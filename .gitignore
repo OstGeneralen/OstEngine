@@ -30,3 +30,20 @@
 *.exe
 *.out
 *.app
+
+# Log files
+*.tlog
+
+# Intermediate
+*.idb
+*.pdb
+*/[Ii]ntermediate/*
+
+# Build output directory
+*/[Bb]uild/*
+
+# VS Directory
+*/.vs/*
+
+# User files
+*.user
