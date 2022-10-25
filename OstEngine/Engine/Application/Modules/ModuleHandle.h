@@ -1,6 +1,9 @@
+// OstEngine (c) - Kasper Esbjornsson 2022
+
 #pragma once
-#include <string>
 #include <Common/Public/Module/ModuleInterface.h>
+
+#include <string>
 
 namespace ost
 {
@@ -9,7 +12,7 @@ namespace ost
 	public:
 		static SModuleHandle MakeInvalid()
 		{
-			return SModuleHandle("", nullptr, nullptr);
+			return SModuleHandle( "", nullptr, nullptr );
 		}
 
 		std::string ModuleName;
@@ -17,36 +20,36 @@ namespace ost
 		void* InstancePtr;
 
 		SModuleHandle()
-			: ModuleName("")
-			, ModulePtr(nullptr)
-			, InstancePtr(nullptr)
+			: ModuleName( "" )
+			, ModulePtr( nullptr )
+			, InstancePtr( nullptr )
 		{
 		}
 
-		SModuleHandle(const std::string& name, IModule* modulePtr, void* instancePtr)
-			: ModuleName(name)
-			, ModulePtr(modulePtr)
-			, InstancePtr(instancePtr)
+		SModuleHandle( const std::string& name, IModule* modulePtr, void* instancePtr )
+			: ModuleName( name )
+			, ModulePtr( modulePtr )
+			, InstancePtr( instancePtr )
 		{
 		}
-		
-		SModuleHandle(SModuleHandle&& r) noexcept
-			: ModuleName(r.ModuleName)
-			, ModulePtr(r.ModulePtr)
-			, InstancePtr(r.InstancePtr)
+
+		SModuleHandle( SModuleHandle&& r ) noexcept
+			: ModuleName( r.ModuleName )
+			, ModulePtr( r.ModulePtr )
+			, InstancePtr( r.InstancePtr )
 		{
 			r.ModulePtr = nullptr;
 			r.InstancePtr = nullptr;
 		}
 
-		SModuleHandle(const SModuleHandle&) = delete;
+		SModuleHandle( const SModuleHandle& ) = delete;
 
 		bool IsValid() const
 		{
 			return ModulePtr && InstancePtr;
 		}
 
-		void operator=(SModuleHandle&& r) noexcept
+		void operator=( SModuleHandle&& r ) noexcept
 		{
 			ModuleName = r.ModuleName;
 			ModulePtr = r.ModulePtr;
@@ -56,4 +59,4 @@ namespace ost
 			r.InstancePtr = nullptr;
 		}
 	};
-}
+} // namespace ost

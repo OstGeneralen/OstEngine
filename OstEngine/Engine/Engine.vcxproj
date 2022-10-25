@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\CoreEngine.cpp" />
+    <ClCompile Include="Application\Modules\ModuleLibrary.cpp" />
     <ClCompile Include="Application\Modules\ModuleLoader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Service\ServiceProvider.cpp" />
@@ -143,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="Application\CoreEngine.h" />
     <ClInclude Include="Application\Modules\ModuleHandle.h" />
+    <ClInclude Include="Application\Modules\ModuleLibrary.h" />
     <ClInclude Include="Application\Modules\ModuleLoader.h" />
     <ClInclude Include="Service\ServiceProvider.h" />
   </ItemGroup>

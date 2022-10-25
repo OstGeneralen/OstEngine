@@ -139,12 +139,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Public\TestService.h" />
     <ClInclude Include="RenderingModule.h" />
     <ClInclude Include="RenderingModuleDeclaration.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Private\TestService.cpp" />
     <ClCompile Include="RenderingModule.cpp" />
     <ClCompile Include="RenderingModuleDeclaration.cpp" />
   </ItemGroup>

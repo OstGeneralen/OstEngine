@@ -27,6 +27,9 @@
     <ClCompile Include="Application\CoreEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Modules\ModuleLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Modules\ModuleLoader.h">
@@ -39,6 +42,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Application\CoreEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Modules\ModuleLibrary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

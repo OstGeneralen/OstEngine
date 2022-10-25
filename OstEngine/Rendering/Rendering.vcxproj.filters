@@ -21,18 +21,12 @@
     <ClInclude Include="RenderingModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Public\TestService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderingModule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderingModuleDeclaration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Private\TestService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

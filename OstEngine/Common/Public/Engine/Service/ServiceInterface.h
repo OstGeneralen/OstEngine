@@ -1,3 +1,5 @@
+// OstEngine (c) - Kasper Esbjornsson 2022
+
 #pragma once
 
 namespace ost
@@ -5,6 +7,6 @@ namespace ost
 	class IService
 	{
 	public:
-		virtual ~IService() {}
+		virtual ~IService() { }
 	};
-}
+} // namespace ost

@@ -1,11 +1,13 @@
+// OstEngine (c) - Kasper Esbjornsson 2022
+
 #include "Common/Public/String/StringHelperLibrary.h"
 
-std::string ost::stringhelpers::WstrToStr(const std::wstring& wstr)
+std::string ost::stringhelpers::WstrToStr( const std::wstring& wstr )
 {
-	return std::move(std::string(wstr.begin(), wstr.end()));
+	return std::move( std::string( wstr.begin(), wstr.end() ) );
 }
 
-std::wstring ost::stringhelpers::StrToWstr(const std::string& str)
+std::wstring ost::stringhelpers::StrToWstr( const std::string& str )
 {
-	return std::move(std::wstring(str.begin(), str.end()));
+	return std::move( std::wstring( str.begin(), str.end() ) );
 }

@@ -1,8 +1,10 @@
-#pragma once
-#include "Engine/Service/ServiceProvider.h"
-#include "Engine/Application/Modules/ModuleLoader.h"
-#include <vector>
+// OstEngine (c) - Kasper Esbjornsson 2022
 
+#pragma once
+#include "Engine/Application/Modules/ModuleLibrary.h"
+#include "Engine/Service/ServiceProvider.h"
+
+#include <vector>
 
 namespace ost
 {
@@ -13,18 +15,14 @@ namespace ost
 		void RequestShutdown();
 
 	private:
+		void Bootup();
 		void Shutdown();
-
 		void LoadCoreModules();
 
-		void LoadModule(const wchar_t* moduleName);
-		void UnloadModule(const wchar_t* moduleName);
-		void UnloadModule(std::vector<SModuleHandle>::iterator it);
-
-		CServiceProvider _serviceProvider;
-		CModuleLoader _moduleLoader;
 		SEngineContext* context;
-		std::vector<SModuleHandle> _loadedModules;
+		CServiceProvider _serviceProvider;
+		CModuleLibrary _moduleLib;
+
 		bool _shouldRun = true;
 	};
-}
+} // namespace ost

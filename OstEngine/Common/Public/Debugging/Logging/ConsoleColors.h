@@ -1,4 +1,4 @@
-// OstEngine Code - Copyright (c) Kasper Esbjornsson 2022
+// OstEngine (c) - Kasper Esbjornsson 2022
 
 #pragma once
 

@@ -1,28 +1,27 @@
-// OstEngine Code - Copyright (c) Kasper Esbjornsson 2022
-
-// Note: This file is currently windows specific!
+// OstEngine (c) - Kasper Esbjornsson 2022
 
 #include <Common/Public/Debugging/Logging/LoggingFunctionLibrary.h>
-#include <windows.h>
-#include <chrono>
 
-std::string ost::logging::VerbosityToString(ELogVerbosity v)
+#include <chrono>
+#include <windows.h>
+
+std::string ost::logging::VerbosityToString( ELogVerbosity v )
 {
-	switch (v)
+	switch ( v )
 	{
-	case ost::ELogVerbosity::Verbose: return std::move(std::string("VER"));
-	case ost::ELogVerbosity::Log: return std::move(std::string("MSG"));
-	case ost::ELogVerbosity::Confirm: return std::move(std::string("CON"));
-	case ost::ELogVerbosity::Warning: return std::move(std::string("WRN"));
-	case ost::ELogVerbosity::Error: return std::move(std::string("ERR"));
+	case ost::ELogVerbosity::Verbose: return std::move( std::string( "VER" ) );
+	case ost::ELogVerbosity::Log: return std::move( std::string( "MSG" ) );
+	case ost::ELogVerbosity::Confirm: return std::move( std::string( "CON" ) );
+	case ost::ELogVerbosity::Warning: return std::move( std::string( "WRN" ) );
+	case ost::ELogVerbosity::Error: return std::move( std::string( "ERR" ) );
 	}
 
 	return "";
 }
 
-int ost::logging::GetConsoleColorCode(EConsoleColor c)
+int ost::logging::GetConsoleColorCode( EConsoleColor c )
 {
-	switch (c)
+	switch ( c )
 	{
 	case ost::EConsoleColor::Green: return 10;
 	case ost::EConsoleColor::Cyan: return 11;
@@ -37,8 +36,8 @@ int ost::logging::GetConsoleColorCode(EConsoleColor c)
 	return 7;
 }
 
-void ost::logging::SetConsoleColor(int code)
+void ost::logging::SetConsoleColor( int code )
 {
-	HANDLE conHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(conHandle, code);
+	HANDLE conHandle = GetStdHandle( STD_OUTPUT_HANDLE );
+	SetConsoleTextAttribute( conHandle, code );
 }
