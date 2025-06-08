@@ -1,7 +1,8 @@
 add_library(${GAME_NAME} SHARED)
 
 file(GLOB_RECURSE GAME_SOURCES "Src/*.cpp")
-target_sources(${GAME_NAME} PRIVATE ${GAME_SOURCES})
+file(GLOB_RECURSE GAME_HEADERS "Include/*.h")
+target_sources(${GAME_NAME} PRIVATE ${GAME_SOURCES} ${GAME_HEADERS})
 
 target_link_libraries(${GAME_NAME} PRIVATE Engine)
 
