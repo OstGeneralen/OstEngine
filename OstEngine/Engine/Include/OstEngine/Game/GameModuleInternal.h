@@ -21,7 +21,7 @@
 // ------------------------------------------------------------
 
 #pragma once
-#include "OstEngine/Game/GameModuleInstance.h"
+#include "OstEngine/Game/GameInstance.h"
 
 namespace ostengine_internal
 {
@@ -34,16 +34,16 @@ namespace ostengine_internal
 
 	class CGameModuleLoader
 	{
-		using MakeGameModuleProc = ost::IGameModuleInstance* (*)();
-		using ReleaseGameModuleProc = void (*)(ost::IGameModuleInstance*);
+		using MakeGameModuleProc = ost::IGameInstance* (*)();
+		using ReleaseGameModuleProc = void (*)(ost::IGameInstance*);
 	public:
 		ModuleLoaderStatusCode_t LoadModule(const char* modulePath);
 		void ReleaseModule();
 
 		bool HasLoadedModule() const;
 
-		ost::IGameModuleInstance* CreateGameModuleInstance();
-		void ReleaseGameModuleInstance(ost::IGameModuleInstance* instancePtr);
+		ost::IGameInstance* CreateGameModuleInstance();
+		void ReleaseGameModuleInstance(ost::IGameInstance** ppInstance);
 	private:
 		void* _moduleHandle;
 		MakeGameModuleProc _makeModuleProc;

@@ -82,7 +82,7 @@ bool ostengine_internal::CGameModuleLoader::HasLoadedModule() const
 
 // ------------------------------------------------------------
 
-ost::IGameModuleInstance* ostengine_internal::CGameModuleLoader::CreateGameModuleInstance()
+ost::IGameInstance* ostengine_internal::CGameModuleLoader::CreateGameModuleInstance()
 {
     if (_makeModuleProc != nullptr && _releaseModuleProc != nullptr)
     {
@@ -93,12 +93,16 @@ ost::IGameModuleInstance* ostengine_internal::CGameModuleLoader::CreateGameModul
 
 // ------------------------------------------------------------
 
-void ostengine_internal::CGameModuleLoader::ReleaseGameModuleInstance(ost::IGameModuleInstance* instancePtr)
+void ostengine_internal::CGameModuleLoader::ReleaseGameModuleInstance(ost::IGameInstance** ppInstance)
 {
+    ost::IGameInstance* instancePtr = *ppInstance;
+
     if (instancePtr != nullptr && _makeModuleProc != nullptr && _releaseModuleProc != nullptr)
     {
         _releaseModuleProc(instancePtr);
     }
+
+    (*ppInstance) = nullptr;
 }
 
 // ------------------------------------------------------------
