@@ -1,0 +1,107 @@
+// OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
+
+#include "OstEngine/Application/CommandLine/CommandLineParser.h"
+
+#include <sstream>
+
+// ------------------------------------------------------------
+
+ost::CCommandLineParser::CCommandLineParser(char* commandLineArgs[], int numArgs)
+{
+	std::stringstream commandLineStream;
+	for (int i = 0; i < numArgs; ++i)
+	{
+		commandLineStream << commandLineArgs[i];
+		if (i < numArgs - 1)
+		{
+			commandLineStream << " ";
+		}
+	}
+
+	ParseCommandLine(commandLineStream.str());
+}
+
+// ------------------------------------------------------------
+
+ost::CCommandLineParser::CCommandLineParser(const char* commandLineString)
+{
+	ParseCommandLine(commandLineString);
+}
+
+// ------------------------------------------------------------
+
+ost::CCommandLineParser::CCommandLineParser(const wchar_t* commandLineStringW)
+{
+	std::wstring asWStr(commandLineStringW);
+	std::string asStr(asWStr.begin(), asWStr.end());
+	ParseCommandLine(asStr);
+}
+
+// ------------------------------------------------------------
+
+bool ost::CCommandLineParser::TryGetCommandLine(const std::string& cmdName, SCommandLineValue& outCmdVal)
+{
+	for (auto& command : _values)
+	{
+		if (command == cmdName)
+		{
+			outCmdVal = command;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ------------------------------------------------------------
+
+const std::vector<ost::SCommandLineValue>& ost::CCommandLineParser::GetParsedValues() const
+{
+	return _values;
+}
+
+// ------------------------------------------------------------
+
+void ost::CCommandLineParser::ParseCommandLine(const std::string& commandLine)
+{
+	// Split command line string by spaces
+	size_t currentOffset = 0;
+	std::vector<std::string> cmdLineSubstrings;
+
+	size_t nextBlankSpacePosition = 0;
+	do
+	{
+		nextBlankSpacePosition = commandLine.find_first_of(' ', currentOffset);
+		cmdLineSubstrings.push_back(commandLine.substr(currentOffset, nextBlankSpacePosition - currentOffset));
+
+		currentOffset = nextBlankSpacePosition + 1;
+	} while (nextBlankSpacePosition != std::string::npos);
+
+	std::string commandNameStr;
+
+	for (size_t cmdIdx = 0; cmdIdx < cmdLineSubstrings.size(); ++cmdIdx)
+	{
+		const bool isCommandName = cmdLineSubstrings[cmdIdx].starts_with('-');
+		const bool isValue = !isCommandName;
+
+		if (commandNameStr.size() > 0 && isValue)
+		{
+			_values.emplace_back(commandNameStr, cmdLineSubstrings[cmdIdx]);
+			commandNameStr.clear();
+		}
+		else if (commandNameStr.size() > 0)
+		{
+			_values.emplace_back(commandNameStr);
+			commandNameStr.clear();
+		}
+
+		if (isCommandName)
+		{
+			commandNameStr = cmdLineSubstrings[cmdIdx];
+		}
+	}
+}
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------
