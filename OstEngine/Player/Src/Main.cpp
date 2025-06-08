@@ -1,6 +1,6 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 
-#include <OstEngine/Game/GameModuleInstance.h>
+#include <OstEngine/Game/GameInstance.h>
 #include <OstEngine/Game/GameModuleInternal.h>
 
 #if APP_WIN32
@@ -22,9 +22,9 @@ int main(int argc, char* argv[])
 
     if (moduleLoader.LoadModule(GAME_MODULE_DLL_NAME) == ostengine_internal::ModuleLoaderStatus_Success)
     {
-        ost::IGameModuleInstance* moduleInstance = moduleLoader.CreateGameModuleInstance();
-        moduleInstance->GetGameInstance().Run();
-        moduleLoader.ReleaseGameModuleInstance(moduleInstance);
+        ost::IGameInstance* moduleInstance = moduleLoader.CreateGameModuleInstance();
+        moduleInstance->Run();
+        moduleLoader.ReleaseGameModuleInstance(&moduleInstance);
         moduleLoader.ReleaseModule();
     }
 
