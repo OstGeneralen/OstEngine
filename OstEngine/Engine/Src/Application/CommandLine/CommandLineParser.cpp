@@ -41,7 +41,7 @@ ost::CCommandLineParser::CCommandLineParser(const wchar_t* commandLineStringW)
 
 float ost::CCommandLineParser::ReadArg(const app_config::CfgFloat& commandLineArg)
 {
-	SCommandLineValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
+	SNamedConfigValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
 	if (cmdVal && cmdVal->HasValue())
 	{
 		return cmdVal->ReadAsFloat(commandLineArg.DefaultValue);
@@ -53,7 +53,7 @@ float ost::CCommandLineParser::ReadArg(const app_config::CfgFloat& commandLineAr
 
 int ost::CCommandLineParser::ReadArg(const app_config::CfgInt& commandLineArg)
 {
-	SCommandLineValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
+	SNamedConfigValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
 	if (cmdVal && cmdVal->HasValue())
 	{
 		return cmdVal->ReadAsInt(commandLineArg.DefaultValue);
@@ -65,7 +65,7 @@ int ost::CCommandLineParser::ReadArg(const app_config::CfgInt& commandLineArg)
 
 std::string ost::CCommandLineParser::ReadArg(const app_config::CfgStr& commandLineArg)
 {
-	SCommandLineValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
+	SNamedConfigValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
 	if (cmdVal && cmdVal->HasValue())
 	{
 		return cmdVal->ReadAsString();
@@ -75,14 +75,14 @@ std::string ost::CCommandLineParser::ReadArg(const app_config::CfgStr& commandLi
 
 // ------------------------------------------------------------
 
-const std::vector<ost::SCommandLineValue>& ost::CCommandLineParser::GetParsedValues() const
+const std::vector<ost::SNamedConfigValue>& ost::CCommandLineParser::GetParsedValues() const
 {
 	return _values;
 }
 
 // ------------------------------------------------------------
 
-ost::SCommandLineValue* ost::CCommandLineParser::GetCmdValue(const std::string& cmdValName)
+ost::SNamedConfigValue* ost::CCommandLineParser::GetCmdValue(const std::string& cmdValName)
 {
 	for (auto& cmdVal : _values)
 	{
