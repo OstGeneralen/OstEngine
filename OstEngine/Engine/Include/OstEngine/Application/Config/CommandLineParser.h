@@ -1,8 +1,6 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-
-#include "OstEngine/Application/CommandLine/CommandLineParser.h"
-
+#include "OstEngine/Application/Config/ConfigValues.h"
 #include <vector>
 #include <string>
 
@@ -66,11 +64,14 @@ namespace ost
 		CCommandLineParser(const char* commandLineString);
 		CCommandLineParser(const wchar_t* commandLineStringW);
 
-		bool TryGetCommandLine(const std::string& cmdName, SCommandLineValue& outCmdVal);
+		float ReadArg(const app_config::CfgFloat& commandLineArg);
+		int ReadArg(const app_config::CfgInt& commandLineArg);
+		std::string ReadArg(const app_config::CfgStr& commandLineArg);
 
 		const std::vector<SCommandLineValue>& GetParsedValues() const;
 
 	private:
+		SCommandLineValue* GetCmdValue(const std::string& cmdValName);
 		void ParseCommandLine(const std::string& commandLine);
 
 		std::vector<SCommandLineValue> _values;

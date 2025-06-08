@@ -1,6 +1,6 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 
-#include "OstEngine/Application/CommandLine/CommandLineParser.h"
+#include "OstEngine/Application/Config/CommandLineParser.h"
 
 #include <sstream>
 
@@ -39,18 +39,38 @@ ost::CCommandLineParser::CCommandLineParser(const wchar_t* commandLineStringW)
 
 // ------------------------------------------------------------
 
-bool ost::CCommandLineParser::TryGetCommandLine(const std::string& cmdName, SCommandLineValue& outCmdVal)
+float ost::CCommandLineParser::ReadArg(const app_config::CfgFloat& commandLineArg)
 {
-	for (auto& command : _values)
+	SCommandLineValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
+	if (cmdVal && cmdVal->HasValue())
 	{
-		if (command == cmdName)
-		{
-			outCmdVal = command;
-			return true;
-		}
+		return cmdVal->ReadAsFloat(commandLineArg.DefaultValue);
 	}
+	return commandLineArg.DefaultValue;
+}
 
-	return false;
+// ------------------------------------------------------------
+
+int ost::CCommandLineParser::ReadArg(const app_config::CfgInt& commandLineArg)
+{
+	SCommandLineValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
+	if (cmdVal && cmdVal->HasValue())
+	{
+		return cmdVal->ReadAsInt(commandLineArg.DefaultValue);
+	}
+	return commandLineArg.DefaultValue;
+}
+
+// ------------------------------------------------------------
+
+std::string ost::CCommandLineParser::ReadArg(const app_config::CfgStr& commandLineArg)
+{
+	SCommandLineValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);
+	if (cmdVal && cmdVal->HasValue())
+	{
+		return cmdVal->ReadAsString();
+	}
+	return commandLineArg.DefaultValue;
 }
 
 // ------------------------------------------------------------
@@ -58,6 +78,21 @@ bool ost::CCommandLineParser::TryGetCommandLine(const std::string& cmdName, SCom
 const std::vector<ost::SCommandLineValue>& ost::CCommandLineParser::GetParsedValues() const
 {
 	return _values;
+}
+
+// ------------------------------------------------------------
+
+ost::SCommandLineValue* ost::CCommandLineParser::GetCmdValue(const std::string& cmdValName)
+{
+	for (auto& cmdVal : _values)
+	{
+		if (cmdVal == cmdValName)
+		{
+			return &cmdVal;
+		}
+	}
+
+	return nullptr;
 }
 
 // ------------------------------------------------------------
