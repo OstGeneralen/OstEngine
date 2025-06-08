@@ -1,8 +1,9 @@
-add_library(Engine STATIC)
 
-file(GLOB_RECURSE ENGINE_SOURCES "Src/*.cpp")
-file(GLOB_RECURSE ENGINE_HEADERS "Include/*.h")
-target_sources(Engine PRIVATE ${ENGINE_SOURCES} ${ENGINE_HEADERS})
+add_library(Engine STATIC 
+    "Src/Application/Config/CommandLineParser.cpp"
+    "Src/Application/Config/ConfigFileParser.cpp"
+    "Src/Game/GameModuleInternal.cpp"
+)
 
 target_include_directories(Engine PUBLIC 
     "${CMAKE_CURRENT_SOURCE_DIR}/Include"

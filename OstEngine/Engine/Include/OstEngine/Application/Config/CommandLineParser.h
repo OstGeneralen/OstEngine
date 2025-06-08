@@ -17,6 +17,10 @@ namespace ost
 		CCommandLineParser(const char* commandLineString);
 		CCommandLineParser(const wchar_t* commandLineStringW);
 
+		bool ContainsArg(const app_config::CfgFloat& commandLineArg);
+		bool ContainsArg(const app_config::CfgInt& commandLineArg);
+		bool ContainsArg(const app_config::CfgStr& commandLineArg);
+
 		float ReadArg(const app_config::CfgFloat& commandLineArg);
 		int ReadArg(const app_config::CfgInt& commandLineArg);
 		std::string ReadArg(const app_config::CfgStr& commandLineArg);

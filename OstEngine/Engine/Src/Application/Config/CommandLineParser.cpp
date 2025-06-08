@@ -39,6 +39,27 @@ ost::CCommandLineParser::CCommandLineParser(const wchar_t* commandLineStringW)
 
 // ------------------------------------------------------------
 
+bool ost::CCommandLineParser::ContainsArg(const app_config::CfgFloat& commandLineArg)
+{
+	return GetCmdValue(commandLineArg.ArgName) != nullptr;
+}
+
+// ------------------------------------------------------------
+
+bool ost::CCommandLineParser::ContainsArg(const app_config::CfgInt& commandLineArg)
+{
+	return GetCmdValue(commandLineArg.ArgName) != nullptr;
+}
+
+// ------------------------------------------------------------
+
+bool ost::CCommandLineParser::ContainsArg(const app_config::CfgStr& commandLineArg)
+{
+	return GetCmdValue(commandLineArg.ArgName) != nullptr;
+}
+
+// ------------------------------------------------------------
+
 float ost::CCommandLineParser::ReadArg(const app_config::CfgFloat& commandLineArg)
 {
 	SNamedConfigValue* const cmdVal = GetCmdValue(commandLineArg.ArgName);

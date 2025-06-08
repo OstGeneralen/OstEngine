@@ -3,6 +3,7 @@
 #include <OstEngine/Game/GameInstance.h>
 #include <OstEngine/Game/GameModuleInternal.h>
 #include <OstEngine/Application/Config/CommandLineParser.h>
+#include <OstEngine/Application/Config/ConfigFileParser.h>
 #include <OstEngine/Application/Config/ConfigValues.h>
 
 #if APP_WIN32
@@ -19,12 +20,13 @@ int CALLBACK WinMain(_In_ HINSTANCE aInst, _In_opt_ HINSTANCE pInst, _In_ LPSTR 
 int main(int argc, char* argv[])
 {
     ost::CCommandLineParser cmdParser = ost::CCommandLineParser(argv, argc);
-
-    std::cout << "Parsed " << cmdParser.GetParsedValues().size() << " cmd args" << std::endl;
+    ost::CConfigFileParser cfgParser;
+    cfgParser.ReadConfigFile("OstEngine.cfg");
 
     ostengine_internal::CGameModuleLoader moduleLoader;
 
-    const std::string gameModuleName = cmdParser.ReadArg(ost::cfg_val::cmdArg_GameModule);
+    const bool hasConfigModuleName = cfgParser.ContainsConfig(ost::cfg_val::cmdArg_GameModule);
+    const std::string gameModuleName = hasConfigModuleName ? cfgParser.ReadValue(ost::cfg_val::cmdArg_GameModule) : cmdParser.ReadArg(ost::cfg_val::cmdArg_GameModule);
     if (moduleLoader.LoadModule(gameModuleName.c_str()) == ostengine_internal::ModuleLoaderStatus_Success)
     {
         ost::IGameInstance* moduleInstance = moduleLoader.CreateGameModuleInstance();
@@ -33,6 +35,13 @@ int main(int argc, char* argv[])
         moduleLoader.ReleaseModule();
     }
 
+
+    if (!hasConfigModuleName)
+    {
+        cfgParser.SetConfigValue(ost::cfg_val::cmdArg_GameModule, gameModuleName);
+    }
+
+    cfgParser.WriteConfigFile("OstEngine.cfg");
 
     return 0;
 }
