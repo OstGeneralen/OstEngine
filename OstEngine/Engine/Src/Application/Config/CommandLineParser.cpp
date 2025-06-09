@@ -3,6 +3,7 @@
 #include "OstEngine/Application/Config/CommandLineParser.h"
 
 #include <sstream>
+#include <algorithm>
 
 // ------------------------------------------------------------
 
@@ -33,7 +34,8 @@ ost::CCommandLineParser::CCommandLineParser(const char* commandLineString)
 ost::CCommandLineParser::CCommandLineParser(const wchar_t* commandLineStringW)
 {
 	std::wstring asWStr(commandLineStringW);
-	std::string asStr(asWStr.begin(), asWStr.end());
+	std::string asStr(asWStr.length(), 0 );
+	std::transform(asWStr.begin(), asWStr.end(), asStr.begin(), [](wchar_t wc) { return static_cast<char>(wc); });
 	ParseCommandLine(asStr);
 }
 
