@@ -27,12 +27,9 @@ namespace ost
 		using CfgStr = TConfigValue<std::string>;
 	}
 
-	namespace cfg_val
-	{
-		const static app_config::CfgInt cmdArg_WinWidth{ "-w", "WinWidth", 1920};
-		const static app_config::CfgInt cmdArg_WinHeight{ "-h", "WinHeight", 1080};
-		const static app_config::CfgStr cmdArg_GameModule("-module", "GameModule", "");
-	}
+	const static app_config::CfgInt config_WinWidth{ "-w", "WinWidth", 1920 };
+	const static app_config::CfgInt config_WinHeight{ "-h", "WinHeight", 1080 };
+	const static app_config::CfgStr config_GameModule("-module", "GameModule", "");
 }
 
 // ------------------------------------------------------------

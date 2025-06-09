@@ -25,8 +25,8 @@ int main(int argc, char* argv[])
 
     ostengine_internal::CGameModuleLoader moduleLoader;
 
-    const bool hasConfigModuleName = cfgParser.ContainsConfig(ost::cfg_val::cmdArg_GameModule);
-    const std::string gameModuleName = hasConfigModuleName ? cfgParser.ReadValue(ost::cfg_val::cmdArg_GameModule) : cmdParser.ReadArg(ost::cfg_val::cmdArg_GameModule);
+    const bool hasConfigModuleName = cfgParser.ContainsConfig(ost::config_GameModule);
+    const std::string gameModuleName = hasConfigModuleName ? cfgParser.ReadValue(ost::config_GameModule) : cmdParser.ReadArg(ost::config_GameModule);
     if (moduleLoader.LoadModule(gameModuleName.c_str()) == ostengine_internal::ModuleLoaderStatus_Success)
     {
         ost::IGameInstance* moduleInstance = moduleLoader.CreateGameModuleInstance();
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 
     if (!hasConfigModuleName)
     {
-        cfgParser.SetConfigValue(ost::cfg_val::cmdArg_GameModule, gameModuleName);
+        cfgParser.SetConfigValue(ost::config_GameModule, gameModuleName);
     }
 
     cfgParser.WriteConfigFile("OstEngine.cfg");
