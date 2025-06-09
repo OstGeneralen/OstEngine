@@ -2,16 +2,37 @@
 #pragma once
 #include <string>
 
+
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class IGameInstance
+	struct SWindowSettings
+	{
+		std::string Title;
+		unsigned int Width;
+		unsigned int Height;
+
+		void* InstanceInfo;
+		int InstanceFlags;
+	};
+
+	class CWindow
 	{
 	public:
-		virtual ~IGameInstance() = default;
-		virtual std::string GameTitle() const = 0;
-		virtual void Run() = 0;
+		void Create(const SWindowSettings& settings);
+		void ProcessEvents();
+
+		void Close();
+		bool IsOpen() const;
+
+	private:
+		void RecalcDPIAwareSize();
+
+		void* _winHandle;
+		int _w, _h;
+		bool _open;
+
 	};
 }
 

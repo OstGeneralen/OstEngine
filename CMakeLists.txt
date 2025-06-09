@@ -9,7 +9,7 @@ project(OstEngineWorkspace)
 #						CONFIGURATION
 # ============================================================
 set(EDITOR_BUILD OFF CACHE BOOL "Editor exe instead of game")
-set(WIN_BUILD OFF CACHE BOOL "Use WinMain instead of main")
+set(WIN_BUILD ON CACHE BOOL "Use WinMain instead of main")
 set(GAME_NAME "Game" CACHE STRING "Name of the game")
 # ============================================================
 
