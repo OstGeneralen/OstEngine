@@ -2,6 +2,8 @@
 
 #include <OstEngine/EngineInterface.h>
 #include <OstEngine/Debug/Logging/LogLevel.h>
+#include <OstEngine/Debug/Logging/LogMessage.h>
+#include <OstEngine/Debug/Logging.h>
 
 int main(int argc, char* argv[])
 {

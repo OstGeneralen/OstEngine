@@ -3,7 +3,12 @@
 #include "Engine.h"
 #include "Application/AppRuntimeStatics.h"
 
+#include "OstEngine/Debug/Logging/LoggingContext.h"
+#include "Debug/Logging/LoggerIOStream.h"
+#include "OstEngine/Debug/Logging.h"
+
 #include <unordered_map>
+#include <format>
 
 // ------------------------------------------------------------
 
@@ -89,12 +94,19 @@ struct EngineConfig
 
 ost::COstEngine::COstEngine(const SCommandArgs & cmdLineArgs)
 {
+	CLoggingContext::Create();
+	CLoggingContext::Get()->BindLogger(new CLogger_IOStream());
+	LOG_INFO("Logging context initialized, bound IOStream Logger");
+
 	// 1. Parse command line args
 	EngineCommandLineContext cmdContext{cmdLineArgs};
 	const EngineConfig cfg{ cmdContext };
 
+	LOG_INFO("Parsed cmd args");
+
 	// 2. Initialize rendering
 	_appWindow = _renderContext.Initialize(cfg.WindowWidth, cfg.WindowHeight);
+	LOG_INFO("Created window with dimensions {}x{}", cfg.WindowWidth, cfg.WindowHeight);
 
 	// 3. Load game module here
 
@@ -112,7 +124,9 @@ int ost::COstEngine::Run()
 		_renderContext.EndFrame();
 	}
 
+	LOG_INFO("Shutdown requested, cleaning up render context");
 	_renderContext.Release(&_appWindow);
+	LOG_INFO("Cleanup complete, shutting down ost engine");
 	return 0;
 }
 

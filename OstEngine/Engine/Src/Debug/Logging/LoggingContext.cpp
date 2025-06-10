@@ -1,5 +1,6 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #include "OstEngine/Debug/Logging/LoggingContext.h"
+#include "OstEngine/Debug/Logging/LogMessage.h"
 
 // ------------------------------------------------------------
 
@@ -27,6 +28,33 @@ void ost::CLoggingContext::Bind(CLoggingContext* context)
 ost::CLoggingContext* ost::CLoggingContext::Get()
 {
 	return s_pInstance;
+}
+
+// ------------------------------------------------------------
+
+void ost::CLoggingContext::PushLogMessage(const SLogMessage& msg)
+{
+	if (s_pInstance != nullptr)
+	{
+		s_pInstance->Instance_PushLogMessage(msg);
+	}
+}
+
+// ------------------------------------------------------------
+
+void ost::CLoggingContext::BindLogger(ILogger* pLogger)
+{
+	_loggers.push_back(pLogger);
+}
+
+// ------------------------------------------------------------
+
+void ost::CLoggingContext::Instance_PushLogMessage(const SLogMessage& msg)
+{
+	for (ILogger* l : _loggers)
+	{
+		l->ReceiveMessage(msg);
+	}
 }
 
 // ------------------------------------------------------------
