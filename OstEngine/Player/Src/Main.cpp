@@ -1,6 +1,7 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 
 #include <OstEngine/EngineInterface.h>
+#include <OstEngine/Debug/Logging/LogLevel.h>
 
 int main(int argc, char* argv[])
 {
