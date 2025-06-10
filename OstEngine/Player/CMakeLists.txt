@@ -1,10 +1,5 @@
 
-if(WIN_BUILD)
-add_executable(Player WIN32)
-target_compile_definitions(Player PRIVATE "APP_WIN32")
-else()
 add_executable(Player)
-endif()
 
 target_compile_definitions(Player PRIVATE "GAME_MODULE_DLL_NAME=\"${GAME_MODULE_NAME}.dll\"")
 

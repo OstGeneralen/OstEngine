@@ -7,7 +7,7 @@
 // Well, you have been warned (see GameModuleInternal.h)
 // ------------------------------------------------------------
 
-#include "OstEngine/Game/GameModuleInternal.h"
+#include "Game/GameModuleInternal.h"
 #include "OstEngine/Game/GameModule.h"
 
 using namespace ostengine_internal;

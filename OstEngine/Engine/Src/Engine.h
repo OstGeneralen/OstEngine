@@ -1,22 +1,22 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <string>
+#include "OstEngine/EngineInterface.h"
+
+#include "OstEngine/Application/Window/Window.h"
+#include "Rendering/RenderingContext.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class CWindow
+	class COstEngine : public IOstEngine
 	{
 	public:
-		CWindow(void* winPtr);
-		void Close();
-		void ProcessEvents();
-		bool IsOpen() const;
-
+		COstEngine(const SCommandArgs& cmdLineArgs);
+		int Run() override;
 	private:
-		void* _windowPtr;
-		bool _open;
+		CRenderingContext _renderContext;
+		CWindow* _appWindow;
 	};
 }
 

@@ -1,23 +1,30 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <string>
+
+#include "OstEngine/Application/Config/CmdArgs.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class CWindow
+	class IOstEngine;
+
+	struct SEngineRuntimeInfo
+	{
+		void* AppInstancePtr;
+		int AppInstanceFlag;
+	};
+
+
+	extern IOstEngine* CreateEngineInstance(const SCommandArgs& cmdArgs);
+	extern void ReleaseEngineInstance(IOstEngine** ppEngInstance);
+
+	class IOstEngine
 	{
 	public:
-		CWindow(void* winPtr);
-		void Close();
-		void ProcessEvents();
-		bool IsOpen() const;
-
-	private:
-		void* _windowPtr;
-		bool _open;
+		virtual int Run() = 0;
 	};
+
 }
 
 // ------------------------------------------------------------

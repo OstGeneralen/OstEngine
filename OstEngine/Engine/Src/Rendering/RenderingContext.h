@@ -1,22 +1,22 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <string>
+
+#include "OstEngine/Application/Window/Window.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class CWindow
+	class CRenderingContext
 	{
 	public:
-		CWindow(void* winPtr);
-		void Close();
-		void ProcessEvents();
-		bool IsOpen() const;
+		CWindow* Initialize( int w, int h );
+		void Release(CWindow** ppWindow);
 
+		void BeginFrame();
+		void EndFrame();
 	private:
 		void* _windowPtr;
-		bool _open;
 	};
 }
 

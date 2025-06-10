@@ -1,23 +1,14 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#pragma once
-#include <string>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class CWindow
+	namespace runtime_values
 	{
-	public:
-		CWindow(void* winPtr);
-		void Close();
-		void ProcessEvents();
-		bool IsOpen() const;
-
-	private:
-		void* _windowPtr;
-		bool _open;
-	};
+		extern void* AppInstance;
+		extern int AppInstanceFlags;
+	}
 }
 
 // ------------------------------------------------------------
