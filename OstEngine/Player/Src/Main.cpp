@@ -16,9 +16,9 @@ namespace log_helper
 {
     const std::unordered_map<ost::ELogLevel, int> LEVEL_COL_MAP = {
         { ost::ELogLevel::Verbose,  7 },
-        { ost::ELogLevel::Log,      15 },
+        { ost::ELogLevel::Log,      7 },
         { ost::ELogLevel::Confirm,  10 },
-        { ost::ELogLevel::Info,     11 },
+        { ost::ELogLevel::Info,     7 },
         { ost::ELogLevel::Warning,  14 },
         { ost::ELogLevel::Error,    12 }
     };
@@ -87,10 +87,13 @@ public:
 int main(int argc, char* argv[])
 {
     IOStreamLogger iosLog;
+    
+    ost::SCommandArgs cmdArgs(argv, argc);
     ost::SEngineInitializationOptions initializeOpt = {};
     initializeOpt.InitLogger = &iosLog;
+    initializeOpt.CmdLineArgs = &cmdArgs;
 
-    ost::IOstEngine* engineInstancePtr = ost::CreateEngineInstance({ argv, argc }, initializeOpt);
+    ost::IOstEngine* engineInstancePtr = ost::CreateEngineInstance(initializeOpt);
     engineInstancePtr->Run();
     ost::ReleaseEngineInstance(&engineInstancePtr);
     return 0;

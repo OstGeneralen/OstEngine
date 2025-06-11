@@ -12,11 +12,12 @@ namespace ost
 
 	struct SEngineInitializationOptions
 	{
+		const SCommandArgs* CmdLineArgs{ nullptr };
 		ILogger* InitLogger{ nullptr };
 	};
 
 
-	extern IOstEngine* CreateEngineInstance(const SCommandArgs& cmdArgs, SEngineInitializationOptions options);
+	extern IOstEngine* CreateEngineInstance(SEngineInitializationOptions options);
 	extern void ReleaseEngineInstance(IOstEngine** ppEngInstance);
 
 	class IOstEngine

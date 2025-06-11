@@ -12,7 +12,7 @@ namespace ost
 	class COstEngine : public IOstEngine
 	{
 	public:
-		COstEngine(const SCommandArgs& cmdLineArgs, SEngineInitializationOptions initOptions);
+		COstEngine(SEngineInitializationOptions initOptions);
 		int Run() override;
 	private:
 		CRenderingContext _renderContext;
