@@ -4,7 +4,6 @@
 #include "Application/AppRuntimeStatics.h"
 
 #include "OstEngine/Debug/Logging/LoggingContext.h"
-#include "Debug/Logging/LoggerIOStream.h"
 #include "OstEngine/Debug/Logging.h"
 
 #include <unordered_map>
@@ -83,30 +82,53 @@ struct EngineConfig
 
 	EngineConfig(EngineCommandLineContext& eclc)
 	{
-		eclc.TryParseString("-gameMod", GameModuleName);
-		eclc.TryParseString("-assetsPath", WorkingPath);
-		eclc.TryParseInt("-w", WindowWidth);
-		eclc.TryParseInt("-h", WindowHeight);
+		if (eclc.TryParseString("-gameMod", GameModuleName))
+			LOG_DETAIL("Cmd Arg: Parsed -gameMod arg, value '{}'", GameModuleName);
+
+		if (eclc.TryParseString("-assetsPath", WorkingPath))
+			LOG_DETAIL("Cmd Arg: Parsed -assetPath arg, value '{}'", WorkingPath);
+
+		if (eclc.TryParseInt("-w", WindowWidth))
+			LOG_DETAIL("Cmd Arg: Parsed -w arg, value '{}'", WindowWidth);
+
+		if (eclc.TryParseInt("-h", WindowHeight))
+			LOG_DETAIL("Cmd Arg: Parsed -h arg, value '{}'", WindowWidth);
 	}
 };
 
 // ------------------------------------------------------------
 
-ost::COstEngine::COstEngine(const SCommandArgs & cmdLineArgs)
+ost::COstEngine::COstEngine(const SCommandArgs& cmdLineArgs, SEngineInitializationOptions initOptions)
 {
 	CLoggingContext::Create();
-	CLoggingContext::Get()->BindLogger(new CLogger_IOStream());
-	LOG_INFO("Logging context initialized, bound IOStream Logger");
+	if (initOptions.InitLogger != nullptr)
+	{
+		CLoggingContext::Get()->BindLogger(initOptions.InitLogger);
+	}
+	LOG_INFO("OstEngine created with command line args");
+	LOG_BEGIN_SCOPE();
+
+	cmdLineArgs.ForeachCommand([](const std::string msg, const std::string val) {
+		if (val.length() > 0)
+		{
+			LOG_INFO("{} = {}", msg, val);
+		}
+		else
+		{
+			LOG_INFO(msg);
+		}
+		});
+	LOG_END_SCOPE();
+
+	LOG_DETAIL("Logging context initialized");
 
 	// 1. Parse command line args
-	EngineCommandLineContext cmdContext{cmdLineArgs};
+	EngineCommandLineContext cmdContext{ cmdLineArgs };
 	const EngineConfig cfg{ cmdContext };
-
-	LOG_INFO("Parsed cmd args");
 
 	// 2. Initialize rendering
 	_appWindow = _renderContext.Initialize(cfg.WindowWidth, cfg.WindowHeight);
-	LOG_INFO("Created window with dimensions {}x{}", cfg.WindowWidth, cfg.WindowHeight);
+	LOG_CONFIRM("Created window with dimensions {}x{}", cfg.WindowWidth, cfg.WindowHeight);
 
 	// 3. Load game module here
 

@@ -5,9 +5,9 @@
 
 // ------------------------------------------------------------
 
-ost::IOstEngine* ost::CreateEngineInstance(const SCommandArgs& cmdArgs)
+ost::IOstEngine* ost::CreateEngineInstance(const SCommandArgs& cmdArgs, SEngineInitializationOptions initOption)
 {
-	return new COstEngine(cmdArgs);
+	return new COstEngine(cmdArgs, initOption);
 }
 
 // ------------------------------------------------------------

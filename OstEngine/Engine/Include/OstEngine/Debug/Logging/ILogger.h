@@ -9,7 +9,7 @@ namespace ost
 	class ILogger
 	{
 	public:
-		virtual void ReceiveMessage(const SLogMessage& message) = 0;
+		virtual void ReceiveMessage(const SLogMessage& message, uint32 scope = 0) = 0;
 	};
 }
 

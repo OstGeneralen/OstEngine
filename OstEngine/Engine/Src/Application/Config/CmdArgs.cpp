@@ -74,9 +74,17 @@ namespace string_parse
 
 // ------------------------------------------------------------
 
+const std::string& ost::SCommandArgs::GetCommandLine() const
+{
+	return _fullLine;
+}
+
+// ------------------------------------------------------------
+
 void ost::SCommandArgs::BuildCommandArgsList(const std::string& fromStr)
 {
 	size_t readOffset = 0;
+	_fullLine = fromStr;
 
 	// Split the string into each individual substring delimited by space
 	do 
@@ -88,6 +96,10 @@ void ost::SCommandArgs::BuildCommandArgsList(const std::string& fromStr)
 		if (nextWordStart != std::string::npos && nextWordEnd != std::string::npos)
 		{
 			_splitCommandLine.emplace_back(fromStr.substr(nextWordStart, nextWordEnd - nextWordStart));
+		}
+		else if (nextWordEnd == std::string::npos)
+		{
+			_splitCommandLine.emplace_back(fromStr.substr(nextWordStart));
 		}
 	} while (readOffset < fromStr.length() && readOffset != std::string::npos);
 }
@@ -109,6 +121,10 @@ void ost::SCommandArgs::ForeachCommand(ost::SCommandArgs::ArgsIT_f f) const
 			{
 				f(_splitCommandLine[idx].GetString(), "");
 			}
+		}
+		else if (_splitCommandLine[idx].GetType() == ECommandArgType::Value && (idx == 0 || _splitCommandLine[idx - 1].GetType() != ECommandArgType::Command))
+		{
+			f(_splitCommandLine[idx].GetString(), "");
 		}
 	}
 }

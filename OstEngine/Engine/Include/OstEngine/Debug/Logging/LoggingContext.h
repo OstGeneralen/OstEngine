@@ -17,6 +17,8 @@ namespace ost
 		static CLoggingContext* Get();
 
 		static void PushLogMessage(const SLogMessage& lm);
+		static void OpenScope();
+		static void CloseScope();
 	private:
 		static CLoggingContext* s_pInstance;
 		static bool s_instanceBound;
@@ -26,7 +28,8 @@ namespace ost
 		void Instance_PushLogMessage(const SLogMessage& lm);
 
 	private:
-		std::vector<ILogger*> _loggers;
+		int _currentScope{ 0 };
+;		std::vector<ILogger*> _loggers;
 	};
 }
 

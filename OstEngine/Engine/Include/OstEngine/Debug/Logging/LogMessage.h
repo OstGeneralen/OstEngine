@@ -24,7 +24,7 @@ namespace ost
 
 	struct SLogMessage
 	{
-		SLogMessage(const std::string& message, ELogLevel level );
+		SLogMessage(const std::string& message, ELogLevel level);
 		SLogMessage(const SLogMessage&) = default;
 		SLogMessage(SLogMessage&&) noexcept = default;
 

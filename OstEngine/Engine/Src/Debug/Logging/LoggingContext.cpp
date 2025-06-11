@@ -42,6 +42,26 @@ void ost::CLoggingContext::PushLogMessage(const SLogMessage& msg)
 
 // ------------------------------------------------------------
 
+void ost::CLoggingContext::OpenScope()
+{
+	if (s_pInstance != nullptr)
+	{
+		s_pInstance->_currentScope++;
+	}
+}
+
+// ------------------------------------------------------------
+
+void ost::CLoggingContext::CloseScope()
+{
+	if (s_pInstance != nullptr)
+	{
+		s_pInstance->_currentScope--;
+	}
+}
+
+// ------------------------------------------------------------
+
 void ost::CLoggingContext::BindLogger(ILogger* pLogger)
 {
 	_loggers.push_back(pLogger);
@@ -53,7 +73,7 @@ void ost::CLoggingContext::Instance_PushLogMessage(const SLogMessage& msg)
 {
 	for (ILogger* l : _loggers)
 	{
-		l->ReceiveMessage(msg);
+		l->ReceiveMessage(msg, _currentScope);
 	}
 }
 

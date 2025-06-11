@@ -8,15 +8,15 @@
 namespace ost
 {
 	class IOstEngine;
+	class ILogger;
 
-	struct SEngineRuntimeInfo
+	struct SEngineInitializationOptions
 	{
-		void* AppInstancePtr;
-		int AppInstanceFlag;
+		ILogger* InitLogger{ nullptr };
 	};
 
 
-	extern IOstEngine* CreateEngineInstance(const SCommandArgs& cmdArgs);
+	extern IOstEngine* CreateEngineInstance(const SCommandArgs& cmdArgs, SEngineInitializationOptions options);
 	extern void ReleaseEngineInstance(IOstEngine** ppEngInstance);
 
 	class IOstEngine

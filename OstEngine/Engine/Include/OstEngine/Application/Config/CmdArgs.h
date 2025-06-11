@@ -43,8 +43,11 @@ namespace ost
 		using ArgsIT_f = std::function<void(const std::string&, const std::string&)>;
 		void ForeachCommand(ArgsIT_f itFunc) const;
 
+		const std::string& GetCommandLine() const;
+
 	private:
 		void BuildCommandArgsList(const std::string& fromStr);
+		std::string _fullLine;
 		std::vector<SCommandArg> _splitCommandLine;
 	};
 }
