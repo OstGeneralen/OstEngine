@@ -30,6 +30,7 @@ ost::COstEngine::COstEngine(SEngineInitializationOptions initOptions)
 
 	// 2. Initialize rendering
 	_appWindow = _renderContext.Initialize(_configuration.WindowWidth, _configuration.WindowHeight);
+	_appWindow->BindInputSystem(&_inputSystem);
 	
 	// 3. Load game module here
 

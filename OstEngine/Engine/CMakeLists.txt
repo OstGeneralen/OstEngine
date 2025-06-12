@@ -15,7 +15,7 @@ add_library(Engine STATIC
     "Src/Application/Config/Configurations.cpp" 
     "Src/Application/Config/ConfigFile.h" 
     "Src/Application/Config/ConfigFile.cpp"
-)
+ "Include/OstEngine/Core/Input/InputHandler.h" "Src/Core/Input/InputSystem.h" "Src/Core/Input/InputSystem.cpp")
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
 target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" )    # Interface includes

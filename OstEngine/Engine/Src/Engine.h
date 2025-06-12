@@ -5,6 +5,7 @@
 #include "OstEngine/Application/Window/Window.h"
 #include "Rendering/RenderingContext.h"
 #include "Application/Config/EngineConfiguration.h"
+#include "Core/Input/InputSystem.h"
 
 // ------------------------------------------------------------
 
@@ -18,6 +19,7 @@ namespace ost
 	private:
 		SEngineConfigurations _configuration;
 		CRenderingContext _renderContext;
+		input::CInputSystem _inputSystem;
 		CWindow* _appWindow;
 	};
 }
