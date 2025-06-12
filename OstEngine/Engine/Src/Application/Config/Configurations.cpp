@@ -68,7 +68,7 @@ void ost::SConfig::ParseCommandLine(const SCommandArgs& args)
 
 void ost::SConfig::ParseConfigFile(const CConfigFile& cfg)
 {
-	LOG_INFO("Configurations: Parsing config file");
+	LOG_INFO("Configurations: Parsing config file", );
 	LOG_BEGIN_SCOPE();
 	auto iteration = [&](const auto& cN, const auto& cV) { ForeachConfigValue(cN, cV); };
 	cfg.ForeachConfigValue(iteration);
