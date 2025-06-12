@@ -5,19 +5,10 @@
 #include "OstEngine/Debug/Logging/LoggingContext.h"
 #include "OstEngine/Debug/Logging.h"
 
+#include "Application/Config/ConfigFile.h"
+
 #include <unordered_map>
 #include <format>
-
-// ------------------------------------------------------------
-
-struct EngineConfig
-{
-	std::string ExePath;
-	std::string GameModuleName;
-	std::string WorkingPath;
-	int WindowWidth = 1920;
-	int WindowHeight = 1080;
-};
 
 // ------------------------------------------------------------
 
@@ -29,30 +20,16 @@ ost::COstEngine::COstEngine(SEngineInitializationOptions initOptions)
 		CLoggingContext::Get()->BindLogger(initOptions.InitLogger);
 	}
 
-	// 1. Parse command line args
-	EngineConfig cfg = {};
-	auto cmdIt = [&cfg](const std::string& n, const std::string& v)
-		{
-			if (v.size() == 0) cfg.ExePath = n;
-			if (n == "-w") cfg.WindowWidth = std::stoi(v);
-			if (n == "-h") cfg.WindowHeight = std::stoi(v);
-			if (n == "-assetPath") cfg.WorkingPath = v;
-		};
-
-	initOptions.CmdLineArgs->ForeachCommand(cmdIt);
-
-	LOG_CONFIRM("OstEngine init");
-	LOG_BEGIN_SCOPE();
-	{
-		LOG_INFO("Execution Path: {}", cfg.ExePath);
-		LOG_INFO("Window dimensions: {}x{}", cfg.WindowWidth, cfg.WindowHeight);
-		LOG_INFO("Asset Directory: {}", cfg.WorkingPath);
-		LOG_INFO("Game Module: {}", cfg.GameModuleName);
-	}
-	LOG_END_SCOPE();
+	// 1. Initialize engine config from options
+	_configuration.ParseCommandLine(*initOptions.CmdLineArgs);
+	// To load the config file, we want to use any potential path config from the args provided
+	std::string assetDirectory = _configuration.AssetsDir;
+	if (!assetDirectory.ends_with('/')) assetDirectory.append("/");
+	CConfigFile configFile(assetDirectory + "EngineConfig.cfg");
+	_configuration.ParseConfigFile(configFile);
 
 	// 2. Initialize rendering
-	_appWindow = _renderContext.Initialize(cfg.WindowWidth, cfg.WindowHeight);
+	_appWindow = _renderContext.Initialize(_configuration.WindowWidth, _configuration.WindowHeight);
 	
 	// 3. Load game module here
 

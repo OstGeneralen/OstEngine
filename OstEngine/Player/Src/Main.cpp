@@ -77,7 +77,7 @@ public:
         else
         {
             log_helper::ResetOutputColor();
-            std::cout << "           --> " << msg.Message << std::endl;
+            std::cout << "           \t" << msg.Message << std::endl;
         }
     }
 };

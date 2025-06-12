@@ -4,6 +4,7 @@
 
 #include "OstEngine/Application/Window/Window.h"
 #include "Rendering/RenderingContext.h"
+#include "Application/Config/EngineConfiguration.h"
 
 // ------------------------------------------------------------
 
@@ -15,6 +16,7 @@ namespace ost
 		COstEngine(SEngineInitializationOptions initOptions);
 		int Run() override;
 	private:
+		SEngineConfigurations _configuration;
 		CRenderingContext _renderContext;
 		CWindow* _appWindow;
 	};
