@@ -10,6 +10,8 @@ namespace ost
 	{
 		class ILogger
 		{
+			friend class CLogInstance;
+
 		public: // LOG FUNCTIONS
 			template<typename ... TFmt>
 			void TRACE(std::format_string<TFmt...> str, TFmt&&... args) { Log(ELogLevel::Trace, str, std::forward<TFmt>(args)...); }

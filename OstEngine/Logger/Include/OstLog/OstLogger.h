@@ -9,3 +9,4 @@
 
 #include "OstLog/LoggerApi.h"
 #include "OstLog/ILogger.h"
+#include "OstLog/LoggingInstance.h"

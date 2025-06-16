@@ -6,6 +6,7 @@
 #include <functional>
 #include <source_location>
 #include <string_view>
+#include <vector>
 
 // ------------------------------------------------------------
 
@@ -20,6 +21,7 @@ namespace ost
 			std::source_location Source;
 			std::string_view LoggerName;
 			std::function<std::string()> MessageFormatter;
+			std::vector<SLogMessage> SubMessages;
 		};
 	}
 }
