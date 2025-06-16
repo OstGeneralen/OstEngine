@@ -4,8 +4,7 @@
 #include "OstEngine/Application/Config/CmdArgs.h"
 #include "Application/Config/ConfigFile.h"
 
-#include <OstLog/LoggerAPI.h>
-#include <OstLog/ILogger.h>
+#include <OstLog/OstLogger.h>
 
 // ------------------------------------------------------------
 

@@ -2,8 +2,7 @@
 
 #include <OstEngine/EngineInterface.h>
 
-#include <OstLog/LoggerApi.h>
-#include <OstLog/ILogger.h>
+#include <OstLog/OstLogger.h>
 #include <OstLog/MessageFormatter.h>
 #include <OstLog/Sinks/LogSink.h>
 

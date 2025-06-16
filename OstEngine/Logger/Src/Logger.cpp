@@ -1,5 +1,5 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#include "OstLog/Logger.h"
+#include "Logger.h"
 
 // ------------------------------------------------------------
 // API Getter

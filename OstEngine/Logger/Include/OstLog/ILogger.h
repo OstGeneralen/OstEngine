@@ -3,7 +3,6 @@
 #include "OstLog/LogMessage.h"
 #include "OstLog/Sinks/LogSink.h"
 
-
 // ------------------------------------------------------------
 
 namespace ost

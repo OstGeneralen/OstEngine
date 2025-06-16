@@ -1,5 +1,5 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#include "OstLog/Internal/MessageQueue.h"
+#include "Internal/MessageQueue.h"
 #include <exception>
 
 // ------------------------------------------------------------

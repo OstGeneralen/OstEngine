@@ -2,9 +2,9 @@
 #pragma once
 #include "OstLog/LoggerApi.h"
 #include "OstLog/ILogger.h"
-#include "OstLog/Internal/MessageQueue.h"
-#include <vector>
+#include "Internal/MessageQueue.h"
 
+#include <vector>
 #include <thread>
 #include <atomic>
 

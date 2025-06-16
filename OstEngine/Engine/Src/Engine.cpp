@@ -2,8 +2,7 @@
 
 #include "Engine.h"
 
-#include <OstLog/LoggerApi.h>
-#include <OstLog/ILogger.h>
+#include <OstLog/OstLogger.h>
 
 #include "Application/Config/ConfigFile.h"
 
