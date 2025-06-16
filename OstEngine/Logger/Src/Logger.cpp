@@ -2,7 +2,7 @@
 #include "Logger.h"
 
 // ------------------------------------------------------------
-// API Getter
+// API Functions
 // ------------------------------------------------------------
 ost::log::CLogger s_LogInstance;
 
@@ -11,6 +11,28 @@ extern "C" LOGGER_API ost::log::ILogger& GetLogger()
 	return s_LogInstance;
 }
 
+extern "C" LOGGER_API void OstLogger_RegisterLogSink(ost::log::CLogSink& sink)
+{
+	s_LogInstance.RegisterSink(sink);
+}
+
+extern "C" LOGGER_API void OstLogger_RunLogger()
+{
+	s_LogInstance.Run();
+}
+
+extern "C" LOGGER_API void OstLogger_PostShutdownSignal()
+{
+	s_LogInstance.SignalShutdown();
+}
+
+extern "C" LOGGER_API void OstLogger_AwaitShutdown()
+{
+	s_LogInstance.AwaitShutdown();
+}
+
+// ------------------------------------------------------------
+// CLogger Definition
 // ------------------------------------------------------------
 
 ost::log::CLogger::CLogger()

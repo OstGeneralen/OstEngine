@@ -1,7 +1,6 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
 #include "OstLog/LogMessage.h"
-#include "OstLog/Sinks/LogSink.h"
 
 // ------------------------------------------------------------
 
@@ -32,10 +31,6 @@ namespace ost
 
 		public: // INTERFACE
 			virtual ~ILogger() = default;
-			virtual void RegisterSink(CLogSink& sink) = 0;
-			virtual void Run() = 0;
-			virtual void SignalShutdown() = 0;
-			virtual void AwaitShutdown() = 0;
 		protected:
 			virtual void Log(const SLogMessage& msg) = 0;
 

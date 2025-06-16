@@ -1,11 +1,6 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-
-#if LOGGER_DLL_BUILD
-#define LOGGER_API __declspec(dllexport)
-#else
-#define LOGGER_API __declspec(dllimport)
-#endif
+#include "OstLog/LoggerApi.h"
 
 // ------------------------------------------------------------
 
@@ -13,12 +8,14 @@ namespace ost
 {
 	namespace log
 	{
-		class ILogger;
+		class CLogSink;
 	}
 }
 
-extern "C" LOGGER_API ost::log::ILogger& GetLogger();
-
+extern "C" LOGGER_API void OstLogger_RegisterLogSink(ost::log::CLogSink& sink);
+extern "C" LOGGER_API void OstLogger_RunLogger();
+extern "C" LOGGER_API void OstLogger_PostShutdownSignal();
+extern "C" LOGGER_API void OstLogger_AwaitShutdown();
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

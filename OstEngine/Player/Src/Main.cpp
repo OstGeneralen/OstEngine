@@ -5,6 +5,7 @@
 #include <OstLog/OstLogger.h>
 #include <OstLog/MessageFormatter.h>
 #include <OstLog/Sinks/LogSink.h>
+#include <OstLog/LoggerLifetimeManagement.h>
 
 // ------------------------------------------------------------
 
@@ -63,14 +64,14 @@ int main(int argc, char* argv[])
     IOStreamLogger iosLog;
     
     auto& logger = GetLogger();
-    logger.RegisterSink(iosLog);
+    OstLogger_RegisterLogSink(iosLog);
 
     ost::SCommandArgs cmdArgs(argv, argc);
     ost::SEngineInitializationOptions initializeOpt = {};
     //initializeOpt.InitLogger = &iosLog;
     initializeOpt.CmdLineArgs = &cmdArgs;
 
-    logger.Run();
+    OstLogger_RunLogger();
 
     logger.INFO("Test info message with integer {}", 10);
     logger.DEBUG("Test debug message with integer {}", 50);
@@ -80,8 +81,8 @@ int main(int argc, char* argv[])
     engineInstancePtr->Run();
     ost::ReleaseEngineInstance(&engineInstancePtr);
 
-    logger.SignalShutdown();
-    logger.AwaitShutdown();
+    OstLogger_PostShutdownSignal();
+    OstLogger_AwaitShutdown();
 
     return 0;
 }

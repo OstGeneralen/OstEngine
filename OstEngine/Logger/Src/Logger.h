@@ -2,6 +2,7 @@
 #pragma once
 #include "OstLog/LoggerApi.h"
 #include "OstLog/ILogger.h"
+#include "OstLog/Sinks/LogSink.h"
 #include "Internal/MessageQueue.h"
 
 #include <vector>
@@ -18,10 +19,10 @@ namespace ost
 		{
 		public:
 			CLogger();
-			virtual void RegisterSink(CLogSink& sink) override;
-			void Run() override;
-			void SignalShutdown() override;
-			virtual void AwaitShutdown() override;
+			void RegisterSink(CLogSink& sink);
+			void Run();
+			void SignalShutdown();
+			void AwaitShutdown();
 		
 		private:
 			void Log(const SLogMessage& msg) override;
