@@ -9,11 +9,12 @@
 #include <unordered_map>
 #include <format>
 
+CREATE_LOG_INSTANCE(OstEngineLog);
+
 // ------------------------------------------------------------
 
 ost::COstEngine::COstEngine(SEngineInitializationOptions initOptions)
 {
-	GetLogger().INFO("OstEngine - Engine initialization started");
 	// 1. Initialize engine config from options
 	_configuration.ParseCommandLine(*initOptions.CmdLineArgs);
 	// To load the config file, we want to use any potential path config from the args provided
@@ -42,9 +43,9 @@ int ost::COstEngine::Run()
 		_renderContext.EndFrame();
 	}
 
-	GetLogger().DEBUG("OstEngine - Shutdown requested, cleaning up render context");
+	LOG_DEBUG(OstEngineLog, "Shutdown requested, cleaning up render context");
 	_renderContext.Release(&_appWindow);
-	GetLogger().INFO("OstEngine - Cleanup complete, shutting down ost engine");
+	LOG_INFO(OstEngineLog, "Cleanup complete, shutting down ost engine");
 	return 0;
 }
 
