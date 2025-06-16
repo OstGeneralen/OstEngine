@@ -1,17 +1,23 @@
-// OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
+// OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <OstEngine/Debug/Logging/LogMessage.h>
+
+#if LOGGER_DLL_BUILD
+#define LOGGER_API __declspec(dllexport)
+#else
+#define LOGGER_API __declspec(dllimport)
+#endif
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class ILogger
+	namespace log
 	{
-	public:
-		virtual void ReceiveMessage(const SLogMessage& message, uint32 scope = 0) = 0;
-	};
+		class ILogger;
+	}
 }
+
+extern "C" LOGGER_API ost::log::ILogger& GetLogger();
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

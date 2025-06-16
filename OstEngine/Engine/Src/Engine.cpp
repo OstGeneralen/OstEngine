@@ -2,8 +2,8 @@
 
 #include "Engine.h"
 
-#include "OstEngine/Debug/Logging/LoggingContext.h"
-#include "OstEngine/Debug/Logging.h"
+#include <OstLog/LoggerApi.h>
+#include <OstLog/ILogger.h>
 
 #include "Application/Config/ConfigFile.h"
 
@@ -14,12 +14,7 @@
 
 ost::COstEngine::COstEngine(SEngineInitializationOptions initOptions)
 {
-	CLoggingContext::Create();
-	if (initOptions.InitLogger != nullptr)
-	{
-		CLoggingContext::Get()->BindLogger(initOptions.InitLogger);
-	}
-
+	GetLogger().INFO("OstEngine - Engine initialization started");
 	// 1. Initialize engine config from options
 	_configuration.ParseCommandLine(*initOptions.CmdLineArgs);
 	// To load the config file, we want to use any potential path config from the args provided
@@ -48,9 +43,9 @@ int ost::COstEngine::Run()
 		_renderContext.EndFrame();
 	}
 
-	LOG_INFO("Shutdown requested, cleaning up render context");
+	GetLogger().DEBUG("OstEngine - Shutdown requested, cleaning up render context");
 	_renderContext.Release(&_appWindow);
-	LOG_INFO("Cleanup complete, shutting down ost engine");
+	GetLogger().INFO("OstEngine - Cleanup complete, shutting down ost engine");
 	return 0;
 }
 

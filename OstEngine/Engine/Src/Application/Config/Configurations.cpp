@@ -4,7 +4,8 @@
 #include "OstEngine/Application/Config/CmdArgs.h"
 #include "Application/Config/ConfigFile.h"
 
-#include "OstEngine/Debug/Logging.h"
+#include <OstLog/LoggerAPI.h>
+#include <OstLog/ILogger.h>
 
 // ------------------------------------------------------------
 
@@ -58,21 +59,17 @@ void ost::SConfig::ParseCommandLine(const SCommandArgs& args)
 {
 	auto iteration = [&](const auto& cN, const auto& cV) { ForeachConfigValue(cN, cV); };
 
-	LOG_INFO("Configurations: Parsing command line");
-	LOG_BEGIN_SCOPE();
+	GetLogger().INFO("Configurations: Parsing command line");
 	args.ForeachCommand(iteration);
-	LOG_END_SCOPE();
 }
 
 // ------------------------------------------------------------
 
 void ost::SConfig::ParseConfigFile(const CConfigFile& cfg)
 {
-	LOG_INFO("Configurations: Parsing config file", );
-	LOG_BEGIN_SCOPE();
+	GetLogger().INFO("Configurations: Parsing config file");
 	auto iteration = [&](const auto& cN, const auto& cV) { ForeachConfigValue(cN, cV); };
 	cfg.ForeachConfigValue(iteration);
-	LOG_END_SCOPE();
 }
 
 // ------------------------------------------------------------
@@ -120,28 +117,28 @@ void ost::SConfig::ForeachConfigValue(const std::string& n, const std::string& v
 		{
 			bool& vRef = *static_cast<bool*>(valuePtr);
 			::SetFlag(v, vRef);
-			LOG_INFO("{}: {}", n, vRef);
+			GetLogger().INFO("{}: {}", n, vRef);
 			break;
 		}
 		case EValueType::Integer:
 		{
 			int32& vRef = *static_cast<int32*>(valuePtr);
 			::SetInt(v, vRef);
-			LOG_INFO("{}: {}", n, vRef);
+			GetLogger().INFO("{}: {}", n, vRef);
 			break;
 		}
 		case EValueType::Float:
 		{
 			float32& vRef = *static_cast<float32*>(valuePtr);
 			::SetFloat(v, vRef);
-			LOG_INFO("{}: {}", n, vRef);
+			GetLogger().INFO("{}: {}", n, vRef);
 			break;
 		}
 		case EValueType::String:
 		{
 			std::string& vRef = *static_cast<std::string*>(valuePtr);
 			::SetString(v, vRef);
-			LOG_INFO("{}: {}", n, vRef);
+			GetLogger().INFO("{}: {}", n, vRef);
 			break;
 		}
 		}
