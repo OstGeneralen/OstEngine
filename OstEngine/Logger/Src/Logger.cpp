@@ -138,6 +138,11 @@ void ost::log::CLogger::FlushQueue()
 			}
 		}
 	}
+
+	for (auto ptrSink : _sinks)
+	{
+		ptrSink->Flush();
+	}
 }
 
 // ------------------------------------------------------------

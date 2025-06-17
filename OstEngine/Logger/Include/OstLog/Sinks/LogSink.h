@@ -26,6 +26,7 @@ namespace ost
 			CLogSink(ELogLevel levels = LOG_LEVELS_DEFAULT);
 			virtual ~CLogSink() = default;
 			virtual void Log(const SLogMessage& msg) = 0;
+			virtual void Flush() {}
 
 		public:
 			bool FilterLogLevel(ELogLevel level) const;
