@@ -5,6 +5,7 @@
 #include <OstLog/OstLogger.h>
 #include <OstLog/MessageFormatter.h>
 #include <OstLog/Sinks/ConsoleLogSink.h>
+#include <OstLog/Sinks/FileLogSink.h>
 #include <OstLog/LoggerLifetimeManagement.h>
 
 // ------------------------------------------------------------
@@ -16,9 +17,11 @@ OSTLOG_LOG_INSTANCE(AppLog);
 int main(int argc, char* argv[])
 {
     ost::log::CConsoleLogSink consoleLogSink;
-    
+    ost::log::CFileLogSink fileLogSink{ "Logs/", "OstEngineLog" };
+
     auto& logger = GetLogger();
     OstLogger_RegisterLogSink(consoleLogSink);
+    OstLogger_RegisterLogSink(fileLogSink);
 
     ost::SCommandArgs cmdArgs(argv, argc);
     ost::SEngineInitializationOptions initializeOpt = {};
