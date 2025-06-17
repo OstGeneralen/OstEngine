@@ -36,7 +36,8 @@ extern "C" LOGGER_API void OstLogger_AwaitShutdown()
 // ------------------------------------------------------------
 
 ost::log::CLogger::CLogger()
-	: _messageQueue{64}
+	: _messageQueue{LOG_THREAD_SIZE}
+	, _threadSemaphore{0}
 {
 }
 
@@ -62,6 +63,7 @@ void ost::log::CLogger::SignalShutdown()
 {
 	GetLogger().DEBUG("OstLogger SHUTDOWN SIGNAL RECEIVED");
 	_shutdownFlag = true;
+	_threadSemaphore.release(); // Notify the semaphore to ensure we actually exit out of the execution loop
 }
 
 // ------------------------------------------------------------
@@ -80,6 +82,7 @@ void ost::log::CLogger::AwaitShutdown()
 void ost::log::CLogger::Log(const SLogMessage& msg)
 {
 	_messageQueue.Push(msg);
+	_threadSemaphore.release();
 }
 
 // ------------------------------------------------------------
@@ -89,6 +92,8 @@ void ost::log::CLogger::LoggingRun()
 	SLogMessage poppedMessage;
 	while (!_shutdownFlag)
 	{
+		_threadSemaphore.acquire();
+
 		if (_messageQueue.Pop(poppedMessage))
 		{
 			for (auto ptrSink : _sinks)

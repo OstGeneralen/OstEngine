@@ -8,6 +8,7 @@
 #include <vector>
 #include <thread>
 #include <atomic>
+#include <semaphore>
 
 // ------------------------------------------------------------
 
@@ -30,8 +31,11 @@ namespace ost
 			void FlushQueue();
 
 		private:
+			constexpr static size_t LOG_THREAD_SIZE = 128;
+
 			CMessageQueue _messageQueue;
 			std::thread _logThread;
+			std::counting_semaphore<LOG_THREAD_SIZE> _threadSemaphore;
 			std::atomic_bool _shutdownFlag{ false };
 			std::vector<CLogSink*> _sinks;
 		};
