@@ -6,6 +6,7 @@ target_compile_definitions(Player PRIVATE "GAME_MODULE_DLL_NAME=\"${GAME_MODULE_
 target_sources(Player PRIVATE "Src/Main.cpp")
 
 target_link_libraries(Player PRIVATE Engine)
+target_link_libraries(Player PRIVATE Logger)
 
 target_include_directories(Engine PUBLIC 
     "${CMAKE_CURRENT_SOURCE_DIR}/Include"
