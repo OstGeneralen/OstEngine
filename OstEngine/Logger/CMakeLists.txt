@@ -2,7 +2,7 @@ add_library(Logger SHARED)
 
 target_sources(Logger PRIVATE 
     "Src/Logger.cpp"
- "Include/OstLog/LogLevel.h" "Include/OstLog/LogMessage.h" "Src/Internal/MessageQueue.h" "Src/Internal/MessageQueue.cpp" "Include/OstLog/ILogger.h" "Include/OstLog/Sinks/LogSink.h" "Src/LogSink.cpp" "Include/OstLog/MessageFormatter.h" "Src/MessageFormatter.cpp" "Include/OstLog/OstLogger.h" "Include/OstLog/LoggerLifetimeManagement.h" "Include/OstLog/LoggingInstance.h" "Src/LoggingInstance.cpp" "Include/OstLog/Sinks/ConsoleLogSink.h" "Src/Sinks/ConsoleLogSink.cpp")
+ "Include/OstLog/LogLevel.h" "Include/OstLog/LogMessage.h" "Src/Internal/MessageQueue.h" "Src/Internal/MessageQueue.cpp" "Include/OstLog/ILogger.h" "Include/OstLog/Sinks/LogSink.h" "Src/LogSink.cpp" "Include/OstLog/MessageFormatter.h" "Src/MessageFormatter.cpp" "Include/OstLog/OstLogger.h" "Include/OstLog/LoggerLifetimeManagement.h" "Include/OstLog/LoggingInstance.h" "Src/LoggingInstance.cpp" "Include/OstLog/Sinks/ConsoleLogSink.h" "Src/Sinks/ConsoleLogSink.cpp" "Include/OstLog/Sinks/FileLogSink.h" "Src/Sinks/FileLogSink.cpp")
 
 if(WIN32)
     target_compile_definitions(Logger PRIVATE "LOGGER_DLL_BUILD")
