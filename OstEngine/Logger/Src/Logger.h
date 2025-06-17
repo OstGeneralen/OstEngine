@@ -24,9 +24,9 @@ namespace ost
 			void Run();
 			void SignalShutdown();
 			void AwaitShutdown();
+			void Log(const SLogMessage& msg) override;
 		
 		private:
-			void Log(const SLogMessage& msg) override;
 			void LoggingRun();
 			void FlushQueue();
 

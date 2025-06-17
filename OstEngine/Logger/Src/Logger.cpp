@@ -1,5 +1,6 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #include "Logger.h"
+#include <OstLog/LoggingInstance.h>
 
 // ------------------------------------------------------------
 // API Functions
@@ -35,6 +36,8 @@ extern "C" LOGGER_API void OstLogger_AwaitShutdown()
 // CLogger Definition
 // ------------------------------------------------------------
 
+ost::log::CLogInstance OstLogInstance("OstLog");
+
 ost::log::CLogger::CLogger()
 	: _messageQueue{LOG_THREAD_SIZE}
 	, _threadSemaphore{0}
@@ -54,14 +57,14 @@ void ost::log::CLogger::Run()
 {
 	_shutdownFlag = false;
 	_logThread = std::thread(&CLogger::LoggingRun, this);
-	GetLogger().INFO("OstLogger INITIALIZED, RUNNING ON LOGGING THREAD");
+	OstLogInstance.Log(ELogLevel::Info, "INITIALIZED, RUNNING ON LOGGING THREAD");
 }
 
 // ------------------------------------------------------------
 
 void ost::log::CLogger::SignalShutdown()
 {
-	GetLogger().DEBUG("OstLogger SHUTDOWN SIGNAL RECEIVED");
+	OstLogInstance.Log(ELogLevel::Debug, "SHUTDOWN SIGNAL RECEIVED");
 	_shutdownFlag = true;
 	_threadSemaphore.release(); // Notify the semaphore to ensure we actually exit out of the execution loop
 }
@@ -70,9 +73,9 @@ void ost::log::CLogger::SignalShutdown()
 
 void ost::log::CLogger::AwaitShutdown()
 {
-	GetLogger().INFO("OstLogger AWAITING SHUTDOWN");
+	OstLogInstance.Log(ELogLevel::Info, "AWAITING SHUTDOWN");
 	_logThread.join();
-	GetLogger().INFO("OstLogger SHUTDOWN COMPLETE");
+	OstLogInstance.Log(ELogLevel::Info, "SHUTDOWN COMPLETE");
 	// Manually run one last log to confirm the shutdown
 	FlushQueue();
 }

@@ -10,3 +10,5 @@
 #include "OstLog/LoggerApi.h"
 #include "OstLog/ILogger.h"
 #include "OstLog/LoggingInstance.h"
+
+using OstLogLevel = ost::log::ELogLevel;

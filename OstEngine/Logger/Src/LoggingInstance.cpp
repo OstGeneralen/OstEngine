@@ -21,7 +21,7 @@ void ost::log::CLogInstance::BeginLogScope( const SLogMessage& scopeRootMsg)
 
 // ------------------------------------------------------------
 
-void ost::log::CLogInstance::EndLogScope()
+void ost::log::CLogInstance::EndScope()
 {
 	_currentMessageScope = nullptr;
 	Log(_currentMessage);
