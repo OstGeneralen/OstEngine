@@ -1,4 +1,4 @@
-// OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
+// OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 
 // ------------------------------------------------------------
 // OstLogger - LogSink
