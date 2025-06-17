@@ -9,7 +9,7 @@
 
 // ------------------------------------------------------------
 
-CREATE_LOG_INSTANCE(AppLog);
+OSTLOG_LOG_INSTANCE(AppLog);
 
 #include <iostream>
 #include <iomanip>
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 
     OstLogger_RunLogger();
 
-    LOG_INFO(AppLog, "Application bootflow initialized. Creating engine instance");
+    AppLog.Log(OstLogLevel::Info, "Application bootflow initialized. Creating engine instance");
     ost::IOstEngine* engineInstancePtr = ost::CreateEngineInstance(initializeOpt);
     engineInstancePtr->Run();
     ost::ReleaseEngineInstance(&engineInstancePtr);

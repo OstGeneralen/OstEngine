@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <format>
 
-CREATE_LOG_INSTANCE(OstEngineLog);
+OSTLOG_LOG_INSTANCE(OstEngineLog);
 
 // ------------------------------------------------------------
 
@@ -43,9 +43,9 @@ int ost::COstEngine::Run()
 		_renderContext.EndFrame();
 	}
 
-	LOG_DEBUG(OstEngineLog, "Shutdown requested, cleaning up render context");
+	OstEngineLog.Log(OstLogLevel::Debug, "Shutdown requested, cleaning up render context");
 	_renderContext.Release(&_appWindow);
-	LOG_INFO(OstEngineLog, "Cleanup complete, shutting down ost engine");
+	OstEngineLog.Log(OstLogLevel::Info, "Cleanup complete, shutting down ost engine");
 	return 0;
 }
 
