@@ -20,6 +20,7 @@ namespace ost
 		{
 		public:
 			CLogger();
+			~CLogger();
 			void RegisterSink(CLogSink& sink);
 			void Run();
 			void SignalShutdown();
@@ -32,7 +33,7 @@ namespace ost
 
 		private:
 			constexpr static size_t LOG_THREAD_SIZE = 128;
-
+			bool _running{ false };
 			CMessageQueue _messageQueue;
 			std::thread _logThread;
 			std::counting_semaphore<LOG_THREAD_SIZE> _threadSemaphore;

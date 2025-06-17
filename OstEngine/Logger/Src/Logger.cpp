@@ -46,6 +46,17 @@ ost::log::CLogger::CLogger()
 
 // ------------------------------------------------------------
 
+ost::log::CLogger::~CLogger()
+{
+	if (_running)
+	{
+		SignalShutdown();
+		AwaitShutdown();
+	}
+}
+
+// ------------------------------------------------------------
+
 void ost::log::CLogger::RegisterSink(CLogSink& sink)
 {
 	_sinks.push_back(&sink);
@@ -56,6 +67,7 @@ void ost::log::CLogger::RegisterSink(CLogSink& sink)
 void ost::log::CLogger::Run()
 {
 	_shutdownFlag = false;
+	_running = true;
 	_logThread = std::thread(&CLogger::LoggingRun, this);
 	OstLogInstance.Log(ELogLevel::Info, "INITIALIZED, RUNNING ON LOGGING THREAD");
 }
@@ -78,6 +90,7 @@ void ost::log::CLogger::AwaitShutdown()
 	OstLogInstance.Log(ELogLevel::Info, "SHUTDOWN COMPLETE");
 	// Manually run one last log to confirm the shutdown
 	FlushQueue();
+	_running = false;
 }
 
 // ------------------------------------------------------------
