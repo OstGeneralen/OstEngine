@@ -50,7 +50,14 @@ namespace
 
 	void SetString(const std::string& valueStr, std::string& valueRef)
 	{
-		valueRef = valueStr;
+		if (valueStr.starts_with('\"') && valueStr.ends_with('\"'))
+		{
+			valueRef = valueStr.substr(1, valueStr.length() - 2);
+		}
+		else
+		{
+			valueRef = valueStr;
+		}
 	}
 }
 
