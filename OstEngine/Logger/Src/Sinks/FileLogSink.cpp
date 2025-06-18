@@ -1,12 +1,15 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #include "OstLog/Sinks/FileLogSink.h"
 #include "OstLog/MessageFormatter.h"
+#include "OstLog/LoggingInstance.h"
 
 #include <format>
 #include <chrono>
 #include <fstream>
 
 namespace chr = std::chrono;
+
+OSTLOG_LOG_INSTANCE(FileSinkLog);
 
 // ------------------------------------------------------------
 
@@ -35,7 +38,10 @@ ost::log::CFileLogSink::CFileLogSink(std::filesystem::path logFileDirectory, std
 
 	const std::string logFileName = std::vformat("{} {} {}.log", std::make_format_args(logFileMainName, ymdStr, hmsStr));
 
-	_activeLogFilePath = logFileDirectory.string() + logFileName;
+	_activeLogFilePath = logFileDirectory / logFileName;
+	std::string outputStr = _activeLogFilePath.string();
+	std::replace(outputStr.begin(), outputStr.end(), '\\', '/');
+	FileSinkLog.Log(ELogLevel::Info, "File logger will write to '{}'",  outputStr);
 	std::ofstream cfileStr(_activeLogFilePath); // Thank you C++ for not providing an easy std::filesystem::create_file
 	cfileStr.close();
 }
