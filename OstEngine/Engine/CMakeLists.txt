@@ -2,20 +2,23 @@
 # ======================================================================
 # Sources
 add_library(Engine STATIC 
-    "Src/Engine.cpp" 
     "Src/Game/GameModuleInternal.cpp"
     
-    
     "Src/Application/Config/CmdArgs.cpp" 
-    "Src/Application/Window/Window.cpp" 
-    "Src/EngineInterface.cpp"
-    "Src/Rendering/RenderingContext.cpp"
      
+    "Src/Engine.cpp" 
+    
        
     "Src/Application/Config/Configurations.cpp" 
-    "Src/Application/Config/ConfigFile.h" 
     "Src/Application/Config/ConfigFile.cpp"
- "Include/OstEngine/Core/Input/InputHandler.h" "Src/Core/Input/InputSystem.h" "Src/Core/Input/InputSystem.cpp")
+    "Src/Subsystem/Input/InputSystem.cpp" 
+    "Src/Application/Application.cpp" 
+    "Src/Subsystem/Assets/AssetsSystem.cpp" 
+    "Src/Utility/PathUtils.cpp"   
+    "Src/Application/Window/AppWindow.cpp" 
+    "Src/Rendering/TextureRenderTarget.cpp" 
+    "Src/Subsystem/Input/InputEventProvider.cpp"
+)
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
 target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" )    # Interface includes
