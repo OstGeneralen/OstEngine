@@ -2,22 +2,22 @@
 # ======================================================================
 # Sources
 add_library(Engine STATIC 
+    "Src/Engine.cpp" 
     "Src/Game/GameModuleInternal.cpp"
     
+    "Src/Application/Application.cpp" 
     "Src/Application/Config/CmdArgs.cpp" 
-     
-    "Src/Engine.cpp" 
-    
-       
     "Src/Application/Config/Configurations.cpp" 
     "Src/Application/Config/ConfigFile.cpp"
-    "Src/Subsystem/Input/InputSystem.cpp" 
-    "Src/Application/Application.cpp" 
-    "Src/Subsystem/Assets/AssetsSystem.cpp" 
-    "Src/Utility/PathUtils.cpp"   
     "Src/Application/Window/AppWindow.cpp" 
+     
     "Src/Rendering/TextureRenderTarget.cpp" 
+    
+    "Src/Subsystem/Assets/AssetsSystem.cpp" 
+    "Src/Subsystem/Input/InputSystem.cpp" 
     "Src/Subsystem/Input/InputEventProvider.cpp"
+    
+    "Src/Utility/PathUtils.cpp"   
 )
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
