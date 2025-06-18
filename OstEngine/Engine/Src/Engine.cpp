@@ -1,52 +1,50 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-
 #include "Engine.h"
+#include "Application/Config/ConfigFile.h"
 
 #include <OstLog/OstLogger.h>
 
-#include "Application/Config/ConfigFile.h"
-
-#include <unordered_map>
-#include <format>
 
 OSTLOG_LOG_INSTANCE(OstEngineLog);
 
 // ------------------------------------------------------------
 
-ost::COstEngine::COstEngine(SEngineInitializationOptions initOptions)
+void ost::COstEngine::InitSystem_Assets(const std::filesystem::path& assetsRootPath)
 {
-	// 1. Initialize engine config from options
-	_configuration.ParseCommandLine(*initOptions.CmdLineArgs);
-	// To load the config file, we want to use any potential path config from the args provided
-	std::string assetDirectory = _configuration.AssetsDir;
-	if (!assetDirectory.ends_with('/')) assetDirectory.append("/");
-	CConfigFile configFile(assetDirectory + "EngineConfig.cfg");
-	_configuration.ParseConfigFile(configFile);
-
-	// 2. Initialize rendering
-	_appWindow = _renderContext.Initialize(_configuration.WindowWidth, _configuration.WindowHeight);
-	_appWindow->BindInputSystem(&_inputSystem);
-	
-	// 3. Load game module here
-
+	_assetsSystem.SetRootPath(assetsRootPath);
 }
 
 // ------------------------------------------------------------
-int ost::COstEngine::Run()
+
+void ost::COstEngine::InitSystem_Rendering(CTextureRenderTarget& engineRenderTarget)
 {
-	while (_appWindow->IsOpen())
-	{
-		_appWindow->ProcessEvents();
+}
 
-		_renderContext.BeginFrame();
+// ------------------------------------------------------------
 
-		_renderContext.EndFrame();
-	}
+void ost::COstEngine::InitSystem_Input(input::CInputEventProvider& eventProvider)
+{
+	eventProvider.BindInputSystem(_inputSystem);
+}
 
-	OstEngineLog.Log(OstLogLevel::Debug, "Shutdown requested, cleaning up render context");
-	_renderContext.Release(&_appWindow);
-	OstEngineLog.Log(OstLogLevel::Info, "Cleanup complete, shutting down ost engine");
-	return 0;
+// ------------------------------------------------------------
+
+ost::IAssetsSystem& ost::COstEngine::GetSystem_Assets()
+{
+	return _assetsSystem;
+}
+
+// ------------------------------------------------------------
+
+ost::input::IInputSystem& ost::COstEngine::GetSystem_Input()
+{
+	return _inputSystem;
+}
+
+// ------------------------------------------------------------
+
+void ost::COstEngine::EngineTick()
+{
 }
 
 // ------------------------------------------------------------
