@@ -1,5 +1,5 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#include "Core/Input/InputSystem.h"
+#include "Subsystem/Input/InputSystem.h"
 
 // ------------------------------------------------------------
 

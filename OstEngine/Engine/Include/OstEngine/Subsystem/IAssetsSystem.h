@@ -1,16 +1,16 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-
-#include <OstEngine/Application/Application.h>
-
+#pragma once
+#include <filesystem>
 
 // ------------------------------------------------------------
 
-int main(int argc, char* argv[])
+namespace ost
 {
-    ost::SCommandArgs cmdArgs(argv, argc);
-    ost::CApplication app{ cmdArgs };
-    app.Run();
-    return 0;
+	class IAssetsSystem
+	{
+	public:
+		virtual std::filesystem::path MakeAssetPath(const std::filesystem::path& assetRelPath) const = 0;
+	};
 }
 
 // ------------------------------------------------------------

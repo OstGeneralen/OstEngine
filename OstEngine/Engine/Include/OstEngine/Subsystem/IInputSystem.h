@@ -17,7 +17,7 @@ namespace ost
 			COUNT,
 		};
 
-		class IInputHandler
+		class IInputSystem
 		{
 		public:
 			virtual bool KeyDown( EKey k ) const = 0;

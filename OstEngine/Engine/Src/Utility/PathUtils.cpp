@@ -1,16 +1,13 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-
-#include <OstEngine/Application/Application.h>
-
+#include "OstEngine/Utility/PathUtils.h"
 
 // ------------------------------------------------------------
 
-int main(int argc, char* argv[])
+std::string ost::path_utils::GetNormalizedPathString(const std::filesystem::path& path)
 {
-    ost::SCommandArgs cmdArgs(argv, argc);
-    ost::CApplication app{ cmdArgs };
-    app.Run();
-    return 0;
+	std::string pathStr = path.string();
+	std::replace(pathStr.begin(), pathStr.end(), '\\', '/');
+	return std::move(pathStr);
 }
 
 // ------------------------------------------------------------

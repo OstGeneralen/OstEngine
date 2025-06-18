@@ -1,16 +1,22 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
+#pragma once
 
-#include <OstEngine/Application/Application.h>
-
+#include "OstEngine/BasicTypes.h"
 
 // ------------------------------------------------------------
 
-int main(int argc, char* argv[])
+namespace ost
 {
-    ost::SCommandArgs cmdArgs(argv, argc);
-    ost::CApplication app{ cmdArgs };
-    app.Run();
-    return 0;
+	class IRenderTarget
+	{
+	public:
+		virtual ~IRenderTarget() = default;
+
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
+		virtual uint32 GetW() const = 0;
+		virtual uint32 GetH() const = 0;
+	};
 }
 
 // ------------------------------------------------------------

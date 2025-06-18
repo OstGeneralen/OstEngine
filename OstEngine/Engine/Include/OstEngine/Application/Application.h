@@ -1,17 +1,26 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <OstEngine/Subsystem/IAssetsSystem.h>
-#include <OstEngine/Subsystem/IInputSystem.h>
+#include "OstEngine/Application/Config/CmdArgs.h"
+#include "OstEngine/EngineInterface.h"
+
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class IOstEngine
+	class CAppWindow;
+	class COstEngine;
+
+	class CApplication
 	{
 	public:
-		virtual IAssetsSystem& GetSystem_Assets() = 0;
-		virtual input::IInputSystem& GetSystem_Input() = 0;
+		CApplication( const SCommandArgs& cmdArgs );
+		~CApplication();
+
+		void Run();
+	private:
+		COstEngine* _enginePtr;
+		CAppWindow* _appWindowPtr;
 	};
 }
 

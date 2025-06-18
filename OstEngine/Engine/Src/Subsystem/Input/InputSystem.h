@@ -1,7 +1,7 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
 #include "OstEngine/BasicTypes.h"
-#include "OstEngine/Core/Input/InputHandler.h"
+#include "OstEngine/Subsystem/IInputSystem.h"
 #include <bitset>
 
 // ------------------------------------------------------------
@@ -10,7 +10,7 @@ namespace ost
 {
 	namespace input
 	{
-		class CInputSystem : public IInputHandler
+		class CInputSystem : public IInputSystem
 		{
 		public:
 			void NewInputFrame();

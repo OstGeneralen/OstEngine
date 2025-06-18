@@ -1,23 +1,22 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-
-#include "OstEngine/Application/Window/Window.h"
+#include "Subsystem/Input/InputSystem.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class CRenderingContext
+	namespace input
 	{
-	public:
-		CWindow* Initialize( int w, int h );
-		void Release(CWindow** ppWindow);
-
-		void BeginFrame();
-		void EndFrame();
-	private:
-		void* _windowPtr;
-	};
+		class CInputEventProvider
+		{
+		public:
+			void BindInputSystem(CInputSystem& is);
+			void ReportKeyboardInput(int kc, int sc, int a, int m);
+		private:
+			CInputSystem* _inputSystemPtr{ nullptr };
+		};
+	}
 }
 
 // ------------------------------------------------------------

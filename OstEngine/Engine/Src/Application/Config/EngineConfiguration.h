@@ -12,6 +12,7 @@ namespace ost
 		int32 WindowHeight = 900;
 		std::string ModuleName = "";
 		std::string AssetsDir = "";
+		std::string ProjectName = "OstEngineProj";
 
 		SEngineConfigurations()
 		{
@@ -25,6 +26,8 @@ namespace ost
 			Register("GameModule", ModuleName);
 
 			Register("-assets-directory", AssetsDir);
+
+			Register("ProjectName", ProjectName);
 		}
 	};
 }
