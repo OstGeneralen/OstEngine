@@ -1,5 +1,5 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#include "OstEngine/Math/MathOperations.h"
+#include "OstEngine/Math/CommonMath.h"
 #include <cmath>
 
 // ------------------------------------------------------------
