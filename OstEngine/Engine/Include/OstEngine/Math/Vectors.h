@@ -14,6 +14,13 @@ namespace ost
 	using Vector2f = TVector2<float32>;
 	using Vector3f = TVector3<float32>;
 	using Vector4f = TVector4<float32>;
+
+	// ------------------------------------------------------------
+	// Double
+	// ------------------------------------------------------------
+	using Vector2d = TVector2<float64>;
+	using Vector3d = TVector3<float64>;
+	using Vector4d = TVector4<float64>;
 	
 	// ------------------------------------------------------------
 	// Signed integer
