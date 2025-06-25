@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "OstLog/LoggerApi.h"
-#include "OstLog/ILogger.h"
-#include "OstLog/LoggingInstance.h"
+#include "OstLog/Logging/LoggerApi.h"
+#include "OstLog/Logging/ILogger.h"
+#include "OstLog/Logging/LoggingInstance.h"
 
 using OstLogLevel = ost::log::ELogLevel;

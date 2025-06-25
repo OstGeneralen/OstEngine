@@ -1,6 +1,6 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #include "Logger.h"
-#include <OstLog/LoggingInstance.h>
+#include <OstLog/Logging/LoggingInstance.h>
 
 // ------------------------------------------------------------
 // API Functions

@@ -1,6 +1,6 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include "OstLog/LoggerApi.h"
+#include "OstLog/APIDefinition.h"
 
 // ------------------------------------------------------------
 

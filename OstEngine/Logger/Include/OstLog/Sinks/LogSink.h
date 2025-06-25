@@ -11,8 +11,8 @@
 // Sinks should be registered before the Logger's run is called
 // ------------------------------------------------------------
 #pragma once
-#include "OstLog/LoggerApi.h"
-#include "OstLog/LogMessage.h"
+#include "OstLog/Logging/LoggerApi.h"
+#include "OstLog/Logging/LogMessage.h"
 
 // ------------------------------------------------------------
 

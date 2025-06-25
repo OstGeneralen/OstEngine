@@ -1,6 +1,6 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include "OstLog/LogMessage.h"
+#include "OstLog/APIDefinition.h"
 
 // ------------------------------------------------------------
 
@@ -8,14 +8,12 @@ namespace ost
 {
 	namespace log
 	{
-		class ILogger
-		{
-		public: // INTERFACE
-			virtual ~ILogger() = default;
-			virtual void Log(const SLogMessage& msg) = 0;
-		};
+		class ILogger;
 	}
 }
+
+extern "C" LOGGER_API ost::log::ILogger& GetLogger();
+
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

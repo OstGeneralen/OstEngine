@@ -7,7 +7,7 @@
 
 // ------------------------------------------------------------
 
-#include <OstLog/LoggerLifetimeManagement.h>
+#include <OstLog/CoreAPI.h>
 #include <OstLog/Sinks/FileLogSink.h>
 #include <OstLog/Sinks/ConsoleLogSink.h>
 

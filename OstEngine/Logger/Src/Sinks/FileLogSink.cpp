@@ -1,7 +1,7 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #include "OstLog/Sinks/FileLogSink.h"
 #include "OstLog/MessageFormatter.h"
-#include "OstLog/LoggingInstance.h"
+#include "OstLog/Logging/LoggingInstance.h"
 
 #include <format>
 #include <chrono>

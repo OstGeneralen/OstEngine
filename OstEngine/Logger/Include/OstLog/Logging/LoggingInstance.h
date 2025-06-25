@@ -1,7 +1,8 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include "OstLog/LoggerApi.h"
-#include "OstLog/LogMessage.h"
+#include "OstLog/Logging/LoggerApi.h"
+#include "OstLog/Logging/LogMessage.h"
+#include "OstLog/Logging/LogScope.h"
 #include <string>
 
 // ------------------------------------------------------------
@@ -19,10 +20,8 @@ namespace ost
 		public:
 			CLogInstance(std::string instanceName);
 
-			void EndScope();
-
 			template<typename ... TFmt>
-			void LogScoped(ELogLevel lvl, std::format_string<TFmt...> fmtStr, TFmt&&... fmtArgs)
+			SLogScope ScopedLog(ELogLevel lvl, std::format_string<TFmt...> fmtStr, TFmt&&... fmtArgs)
 			{
 				SLogMessage msg;
 				msg.Level = lvl;
@@ -32,8 +31,7 @@ namespace ost
 				msg.MessageFormatter = [fmtStr, ...args = std::forward<TFmt>(fmtArgs)]() mutable {
 					return std::format(fmtStr, std::forward<TFmt>(args)...);
 					};
-
-				BeginLogScope(msg);
+				return std::move(SLogScope(msg));
 			}
 
 			template<typename ... TFmt>
@@ -52,7 +50,6 @@ namespace ost
 
 		private:
 			void Log(const SLogMessage& msg);
-			void BeginLogScope(const SLogMessage& scopeRootMsg);
 
 			const std::string _instanceName;
 			SLogMessage _currentMessage;

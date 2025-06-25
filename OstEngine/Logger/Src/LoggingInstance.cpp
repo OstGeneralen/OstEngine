@@ -1,6 +1,6 @@
 // OstLogger - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#include "OstLog/LoggingInstance.h"
-#include "OstLog/ILogger.h"
+#include "OstLog/Logging/LoggingInstance.h"
+#include "OstLog/Logging/ILogger.h"
 
 // ------------------------------------------------------------
 
@@ -9,23 +9,6 @@ ost::log::CLogInstance::CLogInstance(std::string instanceName)
 	, _currentMessage{}
 	, _currentMessageScope{nullptr}
 {
-}
-
-// ------------------------------------------------------------
-
-void ost::log::CLogInstance::BeginLogScope( const SLogMessage& scopeRootMsg)
-{
-	_currentMessage = scopeRootMsg;
-	_currentMessageScope = &_currentMessage;
-}
-
-// ------------------------------------------------------------
-
-void ost::log::CLogInstance::EndScope()
-{
-	_currentMessageScope = nullptr;
-	Log(_currentMessage);
-	_currentMessage = {};
 }
 
 // ------------------------------------------------------------

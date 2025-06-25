@@ -14,7 +14,7 @@
 // ------------------------------------------------------------
 
 #pragma once
-#include "OstLog/LogMessage.h"
+#include "OstLog/Logging/LogMessage.h"
 
 #include <atomic>
 

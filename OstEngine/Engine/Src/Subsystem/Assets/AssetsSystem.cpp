@@ -18,9 +18,8 @@ void ost::CAssetsSystem::SetRootPath(const std::filesystem::path& rootPath)
 {
 	if (std::filesystem::exists(rootPath) == false)
 	{
-		AssetsSystemLog.LogScoped(OstLogLevel::Warning, "The provided root path does not exist, no assets will be found");
-		AssetsSystemLog.Log(OstLogLevel::Warning,  "{}", path_utils::GetNormalizedPathString(rootPath));
-		AssetsSystemLog.EndScope();
+		auto scope = AssetsSystemLog.ScopedLog(OstLogLevel::Warning, "The provided root path does not exist, no assets will be found");
+		scope.Log("{}", path_utils::GetNormalizedPathString(rootPath));
 		_assetsRootPath.clear();
 		return;
 	}
