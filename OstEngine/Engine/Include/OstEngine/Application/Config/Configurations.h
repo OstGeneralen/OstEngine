@@ -33,7 +33,7 @@ namespace ost
 		enum class EValueType { Flag, Integer, Float, String };
 		struct SValue { EValueType vT; void* vP; };
 		
-		void ForeachConfigValue(const std::string& nStr, const std::string& vStr, ost::log::SLogScope& logScope);
+		void ForeachConfigValue(const std::string& nStr, const std::string& vStr);
 
 		std::unordered_map<std::string, SValue> _registeredValues;
 	};

@@ -15,8 +15,12 @@ namespace ost
 {
 	namespace log
 	{
+		struct SLogScope;
+
 		class LOGGER_API CLogInstance
 		{
+			friend SLogScope;
+
 		public:
 			CLogInstance(std::string instanceName);
 
@@ -31,7 +35,7 @@ namespace ost
 				msg.MessageFormatter = [fmtStr, ...args = std::forward<TFmt>(fmtArgs)]() mutable {
 					return std::format(fmtStr, std::forward<TFmt>(args)...);
 					};
-				return std::move(SLogScope(msg));
+				return std::move(SLogScope(msg, this));
 			}
 
 			template<typename ... TFmt>
@@ -50,10 +54,8 @@ namespace ost
 
 		private:
 			void Log(const SLogMessage& msg);
-
 			const std::string _instanceName;
-			SLogMessage _currentMessage;
-			SLogMessage* _currentMessageScope{ nullptr };
+			SLogScope* _activeScope;
 		};
 
 	}

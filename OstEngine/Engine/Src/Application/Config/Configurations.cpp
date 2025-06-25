@@ -66,7 +66,7 @@ namespace
 void ost::SConfig::ParseCommandLine(const SCommandArgs& args)
 {
 	auto scope = CfgLog.ScopedLog(OstLogLevel::Info, "Parsing command line");
-	auto iteration = [&](const auto& cN, const auto& cV) { ForeachConfigValue(cN, cV, scope); };
+	auto iteration = [&](const auto& cN, const auto& cV) { ForeachConfigValue(cN, cV); };
 	args.ForeachCommand(iteration);
 }
 
@@ -75,7 +75,7 @@ void ost::SConfig::ParseCommandLine(const SCommandArgs& args)
 void ost::SConfig::ParseConfigFile(const CConfigFile& cfg)
 {
 	ost::log::SLogScope scope = CfgLog.ScopedLog(OstLogLevel::Info, "Parsing config file");
-	auto iteration = [&](const auto& cN, const auto& cV) { ForeachConfigValue(cN, cV, scope); };
+	auto iteration = [&](const auto& cN, const auto& cV) { ForeachConfigValue(cN, cV); };
 	cfg.ForeachConfigValue(iteration);
 }
 
@@ -109,7 +109,7 @@ void ost::SConfig::Register(const std::string& config, std::string& value)
 
 // ------------------------------------------------------------
 
-void ost::SConfig::ForeachConfigValue(const std::string& n, const std::string& v, ost::log::SLogScope& logScope)
+void ost::SConfig::ForeachConfigValue(const std::string& n, const std::string& v)
 {
 	auto cfIT = _registeredValues.find(n);
 
@@ -124,28 +124,28 @@ void ost::SConfig::ForeachConfigValue(const std::string& n, const std::string& v
 		{
 			bool& vRef = *static_cast<bool*>(valuePtr);
 			::SetFlag(v, vRef);
-			logScope.Log("{}: {}", n, vRef);
+			CfgLog.Log(OstLogLevel::Info, "{}: {}", n, vRef);
 			break;
 		}
 		case EValueType::Integer:
 		{
 			int32& vRef = *static_cast<int32*>(valuePtr);
 			::SetInt(v, vRef);
-			logScope.Log("{}: {}", n, vRef);
+			CfgLog.Log(OstLogLevel::Info, "{}: {}", n, vRef);
 			break;
 		}
 		case EValueType::Float:
 		{
 			float32& vRef = *static_cast<float32*>(valuePtr);
 			::SetFloat(v, vRef);
-			logScope.Log("{}: {}", n, vRef);
+			CfgLog.Log(OstLogLevel::Info, "{}: {}", n, vRef);
 			break;
 		}
 		case EValueType::String:
 		{
 			std::string& vRef = *static_cast<std::string*>(valuePtr);
 			::SetString(v, vRef);
-			logScope.Log("{}: {}", n, vRef);
+			CfgLog.Log(OstLogLevel::Info, "{}: {}", n, vRef);
 			break;
 		}
 		}

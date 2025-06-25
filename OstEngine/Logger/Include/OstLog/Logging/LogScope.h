@@ -35,10 +35,12 @@ namespace ost
 				_rootMessage.SubMessages.push_back(msg);
 			}
 
+			void Log(const SLogMessage& msg);
+
 		private:
-			SLogScope(SLogMessage rootMessage);
+			SLogScope(SLogMessage rootMessage, CLogInstance* instancePtr);
+			CLogInstance* _instancePtr;
 			SLogMessage _rootMessage;
-			bool _isValid;
 		};
 	}
 }

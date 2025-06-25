@@ -6,8 +6,7 @@
 
 ost::log::CLogInstance::CLogInstance(std::string instanceName)
 	: _instanceName(instanceName)
-	, _currentMessage{}
-	, _currentMessageScope{nullptr}
+	, _activeScope{nullptr}
 {
 }
 
@@ -15,13 +14,13 @@ ost::log::CLogInstance::CLogInstance(std::string instanceName)
 
 void ost::log::CLogInstance::Log(const SLogMessage& msg)
 {
-	if (_currentMessageScope == nullptr)
+	if (_activeScope != nullptr)
 	{
-		GetLogger().Log(msg);
+		_activeScope->Log(msg);
 	}
 	else
 	{
-		_currentMessageScope->SubMessages.push_back(msg);
+		GetLogger().Log(msg);
 	}
 }
 
