@@ -18,7 +18,11 @@ add_library(Engine STATIC
     "Src/Subsystem/Input/InputEventProvider.cpp"
     
     "Src/Utility/PathUtils.cpp"   
-)
+    
+    "Src/Math/CommonMath.cpp" 
+    "Src/Math/Units/Radians.cpp" 
+    "Src/Math/Units/Degrees.cpp" 
+ "Include/OstEngine/Math/Matrices/Mat4x4.h" "Include/OstEngine/Math/Matrices/Mat3x3.h")
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
 target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" )    # Interface includes
