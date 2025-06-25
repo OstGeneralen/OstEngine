@@ -28,10 +28,10 @@ ost::Degrees::Degrees(const Radians& d)
 
 // ------------------------------------------------------------
 
-ost::Degrees::operator Radians() const
-{
-	return Radians{ _value * math::constants::DEG_TO_RAD<float32> };
-}
+//ost::Degrees::operator Radians() const
+//{
+//	return Radians{ _value * math::constants::DEG_TO_RAD<float32> };
+//}
 
 // ------------------------------------------------------------
 
@@ -44,7 +44,7 @@ ost::float32 ost::Degrees::Get() const
 
 bool ost::Degrees::operator==(Degrees d)
 {
-	return num_util::AreEqual<float32>(_value, r._value);
+	return num_util::AreEqual<float32>(_value, d._value);
 }
 
 // ------------------------------------------------------------

@@ -12,10 +12,10 @@ namespace ost
 	{
 		Degrees();
 		Degrees(float32 v);
-		Degrees(const Radians& d);
-		Degrees(const Degrees& r) = default;
+		Degrees(const Radians& r);
+		Degrees(const Degrees&) = default;
 
-		operator Radians() const;
+		//operator Radians() const;
 		float32 Get() const;
 
 		Degrees& operator=(const Degrees&) = default;

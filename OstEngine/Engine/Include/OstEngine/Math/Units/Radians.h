@@ -13,9 +13,9 @@ namespace ost
 		Radians();
 		Radians(float32 v);
 		Radians(const Degrees& d);
-		Radians(const Radians& r) = default;
+		Radians(const Radians&) = default;
 
-		operator Degrees() const;
+		//operator Degrees() const;
 		float32 Get() const;
 
 		Radians& operator=(const Radians&) = default;

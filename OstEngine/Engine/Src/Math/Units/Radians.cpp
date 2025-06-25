@@ -28,10 +28,10 @@ ost::Radians::Radians(const Degrees& d)
 
 // ------------------------------------------------------------
 
-ost::Radians::operator Degrees() const
-{
-	return Degrees{ _value * math::constants::RAD_TO_DEG<float32> };
-}
+//ost::Radians::operator Degrees() const
+//{
+//	return Degrees{ _value * math::constants::RAD_TO_DEG<float32> };
+//}
 
 // ------------------------------------------------------------
 
