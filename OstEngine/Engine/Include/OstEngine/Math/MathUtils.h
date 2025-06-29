@@ -8,12 +8,6 @@
 
 namespace ost
 {
-	template<typename T>
-	concept FloatingPointType = std::is_same<ost::float32, T>::value || std::is_same<ost::float64, T>::value;
-
-	template<typename T>
-	concept NumericType = std::is_same<ost::int32, T>::value || std::is_same<ost::uint32, T>::value || FloatingPointType<T>;
-
 	namespace num_util
 	{
 		constexpr static float32 flt32Tolerance = 0.0001f;
