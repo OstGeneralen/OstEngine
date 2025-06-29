@@ -26,14 +26,6 @@ namespace ost
 		{
 		}
 
-		TVector4& operator=(const TVector3<T>& v, T w)
-		{
-			X = v.X;
-			Y = v.Y;
-			Z = v.Z;
-			W = w;
-			return *this;
-		}
 		TVector4& operator=(const TVector3<T>& v)
 		{
 			X = v.X;
@@ -46,10 +38,10 @@ namespace ost
 
 		bool operator==(const TVector4& r) const
 		{
-			return NumericEquality::AreEqual<T>(X, r.X)
-				&& NumericEquality::AreEqual<T>(Y, r.Y)
-				&& NumericEquality::AreEqual<T>(Z, r.Z)
-				&& NumericEquality::AreEqual<T>(W, r.W);
+			return num_util::AreEqual<T>(X, r.X)
+				&& num_util::AreEqual<T>(Y, r.Y)
+				&& num_util::AreEqual<T>(Z, r.Z)
+				&& num_util::AreEqual<T>(W, r.W);
 		}
 
 		TVector4 operator+(const TVector4& r) const

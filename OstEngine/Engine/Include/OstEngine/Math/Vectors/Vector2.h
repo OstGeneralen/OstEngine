@@ -26,8 +26,8 @@ namespace ost
 
 		bool operator==(const TVector2& r) const
 		{
-			return NumericEquality::AreEqual<T>(X, r.X)
-				&& NumericEquality::AreEqual<T>(Y, r.Y);
+			return num_util::AreEqual<T>(X, r.X)
+				&& num_util::AreEqual<T>(Y, r.Y);
 		}
 
 		TVector2 operator+(const TVector2& r) const
