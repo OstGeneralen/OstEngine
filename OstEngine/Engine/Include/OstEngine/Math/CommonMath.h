@@ -2,6 +2,7 @@
 #pragma once
 #include "OstEngine/BasicTypes.h"
 #include "OstEngine/Math/Units/Radians.h"
+#include "OstEngine/Math/Units/Degrees.h"
 
 // ------------------------------------------------------------
 
