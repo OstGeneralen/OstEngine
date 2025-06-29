@@ -25,7 +25,7 @@ add_library(Engine STATIC
     "Include/OstEngine/BasicTypes.h"
     "Include/OstEngine/Math/Matrices/Mat4x4.h" 
     "Include/OstEngine/Math/Matrices/Mat3x3.h"
-    "Include/OstEngine/Math/Quaternion.h"
+    "Include/OstEngine/Math/Quaternion/Quaternion.h"
     )
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
