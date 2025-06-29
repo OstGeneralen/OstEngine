@@ -3,6 +3,7 @@
 #include "OstEngine/Math/CommonMath.h"
 #include "OstEngine/Math/Vectors.h"
 #include "OstEngine/Math/Matrices.h"
+#include "OstEngine/Math/Quaternion.h"
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
