@@ -4,7 +4,7 @@
 #include "OstEngine/Math/MathUtils.h"
 #include "OstEngine/Math/CommonMath.h"
 
-#include "OstEngine/Math/Vectors/Vector2.h"
+#include "OstEngine/Math/Structures/Vector2.h"
 
 // ------------------------------------------------------------
 

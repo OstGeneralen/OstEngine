@@ -1,7 +1,7 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include "OstEngine/Math/Matrices/Mat3x3.h"
-#include "OstEngine/Math/Matrices/Mat4x4.h"
+#include "OstEngine/Math/Structures/Mat3x3.h"
+#include "OstEngine/Math/Structures/Mat4x4.h"
 
 // ------------------------------------------------------------
 

@@ -1,8 +1,9 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include "OstEngine/Math/Vectors/Vector2.h"
-#include "OstEngine/Math/Vectors/Vector3.h"
-#include "OstEngine/Math/Vectors/Vector4.h"
+#include "OstEngine/BasicTypes.h"
+#include "OstEngine/Math/Structures/Vector2.h"
+#include "OstEngine/Math/Structures/Vector3.h"
+#include "OstEngine/Math/Structures/Vector4.h"
 
 // ------------------------------------------------------------
 

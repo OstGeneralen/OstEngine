@@ -23,9 +23,9 @@ add_library(Engine STATIC
     "Src/Math/Units/Radians.cpp" 
     "Src/Math/Units/Degrees.cpp" 
     "Include/OstEngine/BasicTypes.h"
-    "Include/OstEngine/Math/Matrices/Mat4x4.h" 
-    "Include/OstEngine/Math/Matrices/Mat3x3.h"
-    "Include/OstEngine/Math/Quaternion/Quaternion.h"
+    "Include/OstEngine/Math/Structures/Mat4x4.h" 
+    "Include/OstEngine/Math/Structures/Mat3x3.h"
+    "Include/OstEngine/Math/Structures/Quaternion.h"
     )
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes

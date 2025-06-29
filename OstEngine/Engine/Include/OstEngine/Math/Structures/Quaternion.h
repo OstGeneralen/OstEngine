@@ -4,8 +4,8 @@
 
 #include "OstEngine/Math/CommonMath.h"
 #include "OstEngine/Math/MathUtils.h"
-#include "OstEngine/Math/Matrices/Mat4x4.h"
-#include "OstEngine/Math/Vectors/Vector3.h"
+#include "OstEngine/Math/Structures/Mat4x4.h"
+#include "OstEngine/Math/Structures/Vector3.h"
 #include "OstEngine/Math/Units/Radians.h"
 
 namespace ost
