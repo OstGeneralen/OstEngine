@@ -31,11 +31,11 @@ add_library(Engine STATIC
     "Include/OstEngine/Math/Transform.h"
     
     # OBJECT SYSTYEM
+    "Include/OstEngine/Game/ObjectSystem/StableIndexedType.h"
     "Include/OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h"
-    "Include/OstEngine/Game/ObjectSystem/Internal/StableIndexedType.h" 
     "Include/OstEngine/Game/ObjectSystem/Internal/StableIndex.h" 
     "Src/Game/ObjectSystem/Internal/StableIndexedTypeContainer.cpp"
-)
+ )
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
 target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" )    # Interface includes

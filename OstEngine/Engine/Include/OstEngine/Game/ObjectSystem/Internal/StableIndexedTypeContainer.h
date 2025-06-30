@@ -1,9 +1,8 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
 #include <OstEngine/BasicTypes.h>
-
 #include <OstEngine/Game/ObjectSystem/Internal/StableIndex.h>
-#include <OstEngine/Game/ObjectSystem/Internal/StableIndexedType.h>
+#include <OstEngine/Game/ObjectSystem/StableIndexedType.h>
 
 #include <vector>
 #include <queue>
@@ -12,8 +11,6 @@
 
 namespace ost
 {
-	template<typename T> concept TypeWithStableID = std::is_base_of_v<IStableIndexedType, T>;
-
 	// ------------------------------------------------------------
 	// Base Type
 	// ------------------------------------------------------------
@@ -40,7 +37,7 @@ namespace ost
 	// ------------------------------------------------------------
 	// Templated Type (actual qualified)
 	// ------------------------------------------------------------
-	template<TypeWithStableID T>
+	template<StableIDMemberType T>
 	class TStableIndexedTypeContainer final : public CStableIndexedTypeContainerBase
 	{
 	public:
@@ -48,7 +45,8 @@ namespace ost
 		T& Emplace(TArgs&& ... args)
 		{
 			const SStableIndex stableID = GenerateStableIndex();
-			_denseList.emplace_back(args...);
+			T& created = _denseList.emplace_back(args...);
+			created._stableIndex = stableID;
 			StableToDenseIndexMap(stableID, _denseList.size() - 1);
 			return _denseList[GetDenseIndex(stableID)];
 		}
@@ -62,7 +60,7 @@ namespace ost
 			{
 				// Swap the removed instance with the last of the dense list
 				// We do this to maintain O(1) removal
-				const SStableIndex movedElemStableIdx = static_cast<IStableIndexedType&>(_denseList.back()).GetStableIdx();
+				const SStableIndex movedElemStableIdx = _denseList.back()._stableIndex;
 				std::swap(_denseList.back(), _denseList[removedInstanceDenseIdx]);
 
 				// Since we have now moved a maintained element, update its mapped dense index
@@ -76,9 +74,7 @@ namespace ost
 
 		void Remove(T* ptrObj)
 		{
-			// This cast isn't strictly necessary but helps intellisense track
-			// the type so leaving it here since it's static anyway
-			Remove(static_cast<IStableIndexedType*>(ptrObj)->GetStableIdx());
+			Remove(ptrObj->_stableIndex);
 		}
 
 		T& Get(SStableIndex stableIndex)
