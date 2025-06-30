@@ -26,7 +26,8 @@ add_library(Engine STATIC
     "Include/OstEngine/Math/Structures/Mat4x4.h" 
     "Include/OstEngine/Math/Structures/Mat3x3.h"
     "Include/OstEngine/Math/Structures/Quaternion.h"
-    )
+    "Include/OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h"
+     "Include/OstEngine/Game/ObjectSystem/Internal/StableIndexedType.h" "Include/OstEngine/Game/ObjectSystem/Internal/StableIndex.h" "Src/Game/ObjectSystem/Internal/StableIndexedTypeContainer.cpp")
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
 target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" )    # Interface includes
