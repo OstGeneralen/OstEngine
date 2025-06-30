@@ -19,6 +19,57 @@ ost::CTransform::CTransform()
 
 // ------------------------------------------------------------
 
+ost::CTransform::CTransform(CTransform&& t) noexcept
+	: _translation{ std::move(t._translation) }
+	, _rotation{ std::move(t._rotation) }
+	, _scale{ std::move(t._scale) }
+	, _parent{ t._parent }
+	, _children{ std::move(t._children) }
+	, _localMatrix{ std::move(t._localMatrix) }
+	, _worldMatrix{ std::move(t._worldMatrix) }
+	, _localDirty{ t._localDirty }
+	, _worldDirty{ t._worldDirty }
+{
+	if (_parent != nullptr)
+	{
+		for (auto& childOfParent : _parent->_children)
+		{
+			if (childOfParent == &t)
+			{
+				childOfParent = this;
+				break;
+			}
+		}
+	}
+
+	for (auto childPtr : _children)
+	{
+		childPtr->_parent = this;
+	}
+	
+	t._parent = nullptr;
+	t._children.clear();
+}
+
+// ------------------------------------------------------------
+
+ost::CTransform::~CTransform()
+{
+	if (_parent != nullptr)
+	{
+		_parent->RemoveChild(*this);
+	}
+
+	// Any children becomes root objects now
+	for (auto childPtr : _children)
+	{
+		childPtr->_parent = nullptr;
+		childPtr->MarkWorldDirty();
+	}
+}
+
+// ------------------------------------------------------------
+
 ost::CTransform* ost::CTransform::GetParent()
 {
 	return _parent;
@@ -113,7 +164,7 @@ ost::Quaternion32f ost::CTransform::GetRotation(ELocality loc) const
 	{
 		// Getter over member access to ensure dirty check and recalc
 		auto& worldMat = GetMatrix(ELocality::World);
-		
+
 		const Vector4f c1v4 = worldMat.GetCol1();
 		const Vector4f c2v4 = worldMat.GetCol2();
 		const Vector4f c3v4 = worldMat.GetCol3();

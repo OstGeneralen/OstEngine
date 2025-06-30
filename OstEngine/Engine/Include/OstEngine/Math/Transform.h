@@ -19,6 +19,8 @@ namespace ost
 	public:
 		CTransform();
 		CTransform(const CTransform&) = default;
+		CTransform(CTransform&& t) noexcept;
+		~CTransform();
 
 		CTransform* GetParent();
 		const CTransform* GetParent() const;
