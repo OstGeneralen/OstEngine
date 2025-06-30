@@ -12,6 +12,25 @@ namespace ost
 	class TMatrix4x4
 	{
 	public:
+		static TMatrix4x4 CreateTranslation(const TVector3<T>& t)
+		{
+			TMatrix4x4<T> mat;
+			mat.Elements[12] = t.X;
+			mat.Elements[13] = t.Y;
+			mat.Elements[14] = t.Z;
+			return mat;
+		}
+
+		static TMatrix4x4 CreateScale(const TVector3<T>& s)
+		{
+			TMatrix4x4<T> mat;
+			mat.Elements[0] = s.X;
+			mat.Elements[5] = s.Y;
+			mat.Elements[10] = s.Z;
+			return mat;
+		}
+
+	public:
 		T Elements[4 * 4];
 
 		TMatrix4x4();
