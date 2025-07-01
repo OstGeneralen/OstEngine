@@ -17,6 +17,8 @@ namespace ost
 		constexpr bool IsValid() const { return _idValue != STABLE_ID_INVALID; }
 		void Invalidate() { _idValue = STABLE_ID_INVALID; }
 
+		SStableIndex& operator=(const SStableIndex&) = default;
+
 		bool operator==(const SStableIndex&) const = default;
 		auto operator<=>(const SStableIndex&) const = default;
 

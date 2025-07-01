@@ -46,7 +46,7 @@ namespace ost
 		{
 			const SStableIndex stableID = GenerateStableIndex();
 			T& created = _denseList.emplace_back(args...);
-			created._stableIndex = stableID;
+			created.SetStableIndex(stableID);
 			StableToDenseIndexMap(stableID, _denseList.size() - 1);
 			return _denseList[GetDenseIndex(stableID)];
 		}
@@ -60,7 +60,7 @@ namespace ost
 			{
 				// Swap the removed instance with the last of the dense list
 				// We do this to maintain O(1) removal
-				const SStableIndex movedElemStableIdx = _denseList.back()._stableIndex;
+				const SStableIndex movedElemStableIdx = _denseList.back().GetStableIndex();
 				std::swap(_denseList.back(), _denseList[removedInstanceDenseIdx]);
 
 				// Since we have now moved a maintained element, update its mapped dense index
@@ -74,7 +74,7 @@ namespace ost
 
 		void Remove(T* ptrObj)
 		{
-			Remove(ptrObj->_stableIndex);
+			Remove(ptrObj->GetStableIndex());
 		}
 
 		T& Get(SStableIndex stableIndex)
@@ -90,7 +90,6 @@ namespace ost
 	private:
 		std::vector<T> _denseList;
 	};
-
 }
 
 // ------------------------------------------------------------
