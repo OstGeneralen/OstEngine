@@ -27,6 +27,8 @@ namespace ost
 		SStableIndex GenerateStableIndex();
 		void RecycleStableIndex(SStableIndex id);
 
+		void AssignStableIndexValue(SStableIndexInternalContainer& assignTo, SStableIndex assignVal);
+
 		DenseIndex_t GetDenseIndex(SStableIndex stable) const;
 		void StableToDenseIndexMap(SStableIndex stableIndex, DenseIndex_t denseIndex);
 	private:
@@ -46,7 +48,7 @@ namespace ost
 		{
 			const SStableIndex stableID = GenerateStableIndex();
 			T& created = _denseList.emplace_back(args...);
-			created.SetStableIndex(stableID);
+			AssignStableIndexValue(created.GetSIDXContainer(), stableID);
 			StableToDenseIndexMap(stableID, _denseList.size() - 1);
 			return _denseList[GetDenseIndex(stableID)];
 		}

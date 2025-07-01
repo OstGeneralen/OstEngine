@@ -26,6 +26,13 @@ void ost::CStableIndexedTypeContainerBase::RecycleStableIndex(SStableIndex id)
 
 // ------------------------------------------------------------
 
+void ost::CStableIndexedTypeContainerBase::AssignStableIndexValue(SStableIndexInternalContainer& assignTo, SStableIndex assignVal)
+{
+	assignTo._index = assignVal;
+}
+
+// ------------------------------------------------------------
+
 ost::CStableIndexedTypeContainerBase::DenseIndex_t ost::CStableIndexedTypeContainerBase::GetDenseIndex(SStableIndex stable) const
 {
 	assert(stable.IsValid() && "Invalid stable index is not allowed");
