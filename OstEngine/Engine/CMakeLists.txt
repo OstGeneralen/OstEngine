@@ -33,12 +33,12 @@ add_library(Engine STATIC
     # OBJECT SYSTYEM
     "Include/OstEngine/Game/ObjectSystem/StableIndexedType.h"
     "Include/OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h"
-    "Include/OstEngine/Game/ObjectSystem/Internal/StableIndex.h" 
     "Src/Game/ObjectSystem/Internal/StableIndexedTypeContainer.cpp"
+    "Include/OstEngine/Game/ObjectSystem/Internal/StableIndex.h" 
     "Include/OstEngine/Game/ObjectSystem/ObjectSystem.h" 
     "Src/Game/ObjectSystem/ObjectSystem.cpp"   
-    "Include/OstEngine/Game/ObjectSystem/Internal/GameObjectHandle.h" 
-    "Src/Game/ObjectSystem/Internal/GameObjectHandle.cpp" 
+    "Include/OstEngine/Game/ObjectSystem/Objects/GameObjectHandle.h" 
+    "Src/Game/ObjectSystem/Objects/GameObjectHandle.cpp" 
 )
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes

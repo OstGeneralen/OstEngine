@@ -1,7 +1,7 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
 #include <OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h>
-#include <OstEngine/Game/ObjectSystem/GameObject.h>
+#include <OstEngine/Game/ObjectSystem/Objects/GameObject.h>
 
 // ------------------------------------------------------------
 
