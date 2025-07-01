@@ -5,6 +5,17 @@
 #include <OstEngine/ObjectSystem/Objects/GameObjectHandle.h>
 #include <OstEngine/ObjectSystem/Objects/GameObject.h>
 
+#include <OstLog/OstLogger.h>
+
+// ------------------------------------------------------------
+
+OSTLOG_LOG_INSTANCE(CompsLog);
+
+void ost::CComponentRegistry::FinalizeComponentTypeRegistration(ComponentTypeID_t tID, const char* cName)
+{
+	CompsLog.Log(OstLogLevel::Info, "COMPONENT REGISTRATION N: {} UID: {}", cName, tID);
+}
+
 // ------------------------------------------------------------
 
 ost::CComponentContainerBase* ost::CComponentRegistry::GetRegistryComponentTypeContainer(ComponentTypeID_t cTypeId)

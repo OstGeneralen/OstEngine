@@ -1,10 +1,11 @@
-add_library(${GAME_NAME} SHARED)
-
-file(GLOB_RECURSE GAME_SOURCES "Src/*.cpp")
-file(GLOB_RECURSE GAME_HEADERS "Include/*.h")
-target_sources(${GAME_NAME} PRIVATE ${GAME_SOURCES} ${GAME_HEADERS})
+add_library(${GAME_NAME} SHARED
+    "Src/GameInstance.cpp"
+    "Src/Game_GameModule.cpp"
+    "Include/GameInstance.h"
+)
 
 target_link_libraries(${GAME_NAME} PRIVATE Engine)
+target_link_libraries(${GAME_NAME} PRIVATE Logger)
 
 if(WIN32)
     string(TOUPPER ${GAME_NAME} UPPER_GAME_NAME)

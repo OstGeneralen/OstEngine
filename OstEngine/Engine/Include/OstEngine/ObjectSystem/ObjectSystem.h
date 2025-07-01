@@ -16,12 +16,15 @@ namespace ost
 	class CGameObjectSystem
 	{
 	public:
+		CGameObjectSystem();
+
 		SGameObjectHandle CreateObject();
 		void DestroyObject(SGameObjectHandle& handle);
 		
 		CGameObject& GetObject(const SGameObjectHandle& h);
 		const CGameObject& GetObject(const SGameObjectHandle& h) const;
 
+		CComponentRegistry& ComponentsRegistry();
 	private:
 		TStableIndexedTypeContainer<CGameObject> _objects;
 		CComponentRegistry _componentRegistry;

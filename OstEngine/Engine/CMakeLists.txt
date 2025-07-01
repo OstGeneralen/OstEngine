@@ -49,7 +49,9 @@ add_library(Engine STATIC
     "Src/ObjectSystem/Component/ComponentHandle.cpp" 
     "Src/ObjectSystem/Objects/GameObject.cpp" 
     "Src/ObjectSystem/Component/Component.cpp"   
-)
+
+    "Include/OstEngine/Game/Core/TransformComponent.h"
+ "Include/OstEngine/Game/OstEngineGameCore.h")
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
 target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" )    # Interface includes

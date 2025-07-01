@@ -9,7 +9,8 @@ namespace game
 	class CGameInstance : public ost::IGameInstance
 	{
 		std::string GameTitle() const override;
-		void Run() override;
+		void RegisterGameComponentTypes(ost::CComponentRegistry& registry) const override;
+		void Shutdown() override;
 	};
 }
 

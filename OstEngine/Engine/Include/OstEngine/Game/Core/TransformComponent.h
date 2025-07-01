@@ -1,20 +1,19 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <string>
-#include <OstEngine/ObjectSystem/Internal/ComponentRegistry.h>
-#include "OstEngine/Game/OstEngineGameCore.h"
+#include <OstEngine/ObjectSystem/Component/Component.h>
+#include <OstEngine/Math/Transform.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class IGameInstance
+	class CTransformComponent : public CComponent
 	{
 	public:
-		virtual ~IGameInstance() = default;
-		virtual std::string GameTitle() const = 0;
-		virtual void RegisterGameComponentTypes(CComponentRegistry& registry) const {}
-		virtual void Shutdown() = 0;
+		CTransformComponent() = default;
+		CTransformComponent(const CTransform& t) : Transform(t) {}
+
+		CTransform Transform;
 	};
 }
 

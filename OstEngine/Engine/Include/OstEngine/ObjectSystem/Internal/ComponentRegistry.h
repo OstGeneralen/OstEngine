@@ -21,12 +21,13 @@ namespace ost
 		void RegisterComponentType()
 		{
 			_registry[ComponentTypeID<T>] = std::make_unique<TStableIndexedTypeContainer<T>>();
+			FinalizeComponentTypeRegistration(ComponentTypeID<T>, typeid(T).name());
 		}
 
 		template<ComponentDerivedType T, typename ... TArgs>
 		SComponentHandle EmplaceComponent(SGameObjectHandle& onObject, TArgs&& ... args)
 		{
-			CComponentContainerBase* baseListPtr = GetComponentTypeList(ComponentTypeID<T>);
+			CComponentContainerBase* baseListPtr = GetRegistryComponentTypeContainer(ComponentTypeID<T>);
 			
 			assert(baseListPtr != nullptr && "Cannot emplace non-registered component type");
 
@@ -63,6 +64,8 @@ namespace ost
 		void DestroyComponent(SComponentHandle& h);
 
 	private:
+		void FinalizeComponentTypeRegistration(ComponentTypeID_t tID, const char* cName);
+
 		CComponentContainerBase* GetRegistryComponentTypeContainer(ComponentTypeID_t cTypeId);
 		SComponentHandle GenerateComponentHandle(SStableIndex stableId, ComponentTypeID_t ctId);
 		void AttachComponentToObject(SGameObjectHandle& hObject, const SComponentHandle& hComp, CComponent& compInstance);

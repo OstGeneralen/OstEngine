@@ -2,14 +2,27 @@
 #pragma once
 #include <OstEngine/ObjectSystem/ObjectSystem.h>
 #include <OstEngine/ObjectSystem/Objects/GameObjectHandle.h>
+#include <OstEngine/Game/Core/TransformComponent.h>
 
 #include <cassert>
+
+// ------------------------------------------------------------
+
+ost::CGameObjectSystem::CGameObjectSystem()
+{
+	// Register the core components
+	_componentRegistry.RegisterComponentType<CTransformComponent>();
+}
 
 // ------------------------------------------------------------
 
 ost::SGameObjectHandle ost::CGameObjectSystem::CreateObject()
 {
 	CGameObject& object = _objects.Emplace();
+	SGameObjectHandle objectHandle{ object.GetStableIndex(), *this };
+
+	_componentRegistry.EmplaceComponent<CTransformComponent>(objectHandle);
+
 	return SGameObjectHandle(object.GetStableIndex(), *this);
 }
 
@@ -38,6 +51,13 @@ const ost::CGameObject& ost::CGameObjectSystem::GetObject(const SGameObjectHandl
 {
 	assert(h.IsValid() && "Handle may not be invalid when getting object");
 	return _objects.Get(h._objectStableIndex);
+}
+
+// ------------------------------------------------------------
+
+ost::CComponentRegistry& ost::CGameObjectSystem::ComponentsRegistry()
+{
+	return _componentRegistry;
 }
 
 // ------------------------------------------------------------
