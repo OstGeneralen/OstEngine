@@ -50,7 +50,7 @@ namespace ost
 			T& created = _denseList.emplace_back(args...);
 			AssignStableIndexValue(created.GetSIDXContainer(), stableID);
 			StableToDenseIndexMap(stableID, _denseList.size() - 1);
-			return _denseList[GetDenseIndex(stableID)];
+			return created;
 		}
 
 		void Remove(SStableIndex stableIndex) override
