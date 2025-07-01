@@ -1,5 +1,5 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson(MIT License)
-#include <OstEngine/Game/ObjectSystem/Objects/GameObject.h>
+#include <OstEngine/ObjectSystem/Objects/GameObject.h>
 
 #include <algorithm>
 

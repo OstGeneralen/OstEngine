@@ -1,7 +1,7 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <OstEngine/Game/ObjectSystem/Component/Component.h>
-#include <OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h>
+#include <OstEngine/ObjectSystem/Component/Component.h>
+#include <OstEngine/ObjectSystem/Internal/StableIndexedTypeContainer.h>
 
 #include <unordered_map>
 #include <cassert>

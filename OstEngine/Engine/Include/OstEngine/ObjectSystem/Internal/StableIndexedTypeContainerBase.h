@@ -1,8 +1,8 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
 #include <OstEngine/BasicTypes.h>
-#include <OstEngine/Game/ObjectSystem/Internal/StableIndex.h>
-#include <OstEngine/Game/ObjectSystem/StableIndexedType.h>
+#include <OstEngine/ObjectSystem/Internal/StableIndex.h>
+#include <OstEngine/ObjectSystem/StableIndexedType.h>
 
 #include <vector>
 #include <queue>

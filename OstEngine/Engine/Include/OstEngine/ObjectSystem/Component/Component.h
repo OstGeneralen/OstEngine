@@ -1,8 +1,8 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <OstEngine/Game/ObjectSystem/Component/ComponentsCore.h>
-#include <OstEngine/Game/ObjectSystem/StableIndexedType.h>
-#include <OstEngine/Game/ObjectSystem/Objects/GameObjectHandle.h>
+#include <OstEngine/ObjectSystem/Component/ComponentsCore.h>
+#include <OstEngine/ObjectSystem/StableIndexedType.h>
+#include <OstEngine/ObjectSystem/Objects/GameObjectHandle.h>
 
 #include <concepts>
 #include <typeinfo>

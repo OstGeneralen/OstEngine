@@ -1,8 +1,8 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainerBase.h>
-#include <OstEngine/Game/ObjectSystem/Internal/ComponentContainer.h>
-#include <OstEngine/Game/ObjectSystem/Component/ComponentsCore.h>
+#include <OstEngine/ObjectSystem/Internal/StableIndexedTypeContainerBase.h>
+#include <OstEngine/ObjectSystem/Internal/ComponentContainer.h>
+#include <OstEngine/ObjectSystem/Component/ComponentsCore.h>
 
 #include <type_traits>
 

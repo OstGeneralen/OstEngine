@@ -1,7 +1,7 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#include <OstEngine/Game/ObjectSystem/Objects/GameObjectHandle.h>
+#include <OstEngine/ObjectSystem/Objects/GameObjectHandle.h>
 
-#include <OstEngine/Game/ObjectSystem/ObjectSystem.h>
+#include <OstEngine/ObjectSystem/ObjectSystem.h>
 
 // ------------------------------------------------------------
 

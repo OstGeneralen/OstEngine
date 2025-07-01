@@ -1,6 +1,6 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <OstEngine/Game/ObjectSystem/Internal/StableIndex.h>
+#include <OstEngine/ObjectSystem/Internal/StableIndex.h>
 
 // ------------------------------------------------------------
 

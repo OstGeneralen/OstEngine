@@ -1,6 +1,7 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#include <OstEngine/Game/ObjectSystem/Component/ComponentHandle.h>
-#include <OstEngine/Game/ObjectSystem/Internal/ComponentRegistry.h>
+#include <OstEngine/ObjectSystem/Component/ComponentHandle.h>
+
+#include <OstEngine/ObjectSystem/Internal/ComponentRegistry.h>
 
 // ------------------------------------------------------------
 
