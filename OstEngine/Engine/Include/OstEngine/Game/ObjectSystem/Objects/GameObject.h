@@ -10,7 +10,7 @@ namespace ost
 {
 	class CGameObject
 	{
-		STABLE_IDX_CLASS_TYPE(CGameObject)
+		STABLE_IDX_CLASS_TYPE
 	public:
 	};
 }
