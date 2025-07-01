@@ -31,6 +31,7 @@ namespace ost
 
 // ------------------------------------------------------------
 
+
 namespace std
 {
 	template<>
@@ -38,7 +39,7 @@ namespace std
 	{
 		std::size_t operator()(const ost::SStableIndex& id) const noexcept
 		{
-			return id.Get();
+			return hash<ost::uint64>{}(id.Get());
 		}
 	};
 }
