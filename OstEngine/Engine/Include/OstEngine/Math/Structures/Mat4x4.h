@@ -307,9 +307,9 @@ ost::TMatrix4x4<T> ost::TMatrix4x4<T>::GetFastInverse() const
 
 	// Again, each vector given here is a ROW of the 4x4 matrix
 	return TMatrix4x4{
-		{ invSubMatrix.Elements[0], invSubMatrix.Elements[3], invSubMatrix[6], transVec.X},
-		{ invSubMatrix.Elements[1], invSubMatrix.Elements[4], invSubMatrix[7], transVec.Y},
-		{ invSubMatrix.Elements[2], invSubMatrix.Elements[5], invSubMatrix[8], transVec.Z },
+		TVector4<T>{ invSubMatrix.Elements[0], invSubMatrix.Elements[3], invSubMatrix.Elements[6], transVec.X},
+		TVector4<T>{ invSubMatrix.Elements[1], invSubMatrix.Elements[4], invSubMatrix.Elements[7], transVec.Y},
+		TVector4<T>{ invSubMatrix.Elements[2], invSubMatrix.Elements[5], invSubMatrix.Elements[8], transVec.Z },
 		GetRow4() // Keep row4
 	};
 }
