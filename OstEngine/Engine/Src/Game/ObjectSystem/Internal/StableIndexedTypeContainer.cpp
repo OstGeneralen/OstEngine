@@ -4,7 +4,7 @@
 
 // ------------------------------------------------------------
 
-inline ost::SStableIndex ost::CStableIDTypeContainerBase::GenerateStableIndex()
+ost::SStableIndex ost::CStableIndexedTypeContainerBase::GenerateStableIndex()
 {
 	if (_recycledStableIDValues.empty() == false)
 	{
@@ -12,21 +12,21 @@ inline ost::SStableIndex ost::CStableIDTypeContainerBase::GenerateStableIndex()
 		_recycledStableIDValues.pop();
 		return stableIdx;
 	}
-
+	
 	_stableIDIndexList.emplace_back(0);
 	return SStableIndex{ _stableIDIndexList.size() - 1 };
 }
 
 // ------------------------------------------------------------
 
-void ost::CStableIDTypeContainerBase::RecycleStableIndex(SStableIndex id)
+void ost::CStableIndexedTypeContainerBase::RecycleStableIndex(SStableIndex id)
 {
 	_recycledStableIDValues.push(id.Get());
 }
 
 // ------------------------------------------------------------
 
-ost::CStableIDTypeContainerBase::DenseIndex_t ost::CStableIDTypeContainerBase::GetDenseIndex(SStableIndex stable) const
+ost::CStableIndexedTypeContainerBase::DenseIndex_t ost::CStableIndexedTypeContainerBase::GetDenseIndex(SStableIndex stable) const
 {
 	assert(stable.IsValid() && "Invalid stable index is not allowed");
 	return _stableIDIndexList[stable.Get()];
@@ -34,7 +34,7 @@ ost::CStableIDTypeContainerBase::DenseIndex_t ost::CStableIDTypeContainerBase::G
 
 // ------------------------------------------------------------
 
-void ost::CStableIDTypeContainerBase::StableToDenseIndexMap(SStableIndex stableIndex, DenseIndex_t denseIndex)
+void ost::CStableIndexedTypeContainerBase::StableToDenseIndexMap(SStableIndex stableIndex, DenseIndex_t denseIndex)
 {
 	_stableIDIndexList[stableIndex.Get()] = denseIndex;
 }
