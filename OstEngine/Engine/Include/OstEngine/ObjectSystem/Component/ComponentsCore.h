@@ -21,7 +21,7 @@ namespace ost
 	// ------------------------------------------------------------
 	// Templated ComponentTypeID_t unique ID value
 	// ------------------------------------------------------------
-	template< ComponentDerivedType T > constexpr static ComponentTypeID_t ComponentTypeID = typeid(T).hash_code();
+	template< ComponentDerivedType T > static ComponentTypeID_t ComponentTypeID = typeid(T).hash_code();
 }
 
 // ------------------------------------------------------------
