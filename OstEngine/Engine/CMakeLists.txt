@@ -32,13 +32,23 @@ add_library(Engine STATIC
     
     # OBJECT SYSTYEM
     "Include/OstEngine/Game/ObjectSystem/StableIndexedType.h"
-    "Include/OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h"
-    "Src/Game/ObjectSystem/Internal/StableIndexedTypeContainer.cpp"
     "Include/OstEngine/Game/ObjectSystem/Internal/StableIndex.h" 
+    "Include/OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h"
+    "Include/OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainerBase.h"
+    "Include/OstEngine/Game/ObjectSystem/Internal/ComponentContainer.h" 
+    "Include/OstEngine/Game/ObjectSystem/Internal/ComponentRegistry.h" 
     "Include/OstEngine/Game/ObjectSystem/ObjectSystem.h" 
-    "Src/Game/ObjectSystem/ObjectSystem.cpp"   
+    "Include/OstEngine/Game/ObjectSystem/Component/Component.h" 
+    "Include/OstEngine/Game/ObjectSystem/Component/ComponentsCore.h" 
+    "Include/OstEngine/Game/ObjectSystem/Component/ComponentHandle.h" 
     "Include/OstEngine/Game/ObjectSystem/Objects/GameObjectHandle.h" 
+    "Src/Game/ObjectSystem/Internal/StableIndexedTypeContainerBase.cpp"
+    "Src/Game/ObjectSystem/Internal/ComponentRegistry.cpp" 
+    "Src/Game/ObjectSystem/ObjectSystem.cpp"   
     "Src/Game/ObjectSystem/Objects/GameObjectHandle.cpp" 
+    "Src/Game/ObjectSystem/Component/ComponentHandle.cpp" 
+    "Src/Game/ObjectSystem/Objects/GameObject.cpp" 
+    "Src/Game/ObjectSystem/Component/Component.cpp"   
 )
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes

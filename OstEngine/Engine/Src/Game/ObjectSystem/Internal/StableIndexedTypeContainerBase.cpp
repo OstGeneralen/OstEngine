@@ -1,5 +1,5 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#include <OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h>
+#include <OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainerBase.h>
 #include <cassert>
 
 // ------------------------------------------------------------

@@ -2,6 +2,7 @@
 #pragma once
 #include <OstEngine/Game/ObjectSystem/Internal/StableIndexedTypeContainer.h>
 #include <OstEngine/Game/ObjectSystem/Objects/GameObject.h>
+#include <OstEngine/Game/ObjectSystem/Internal/ComponentRegistry.h>
 
 // ------------------------------------------------------------
 
@@ -23,6 +24,7 @@ namespace ost
 
 	private:
 		TStableIndexedTypeContainer<CGameObject> _objects;
+		CComponentRegistry _componentRegistry;
 	};
 }
 
