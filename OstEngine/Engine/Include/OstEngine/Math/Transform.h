@@ -22,6 +22,9 @@ namespace ost
 		CTransform(CTransform&& t) noexcept;
 		~CTransform();
 
+		CTransform& operator=(const CTransform&) = default;
+		CTransform& operator=(CTransform&& t) noexcept;
+
 		CTransform* GetParent();
 		const CTransform* GetParent() const;
 
