@@ -76,7 +76,8 @@ namespace ost
 
 		void TickAll() override
 		{
-			if constexpr (TTickableOstComponentType<T>)
+			// Optionally invoke tick only on component types that implements a tick function
+			if constexpr (TTickableOstComponentType<T>) 
 			{
 				for (auto& c : _denseList)
 				{

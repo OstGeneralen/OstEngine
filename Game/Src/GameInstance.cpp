@@ -19,7 +19,6 @@ void game::CGameInstance::RegisterGameComponents(ost::CComponentTypeRegistry& re
 {
 }
 #include <OstEngine/Game/Core/TransformComponent.h>
-#include <OstEngine/Game/Core/NameComponent.h>
 
 void game::CGameInstance::OnLoad()
 {
@@ -27,7 +26,6 @@ void game::CGameInstance::OnLoad()
 	auto obj = scene->CreateObject("Test object");
 	auto obj2 = scene->CreateObject("Wooo");
 	obj->GetComponent<ost::CTransformComponent>();
-	obj->AddComponent<ost::CNameComponent>();
 }
 
 void game::CGameInstance::OnTick()

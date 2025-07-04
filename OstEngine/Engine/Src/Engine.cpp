@@ -4,7 +4,6 @@
 #include "Game/GameModuleInternal.h"
 
 #include <OstEngine/Game/Core/TransformComponent.h>
-#include <OstEngine/Game/Core/NameComponent.h>
 
 #include <OstLog/OstLogger.h>
 
@@ -17,9 +16,9 @@ OSTLOG_LOG_INSTANCE(OstEngineLog);
 ost::COstEngine::COstEngine()
 {
 	CComponentTypeRegistry& registry = _objectSystem.GetComponentTypeRegistry();
+
 	// Register engine components
 	registry.Register<CTransformComponent>();
-	registry.Register<CNameComponent>();
 }
 
 // ------------------------------------------------------------

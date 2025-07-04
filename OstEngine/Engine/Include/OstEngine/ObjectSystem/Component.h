@@ -6,7 +6,7 @@
 
 #define OST_COMPONENT(Type) public:										\
 	constexpr static std::string_view OstCompReflection_Name = #Type;	\
-	using ReflectionData = ost::TReflectionData<Type>;				\
+	using ReflectionData = ost::TReflectionData<Type>;					\
 
 namespace ost
 {
