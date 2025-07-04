@@ -1,27 +1,39 @@
 #include "GameInstance.h"
-#include <OstEngine/ObjectSystem/Component/Component.h>
 #include <OstLog/OstLogger.h>
 
 #include <iostream>
 
 OSTLOG_LOG_INSTANCE(GameLog);
 
-class MyCustomComponent : public ost::CComponent
+class CTestComponent
 {
-};
 
+};
 
 std::string game::CGameInstance::GameTitle() const
 {
 	return "My Ost Engine Game";
 }
 
-void game::CGameInstance::RegisterGameComponentTypes(ost::CComponentRegistry& registry) const
+void game::CGameInstance::RegisterGameComponents(ost::CComponentTypeRegistry& registry)
 {
-	registry.RegisterComponentType<MyCustomComponent>();
+}
+#include <OstEngine/Game/Core/TransformComponent.h>
+#include <OstEngine/Game/Core/NameComponent.h>
+
+void game::CGameInstance::OnLoad()
+{
+	auto scene = pEngine->NewScene(true);
+	auto obj = scene->CreateObject("Test object");
+	auto obj2 = scene->CreateObject("Wooo");
+	obj->GetComponent<ost::CTransformComponent>();
+	obj->AddComponent<ost::CNameComponent>();
 }
 
-void game::CGameInstance::Shutdown()
+void game::CGameInstance::OnTick()
 {
-	GameLog.Log(OstLogLevel::Info, "Shutdown invoked on game");
+}
+
+void game::CGameInstance::OnUnload()
+{
 }

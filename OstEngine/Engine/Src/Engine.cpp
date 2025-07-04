@@ -3,10 +3,24 @@
 #include "Application/Config/ConfigFile.h"
 #include "Game/GameModuleInternal.h"
 
+#include <OstEngine/Game/Core/TransformComponent.h>
+#include <OstEngine/Game/Core/NameComponent.h>
+
 #include <OstLog/OstLogger.h>
 
 
+
 OSTLOG_LOG_INSTANCE(OstEngineLog);
+
+// ------------------------------------------------------------
+
+ost::COstEngine::COstEngine()
+{
+	CComponentTypeRegistry& registry = _objectSystem.GetComponentTypeRegistry();
+	// Register engine components
+	registry.Register<CTransformComponent>();
+	registry.Register<CNameComponent>();
+}
 
 // ------------------------------------------------------------
 
@@ -18,7 +32,8 @@ void ost::COstEngine::LoadGameModule(const char* moduleName)
 		_moduleLoader.BindEngineInterface(this);
 		OstEngineLog.Log(OstLogLevel::Info, "Loaded game module '{}' and created instance", std::string(moduleName));
 
-		_gameInstancePtr->RegisterGameComponentTypes(_objectSystem.ComponentsRegistry());
+		_gameInstancePtr->RegisterGameComponents(_objectSystem.GetComponentTypeRegistry());
+		_gameInstancePtr->OnLoad();
 		
 	}
 	else
@@ -63,8 +78,23 @@ ost::input::IInputSystem& ost::COstEngine::GetSystem_Input()
 
 // ------------------------------------------------------------
 
+ost::TPtr<ost::CScene> ost::COstEngine::NewScene(bool makeActive)
+{
+	return _objectSystem.CreateScene(makeActive);
+}
+
+// ------------------------------------------------------------
+
+void ost::COstEngine::SetActiveScene(TPtr<CScene> scene)
+{
+	_objectSystem.SetActiveScene(scene);
+}
+
+// ------------------------------------------------------------
+
 void ost::COstEngine::EngineTick()
 {
+	_objectSystem.TickActiveScene();
 }
 
 // ------------------------------------------------------------
@@ -74,7 +104,7 @@ void ost::COstEngine::Shutdown()
 	if (_moduleLoader.HasLoadedModule())
 	{
 		OstEngineLog.Log(OstLogLevel::Info, "Shutting down with active game module. Releasing module.");
-		_gameInstancePtr->Shutdown();
+		_gameInstancePtr->OnUnload();
 		_moduleLoader.ReleaseGameModuleInstance(&_gameInstancePtr);
 	}
 }

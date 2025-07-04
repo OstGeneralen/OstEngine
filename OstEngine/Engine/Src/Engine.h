@@ -13,8 +13,8 @@
 #include "Subsystem/Input/InputSystem.h"
 #include "Subsystem/Input/InputEventProvider.h"
 #include "Subsystem/Assets/AssetsSystem.h"
-#include <OstEngine/ObjectSystem/ObjectSystem.h>
 
+#include <ObjectSystem/ObjectSystem.h>
 // ------------------------------------------------------------
 
 namespace ost
@@ -24,6 +24,8 @@ namespace ost
 	class COstEngine : public IOstEngine
 	{
 	public:
+		COstEngine();
+
 		void LoadGameModule(const char* moduleName);
 
 		void InitSystem_Assets(const std::filesystem::path& assetsRootPath);
@@ -37,6 +39,10 @@ namespace ost
 	public: // IOstEngine
 		IAssetsSystem& GetSystem_Assets() override;
 		input::IInputSystem& GetSystem_Input() override;
+
+		TPtr<CScene> NewScene(bool makeActive) override;
+		void SetActiveScene(TPtr<CScene> scene) override;
+
 	
 	private:
 		ostengine_internal::CGameModuleLoader _moduleLoader;
@@ -44,7 +50,7 @@ namespace ost
 
 		input::CInputSystem _inputSystem;
 		CAssetsSystem _assetsSystem;
-		CGameObjectSystem _objectSystem;
+		CObjectSystem _objectSystem;
 	};
 }
 

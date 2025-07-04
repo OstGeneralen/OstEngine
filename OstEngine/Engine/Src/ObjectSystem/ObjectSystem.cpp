@@ -1,63 +1,48 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#pragma once
-#include <OstEngine/ObjectSystem/ObjectSystem.h>
-#include <OstEngine/ObjectSystem/Objects/GameObjectHandle.h>
-#include <OstEngine/Game/Core/TransformComponent.h>
-
-#include <cassert>
+#include <ObjectSystem/ObjectSystem.h>
 
 // ------------------------------------------------------------
 
-ost::CGameObjectSystem::CGameObjectSystem()
+ost::CComponentTypeRegistry& ost::CObjectSystem::GetComponentTypeRegistry()
 {
-	// Register the core components
-	_componentRegistry.RegisterComponentType<CTransformComponent>();
+	return _componentTypeRegistry;
 }
 
 // ------------------------------------------------------------
 
-ost::SGameObjectHandle ost::CGameObjectSystem::CreateObject()
+ost::TPtr<ost::CScene> ost::CObjectSystem::CreateScene(bool makeActive)
 {
-	CGameObject& object = _objects.Emplace();
-	SGameObjectHandle objectHandle{ object.GetStableIndex(), *this };
+	if (makeActive)
+	{
+		_activeScene = _scenes.Emplace(_componentTypeRegistry);
+		return _activeScene;
+	}
 
-	_componentRegistry.EmplaceComponent<CTransformComponent>(objectHandle);
-
-	return SGameObjectHandle(object.GetStableIndex(), *this);
+	return _scenes.Emplace(_componentTypeRegistry);
 }
 
 // ------------------------------------------------------------
 
-void ost::CGameObjectSystem::DestroyObject(SGameObjectHandle& handle)
+void ost::CObjectSystem::SetActiveScene(TPtr<CScene> scene)
 {
-	_objects.Remove(handle._objectStableIndex);
-
-	// Invalidate the provided handle
-	handle._objectStableIndex.Invalidate();
-	handle._owningSystem = nullptr;
+	_activeScene = scene;
 }
 
 // ------------------------------------------------------------
 
-ost::CGameObject& ost::CGameObjectSystem::GetObject(const SGameObjectHandle& h)
+void ost::CObjectSystem::TickActiveScene()
 {
-	assert(h.IsValid() && "Handle may not be invalid when getting object");
-	return _objects.Get(h._objectStableIndex);
+	if (_activeScene.Valid())
+	{
+		_activeScene->Tick();
+	}
 }
 
 // ------------------------------------------------------------
 
-const ost::CGameObject& ost::CGameObjectSystem::GetObject(const SGameObjectHandle& h) const
+void ost::CObjectSystem::SweepUnreferenced()
 {
-	assert(h.IsValid() && "Handle may not be invalid when getting object");
-	return _objects.Get(h._objectStableIndex);
-}
-
-// ------------------------------------------------------------
-
-ost::CComponentRegistry& ost::CGameObjectSystem::ComponentsRegistry()
-{
-	return _componentRegistry;
+	// Todo: Iterate scenes and remove any objects that are no longer referenced
 }
 
 // ------------------------------------------------------------

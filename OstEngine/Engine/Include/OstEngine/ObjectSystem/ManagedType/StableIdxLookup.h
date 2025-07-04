@@ -1,21 +1,25 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <OstEngine/ObjectSystem/Component.h>
-#include <OstEngine/Math/Transform.h>
-#include <OstEngine/ObjectSystem/Reflection/ReflectedTypeUtility.h>
+#include <OstEngine/BasicTypes.h>
+
+#include <vector>
+#include <queue>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-	class CTransformComponent : public CComponent
+	class CStableIdxLookup
 	{
-	public: 
-		OST_COMPONENT(CTransformComponent)
-
 	public:
-		CTransformComponent() = default;
-		CTransform Transform;
+		uint32 GenerateStableIDX();
+		void RecycleStableIDX(uint32 stableIdx);
+		uint32 StableToDenseIdx(uint32 stableIdx) const;
+
+		void MapStableToDenseIdx(uint32 stable, uint32 dense);
+	private:
+		std::vector<uint32> _denseIdxs;
+		std::queue<uint32> _recycledStableIdxs;
 	};
 }
 

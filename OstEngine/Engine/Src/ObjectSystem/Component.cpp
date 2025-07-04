@@ -1,10 +1,15 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
-#pragma once
-#include <OstEngine/EngineInterface.h>
+#include <OstEngine/ObjectSystem/Component.h>
+#include <OstEngine/ObjectSystem/GameObject.h>
+#include <OstEngine/ObjectSystem/ISceneContent.h>
+
 
 // ------------------------------------------------------------
 
-extern ost::IOstEngine* pEngine;
+ost::CGameObject& ost::CComponent::GetOwner()
+{
+	return _sceneContent->GetObject(_ownerObjectID);
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

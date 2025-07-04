@@ -33,8 +33,8 @@
 
 #define OST_ENGINE_GAME_MODULE(API, GameInstanceType)		extern "C" API ost::IGameInstance* PROCNAME_MakeModuleInstance() { return new GameInstanceType(); } \
 															extern "C" API void PROCNAME_ReleaseModuleInstance( ost::IGameInstance* pInstance ) { GameInstanceType* ip = (GameInstanceType*)(pInstance); delete ip; } \
-															ost::IOstEngine* ost::EnginePtr = nullptr; \
-															extern "C" API void PROCNAME_BindGlobalEngine( ost::IOstEngine* pEngine ) { ost::EnginePtr = pEngine; } \
+															ost::IOstEngine* pEngine = nullptr; \
+															extern "C" API void PROCNAME_BindGlobalEngine( ost::IOstEngine* engPtr ) { pEngine = engPtr; } \
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

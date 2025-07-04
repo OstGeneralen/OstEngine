@@ -31,27 +31,13 @@ add_library(Engine STATIC
     "Include/OstEngine/Math/Transform.h"
     
     # OBJECT SYSTYEM
-    "Include/OstEngine/ObjectSystem/StableIndexedType.h"
-    "Include/OstEngine/ObjectSystem/Internal/StableIndex.h" 
-    "Include/OstEngine/ObjectSystem/Internal/StableIndexedTypeContainer.h"
-    "Include/OstEngine/ObjectSystem/Internal/StableIndexedTypeContainerBase.h"
-    "Include/OstEngine/ObjectSystem/Internal/ComponentContainer.h" 
-    "Include/OstEngine/ObjectSystem/Internal/ComponentRegistry.h" 
-    "Include/OstEngine/ObjectSystem/ObjectSystem.h" 
-    "Include/OstEngine/ObjectSystem/Component/Component.h" 
-    "Include/OstEngine/ObjectSystem/Component/ComponentsCore.h" 
-    "Include/OstEngine/ObjectSystem/Component/ComponentHandle.h" 
-    "Include/OstEngine/ObjectSystem/Objects/GameObjectHandle.h" 
-    "Src/ObjectSystem/Internal/StableIndexedTypeContainerBase.cpp"
-    "Src/ObjectSystem/Internal/ComponentRegistry.cpp" 
-    "Src/ObjectSystem/ObjectSystem.cpp"   
-    "Src/ObjectSystem/Objects/GameObjectHandle.cpp" 
-    "Src/ObjectSystem/Component/ComponentHandle.cpp" 
-    "Src/ObjectSystem/Objects/GameObject.cpp" 
-    "Src/ObjectSystem/Component/Component.cpp"   
 
     "Include/OstEngine/Game/Core/TransformComponent.h"
- "Include/OstEngine/Game/OstEngineGameCore.h")
+    "Include/OstEngine/Game/OstEngineGameCore.h" 
+    "Include/OstEngine/ObjectSystem/Scene.h" 
+    "Include/OstEngine/ObjectSystem/GameObject.h" 
+    "Include/OstEngine/ObjectSystem/ManagedType/ManagedObjectPtr.h" 
+    "Include/OstEngine/ObjectSystem/Component.h" "Include/OstEngine/ObjectSystem/ManagedType/ManagedObjectType.h" "Include/OstEngine/Utility/StringHashing.h" "Include/OstEngine/ObjectSystem/ManagedType/StableIdxLookup.h" "Src/ObjectSystem/StableIdxLookup.cpp"  "Include/OstEngine/ObjectSystem/ManagedType/ManagedTypeContainer.h"  "Include/OstEngine/ObjectSystem/ManagedType/ManagedTypeContainerBase.h" "Include/OstEngine/ObjectSystem/Registration/ComponentTypeRegistry.h" "Include/OstEngine/ObjectSystem/Registration/ComponentTypeRegistration.h" "Src/ObjectSystem/ComponentTypeRegistry.cpp" "Src/ObjectSystem/Scene.cpp" "Src/ObjectSystem/GameObject.cpp"  "Include/OstEngine/ObjectSystem/ISceneContent.h" "Src/ObjectSystem/Component.cpp" "Src/ObjectSystem/ObjectSystem.h" "Src/ObjectSystem/ObjectSystem.cpp" "Include/OstEngine/Game/Core/NameComponent.h" "Include/OstEngine/ObjectSystem/Reflection/ReflectedTypeUtility.h" "Include/OstEngine/Game/Core/NameComponent.cpp")
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
 target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" )    # Interface includes
