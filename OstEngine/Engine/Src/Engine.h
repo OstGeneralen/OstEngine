@@ -6,10 +6,15 @@
 
 #include "Rendering/TextureRenderTarget.h"
 
+#include <OstEngine/Game/GameModule.h>
+#include <OstEngine/Game/GameInstance.h>
+#include <Game/GameModuleInternal.h>
+
 #include "Subsystem/Input/InputSystem.h"
 #include "Subsystem/Input/InputEventProvider.h"
 #include "Subsystem/Assets/AssetsSystem.h"
 
+#include <ObjectSystem/ObjectSystem.h>
 // ------------------------------------------------------------
 
 namespace ost
@@ -19,6 +24,9 @@ namespace ost
 	class COstEngine : public IOstEngine
 	{
 	public:
+		COstEngine();
+
+		void LoadGameModule(const char* moduleName);
 
 		void InitSystem_Assets(const std::filesystem::path& assetsRootPath);
 		void InitSystem_Rendering(CTextureRenderTarget& engineRenderTarget);
@@ -26,13 +34,23 @@ namespace ost
 
 		void EngineTick();
 
+		void Shutdown();
+
 	public: // IOstEngine
 		IAssetsSystem& GetSystem_Assets() override;
 		input::IInputSystem& GetSystem_Input() override;
+
+		TPtr<CScene> NewScene(bool makeActive) override;
+		void SetActiveScene(TPtr<CScene> scene) override;
+
 	
 	private:
+		ostengine_internal::CGameModuleLoader _moduleLoader;
+		IGameInstance* _gameInstancePtr{ nullptr };
+
 		input::CInputSystem _inputSystem;
 		CAssetsSystem _assetsSystem;
+		CObjectSystem _objectSystem;
 	};
 }
 

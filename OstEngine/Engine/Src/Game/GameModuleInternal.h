@@ -31,11 +31,13 @@ namespace ostengine_internal
 	inline constexpr ModuleLoaderStatusCode_t ModuleLoaderStatus_ModuleFailedLoad = ModuleLoaderStatus_Failure | 0x0000000Fu;
 	inline constexpr ModuleLoaderStatusCode_t ModuleLoaderStatus_MakeProcNotFound = ModuleLoaderStatus_Failure | 0x000000F0u;
 	inline constexpr ModuleLoaderStatusCode_t ModuleLoaderStatus_ReleaseProcNotFound = ModuleLoaderStatus_Failure | 0x00000F00u;
+	inline constexpr ModuleLoaderStatusCode_t ModuleLoaderStatus_EngineBindProcNotFound = ModuleLoaderStatus_Failure | 0x0000F000u;
 
 	class CGameModuleLoader
 	{
 		using MakeGameModuleProc = ost::IGameInstance* (*)();
 		using ReleaseGameModuleProc = void (*)(ost::IGameInstance*);
+		using BindEngineProc = void(*)(ost::IOstEngine* enginePtr);
 	public:
 		ModuleLoaderStatusCode_t LoadModule(const char* modulePath);
 		void ReleaseModule();
@@ -43,10 +45,12 @@ namespace ostengine_internal
 		bool HasLoadedModule() const;
 
 		ost::IGameInstance* CreateGameModuleInstance();
+		void BindEngineInterface(ost::IOstEngine* enginePtr);
 		void ReleaseGameModuleInstance(ost::IGameInstance** ppInstance);
 	private:
 		void* _moduleHandle;
 		MakeGameModuleProc _makeModuleProc;
+		BindEngineProc _bindEngineProc;
 		ReleaseGameModuleProc _releaseModuleProc;
 	};
 }

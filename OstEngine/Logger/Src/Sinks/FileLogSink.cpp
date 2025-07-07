@@ -51,7 +51,7 @@ ost::log::CFileLogSink::CFileLogSink(std::filesystem::path logFileDirectory, std
 void ost::log::CFileLogSink::Log(const SLogMessage& msg)
 {
 	const SMessageFormatter msgFmt{ msg };
-	_contentStream << "[" << msgFmt.LevelStr_Full() << "] " << "[" << msgFmt.TimeStr_HHMMSSMSMS() << "] '" << msgFmt.MessageStr() << "\n";
+	_contentStream << "[" << msgFmt.LevelStr_Full() << " | " << msg.LoggerName << "] " << "[" << msgFmt.TimeStr_HHMMSSMSMS() << "] '" << msgFmt.MessageStr() << "'\n";
 	
 	for (const auto& subMsg : msg.SubMessages)
 	{

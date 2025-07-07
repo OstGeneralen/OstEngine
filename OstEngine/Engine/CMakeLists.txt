@@ -17,8 +17,13 @@ add_library(Engine STATIC
     "Src/Subsystem/Input/InputSystem.cpp" 
     "Src/Subsystem/Input/InputEventProvider.cpp"
     
+    "Include/OstEngine/Utility/StringHashing.h" 
     "Src/Utility/PathUtils.cpp"   
     
+    # GAME MODULE
+    "Include/OstEngine/Game/OstEngineGameCore.h" 
+    
+    # MATH
     "Src/Math/CommonMath.cpp" 
     "Src/Math/Units/Radians.cpp" 
     "Src/Math/Units/Degrees.cpp" 
@@ -26,6 +31,35 @@ add_library(Engine STATIC
     "Include/OstEngine/Math/Structures/Mat4x4.h" 
     "Include/OstEngine/Math/Structures/Mat3x3.h"
     "Include/OstEngine/Math/Structures/Quaternion.h"
+    "Src/Math/Transform.cpp"
+    "Include/OstEngine/Math/Transform.h"
+    
+    # OBJECT SYSTYEM
+    "Src/ObjectSystem/ObjectSystem.h" 
+    "Src/ObjectSystem/ObjectSystem.cpp"  
+    
+    "Include/OstEngine/ObjectSystem/ISceneContent.h" 
+    "Src/ObjectSystem/Scene.cpp" 
+    "Include/OstEngine/ObjectSystem/Scene.h" 
+    "Src/ObjectSystem/GameObject.cpp"  
+    "Include/OstEngine/ObjectSystem/GameObject.h" 
+    "Src/ObjectSystem/Component.cpp" 
+    "Include/OstEngine/ObjectSystem/Component.h" 
+
+    # OBJECT SYSTEM INTERNAL
+    "Include/OstEngine/ObjectSystem/ManagedType/ManagedObjectPtr.h" 
+    "Include/OstEngine/ObjectSystem/ManagedType/ManagedObjectType.h" 
+    "Include/OstEngine/ObjectSystem/Reflection/ReflectedTypeUtility.h" 
+    "Include/OstEngine/ObjectSystem/ManagedType/StableIdxLookup.h" 
+    "Src/ObjectSystem/StableIdxLookup.cpp"  
+    "Include/OstEngine/ObjectSystem/ManagedType/ManagedTypeContainerBase.h" 
+    "Include/OstEngine/ObjectSystem/ManagedType/ManagedTypeContainer.h"  
+    "Include/OstEngine/ObjectSystem/Registration/ComponentTypeRegistration.h" 
+    "Include/OstEngine/ObjectSystem/Registration/ComponentTypeRegistry.h" 
+    "Src/ObjectSystem/ComponentTypeRegistry.cpp" 
+    
+    # COMPONENTS
+    "Include/OstEngine/Game/Core/TransformComponent.h"
     )
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes

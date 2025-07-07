@@ -46,6 +46,12 @@ ModuleLoaderStatusCode_t CGameModuleLoader::LoadModule(const char* modulePath)
         status = status | ModuleLoaderStatus_Failure | ModuleLoaderStatus_ReleaseProcNotFound;
     }
 
+    _bindEngineProc = (BindEngineProc)GetProcAddress(moduleHandle, STRINGIFYMACRO(PROCNAME_BindGlobalEngine));
+    if (!_bindEngineProc)
+    {
+        status = status | ModuleLoaderStatus_Failure | ModuleLoaderStatus_EngineBindProcNotFound;
+    }
+
     if (status != ModuleLoaderStatus_Success)
     {
         _makeModuleProc = nullptr;
@@ -68,6 +74,7 @@ void ostengine_internal::CGameModuleLoader::ReleaseModule()
         _moduleHandle = nullptr;
         _makeModuleProc = nullptr;
         _releaseModuleProc = nullptr;
+        _bindEngineProc = nullptr;
     }
 }
 
@@ -89,6 +96,13 @@ ost::IGameInstance* ostengine_internal::CGameModuleLoader::CreateGameModuleInsta
         return _makeModuleProc();
     }
     return nullptr;
+}
+
+// ------------------------------------------------------------
+
+void ostengine_internal::CGameModuleLoader::BindEngineInterface(ost::IOstEngine* enginePtr)
+{
+    _bindEngineProc(enginePtr);
 }
 
 // ------------------------------------------------------------

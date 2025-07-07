@@ -25,12 +25,16 @@
 #pragma once
 
 #include "OstEngine/Game/GameInstance.h"
+#include "OstEngine/Game/OstEngineGameCore.h"
 
 #define PROCNAME_MakeModuleInstance		MakeModuleInstance
 #define PROCNAME_ReleaseModuleInstance	ReleaseModuleInstance
+#define PROCNAME_BindGlobalEngine		BindEngineInterface
 
 #define OST_ENGINE_GAME_MODULE(API, GameInstanceType)		extern "C" API ost::IGameInstance* PROCNAME_MakeModuleInstance() { return new GameInstanceType(); } \
-															extern "C" API void PROCNAME_ReleaseModuleInstance( ost::IGameInstance* pInstance ) { GameInstanceType* ip = (GameInstanceType*)(pInstance); delete ip; }
+															extern "C" API void PROCNAME_ReleaseModuleInstance( ost::IGameInstance* pInstance ) { GameInstanceType* ip = (GameInstanceType*)(pInstance); delete ip; } \
+															ost::IOstEngine* pEngine = nullptr; \
+															extern "C" API void PROCNAME_BindGlobalEngine( ost::IOstEngine* engPtr ) { pEngine = engPtr; } \
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

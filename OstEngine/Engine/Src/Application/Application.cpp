@@ -69,6 +69,14 @@ ost::CApplication::CApplication(const SCommandArgs& cmdArgs)
 	_enginePtr->InitSystem_Assets(engineCfg.AssetsDir);
 	_enginePtr->InitSystem_Input(_appWindowPtr->GetInputEventProvider());
 	_enginePtr->InitSystem_Rendering(_appWindowPtr->GetWindowRenderBuffer());
+
+	// ------------------------------------------------------------
+	// 5. GAME MODULE LOADING
+	// ------------------------------------------------------------
+	if (engineCfg.ModuleName.empty() == false)
+	{
+		_enginePtr->LoadGameModule(engineCfg.ModuleName.c_str());
+	}
 }
 
 
@@ -91,6 +99,8 @@ void ost::CApplication::Run()
 
 		_appWindowPtr->EndWindowRenderFrame();
 	}
+
+	_enginePtr->Shutdown();
 
 	delete _enginePtr;
 	_appWindowPtr->Destroy();

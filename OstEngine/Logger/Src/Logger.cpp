@@ -69,14 +69,14 @@ void ost::log::CLogger::Run()
 	_shutdownFlag = false;
 	_running = true;
 	_logThread = std::thread(&CLogger::LoggingRun, this);
-	OstLogInstance.Log(ELogLevel::Info, "INITIALIZED, RUNNING ON LOGGING THREAD");
+	OstLogInstance.Log(ELogLevel::Trace, "INITIALIZED, RUNNING ON LOGGING THREAD");
 }
 
 // ------------------------------------------------------------
 
 void ost::log::CLogger::SignalShutdown()
 {
-	OstLogInstance.Log(ELogLevel::Debug, "SHUTDOWN SIGNAL RECEIVED");
+	OstLogInstance.Log(ELogLevel::Trace, "SHUTDOWN SIGNAL RECEIVED");
 	_shutdownFlag = true;
 	_threadSemaphore.release(); // Notify the semaphore to ensure we actually exit out of the execution loop
 }
@@ -85,9 +85,9 @@ void ost::log::CLogger::SignalShutdown()
 
 void ost::log::CLogger::AwaitShutdown()
 {
-	OstLogInstance.Log(ELogLevel::Info, "AWAITING SHUTDOWN");
+	OstLogInstance.Log(ELogLevel::Trace, "AWAITING SHUTDOWN");
 	_logThread.join();
-	OstLogInstance.Log(ELogLevel::Info, "SHUTDOWN COMPLETE");
+	OstLogInstance.Log(ELogLevel::Trace, "SHUTDOWN COMPLETE");
 	// Manually run one last log to confirm the shutdown
 	FlushQueue();
 	_running = false;

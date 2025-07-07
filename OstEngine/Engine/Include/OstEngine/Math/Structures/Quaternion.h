@@ -48,6 +48,49 @@ namespace ost
 			};
 		}
 
+		static TQuaternion FromRotationMatrix(const TMatrix4x4<T>& m)
+		{
+			TQuaternion quat;
+
+			const T matTrace = m.Elements[0] + m.Elements[5] + m.Elements[10];
+
+			if (matTrace > 0)
+			{
+				const T s = math::Sqrt(matTrace + static_cast<T>(1.0)) * 2;
+				quat.W = static_cast<T>(0.25) * s;
+				quat.X = (m.Elements[6] - m.Elements[9]) / s;
+				quat.Y = (m.Elements[8] - m.Elements[2]) / s;
+				quat.Z = (m.Elements[1] - m.Elements[4]) / s;
+			}
+			else if ((m.Elements[0] > m.Elements[5]) && (m.Elements[0] > m.Elements[10]))
+			{
+				const T s = math::Sqrt(static_cast<T>(1.0) + m.Elements[0] - m.Elements[5] - m.Elements[10]) * static_cast<T>(2);
+				quat.W = (m.Elements[6] - m.Elements[9]) / s;
+				quat.X = static_cast<T>(0.25) * s;
+				quat.Y = (m.Elements[1] + m.Elements[4]) / s;
+				quat.Z = (m.Elements[8] + m.Elements[2]) / s;
+			}
+			else if (m.Elements[5] > m.Elements[10])
+			{
+				const T s = math::Sqrt(static_cast<T>(1.0) + m.Elements[5] - m.Elements[0] - m.Elements[10]) * static_cast<T>(2);
+				quat.W = (m.Elements[8] - m.Elements[2]) / s;
+				quat.X = (m.Elements[1] + m.Elements[4]) / s;
+				quat.Y = static_cast<T>(0.25) * s;
+				quat.Z = (m.Elements[6] + m.Elements[9]) / s;
+			}
+			else
+			{
+				const T s = math::Sqrt(static_cast<T>(1.0) + m.Elements[10] - m.Elements[0] - m.Elements[5]) * static_cast<T>(2);
+				quat.W = (m.Elements[1] - m.Elements[4]) / s;
+				quat.X = (m.Elements[8] + m.Elements[2]) / s;
+				quat.Y = (m.Elements[6] + m.Elements[9]) / s;
+				quat.Z = static_cast<T>(0.25) * s;
+			}
+
+			quat.Normalize();
+			return quat;
+		}
+
 	public:
 		T X, Y, Z, W;
 
@@ -193,5 +236,6 @@ namespace ost
 	}
 
 
-	using Quaternion = TQuaternion<float32>;
+	using Quaternion32f = TQuaternion<float32>;
+	using Quaternion64f = TQuaternion<float64>;
 }
