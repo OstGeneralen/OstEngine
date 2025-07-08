@@ -15,9 +15,6 @@ namespace ost
 	public:
 		virtual TPtr<CScene> NewScene(bool makeActive) = 0;
 		virtual void SetActiveScene(TPtr<CScene> scene) = 0;
-
-		virtual IAssetsSystem& GetSystem_Assets() = 0;
-		virtual input::IInputSystem& GetSystem_Input() = 0;
 	};
 }
 

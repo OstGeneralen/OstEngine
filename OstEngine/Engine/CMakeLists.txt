@@ -6,9 +6,9 @@ add_library(Engine STATIC
     "Src/Game/GameModuleInternal.cpp"
     
     "Src/Application/Application.cpp" 
-    "Src/Application/Config/CmdArgs.cpp" 
-    "Src/Application/Config/Configurations.cpp" 
-    "Src/Application/Config/ConfigFile.cpp"
+     
+     
+    
     "Src/Application/Window/AppWindow.cpp" 
      
     "Src/Rendering/TextureRenderTarget.cpp" 
@@ -60,7 +60,7 @@ add_library(Engine STATIC
     
     # COMPONENTS
     "Include/OstEngine/Game/Core/TransformComponent.h"
-    )
+      "Include/OstEngine/Configuration/CmdArg.h" "Include/OstEngine/Configuration/AppCmdArgs.h"  "Src/Configuration/AppCmdArgs.cpp" "Src/EngineComponentRegistration.h" "Src/EngineComponentRegistration.cpp" "Src/EngineCmdArgs.h")
 
 target_include_directories(Engine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Src" )       # Internal includes
 target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" )    # Interface includes
