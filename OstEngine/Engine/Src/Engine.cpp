@@ -1,24 +1,38 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #include "Engine.h"
-#include "Application/Config/ConfigFile.h"
 #include "Game/GameModuleInternal.h"
-
-#include <OstEngine/Game/Core/TransformComponent.h>
+#include <OstEngine/Configuration/CmdArg.h>
 
 #include <OstLog/OstLogger.h>
-
-
-
-OSTLOG_LOG_INSTANCE(OstEngineLog);
+#include <Application/Window/AppWindow.h>
+#include <EngineComponentRegistration.h>
+#include <EngineCmdArgs.h>
 
 // ------------------------------------------------------------
 
-ost::COstEngine::COstEngine()
-{
-	CComponentTypeRegistry& registry = _objectSystem.GetComponentTypeRegistry();
+OSTLOG_LOG_INSTANCE(EngLog);
 
-	// Register engine components
-	registry.Register<CTransformComponent>();
+// ------------------------------------------------------------
+
+ost::COstEngine::COstEngine(const SAppCmdArgs& cmdArgs, CAppWindow& targetWin)
+	: _moduleLoader()
+	, _targetWindowPtr(&targetWin)
+	, _gameInstancePtr(nullptr)
+	, _inputSystem()
+	, _assetsSystem()
+	, _objectSystem()
+{
+	Engine_RegisterCoreComponents(_objectSystem.GetComponentTypeRegistry());
+	_targetWindowPtr->GetInputEventProvider().BindInputSystem(_inputSystem);
+
+	_assetsSystem.SetRootPath( cmdArgs.ReadWithDefault<std::string>(ArgAssetsPath, "Assets/"));
+	EngLog.Log(OstLogLevel::Info, "Root asset path set to '{}'", _assetsSystem.MakeAssetPath("").string());
+
+	std::string gameModuleName = "";
+	if (cmdArgs.TryRead<std::string>(ArgGameModule, gameModuleName))
+	{
+		LoadGameModule(gameModuleName.c_str());
+	}
 }
 
 // ------------------------------------------------------------
@@ -29,50 +43,15 @@ void ost::COstEngine::LoadGameModule(const char* moduleName)
 	{
 		_gameInstancePtr = _moduleLoader.CreateGameModuleInstance();
 		_moduleLoader.BindEngineInterface(this);
-		OstEngineLog.Log(OstLogLevel::Info, "Loaded game module '{}' and created instance", std::string(moduleName));
+		EngLog.Log(OstLogLevel::Info, "Loaded game module '{}' and created instance", std::string(moduleName));
 
 		_gameInstancePtr->RegisterGameComponents(_objectSystem.GetComponentTypeRegistry());
 		_gameInstancePtr->OnLoad();
-		
 	}
 	else
 	{
-		OstEngineLog.Log(OstLogLevel::Warning, "Failed to load specified game module '{}'", std::string(moduleName));
+		EngLog.Log(OstLogLevel::Warning, "Failed to load specified game module '{}'", std::string(moduleName));
 	}
-}
-
-// ------------------------------------------------------------
-
-void ost::COstEngine::InitSystem_Assets(const std::filesystem::path& assetsRootPath)
-{
-	_assetsSystem.SetRootPath(assetsRootPath);
-}
-
-// ------------------------------------------------------------
-
-void ost::COstEngine::InitSystem_Rendering(CTextureRenderTarget& engineRenderTarget)
-{
-}
-
-// ------------------------------------------------------------
-
-void ost::COstEngine::InitSystem_Input(input::CInputEventProvider& eventProvider)
-{
-	eventProvider.BindInputSystem(_inputSystem);
-}
-
-// ------------------------------------------------------------
-
-ost::IAssetsSystem& ost::COstEngine::GetSystem_Assets()
-{
-	return _assetsSystem;
-}
-
-// ------------------------------------------------------------
-
-ost::input::IInputSystem& ost::COstEngine::GetSystem_Input()
-{
-	return _inputSystem;
 }
 
 // ------------------------------------------------------------
@@ -102,7 +81,7 @@ void ost::COstEngine::Shutdown()
 {
 	if (_moduleLoader.HasLoadedModule())
 	{
-		OstEngineLog.Log(OstLogLevel::Info, "Shutting down with active game module. Releasing module.");
+		EngLog.Log(OstLogLevel::Info, "Shutting down with active game module. Releasing module.");
 		_gameInstancePtr->OnUnload();
 		_moduleLoader.ReleaseGameModuleInstance(&_gameInstancePtr);
 	}

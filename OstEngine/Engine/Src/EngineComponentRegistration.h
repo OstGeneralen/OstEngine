@@ -1,27 +1,10 @@
 // OstEngine - Copyright(c) 2025 Kasper Esbjörnsson (MIT License)
 #pragma once
-#include <OstEngine/Configuration/AppCmdArgs.h>
-#include "OstEngine/EngineInterface.h"
+#include <OstEngine/ObjectSystem/Registration/ComponentTypeRegistry.h>
 
 // ------------------------------------------------------------
 
-namespace ost
-{
-	class CAppWindow;
-	class COstEngine;
-
-	class CApplication
-	{
-	public:
-		CApplication( const SAppCmdArgs& cmdArgs );
-		~CApplication();
-
-		void Run();
-	private:
-		COstEngine* _enginePtr;
-		CAppWindow* _appWindowPtr;
-	};
-}
+extern void Engine_RegisterCoreComponents(ost::CComponentTypeRegistry& registry);
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
