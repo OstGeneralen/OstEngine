@@ -1,7 +1,6 @@
-BasedOnStyle: LLVM
+BasedOnStyle: Microsoft
 IndentWidth: 4
 
-BreakBeforeBraces: Allman
 NamespaceIndentation: All
 SpacesInParentheses: Yes
 
@@ -12,3 +11,6 @@ IncludeBlocks: Regroup
 
 PointerAlignment: Left
 ReferenceAlignment: Left
+
+BreakTemplateDeclarations: Yes
+BreakConstructorInitializers: BeforeComma
