@@ -142,15 +142,27 @@
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\AppBase.h" />
     <ClInclude Include="OstEngine\Engine.h" />
+    <ClInclude Include="OstEngine\Math\Color.h" />
     <ClInclude Include="OstEngine\Math\NumericUtils.h" />
+    <ClInclude Include="OstEngine\Math\Rect.h" />
     <ClInclude Include="OstEngine\Math\Vector2.h" />
     <ClInclude Include="OstEngine\Math\Vectors.h" />
+    <ClInclude Include="OstEngine\Rendering\Renderer.h" />
+    <ClInclude Include="OstEngine\Rendering\Sprite\SpriteData.h" />
+    <ClInclude Include="OstEngine\Rendering\Sprite\Texture.h" />
+    <ClInclude Include="OstEngine\Rendering\Sprite\TextureLoader.h" />
     <ClInclude Include="OstEngine\Rendering\Window.h" />
     <ClInclude Include="OstEngine\Types.h" />
+    <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OstEngine\Application\AppBase.cpp" />
     <ClCompile Include="OstEngine\Engine.cpp" />
+    <ClCompile Include="OstEngine\Math\Color.cpp" />
+    <ClCompile Include="OstEngine\Rendering\Renderer.cpp" />
+    <ClCompile Include="OstEngine\Rendering\Sprite\SpriteData.cpp" />
+    <ClCompile Include="OstEngine\Rendering\Sprite\Texture.cpp" />
+    <ClCompile Include="OstEngine\Rendering\Sprite\TextureLoader.cpp" />
     <ClCompile Include="OstEngine\Rendering\Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

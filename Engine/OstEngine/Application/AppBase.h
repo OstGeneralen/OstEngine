@@ -21,6 +21,8 @@ namespace ost
         virtual void DeInit_PreEngine( CEngine& aEngine ) {}
         virtual void DeInit_PostEngine() {} 
 
+        virtual void Tick() {}
+
     public:
         void Init();
         void DeInit();

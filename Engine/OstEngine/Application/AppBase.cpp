@@ -11,7 +11,9 @@ void ost::COstEngineApp::Init()
     // Create the engine instance
     CEngine::_instancePtr = new CEngine();
 
-    Init_PostEngine( *CEngine::Instance() )
+    CEngine& engine = *CEngine::Instance();
+    engine.InitializeRendering( *_appWindow );
+    Init_PostEngine( engine );
 }
 
 // ------------------------------------------------------------
@@ -26,6 +28,8 @@ void ost::COstEngineApp::DeInit()
         _appWindow = nullptr;
     }
 
+    CEngine::Instance()->Deinitialize();
+
     // Destroy the engine instance
     delete CEngine::_instancePtr;
     CEngine::_instancePtr = nullptr;
@@ -37,13 +41,19 @@ void ost::COstEngineApp::DeInit()
 
 void ost::COstEngineApp::Run()
 {
+    CEngine& engine = *CEngine::Instance();
+    SColor clearColor = 0x121212FF;
+
     while (_appWindow && _appWindow->IsOpen())
     {
+        // Frame Start
         _appWindow->RunEventLoop();
+        engine.GetRenderer().BeginFrame( clearColor );
 
-        // Begin Frame
+        Tick();
 
-        // End Frame
+        // Frame End
+        engine.GetRenderer().EndFrame();
     }
 }
 

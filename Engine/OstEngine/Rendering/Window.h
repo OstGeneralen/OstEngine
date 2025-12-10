@@ -1,6 +1,7 @@
 #pragma once
 #include <OstEngine/Types.h>
 #include <OstEngine/Math/Vectors.h>
+#include <OstEngine/Utility/UntypedPointer.h>
 
 struct SDL_Window;
 
@@ -22,6 +23,8 @@ namespace ost
 		void RunEventLoop();
 
 		bool IsOpen() const;
+		
+		SUntypedPtr GetWindowPointer();
 	private:
         SDL_Window* _winPtr;
         bool _isOpen;
