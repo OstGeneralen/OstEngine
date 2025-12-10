@@ -1,4 +1,4 @@
-#include <OstEngine/Application/AppBase.h>
+#include <OstEngine/Application/GameInterface.h>
 #include <OstEngine/Engine.h>
 #include <OstEngine/Rendering/Sprite/SpriteData.h>
 #include <SDL3/SDL.h>
@@ -6,29 +6,7 @@
 
 // ------------------------------------------------------------
 
-class CApp : public ost::IApplication
-{
-    ost::SSprite mySprite;
-
-    void Load() override
-    {
-        ost::CEngine& engine = *ost::CEngine::Instance();
-        ost::CTextureLoader& textureLoader = engine.GetTextureLoader();
-
-        mySprite.Create(*(textureLoader.GetTexture("Assets/Textures/TestTexture.bmp")));
-    }
-    
-    void Update() override
-    {
-    }
-    
-    void Render() override
-    {
-        ost::CEngine& engine = *ost::CEngine::Instance();
-        ost::CRenderer& renderer = engine.GetRenderer();
-        renderer.DrawSprite( mySprite );
-    }
-};
+extern ost::IGame* GameMain();
 
 // ------------------------------------------------------------
 
@@ -36,9 +14,7 @@ int main( int aArgCount, char* aArgs[] )
 {
     ost::CEngine::InitializeEngine();
 
-    CApp app;
-    ost::CEngine::Instance()->Run( app );
-
+    ost::CEngine::Instance()->Run( *GameMain() );
 
     ost::CEngine::ShutdownEngine();
     return 0;

@@ -1,12 +1,8 @@
 #pragma once
-#include <OstEngine/Math/Vectors.h>
-#include <string>
 
 namespace ost
 {
-    class CEngine;
-
-    class IApplication
+    class IGame
     {
     public:
         virtual void Load() = 0;

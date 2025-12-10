@@ -35,7 +35,7 @@ void ost::CEngine::Deinitialize()
     _renderer.Deinitialize();
 }
 
-void ost::CEngine::Run( IApplication& aAppInterface )
+void ost::CEngine::Run( IGame& aAppInterface )
 {
     aAppInterface.Load();
 

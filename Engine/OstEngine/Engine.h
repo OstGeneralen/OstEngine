@@ -2,7 +2,7 @@
 #include <OstEngine/Rendering/Window.h>
 #include <OstEngine/Rendering/Renderer.h>
 #include <OstEngine/Rendering/Sprite/TextureLoader.h>
-#include <OstEngine/Application/AppBase.h>
+#include <OstEngine/Application/GameInterface.h>
 
 namespace ost
 {
@@ -14,7 +14,7 @@ namespace ost
         static void ShutdownEngine();
 
     public:
-        void Run(IApplication& aAppInterface);
+        void Run(IGame& aAppInterface);
 
         CRenderer& GetRenderer();
         CTextureLoader& GetTextureLoader();
@@ -25,7 +25,6 @@ namespace ost
         CWindow _window;
         CRenderer _renderer;
         CTextureLoader _textureLoader;
-        IApplication* _appPtr;
 
     private:
         CEngine();
