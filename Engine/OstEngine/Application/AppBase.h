@@ -5,6 +5,8 @@
 
 namespace ost
 {
+    class CEngine;
+
     class COstEngineApp
     {
     protected: // Override these to make your own app
@@ -12,6 +14,12 @@ namespace ost
         virtual std::string WindowTitle() const { return "OstEngine Window"; }
         virtual Vector2i WindowDimensions() const { return Vector2i( 800, 800 ); }
         // clang-format on
+
+        virtual void Init_PreEngine() {}
+        virtual void Init_PostEngine( CEngine& aEngine ) {}
+
+        virtual void DeInit_PreEngine( CEngine& aEngine ) {}
+        virtual void DeInit_PostEngine() {} 
 
     public:
         void Init();
