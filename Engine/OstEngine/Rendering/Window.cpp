@@ -44,6 +44,7 @@ ost::CWindow& ost::CWindow::operator=( CWindow&& aRhs ) noexcept
 {
     _winPtr = aRhs._winPtr;
     aRhs._winPtr = nullptr;
+    _isOpen = aRhs._isOpen;
     return *this;
 }
 

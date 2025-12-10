@@ -57,6 +57,9 @@
     <ClInclude Include="OstEngine\Rendering\Sprite\SpriteData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OstEngine\EngineConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OstEngine\Engine.cpp">
@@ -81,6 +84,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OstEngine\Rendering\Sprite\SpriteData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\EngineConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

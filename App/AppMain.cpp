@@ -6,36 +6,27 @@
 
 // ------------------------------------------------------------
 
-class CApp : public ost::COstEngineApp
+class CApp : public ost::IApplication
 {
-    ost::SSprite sprite;
-    float totalTime = 0.0f;
+    ost::SSprite mySprite;
 
-    ost::Vector2i WindowDimensions() const override
+    void Load() override
     {
-        return { 800, 600 };
+        ost::CEngine& engine = *ost::CEngine::Instance();
+        ost::CTextureLoader& textureLoader = engine.GetTextureLoader();
+
+        mySprite.Create(*(textureLoader.GetTexture("Assets/Textures/TestTexture.bmp")));
     }
-
-    std::string WindowTitle() const override
+    
+    void Update() override
     {
-        return "Application";
     }
-
-    void Init_PostEngine( ost::CEngine& aEngine ) override
+    
+    void Render() override
     {
-        sprite.Create( *( aEngine.GetTextureLoader().GetTexture( "Assets/Textures/TestTexture.bmp" ) ) );
-        sprite.Location = { 100, 100 };
-        sprite.DrawColor = ost::Color::Red;
-    }
-
-    void Tick() override
-    {
-        totalTime += 0.00001f;
-
-        sprite.Location += { totalTime, totalTime };
-
-        ost::CRenderer& renderer = ost::CEngine::Instance()->GetRenderer();
-        renderer.DrawSprite( sprite );
+        ost::CEngine& engine = *ost::CEngine::Instance();
+        ost::CRenderer& renderer = engine.GetRenderer();
+        renderer.DrawSprite( mySprite );
     }
 };
 
@@ -43,10 +34,13 @@ class CApp : public ost::COstEngineApp
 
 int main( int aArgCount, char* aArgs[] )
 {
+    ost::CEngine::InitializeEngine();
+
     CApp app;
-    app.Init();
-    app.Run();
-    app.DeInit();
+    ost::CEngine::Instance()->Run( app );
+
+
+    ost::CEngine::ShutdownEngine();
     return 0;
 }
 

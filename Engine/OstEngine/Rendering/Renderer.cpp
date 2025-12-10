@@ -4,9 +4,10 @@
 
 #include <SDL3/SDL.h>
 
-void ost::CRenderer::Initialize( CWindow& aWindow )
+void ost::CRenderer::Initialize( CWindow& aWindow, const SColor& clearColor )
 {
     _rendererPtr = SDL_CreateRenderer( aWindow.GetWindowPointer().Get<SDL_Window>(), 0 );
+    _clearColor = clearColor;
 }
 
 void ost::CRenderer::Deinitialize()
@@ -17,9 +18,9 @@ void ost::CRenderer::Deinitialize()
     }
 }
 
-void ost::CRenderer::BeginFrame( const SColor& aColor )
+void ost::CRenderer::BeginFrame()
 {
-    SDL_SetRenderDrawColor( _rendererPtr, aColor.R, aColor.G, aColor.B, aColor.A );
+    SDL_SetRenderDrawColor( _rendererPtr, _clearColor.R, _clearColor.G, _clearColor.B, _clearColor.A );
     SDL_RenderClear( _rendererPtr );
 }
 

@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\JSON\;$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +127,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\JSON\;$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\AppBase.h" />
     <ClInclude Include="OstEngine\Engine.h" />
+    <ClInclude Include="OstEngine\EngineConfig.h" />
     <ClInclude Include="OstEngine\Math\Color.h" />
     <ClInclude Include="OstEngine\Math\NumericUtils.h" />
     <ClInclude Include="OstEngine\Math\Rect.h" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="OstEngine\Application\AppBase.cpp" />
     <ClCompile Include="OstEngine\Engine.cpp" />
+    <ClCompile Include="OstEngine\EngineConfig.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />
     <ClCompile Include="OstEngine\Rendering\Renderer.cpp" />
     <ClCompile Include="OstEngine\Rendering\Sprite\SpriteData.cpp" />
