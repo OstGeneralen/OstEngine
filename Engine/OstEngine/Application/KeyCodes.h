@@ -11,6 +11,8 @@ namespace ost
         LCtrl, RCtrl,
         Return,
 
+        Left, Right, Up, Down,
+
         // Num (top bar) keys
         // 48 to 57
         Num0 = '0', 

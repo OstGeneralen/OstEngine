@@ -29,6 +29,15 @@ ost::EKeyCode ost::Keycode::ConvertVirtualKC( Uint32 aVKC )
         return EKeyCode::RCtrl;
     case SDLK_RETURN:
         return EKeyCode::Return;
+    case SDLK_UP:
+        return EKeyCode::Up;
+    case SDLK_DOWN:
+        return EKeyCode::Down;
+    case SDLK_LEFT:
+        return EKeyCode::Left;
+    case SDLK_RIGHT:
+        return EKeyCode::Right;
+
 
         return EKeyCode::Unknown;
     }
