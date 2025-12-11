@@ -2,6 +2,7 @@
 #include <OstEngine/Application/GameInterface.h>
 #include <OstEngine/Engine.h>
 #include <OstEngine/Utility/Timer.h>
+#include <OstEngine/Input/InputAction.h>
 
 #include <OstEngine/Rendering/Sprite/SpriteData.h>
 
@@ -13,7 +14,13 @@ public:
     void Render() override;
 
 private:
+    void InputMove( const ost::InputValue& aValue );
+
+    ost::Vector2f _velocity;
+
     ost::CEngine* _engine;
     ost::SSprite _testSprite;
     ost::CTimer _frameTimer;
+    
+    ost::SInputAction _moveInputAction;
 };

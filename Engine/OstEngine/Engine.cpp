@@ -43,6 +43,7 @@ void ost::CEngine::Run( IGame& aAppInterface )
     {
         _inputReader.BeginFrame();
         _window.RunEventLoop(_inputReader);
+        _inputSystem.Update( _inputReader );
 
         _renderer.BeginFrame();
 
@@ -51,6 +52,11 @@ void ost::CEngine::Run( IGame& aAppInterface )
 
         _renderer.EndFrame();
     }
+}
+
+ost::CInputSystem& ost::CEngine::GetInputSystem()
+{
+    return _inputSystem;
 }
 
 ost::CRenderer& ost::CEngine::GetRenderer()

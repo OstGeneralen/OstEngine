@@ -128,6 +128,7 @@ namespace ost
             X /= magnitude;
             Y /= magnitude;
         }
+        return *this;
     }
 
     template <typename T>

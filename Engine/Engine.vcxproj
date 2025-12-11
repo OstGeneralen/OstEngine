@@ -145,6 +145,10 @@
     <ClInclude Include="OstEngine\Application\KeyCodes.h" />
     <ClInclude Include="OstEngine\Engine.h" />
     <ClInclude Include="OstEngine\EngineConfig.h" />
+    <ClInclude Include="OstEngine\Input\InputAction.h" />
+    <ClInclude Include="OstEngine\Input\InputActionType.h" />
+    <ClInclude Include="OstEngine\Input\InputSystem.h" />
+    <ClInclude Include="OstEngine\Input\InputValue.h" />
     <ClInclude Include="OstEngine\Math\Color.h" />
     <ClInclude Include="OstEngine\Math\NumericUtils.h" />
     <ClInclude Include="OstEngine\Math\Rect.h" />
@@ -164,6 +168,8 @@
     <ClCompile Include="OstEngine\Application\KeyCodes.cpp" />
     <ClCompile Include="OstEngine\Engine.cpp" />
     <ClCompile Include="OstEngine\EngineConfig.cpp" />
+    <ClCompile Include="OstEngine\Input\InputAction.cpp" />
+    <ClCompile Include="OstEngine\Input\InputSystem.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />
     <ClCompile Include="OstEngine\Rendering\Renderer.cpp" />
     <ClCompile Include="OstEngine\Rendering\Sprite\SpriteData.cpp" />

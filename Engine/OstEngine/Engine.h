@@ -4,6 +4,7 @@
 #include <OstEngine/Rendering/Sprite/TextureLoader.h>
 #include <OstEngine/Application/GameInterface.h>
 #include <OstEngine/Application/InputReader.h>
+#include <OstEngine/Input/InputSystem.h>
 
 namespace ost
 {
@@ -17,6 +18,7 @@ namespace ost
     public:
         void Run(IGame& aAppInterface);
 
+        CInputSystem& GetInputSystem();
         CRenderer& GetRenderer();
         CTextureLoader& GetTextureLoader();
     private:
@@ -27,6 +29,7 @@ namespace ost
         CRenderer _renderer;
         CTextureLoader _textureLoader;
         CInputReader _inputReader;
+        CInputSystem _inputSystem;
 
     private:
         CEngine();

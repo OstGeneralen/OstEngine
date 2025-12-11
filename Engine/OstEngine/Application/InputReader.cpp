@@ -4,6 +4,8 @@
 
 #define KEY_CODE_INDEX( kc ) static_cast<Uint8>(kc)
 
+// ------------------------------------------------------------
+
 bool ost::CInputReader::ProcessInputEvent( const SDL_Event& aEvent )
 {
     const EKeyCode engineKeyCode = Keycode::ConvertVirtualKC( aEvent.key.key );
@@ -27,27 +29,41 @@ bool ost::CInputReader::ProcessInputEvent( const SDL_Event& aEvent )
     return true;
 }
 
+// ------------------------------------------------------------
+
 void ost::CInputReader::BeginFrame()
 {
     _previousStates = _currentState;
 }
+
+// ------------------------------------------------------------
 
 bool ost::CInputReader::IsKeyDown( EKeyCode aKey ) const
 {
     return _currentState[KEY_CODE_INDEX(aKey)];
 }
 
+// ------------------------------------------------------------
+
 bool ost::CInputReader::IsKeyUp( EKeyCode aKey ) const
 {
     return !_currentState[KEY_CODE_INDEX(aKey)];
 }
+
+// ------------------------------------------------------------
 
 bool ost::CInputReader::KeyPressed( EKeyCode aKey ) const
 {
     return _currentState[KEY_CODE_INDEX( aKey )] && !_previousStates[KEY_CODE_INDEX(aKey)];
 }
 
+// ------------------------------------------------------------
+
 bool ost::CInputReader::KeyReleased( EKeyCode aKey ) const
 {
     return !_currentState[KEY_CODE_INDEX( aKey )] && _previousStates[KEY_CODE_INDEX( aKey )];
 }
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------

@@ -5,6 +5,8 @@
 
 union SDL_Event;
 
+// ------------------------------------------------------------
+
 namespace ost
 {
     class CInputReader
@@ -18,9 +20,12 @@ namespace ost
         bool KeyPressed( EKeyCode aKey ) const;
         bool KeyReleased( EKeyCode aKey ) const;
 
-
     private:
         std::bitset<Keycode::KeyCount> _previousStates;
         std::bitset<Keycode::KeyCount> _currentState;
     };
 } // namespace ost
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------

@@ -11,11 +11,13 @@ ost::CTimer::CTimer()
 void ost::CTimer::Update()
 {
     std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<Float32> duration = now - _previousTimePoint;
+    std::chrono::duration<Float32> duration =  now - _previousTimePoint;
     std::chrono::duration<Float64> totalDuration = now - _firstTimePoint;
 
     _currentDeltaTime = duration.count();
     _currentTotalTime = totalDuration.count();
+
+    _previousTimePoint = now;
 }
 
 Float32 ost::CTimer::GetDeltaTime() const

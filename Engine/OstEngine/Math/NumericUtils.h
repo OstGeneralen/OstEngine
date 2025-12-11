@@ -21,5 +21,15 @@ namespace ost
 		{
             return Abs<T>(aFirst - aSecond) <= aTolerance;
 		}
+
+		template<typename T>
+		inline T Clamp(T aValue, const T aMin, const T aMax)
+		{
+            if ( aValue <= aMin )
+                return aMin;
+            if ( aValue >= aMax )
+                return aMax;
+            return aValue;
+		}
 	}
 }
