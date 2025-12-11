@@ -141,6 +141,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
+    <ClInclude Include="OstEngine\Application\InputReader.h" />
+    <ClInclude Include="OstEngine\Application\KeyCodes.h" />
     <ClInclude Include="OstEngine\Engine.h" />
     <ClInclude Include="OstEngine\EngineConfig.h" />
     <ClInclude Include="OstEngine\Math\Color.h" />
@@ -158,6 +160,8 @@
     <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="OstEngine\Application\InputReader.cpp" />
+    <ClCompile Include="OstEngine\Application\KeyCodes.cpp" />
     <ClCompile Include="OstEngine\Engine.cpp" />
     <ClCompile Include="OstEngine\EngineConfig.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />

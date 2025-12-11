@@ -3,6 +3,7 @@
 #include <OstEngine/Rendering/Renderer.h>
 #include <OstEngine/Rendering/Sprite/TextureLoader.h>
 #include <OstEngine/Application/GameInterface.h>
+#include <OstEngine/Application/InputReader.h>
 
 namespace ost
 {
@@ -25,6 +26,7 @@ namespace ost
         CWindow _window;
         CRenderer _renderer;
         CTextureLoader _textureLoader;
+        CInputReader _inputReader;
 
     private:
         CEngine();

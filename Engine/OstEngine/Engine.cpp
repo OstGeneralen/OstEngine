@@ -41,7 +41,8 @@ void ost::CEngine::Run( IGame& aAppInterface )
 
     while (_window.IsOpen())
     {
-        _window.RunEventLoop();
+        _inputReader.BeginFrame();
+        _window.RunEventLoop(_inputReader);
 
         _renderer.BeginFrame();
 

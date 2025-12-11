@@ -50,11 +50,15 @@ ost::CWindow& ost::CWindow::operator=( CWindow&& aRhs ) noexcept
 
 // ------------------------------------------------------------
 
-void ost::CWindow::RunEventLoop()
+void ost::CWindow::RunEventLoop(CInputReader& aInputReader)
 {
     SDL_Event e;
     while ( SDL_PollEvent( &e ) )
     {
+        if (aInputReader.ProcessInputEvent(e))
+        {
+        }
+
         switch ( e.type )
         {
         case SDL_EVENT_WINDOW_CLOSE_REQUESTED: {

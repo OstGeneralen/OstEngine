@@ -2,6 +2,7 @@
 #include <OstEngine/Types.h>
 #include <OstEngine/Math/Vectors.h>
 #include <OstEngine/Utility/UntypedPointer.h>
+#include <OstEngine/Application/InputReader.h>
 
 struct SDL_Window;
 
@@ -20,7 +21,7 @@ namespace ost
 		CWindow( const CWindow& ) = delete;
         CWindow& operator=( const CWindow& ) = delete;
 
-		void RunEventLoop();
+		void RunEventLoop(CInputReader& aInputReader);
 
 		bool IsOpen() const;
 		
