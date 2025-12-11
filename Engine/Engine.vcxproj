@@ -153,6 +153,7 @@
     <ClInclude Include="OstEngine\Math\NumericUtils.h" />
     <ClInclude Include="OstEngine\Math\Rect.h" />
     <ClInclude Include="OstEngine\Math\Vector2.h" />
+    <ClInclude Include="OstEngine\Math\Vector3.h" />
     <ClInclude Include="OstEngine\Math\Vectors.h" />
     <ClInclude Include="OstEngine\Rendering\Renderer.h" />
     <ClInclude Include="OstEngine\Rendering\Sprite\SpriteData.h" />
