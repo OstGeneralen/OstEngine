@@ -44,6 +44,15 @@ namespace ost
         TVector3<T>& operator/=( const T aScalar );
     };
 
+    // ------------------------------------------------------------
+    // Typed Vector3s
+    // ------------------------------------------------------------
+    using Vector3f = TVector3<Float32>;
+	using Vector3d = TVector3<Float64>;
+	using Vector3i = TVector3<Int32>;
+	using Vector3u = TVector3<Uint32>;
+    // ------------------------------------------------------------
+
     template <typename T>
     static TVector3<T> operator+( const TVector3<T>& aFirst, const TVector3<T>& aSecond );
 
