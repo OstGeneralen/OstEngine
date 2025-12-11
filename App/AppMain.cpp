@@ -12,9 +12,11 @@ extern ost::IGame* GameMain();
 
 int main( int aArgCount, char* aArgs[] )
 {
+    ost::IGame& gameInstance = *GameMain();
+
     ost::CEngine::InitializeEngine();
 
-    ost::CEngine::Instance()->Run( *GameMain() );
+    ost::CEngine::Instance()->Run( gameInstance );
 
     ost::CEngine::ShutdownEngine();
     return 0;

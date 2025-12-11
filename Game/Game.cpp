@@ -16,7 +16,10 @@ void CGame::Load()
 
 void CGame::Update()
 {
-
+    _frameTimer.Update();
+    _testSprite.Location =
+        ost::Vector2f{ 100.0f + ( cosf( static_cast<float>( _frameTimer.GetTotalTime() ) ) * 100.0f ),
+                       100.0f + ( sinf( static_cast<float>( _frameTimer.GetTotalTime() ) ) * 100.0f ) };
 }
 
 void CGame::Render()

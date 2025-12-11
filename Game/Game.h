@@ -1,6 +1,7 @@
 #pragma once
 #include <OstEngine/Application/GameInterface.h>
 #include <OstEngine/Engine.h>
+#include <OstEngine/Utility/Timer.h>
 
 #include <OstEngine/Rendering/Sprite/SpriteData.h>
 
@@ -14,4 +15,5 @@ public:
 private:
     ost::CEngine* _engine;
     ost::SSprite _testSprite;
+    ost::CTimer _frameTimer;
 };

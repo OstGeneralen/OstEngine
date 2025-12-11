@@ -154,6 +154,7 @@
     <ClInclude Include="OstEngine\Rendering\Sprite\TextureLoader.h" />
     <ClInclude Include="OstEngine\Rendering\Window.h" />
     <ClInclude Include="OstEngine\Types.h" />
+    <ClInclude Include="OstEngine\Utility\Timer.h" />
     <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClCompile Include="OstEngine\Rendering\Sprite\Texture.cpp" />
     <ClCompile Include="OstEngine\Rendering\Sprite\TextureLoader.cpp" />
     <ClCompile Include="OstEngine\Rendering\Window.cpp" />
+    <ClCompile Include="OstEngine\Utility\Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
