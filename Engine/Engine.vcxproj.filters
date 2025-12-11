@@ -84,6 +84,9 @@
     <ClInclude Include="OstEngine\Math\Vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OstEngine\Math\Vector4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OstEngine\Engine.cpp">
