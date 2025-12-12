@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "EngineConfig.h"
+#include <SDL3/SDL.h>
 
 ost::CEngine* ost::CEngine::_instancePtr = nullptr;
 
@@ -25,6 +26,10 @@ void ost::CEngine::Initialize()
 {
     SEngineConfig cfg;
     cfg.LoadFromFile( "Engine/EngineConfig.json" );
+
+    SDL_Init( SDL_INIT_VIDEO );
+    SDL_SetHint( SDL_HINT_RENDER_DRIVER, "direct3d12" );
+
 
     _window = std::move( CWindow( cfg.WindowTitle.c_str(), cfg.Resolution ) );
     _renderer.Initialize(_window, cfg.ClearColor);

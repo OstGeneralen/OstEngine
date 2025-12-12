@@ -14,7 +14,7 @@ ost::CWindow::CWindow()
 
 ost::CWindow::CWindow( const char* aTitle, const Vector2i& aSize )
 {
-    _winPtr = SDL_CreateWindow( aTitle, aSize.X, aSize.Y, SDL_WINDOW_VULKAN );
+    _winPtr = SDL_CreateWindow( aTitle, aSize.X, aSize.Y, 0);
     _isOpen = _winPtr != nullptr;
 }
 

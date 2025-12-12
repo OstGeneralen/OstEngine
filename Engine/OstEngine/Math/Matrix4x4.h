@@ -105,7 +105,7 @@ namespace ost
     {
         const TMatrix3x3<T> m33PartInverse = TMatrix3x3<T>( M11, M21, M31, M12, M22, M32, M13, M23, M33 ).GetInverse();
         TMatrix4x4<T> result{m33PartInverse};
-        const TVector3<T> inverseTranslation = (TVector3<T>{M14, M24, M34} * m33PartInverse;
+        const TVector3<T> inverseTranslation = TVector3<T>{M14, M24, M34} * m33PartInverse;
         result.M14 = -inverseTranslation.X;
         result.M24 = -inverseTranslation.Y;
         result.M34 = -inverseTranslation.Z;

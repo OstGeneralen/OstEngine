@@ -151,6 +151,7 @@
     <ClInclude Include="OstEngine\Input\InputValue.h" />
     <ClInclude Include="OstEngine\Math\AngleUnit.h" />
     <ClInclude Include="OstEngine\Math\Color.h" />
+    <ClInclude Include="OstEngine\Math\Matrix2x2.h" />
     <ClInclude Include="OstEngine\Math\Matrix3x3.h" />
     <ClInclude Include="OstEngine\Math\Matrix4x4.h" />
     <ClInclude Include="OstEngine\Math\NumericUtils.h" />
@@ -175,6 +176,7 @@
     <ClCompile Include="OstEngine\EngineConfig.cpp" />
     <ClCompile Include="OstEngine\Input\InputAction.cpp" />
     <ClCompile Include="OstEngine\Input\InputSystem.cpp" />
+    <ClCompile Include="OstEngine\Math\AngleUnit.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />
     <ClCompile Include="OstEngine\Rendering\Renderer.cpp" />
     <ClCompile Include="OstEngine\Rendering\Sprite\SpriteData.cpp" />
