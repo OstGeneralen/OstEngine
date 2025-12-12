@@ -14,28 +14,14 @@ namespace ost
         {
             Degrees() = default;
             Degrees( const Degrees& ) = default;
+            Degrees( const Radians& r );
+            Degrees( Float32 v );
+
             Degrees& operator=( const Degrees& ) = default;
-
-            Degrees( Float32 v )
-                : _value{ v }
-            {
-            }
-
-            Degrees& operator=( Float32 v )
-            {
-                _value = v;
-                return *this;
-            }
-
-            Float32 Get() const
-            {
-                return _value;
-            }
-
-            operator Radians() const
-            {
-                return { _value * DegToRad };
-            }
+            Degrees& operator=( const Radians& r );
+            
+            void Set( Float32 aRadianValue );
+            Float32 Get() const;
 
         private:
             Float32 _value;
@@ -45,27 +31,15 @@ namespace ost
         {
             Radians() = default;
             Radians( const Radians& ) = default;
+            Radians( const Degrees& d );
+            Radians( Float32 v );
+
             Radians& operator=( const Radians& ) = default;
-            Radians( Float32 v )
-                : _value{ v }
-            {
-            }
+            Radians& operator=( const Degrees& d );
+            Radians& operator=( Float32 v );
 
-            Radians& operator=( Float32 v )
-            {
-                _value = v;
-                return *this;
-            }
-
-            Float32 Get() const
-            {
-                return _value;
-            }
-
-            operator Degrees() const
-            {
-                return { _value * RadToDeg };
-            }
+            void Set( Float32 aRadianValue );
+            Float32 Get() const;
 
         private:
             Float32 _value;
