@@ -3,7 +3,6 @@
 #include "../Window.h"
 
 #include <OstEngine/Types.h>
-#include <SDL3/SDL.h>
 #include <cassert>
 #include <d3d11.h>
 #include <dxgi.h>

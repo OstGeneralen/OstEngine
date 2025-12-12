@@ -1,6 +1,5 @@
 #include "Engine.h"
 #include "EngineConfig.h"
-#include <SDL3/SDL.h>
 
 #define DX_RENDERING 1
 #if DX_RENDERING

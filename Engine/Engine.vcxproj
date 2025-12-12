@@ -141,11 +141,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\SDL\SDL.vcxproj">
-      <Project>{81ce8daf-ebb2-4761-8e45-b71abcca8c68}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
     <ClInclude Include="OstEngine\Application\InputReader.h" />
     <ClInclude Include="OstEngine\Application\KeyCodes.h" />
