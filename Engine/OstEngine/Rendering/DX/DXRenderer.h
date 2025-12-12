@@ -1,5 +1,6 @@
 #pragma once
 #include <OstEngine/Math/Color.h>
+#include <string>
 
 struct IDXGISwapChain;
 struct ID3D11Device;
@@ -10,6 +11,12 @@ namespace ost
 {
     class CWindow;
 
+    struct SDXRendererDebugInfo
+    {
+        std::string AdapterName;
+        Uint64 VRAM;
+    };
+
 	class CDXRenderer
 	{
     public:
@@ -19,7 +26,13 @@ namespace ost
         void Clear( const SColor& aClearColor );
         void Present();
 
+        ID3D11Device* GetDevicePointer();
+        ID3D11DeviceContext* GetDeviceContextPointer();
+        const SDXRendererDebugInfo& GetDebugInfo() const;
+
 	private:
+        SDXRendererDebugInfo _debugInfo;
+
         IDXGISwapChain* _swapChainPtr;
         ID3D11Device* _devicePtr;
         ID3D11DeviceContext* _deviceContextPtr;

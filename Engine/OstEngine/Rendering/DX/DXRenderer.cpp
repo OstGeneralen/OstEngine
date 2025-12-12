@@ -76,6 +76,18 @@ void ost::CDXRenderer::Initialize( CWindow& aWindow )
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
     _deviceContextPtr->RSSetViewports( 1, &viewport );
+
+    // INIT DEBUG INFO
+    IDXGIDevice* dxgiDevice;
+    IDXGIAdapter* dxgiAdapter;
+    DXGI_ADAPTER_DESC adapterDesc;
+
+    _devicePtr->QueryInterface( &dxgiDevice );
+    dxgiDevice->GetAdapter( &dxgiAdapter );
+    dxgiAdapter->GetDesc( &adapterDesc );
+    std::wstring wadapterName = adapterDesc.Description; 
+    _debugInfo.AdapterName = std::string( wadapterName.begin(), wadapterName.end() );
+    _debugInfo.VRAM = adapterDesc.DedicatedVideoMemory / 1024u / 1024u / 1024u;
 }
 
 // ------------------------------------------------------------
@@ -101,6 +113,27 @@ void ost::CDXRenderer::Clear( const SColor& aClearColor )
 void ost::CDXRenderer::Present()
 {
     _swapChainPtr->Present( 1, 0 );
+}
+
+// ------------------------------------------------------------
+
+ID3D11Device* ost::CDXRenderer::GetDevicePointer()
+{
+    return _devicePtr;
+}
+
+// ------------------------------------------------------------
+
+ID3D11DeviceContext* ost::CDXRenderer::GetDeviceContextPointer()
+{
+    return _deviceContextPtr;
+}
+
+// ------------------------------------------------------------
+
+const ost::SDXRendererDebugInfo& ost::CDXRenderer::GetDebugInfo() const
+{
+    return _debugInfo;
 }
 
 // ------------------------------------------------------------
