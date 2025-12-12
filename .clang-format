@@ -8,6 +8,20 @@ AccessModifierOffset: -4
 ColumnLimit: 120
 
 IncludeBlocks: Regroup
+SortIncludes: true
+
+IncludeCategories:
+  - Regex: '^\"[^\"]*\"$' 
+    Priority: 1
+    SortPriority: 1
+
+  - Regex: '^<OstEngine/.*>$' 
+    Priority: 2
+    SortPriority: 2
+
+  - Regex: '^<[^\/]*>$' 
+    Priority: 3
+    SortPriority: 3
 
 PointerAlignment: Left
 ReferenceAlignment: Left

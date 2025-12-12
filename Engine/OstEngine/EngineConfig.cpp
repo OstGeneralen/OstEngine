@@ -1,5 +1,7 @@
 #include "EngineConfig.h"
 
+#include <OstEngine/Debug/Logging/Logger.h>
+
 #include <fstream>
 #include <json.hpp>
 
@@ -22,10 +24,13 @@ void ost::SEngineConfig::LoadFromFile( const std::string& configPath )
 
         json clrCfg = configFileRoot["clear_color"];
         ClearColor = SColor( clrCfg["r"].get<float>(), clrCfg["g"].get<float>(), clrCfg["b"].get<float>(), 1.0f );
+        
+        Logging::Confirm( "Successfully loaded config from '{}'", configPath );
     }
-    catch (std::exception e)
+    catch ( std::exception e )
     {
         InitDefault();
+        Logging::Warning( "Failed to load engine config from '{}'. Using default settings.", configPath );
     }
 }
 

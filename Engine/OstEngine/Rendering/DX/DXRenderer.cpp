@@ -2,7 +2,9 @@
 
 #include "../Window.h"
 
+#include <OstEngine/Debug/Logging/Logger.h>
 #include <OstEngine/Types.h>
+
 #include <cassert>
 #include <d3d11.h>
 #include <dxgi.h>
@@ -85,9 +87,13 @@ void ost::CDXRenderer::Initialize( CWindow& aWindow )
     _devicePtr->QueryInterface( &dxgiDevice );
     dxgiDevice->GetAdapter( &dxgiAdapter );
     dxgiAdapter->GetDesc( &adapterDesc );
-    std::wstring wadapterName = adapterDesc.Description; 
+    std::wstring wadapterName = adapterDesc.Description;
     _debugInfo.AdapterName = std::string( wadapterName.begin(), wadapterName.end() );
     _debugInfo.VRAM = adapterDesc.DedicatedVideoMemory / 1024u / 1024u / 1024u;
+
+    Logging::Confirm( "d3d11 initialized" );
+    Logging::Log( "Graphics Adapter: {}", _debugInfo.AdapterName );
+    Logging::Log( "Graphics Memory: {}gb", _debugInfo.VRAM);
 }
 
 // ------------------------------------------------------------

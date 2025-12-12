@@ -3,6 +3,9 @@
 #include "EngineBuildFlags.h"
 #include "EngineConfig.h"
 
+#include <OstEngine/Debug/GUI/GUILogOutput.h>
+#include <OstEngine/Debug/Logging/Logger.h>
+
 #define DX_RENDERING 1
 #if DX_RENDERING
 #pragma comment( lib, "d3d11.lib" )
@@ -48,6 +51,8 @@ void ost::CEngine::Initialize( HINSTANCE aAppInstance )
 
     _window = std::move( CWindow( cfg.WindowTitle.c_str(), cfg.Resolution, aAppInstance ) );
     _window.BindEventCallback( [&]( auto m, auto w, auto l ) { return EngineEventProcessor( m, w, l ); } );
+    Logging::Confirm( "Window created with title '{}', resolution {}x{}", cfg.WindowTitle, cfg.Resolution.X,
+                      cfg.Resolution.Y );
 
     _dxRenderer.Initialize( _window );
     clearColor = cfg.ClearColor;
@@ -72,6 +77,8 @@ void ost::CEngine::Deinitialize()
 #endif
 
     _dxRenderer.Deinitialize();
+
+    Logging::Confirm( "Engine shutdown complete, terminating process" );
 }
 
 void ost::CEngine::Run( IGame& aAppInterface )
@@ -90,22 +97,22 @@ void ost::CEngine::Run( IGame& aAppInterface )
         ImGui::NewFrame();
 #endif
 
-
-
-        //ImGui::SetNextWindowPos( ImVec2{ 0, 0 } );
-        //ImGui::SetNextWindowSize( ImGui::GetIO().DisplaySize );
-        //ImGui::Begin( "Editor", 0, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove );
-        //ImGui::Text( "OstEngine Application" );
-        //ImGui::Indent( 20.0f );
-        //ImGui::Text( "Adapter: %s", _dxRenderer.GetDebugInfo().AdapterName.c_str() );
-        //ImGui::Text( "VRAM: %ugb", _dxRenderer.GetDebugInfo().VRAM );
-        //ImGui::Indent( 0.0f );
-        //ImGui::End();
+        // ImGui::SetNextWindowPos( ImVec2{ 0, 0 } );
+        // ImGui::SetNextWindowSize( ImGui::GetIO().DisplaySize );
+        // ImGui::Begin( "Editor", 0, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDecoration |
+        // ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove ); ImGui::Text( "OstEngine Application" );
+        // ImGui::Indent( 20.0f );
+        // ImGui::Text( "Adapter: %s", _dxRenderer.GetDebugInfo().AdapterName.c_str() );
+        // ImGui::Text( "VRAM: %ugb", _dxRenderer.GetDebugInfo().VRAM );
+        // ImGui::Indent( 0.0f );
+        // ImGui::End();
 
         _dxRenderer.Clear( clearColor );
 
         // aAppInterface.Update();
         // aAppInterface.Render();
+
+        gui::GUI_LogOutput::DisplayStandalone();
 
 #if ENABLE_GUI
         gui::DisplayEngineInfo( _dxRenderer );

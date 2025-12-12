@@ -144,6 +144,10 @@
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
     <ClInclude Include="OstEngine\Application\InputReader.h" />
     <ClInclude Include="OstEngine\Application\KeyCodes.h" />
+    <ClInclude Include="OstEngine\Debug\GUI\GUILogOutput.h" />
+    <ClInclude Include="OstEngine\Debug\Logging\Logger.h" />
+    <ClInclude Include="OstEngine\Debug\Logging\LogLevel.h" />
+    <ClInclude Include="OstEngine\Debug\Logging\LogMessage.h" />
     <ClInclude Include="OstEngine\Engine.h" />
     <ClInclude Include="OstEngine\EngineBuildFlags.h" />
     <ClInclude Include="OstEngine\EngineConfig.h" />
@@ -180,6 +184,8 @@
   <ItemGroup>
     <ClCompile Include="OstEngine\Application\InputReader.cpp" />
     <ClCompile Include="OstEngine\Application\KeyCodes.cpp" />
+    <ClCompile Include="OstEngine\Debug\GUI\GUILogOutput.cpp" />
+    <ClCompile Include="OstEngine\Debug\Logging\Logger.cpp" />
     <ClCompile Include="OstEngine\Engine.cpp" />
     <ClCompile Include="OstEngine\EngineConfig.cpp" />
     <ClCompile Include="OstEngine\ImGui\imgui.cpp" />
