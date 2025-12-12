@@ -117,6 +117,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -133,6 +136,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThirdParty\SDL\SDL.vcxproj">
@@ -160,10 +166,7 @@
     <ClInclude Include="OstEngine\Math\Vector3.h" />
     <ClInclude Include="OstEngine\Math\Vector4.h" />
     <ClInclude Include="OstEngine\Math\Vectors.h" />
-    <ClInclude Include="OstEngine\Rendering\Renderer.h" />
-    <ClInclude Include="OstEngine\Rendering\Sprite\SpriteData.h" />
-    <ClInclude Include="OstEngine\Rendering\Sprite\Texture.h" />
-    <ClInclude Include="OstEngine\Rendering\Sprite\TextureLoader.h" />
+    <ClInclude Include="OstEngine\Rendering\DX\DXRenderer.h" />
     <ClInclude Include="OstEngine\Rendering\Window.h" />
     <ClInclude Include="OstEngine\Types.h" />
     <ClInclude Include="OstEngine\Utility\Timer.h" />
@@ -178,10 +181,7 @@
     <ClCompile Include="OstEngine\Input\InputSystem.cpp" />
     <ClCompile Include="OstEngine\Math\AngleUnit.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />
-    <ClCompile Include="OstEngine\Rendering\Renderer.cpp" />
-    <ClCompile Include="OstEngine\Rendering\Sprite\SpriteData.cpp" />
-    <ClCompile Include="OstEngine\Rendering\Sprite\Texture.cpp" />
-    <ClCompile Include="OstEngine\Rendering\Sprite\TextureLoader.cpp" />
+    <ClCompile Include="OstEngine\Rendering\DX\DXRenderer.cpp" />
     <ClCompile Include="OstEngine\Rendering\Window.cpp" />
     <ClCompile Include="OstEngine\Utility\Timer.cpp" />
   </ItemGroup>

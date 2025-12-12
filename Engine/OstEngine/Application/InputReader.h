@@ -3,8 +3,6 @@
 #include <OstEngine/Types.h>
 #include <bitset>
 
-union SDL_Event;
-
 // ------------------------------------------------------------
 
 namespace ost
@@ -12,7 +10,7 @@ namespace ost
     class CInputReader
     {
     public:
-        bool ProcessInputEvent( const SDL_Event& aEvent );
+        bool ProcessInputEvent( Uint32 msg, Int64 w, Uint64 l );
         void BeginFrame();
 
         bool IsKeyDown( EKeyCode aKey ) const;

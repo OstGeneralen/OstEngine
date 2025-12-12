@@ -35,6 +35,11 @@ namespace ost
             *this = std::move( aOther );
         }
 
+        void SetNull()
+        {
+            _ptr = nullptr;
+        }
+
         template<typename T>
         SUntypedPtr& operator=(T* aPtr)
         {
@@ -52,6 +57,7 @@ namespace ost
         SUntypedPtr& operator=( const SUntypedPtr& aRhs )
         {
             _ptr = aRhs._ptr;
+            return *this;
         }
 
         SUntypedPtr& operator=( SUntypedPtr&& aRhs ) noexcept
@@ -64,6 +70,18 @@ namespace ost
         operator bool() const
         {
             return _ptr != nullptr;
+        }
+
+        template<typename T>
+        T Get_AsIs()
+        {
+            return static_cast<T>( _ptr );
+        }
+
+        template <typename T>
+        const T Get_AsIs() const 
+        {
+            return static_cast<const T>( _ptr );
         }
 
         template <typename T>

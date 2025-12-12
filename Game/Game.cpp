@@ -48,8 +48,8 @@ void CGame::Load()
     _engine = ost::CEngine::Instance();
     _engine->GetInputSystem().RegisterAction( _moveInputAction );
 
-    ost::STexture* testTexture = _engine->GetTextureLoader().GetTexture( "Assets/Textures/TestTexture.bmp" );
-    _testSprite.Create( *testTexture );
+    //ost::STexture* testTexture = _engine->GetTextureLoader().GetTexture( "Assets/Textures/TestTexture.bmp" );
+    //_testSprite.Create( *testTexture );
 }
 
 void CGame::Update()
@@ -61,12 +61,11 @@ void CGame::Update()
         int x = 0;
         x++;
     }
-    _testSprite.Location += ( _velocity * 100.0f * _frameTimer.GetDeltaTime() );
 }
 
 void CGame::Render()
 {
-    _engine->GetRenderer().DrawSprite( _testSprite );
+    //_engine->GetRenderer().DrawSprite( _testSprite );
 }
 
 void CGame::InputMove( const ost::InputValue& aValue )

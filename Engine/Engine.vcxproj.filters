@@ -36,25 +36,13 @@
     <ClInclude Include="OstEngine\Application\GameInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Rendering\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OstEngine\Utility\UntypedPointer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OstEngine\Math\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Rendering\Sprite\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OstEngine\Rendering\Sprite\TextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OstEngine\Math\Rect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OstEngine\Rendering\Sprite\SpriteData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OstEngine\EngineConfig.h">
@@ -99,6 +87,9 @@
     <ClInclude Include="OstEngine\Math\Matrix2x2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OstEngine\Rendering\DX\DXRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OstEngine\Engine.cpp">
@@ -107,19 +98,7 @@
     <ClCompile Include="OstEngine\Rendering\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OstEngine\Rendering\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OstEngine\Math\Color.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OstEngine\Rendering\Sprite\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OstEngine\Rendering\Sprite\TextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OstEngine\Rendering\Sprite\SpriteData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OstEngine\EngineConfig.cpp">
@@ -141,6 +120,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OstEngine\Math\AngleUnit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\Rendering\DX\DXRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

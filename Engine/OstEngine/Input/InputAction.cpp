@@ -10,7 +10,6 @@
 
 bool ost::SInputBinding_Button::Evaluate( const CInputReader& aInput, InputValue& outValue )
 {
-    const bool oldValue = outValue.ButtonValue;
     const bool currentValue = aInput.IsKeyDown( Key );
     outValue.ButtonValue |= currentValue;
     return true;

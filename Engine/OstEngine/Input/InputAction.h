@@ -16,12 +16,13 @@ namespace ost
 
     struct IInputBinding
     {
+        virtual ~IInputBinding() = default;
         virtual bool Evaluate( const CInputReader& aInput, InputValue& outValue ) = 0;
     };
 
     struct SInputBinding_Button : IInputBinding
     {
-        EKeyCode Key;
+        EKeyCode Key = EKeyCode::Unknown;
         EInputActionType GetType() const
         {
             return EInputActionType::Button;
@@ -31,8 +32,8 @@ namespace ost
 
     struct SInputBinding_NegativePositive : IInputBinding
     {
-        EKeyCode Positive;
-        EKeyCode Negative;
+        EKeyCode Positive = EKeyCode::Unknown;
+        EKeyCode Negative = EKeyCode::Unknown;
 
         EInputActionType GetType() const
         {
@@ -43,10 +44,10 @@ namespace ost
 
     struct SInputBinding_UpDownLeftRight : IInputBinding
     {
-        EKeyCode Up;
-        EKeyCode Down;
-        EKeyCode Left;
-        EKeyCode Right;
+        EKeyCode Up = EKeyCode::Unknown;
+        EKeyCode Down = EKeyCode::Unknown;
+        EKeyCode Left = EKeyCode::Unknown;
+        EKeyCode Right = EKeyCode::Unknown;
         
         EInputActionType GetType() const
         {

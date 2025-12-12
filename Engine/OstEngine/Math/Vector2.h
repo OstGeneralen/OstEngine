@@ -67,10 +67,10 @@ namespace ost
     static bool operator==( const TVector2<T>& aFirst, const TVector2<T>& aSecond );
 
     template <>
-    static bool operator==( const TVector2<Float32>& aFirst, const TVector2<Float32>& aSecond );
+    static bool operator==<Float32>( const TVector2<Float32>& aFirst, const TVector2<Float32>& aSecond );
 
     template <>
-    static bool operator==( const TVector2<Float64>& aFirst, const TVector2<Float64>& aSecond );
+    static bool operator== <Float64>( const TVector2<Float64>& aFirst, const TVector2<Float64>& aSecond );
 
     // ------------------------------------------------------------
     // Begin Definition

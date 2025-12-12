@@ -1,32 +1,29 @@
 #include "InputReader.h"
 
-#include <SDL3/SDL.h>
+#include <Windows.h>
 
 #define KEY_CODE_INDEX( kc ) static_cast<Uint8>(kc)
 
 // ------------------------------------------------------------
 
-bool ost::CInputReader::ProcessInputEvent( const SDL_Event& aEvent )
+bool ost::CInputReader::ProcessInputEvent( Uint32 msg, Int64 w, Uint64 l )
 {
-    const EKeyCode engineKeyCode = Keycode::ConvertVirtualKC( aEvent.key.key );
+    const EKeyCode engineKeyCode = Keycode::ConvertVirtualKC( w );
     if ( engineKeyCode == EKeyCode::Unknown )
         return false;
 
     const Uint8 kcIdx = static_cast<Uint8>( engineKeyCode );
-
-    switch ( aEvent.type )
+    switch ( msg )
     {
-    case SDL_EventType::SDL_EVENT_KEY_DOWN: {
+    case WM_KEYDOWN:
         _currentState[kcIdx] = true;
-        break;
-    }
-    case SDL_EventType::SDL_EVENT_KEY_UP: {
+        return true;
+    case WM_KEYUP:
         _currentState[kcIdx] = false;
-        break;
-    }
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 // ------------------------------------------------------------

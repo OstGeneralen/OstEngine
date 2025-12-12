@@ -1,41 +1,42 @@
 #include "KeyCodes.h"
 
-#include <SDL3/SDL_keycode.h>
+#include <Windows.h>
 
 #define DIRECT_CONVERT( VKC ) static_cast<ost::EKeyCode>( VKC )
 
 ost::EKeyCode ost::Keycode::ConvertVirtualKC( Uint32 aVKC )
 {
-    if ( aVKC >= SDLK_A && aVKC <= SDLK_Z )
+    VK_ACCEPT;
+    if ( aVKC >= 'A' && aVKC <= 'Z' )
     {
         DIRECT_CONVERT( aVKC );
     }
-    if ( aVKC == SDLK_0 && aVKC <= SDLK_9 )
+    if ( aVKC == '0' && aVKC <= '9' )
     {
         DIRECT_CONVERT( aVKC );
     }
 
     switch ( aVKC )
     {
-    case SDLK_SPACE:
+    case VK_SPACE:
         return EKeyCode::Spacebar;
-    case SDLK_LSHIFT:
+    case VK_LSHIFT:
         return EKeyCode::LShift;
-    case SDLK_RSHIFT:
+    case VK_RSHIFT:
         return EKeyCode::RShift;
-    case SDLK_LCTRL:
+    case VK_LCONTROL:
         return EKeyCode::LCtrl;
-    case SDLK_RCTRL:
+    case VK_RCONTROL:
         return EKeyCode::RCtrl;
-    case SDLK_RETURN:
+    case VK_RETURN:
         return EKeyCode::Return;
-    case SDLK_UP:
+    case VK_UP:
         return EKeyCode::Up;
-    case SDLK_DOWN:
+    case VK_DOWN:
         return EKeyCode::Down;
-    case SDLK_LEFT:
+    case VK_LEFT:
         return EKeyCode::Left;
-    case SDLK_RIGHT:
+    case VK_RIGHT:
         return EKeyCode::Right;
 
 

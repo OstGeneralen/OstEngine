@@ -420,3 +420,7 @@ FodyWeavers.xsd
 BuildFiles/*
 *.exp
 *.lib
+
+!ThirdParty/Lib/d3d11.lib
+!ThirdParty/Lib/dxgi.lib
+!ThirdParty/Lib/d3dcompiler.lib

@@ -3,16 +3,22 @@
 #include <OstEngine/Math/Vectors.h>
 #include <OstEngine/Utility/UntypedPointer.h>
 #include <OstEngine/Application/InputReader.h>
-
-struct SDL_Window;
+#include <functional>
 
 namespace ost
 {
+	class CWindow;
+}
+
+namespace ost
+{
+	using FEventCallback = std::function< bool( Uint32, Int64, Uint64 )>; 
+
 	class CWindow
 	{
 	public:
         CWindow();    
-		CWindow( const char* aTitle, const Vector2i& aSize );
+		CWindow( const char* aTitle, const Vector2i& aSize, void* aAppInstance );
         ~CWindow();
 
 		CWindow( CWindow&& aOther ) noexcept;
@@ -21,13 +27,20 @@ namespace ost
 		CWindow( const CWindow& ) = delete;
         CWindow& operator=( const CWindow& ) = delete;
 
-		void RunEventLoop(CInputReader& aInputReader);
+		void RunEventLoop();
+        void BindEventCallback( FEventCallback aCallback );
+        FEventCallback EventCallbackFunction();
 
+        void Close();
 		bool IsOpen() const;
 		
 		SUntypedPtr GetWindowPointer();
+
+		const Vector2i& GetSize() const;
 	private:
-        SDL_Window* _winPtr;
-        bool _isOpen;
+        FEventCallback _eventProcessorFunction = nullptr;
+        SUntypedPtr _winPtr;
+        Vector2i _size;
+		bool _isOpen;
 	};
 }

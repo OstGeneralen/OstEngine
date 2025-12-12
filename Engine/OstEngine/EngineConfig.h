@@ -8,7 +8,7 @@ namespace ost
     struct SEngineConfig
     {
         std::string WindowTitle;
-        bool Windowed;
+        bool Windowed = true;
         Vector2i Resolution;
         SColor ClearColor;
         

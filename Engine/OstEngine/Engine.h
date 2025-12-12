@@ -1,33 +1,34 @@
 #pragma once
 #include <OstEngine/Rendering/Window.h>
-#include <OstEngine/Rendering/Renderer.h>
-#include <OstEngine/Rendering/Sprite/TextureLoader.h>
 #include <OstEngine/Application/GameInterface.h>
 #include <OstEngine/Application/InputReader.h>
 #include <OstEngine/Input/InputSystem.h>
+#include <OstEngine/Rendering/DX/DXRenderer.h>
+#include <Windows.h>
 
 namespace ost
 {
+    class CDXRenderer;
+
     class CEngine
     {
     public:
         static CEngine* Instance();
-        static void InitializeEngine();
+        static void InitializeEngine( HINSTANCE aAppInstance );
         static void ShutdownEngine();
 
     public:
         void Run(IGame& aAppInterface);
 
         CInputSystem& GetInputSystem();
-        CRenderer& GetRenderer();
-        CTextureLoader& GetTextureLoader();
     private:
-        void Initialize();
+        void Initialize( HINSTANCE aAppInstance );
         void Deinitialize();
 
+        bool EngineEventProcessor( Uint32 aMsg, Int64 wparam, Uint64 lparam );
+
         CWindow _window;
-        CRenderer _renderer;
-        CTextureLoader _textureLoader;
+        CDXRenderer _dxRenderer;
         CInputReader _inputReader;
         CInputSystem _inputSystem;
 

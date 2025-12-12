@@ -4,7 +4,6 @@
 #include <OstEngine/Utility/Timer.h>
 #include <OstEngine/Input/InputAction.h>
 
-#include <OstEngine/Rendering/Sprite/SpriteData.h>
 
 class CGame : public ost::IGame
 {
@@ -19,7 +18,6 @@ private:
     ost::Vector2f _velocity;
 
     ost::CEngine* _engine;
-    ost::SSprite _testSprite;
     ost::CTimer _frameTimer;
     
     ost::SInputAction _moveInputAction;
