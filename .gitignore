@@ -35,7 +35,7 @@ bld/
 [Ll]ogs/
 
 # Build results on 'Bin' directories
-**/[Bb]in/*
+#**/[Bb]in/*
 # Uncomment if you have tasks that rely on *.refresh files to move binaries
 # (https://github.com/github/gitignore/pull/3736)
 #!**/[Bb]in/*.refresh
@@ -424,3 +424,7 @@ BuildFiles/*
 !ThirdParty/Lib/d3d11.lib
 !ThirdParty/Lib/dxgi.lib
 !ThirdParty/Lib/d3dcompiler.lib
+
+Bin/*.exe
+
+
