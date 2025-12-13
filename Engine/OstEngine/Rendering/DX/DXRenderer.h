@@ -1,5 +1,6 @@
 #pragma once
 #include <OstEngine/Math/Color.h>
+#include <OstEngine/Rendering/DX/DXRenderState.h>
 #include <string>
 
 struct IDXGISwapChain;
@@ -30,6 +31,7 @@ namespace ost
         ID3D11DeviceContext* GetDeviceContextPointer();
         const SDXRendererDebugInfo& GetDebugInfo() const;
 
+        CDXRenderState CreateRenderState( const std::string& aRenderStateName );
 	private:
         SDXRendererDebugInfo _debugInfo;
 

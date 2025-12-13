@@ -132,6 +132,27 @@
     <ClInclude Include="OstEngine\Debug\GUI\GUILogOutput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OstEngine\Rendering\DX\DXRenderState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OstEngine\OstEngineMinimal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OstEngine\Debug\Assert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OstEngine\Rendering\DX\OSRFileReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OstEngine\ImGui\ImGuiHandling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OstEngine\Rendering\DX\DXShaderCompiler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OstEngine\Engine.cpp">
@@ -195,6 +216,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OstEngine\Debug\GUI\GUILogOutput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\Rendering\DX\DXRenderState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\Rendering\DX\OSRFileReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\ImGui\ImGuiHandling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\Rendering\DX\DXShaderCompiler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

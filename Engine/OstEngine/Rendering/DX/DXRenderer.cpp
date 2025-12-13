@@ -1,13 +1,18 @@
 #include "DXRenderer.h"
 
+#include "../../OstEngineMinimal.h"
 #include "../Window.h"
 
 #include <OstEngine/Debug/Logging/Logger.h>
+#include <OstEngine/Rendering/DX/DXRenderStateDescriptor.h>
 #include <OstEngine/Types.h>
 
-#include <cassert>
+#include <filesystem>
+
 #include <d3d11.h>
 #include <dxgi.h>
+
+#include <OstEngine/Rendering/DX/DXShaderCompiler.h>
 
 // ------------------------------------------------------------
 
@@ -48,25 +53,17 @@ void ost::CDXRenderer::Initialize( CWindow& aWindow )
     );
     // clang-format on
 
-    if ( FAILED( result ) )
-    {
-        // early out here
-        assert( false );
-    }
+    OST_ASSERT( result == S_OK, "DXRenderer failed to create either device or swapchain" );
 
     ID3D11Texture2D* backBuffer = nullptr;
     result = _swapChainPtr->GetBuffer( 0, IID_PPV_ARGS( &backBuffer ) );
-    if ( FAILED( result ) )
-    {
-        assert( false );
-    }
+
+    OST_ASSERT( result == S_OK, "DXRenderer failed to create back buffer" );
 
     result = _devicePtr->CreateRenderTargetView( backBuffer, NULL, &_renderTargetViewPtr );
     backBuffer->Release();
-    if ( FAILED( result ) )
-    {
-        assert( false );
-    }
+
+    OST_ASSERT( result == S_OK, "DXRenderer failed to create Render Target View" );
 
     _deviceContextPtr->OMSetRenderTargets( 1, &_renderTargetViewPtr, NULL );
 
@@ -93,7 +90,7 @@ void ost::CDXRenderer::Initialize( CWindow& aWindow )
 
     Logging::Confirm( "d3d11 initialized" );
     Logging::Log( "Graphics Adapter: {}", _debugInfo.AdapterName );
-    Logging::Log( "Graphics Memory: {}gb", _debugInfo.VRAM);
+    Logging::Log( "Graphics Memory: {}gb", _debugInfo.VRAM );
 }
 
 // ------------------------------------------------------------
@@ -140,6 +137,82 @@ ID3D11DeviceContext* ost::CDXRenderer::GetDeviceContextPointer()
 const ost::SDXRendererDebugInfo& ost::CDXRenderer::GetDebugInfo() const
 {
     return _debugInfo;
+}
+
+// ------------------------------------------------------------
+
+ost::CDXRenderState ost::CDXRenderer::CreateRenderState( const std::string& aRenderStateName )
+{
+    const std::string osrFileName = aRenderStateName + ".osr";
+    const std::string shaderFileName = aRenderStateName + ".hlsl";
+
+    if ( std::filesystem::exists( osrFileName ) == false )
+    {
+        Logging::Error( "Cannot create render state from '{}'. Missing .osr file\n\t> Expected: '{}'", osrFileName );
+        return CDXRenderState();
+    }
+    if ( std::filesystem::exists( shaderFileName ) == false )
+    {
+        Logging::Error( "Cannot create render state from '{}'. Missing .hlsl file\n\t> Expected: '{}'", shaderFileName );
+        return CDXRenderState();
+    }
+
+    // Create the render state descriptor
+    SDXRenderStateDescriptor desc;
+    desc.InitFromFile( osrFileName );
+    if ( !desc.IsValid() )
+    {
+        Logging::Error( "Failed to create render state '{}'", osrFileName );
+        return CDXRenderState();
+    }
+
+    CDXShaderCompiler vertexCompiler( shaderFileName );
+    CDXShaderCompiler pixelCompiler( shaderFileName );
+
+    vertexCompiler.CompileShader( desc.VertexMain, EDxShaderType::Vertex, _devicePtr );
+    if (vertexCompiler.HasErrors())
+    {
+        Logging::Error( "Failed to compile shader: '{}'", shaderFileName );
+        Logging::Error( "{}", vertexCompiler.GetErrorString() );
+        return CDXRenderState();
+    }
+
+    pixelCompiler.CompileShader( desc.PixelMain, EDxShaderType::Pixel, _devicePtr );
+    if ( vertexCompiler.HasErrors() )
+    {
+        Logging::Error( "Failed to compile shader: '{}'", shaderFileName );
+        Logging::Error( "{}", pixelCompiler.GetErrorString() );
+        return CDXRenderState();
+    }
+
+    CDXRenderState renderState;
+    renderState._renderer = this;
+    renderState._vertexShader = vertexCompiler.GetVertexShader();
+    renderState._pixelShader = pixelCompiler.GetPixelShader();
+
+    
+    D3D11_INPUT_ELEMENT_DESC* layoutDescs = new D3D11_INPUT_ELEMENT_DESC[desc.NumElements];
+    for (Int32 i = 0; i < desc.NumElements; ++i)
+    {
+        layoutDescs[i] = desc.ElementDescs[i].D3DDesc;
+        layoutDescs[i].SemanticName = desc.ElementDescs[i].SemanticName.c_str();
+    }
+
+    HRESULT r =  _devicePtr->CreateInputLayout( layoutDescs, desc.NumElements, vertexCompiler.GetBlob()->GetBufferPointer(),
+                                   vertexCompiler.GetBlob()->GetBufferSize(), &( renderState._inputLayout ) );
+
+    if (r != S_OK)
+    {
+        Logging::Error( "Failed to create input layout for shader '{}' (Error code: {})", shaderFileName, r );
+        renderState._vertexShader->Release();
+        renderState._pixelShader->Release();
+        return CDXRenderState();
+    }
+
+    Logging::Confirm( "Successfully compiled shader '{}'", shaderFileName );
+
+    // TODO: Implement creation based on input here
+    return std::move(renderState);
 }
 
 // ------------------------------------------------------------

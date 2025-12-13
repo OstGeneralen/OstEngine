@@ -10,6 +10,7 @@
 
 SIZED_TYPEDEF(Int8, signed char, 1)
 SIZED_TYPEDEF(Uint8, unsigned char, 1 )
+SIZED_TYPEDEF(Byte, unsigned char, 1)
 
 SIZED_TYPEDEF(Int16, signed short, 2)
 SIZED_TYPEDEF(Uint16, unsigned short, 2)

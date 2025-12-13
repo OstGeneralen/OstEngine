@@ -144,6 +144,7 @@
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
     <ClInclude Include="OstEngine\Application\InputReader.h" />
     <ClInclude Include="OstEngine\Application\KeyCodes.h" />
+    <ClInclude Include="OstEngine\Debug\Assert.h" />
     <ClInclude Include="OstEngine\Debug\GUI\GUILogOutput.h" />
     <ClInclude Include="OstEngine\Debug\Logging\Logger.h" />
     <ClInclude Include="OstEngine\Debug\Logging\LogLevel.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="OstEngine\EngineConfig.h" />
     <ClInclude Include="OstEngine\ImGui\imconfig.h" />
     <ClInclude Include="OstEngine\ImGui\imgui.h" />
+    <ClInclude Include="OstEngine\ImGui\ImGuiHandling.h" />
     <ClInclude Include="OstEngine\ImGui\imgui_impl_dx11.h" />
     <ClInclude Include="OstEngine\ImGui\imgui_impl_win32.h" />
     <ClInclude Include="OstEngine\ImGui\imgui_internal.h" />
@@ -174,8 +176,13 @@
     <ClInclude Include="OstEngine\Math\Vector3.h" />
     <ClInclude Include="OstEngine\Math\Vector4.h" />
     <ClInclude Include="OstEngine\Math\Vectors.h" />
+    <ClInclude Include="OstEngine\OstEngineMinimal.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXRenderer.h" />
+    <ClInclude Include="OstEngine\Rendering\DX\DXRenderState.h" />
+    <ClInclude Include="OstEngine\Rendering\DX\DXShaderCompiler.h" />
     <ClInclude Include="OstEngine\Rendering\DX\EngineInfoGui.h" />
+    <ClInclude Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.h" />
+    <ClInclude Include="OstEngine\Rendering\DX\OSRFileReader.h" />
     <ClInclude Include="OstEngine\Rendering\Window.h" />
     <ClInclude Include="OstEngine\Types.h" />
     <ClInclude Include="OstEngine\Utility\Timer.h" />
@@ -189,6 +196,7 @@
     <ClCompile Include="OstEngine\Engine.cpp" />
     <ClCompile Include="OstEngine\EngineConfig.cpp" />
     <ClCompile Include="OstEngine\ImGui\imgui.cpp" />
+    <ClCompile Include="OstEngine\ImGui\ImGuiHandling.cpp" />
     <ClCompile Include="OstEngine\ImGui\imgui_demo.cpp" />
     <ClCompile Include="OstEngine\ImGui\imgui_draw.cpp" />
     <ClCompile Include="OstEngine\ImGui\imgui_impl_dx11.cpp" />
@@ -200,7 +208,11 @@
     <ClCompile Include="OstEngine\Math\AngleUnit.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\DXRenderer.cpp" />
+    <ClCompile Include="OstEngine\Rendering\DX\DXRenderState.cpp" />
+    <ClCompile Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.cpp" />
+    <ClCompile Include="OstEngine\Rendering\DX\DXShaderCompiler.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\EngineInfoGui.cpp" />
+    <ClCompile Include="OstEngine\Rendering\DX\OSRFileReader.cpp" />
     <ClCompile Include="OstEngine\Rendering\Window.cpp" />
     <ClCompile Include="OstEngine\Utility\Timer.cpp" />
   </ItemGroup>

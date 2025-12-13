@@ -16,12 +16,8 @@
 #include <Windows.h>
 #endif // DX
 
-#if ENABLE_GUI
-#include <OstEngine/ImGui/imgui.h>
-#include <OstEngine/ImGui/imgui_impl_dx11.h>
-#include <OstEngine/ImGui/imgui_impl_win32.h>
+#include <OstEngine/ImGui/ImGuiHandling.h>
 #include <OstEngine/Rendering/DX/EngineInfoGui.h>
-#endif
 
 ost::CEngine* ost::CEngine::_instancePtr = nullptr;
 ost::SColor clearColor;
@@ -57,24 +53,14 @@ void ost::CEngine::Initialize( HINSTANCE aAppInstance )
     _dxRenderer.Initialize( _window );
     clearColor = cfg.ClearColor;
 
-#if ENABLE_GUI
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    DeveloperGUI::Init( _window, _dxRenderer );
 
-    ImGui_ImplWin32_Init( _window.GetWindowPointer().Get_AsIs<void*>() );
-    ImGui_ImplDX11_Init( _dxRenderer.GetDevicePointer(), _dxRenderer.GetDeviceContextPointer() );
-#endif
+    _dxRenderer.CreateRenderState( "Engine/Shaders/DefaultShader" );
 }
 
 void ost::CEngine::Deinitialize()
 {
-#if ENABLE_GUI
-    ImGui_ImplDX11_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
-#endif
+    DeveloperGUI::Deinit();
 
     _dxRenderer.Deinitialize();
 
@@ -91,11 +77,7 @@ void ost::CEngine::Run( IGame& aAppInterface )
         _window.RunEventLoop();
         _inputSystem.Update( _inputReader );
 
-#if ENABLE_GUI
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-#endif
+        DeveloperGUI::BeginFrame();
 
         // ImGui::SetNextWindowPos( ImVec2{ 0, 0 } );
         // ImGui::SetNextWindowSize( ImGui::GetIO().DisplaySize );
@@ -114,12 +96,7 @@ void ost::CEngine::Run( IGame& aAppInterface )
 
         gui::GUI_LogOutput::DisplayStandalone();
 
-#if ENABLE_GUI
-        gui::DisplayEngineInfo( _dxRenderer );
-
-        ImGui::Render();
-        ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
-#endif
+        DeveloperGUI::EndFrame();
 
         _dxRenderer.Present();
     }
@@ -140,13 +117,13 @@ ost::CInputSystem& ost::CEngine::GetInputSystem()
 //     //return _textureLoader;
 // }
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
+
 bool ost::CEngine::EngineEventProcessor( Uint32 aMsg, Int64 wparam, Uint64 lparam )
 {
-#if ENABLE_GUI
-    if ( ImGui_ImplWin32_WndProcHandler( _window.GetWindowPointer().Get_AsIs<HWND>(), aMsg, wparam, lparam ) )
+    if (DeveloperGUI::WndProcHandling(_window, aMsg, wparam, lparam))
+    {
         return true;
-#endif
+    }
 
     if ( _inputReader.ProcessInputEvent( aMsg, wparam, lparam ) )
     {
