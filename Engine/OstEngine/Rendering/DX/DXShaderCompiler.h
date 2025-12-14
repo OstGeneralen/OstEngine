@@ -20,7 +20,7 @@ namespace ost
         CDXShaderCompiler( const std::string& aShaderFilePath);
         ~CDXShaderCompiler();
 
-        void CompileShader( const std::string& aEntry, EDxShaderType aType, ID3D11Device* aDevice );
+        void CompileShader( const std::string& aEntry, EDxShaderType aType );
 
         bool HasErrors() const;
         const std::string& GetErrorString() const;

@@ -1,10 +1,9 @@
 #include "DXShaderCompiler.h"
 
 #include <OstEngine/OstEngineMinimal.h>
+#include <OstEngine/Rendering/DX/DXRenderContext.h>
 
-#include <d3d11.h>
 #include <d3dcompiler.h>
-#include <dxgi.h>
 
 // ------------------------------------------------------------
 
@@ -40,7 +39,7 @@ ost::CDXShaderCompiler::~CDXShaderCompiler()
 
 // ------------------------------------------------------------
 
-void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShaderType aType, ID3D11Device* aDevice )
+void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShaderType aType )
 {
     UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 
@@ -78,11 +77,11 @@ void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShader
     switch ( aType )
     {
     case ost::EDxShaderType::Vertex:
-        result = aDevice->CreateVertexShader( _shaderBlob->GetBufferPointer(), _shaderBlob->GetBufferSize(), NULL,
+        result = dx::Device->CreateVertexShader( _shaderBlob->GetBufferPointer(), _shaderBlob->GetBufferSize(), NULL,
                                               &_vertexShader );
         break;
     case ost::EDxShaderType::Pixel:
-        result = aDevice->CreatePixelShader( _shaderBlob->GetBufferPointer(), _shaderBlob->GetBufferSize(), NULL,
+        result = dx::Device->CreatePixelShader( _shaderBlob->GetBufferPointer(), _shaderBlob->GetBufferSize(), NULL,
                                              &_pixelShader );
         break;
     }

@@ -4,12 +4,22 @@
 
 namespace ost
 {
+    struct SColor;
+
     struct SColorFlt32
     {
         Float32 R;
         Float32 G;
         Float32 B;
         Float32 A;
+
+        SColorFlt32();
+        SColorFlt32( float aR, float aG, float aB, float aA = 1.0f );
+        SColorFlt32( const SColor& aColor );
+        SColorFlt32( const SColorFlt32& ) = default;
+
+        SColorFlt32& operator=( const SColorFlt32& ) = default;
+        SColorFlt32& operator=( const SColor& aColor );
     };
 
 	struct SColor
@@ -21,17 +31,13 @@ namespace ost
 
         SColor();
         SColor( const Uint32 aHex );
-        SColor( float aR, float aG, float aB, float aA );
-        SColor( Uint8 aR, Uint8 aG, Uint8 aB, Uint8 aA );
+        SColor( Uint8 aR, Uint8 aG, Uint8 aB, Uint8 aA = 255u );
+        SColor( const SColorFlt32& aFltColor );
         
         SColor( const SColor& ) = default;
         SColor& operator=( const SColor& ) = default;
-
         SColor& operator=( const Uint32 aHex );
-
-
-        SColorFlt32 ToFlt32Color() const;
-
+        SColor& operator=( const SColorFlt32& aFltColor );
     };
 
     namespace Color

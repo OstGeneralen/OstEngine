@@ -11,7 +11,7 @@
             "semanticIndex": 0,
             "format": {
                 "dataType": "Float32",
-                "dataSize": 3
+                "dataSize": 4
             }
         },
         {

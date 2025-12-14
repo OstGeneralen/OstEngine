@@ -177,12 +177,15 @@
     <ClInclude Include="OstEngine\Math\Vector4.h" />
     <ClInclude Include="OstEngine\Math\Vectors.h" />
     <ClInclude Include="OstEngine\OstEngineMinimal.h" />
+    <ClInclude Include="OstEngine\Rendering\DX\DXModel.h" />
+    <ClInclude Include="OstEngine\Rendering\DX\DXRenderContext.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXRenderer.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXRenderState.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXShaderCompiler.h" />
     <ClInclude Include="OstEngine\Rendering\DX\EngineInfoGui.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.h" />
     <ClInclude Include="OstEngine\Rendering\DX\OSRFileReader.h" />
+    <ClInclude Include="OstEngine\Rendering\RenderData\Vertex.h" />
     <ClInclude Include="OstEngine\Rendering\Window.h" />
     <ClInclude Include="OstEngine\Types.h" />
     <ClInclude Include="OstEngine\Utility\Timer.h" />
@@ -207,6 +210,7 @@
     <ClCompile Include="OstEngine\Input\InputSystem.cpp" />
     <ClCompile Include="OstEngine\Math\AngleUnit.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />
+    <ClCompile Include="OstEngine\Rendering\DX\DXModel.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\DXRenderer.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\DXRenderState.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.cpp" />

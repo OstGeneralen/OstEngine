@@ -4,7 +4,7 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 
-#include <OstEngine/Rendering/DX/DXRenderer.h>
+#include <OstEngine/Rendering/DX/DXRenderContext.h>
 #include <OstEngine/Rendering/Window.h>
 #include <Windows.h>
 
@@ -17,7 +17,7 @@ void ost::DeveloperGUI::Init( CWindow& aWindow, CDXRenderer& aRenderer )
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
     ImGui_ImplWin32_Init( aWindow.GetWindowPointer().Get_AsIs<void*>() );
-    ImGui_ImplDX11_Init( aRenderer.GetDevicePointer(), aRenderer.GetDeviceContextPointer() );
+    ImGui_ImplDX11_Init( dx::Device, dx::DeviceContext );
 #endif
 }
 

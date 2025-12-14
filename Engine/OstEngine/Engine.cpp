@@ -55,7 +55,13 @@ void ost::CEngine::Initialize( HINSTANCE aAppInstance )
 
     DeveloperGUI::Init( _window, _dxRenderer );
 
-    _dxRenderer.CreateRenderState( "Engine/Shaders/DefaultShader" );
+    _defaultRenderState = std::move(_dxRenderer.CreateRenderState( "Engine/Shaders/DefaultShader" ));
+
+    _triA.AddVertex( { -0.5f, -0.5f, 0.f, 1.f }, 0x0000FFFF )
+        .AddVertex( { 0.0f, 0.5f, 0.0f, 1.0f }, 0x00FF00FF )
+        .AddVertex( { 0.5f, -0.5f, 0.0f, 1.0f }, 0xFF0000FF );
+
+    _triA.InitializeResource();
 }
 
 void ost::CEngine::Deinitialize()
@@ -93,6 +99,10 @@ void ost::CEngine::Run( IGame& aAppInterface )
 
         // aAppInterface.Update();
         // aAppInterface.Render();
+
+        _defaultRenderState.Bind();
+        _triA.Render();
+        //_defaultRenderState.Unbind();
 
         gui::GUI_LogOutput::DisplayStandalone();
 

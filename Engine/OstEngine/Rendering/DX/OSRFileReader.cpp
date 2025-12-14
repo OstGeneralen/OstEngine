@@ -171,6 +171,7 @@ namespace osrFormat
             }
         }
 
+        desc.ByteSize = 4u * dataSize;
         desc.D3DDesc.Format = ConvertFormat( dataTypeName, dataSize );
 
         if (static_cast<Uint32>(desc.D3DDesc.Format) == 0)

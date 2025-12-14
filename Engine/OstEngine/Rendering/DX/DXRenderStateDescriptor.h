@@ -12,6 +12,7 @@ namespace ost
     {
         SDXInputElementDesc();
 
+        Uint32 ByteSize;
         std::string SemanticName;
         D3D11_INPUT_ELEMENT_DESC D3DDesc;
     };

@@ -42,6 +42,7 @@ ost::CWindow::CWindow( const char* aTitle, const Vector2i& aSize, void* aAppInst
 {
     const std::string titleStr = aTitle;
     const std::wstring titleWstr{ titleStr.begin(), titleStr.end() };
+    _size = aSize;
 
     HINSTANCE appInstance = static_cast<HINSTANCE>( aAppInstance );
 
@@ -93,6 +94,7 @@ ost::CWindow::~CWindow()
 ost::CWindow::CWindow( CWindow&& aOther ) noexcept
     : _winPtr{ aOther._winPtr }
     , _isOpen{aOther._isOpen}
+    , _size{aOther._size}
 {
     aOther._winPtr.SetNull();
     SetWindowLongPtr( _winPtr.Get_AsIs<HWND>(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>( this ) );
@@ -105,6 +107,7 @@ ost::CWindow& ost::CWindow::operator=( CWindow&& aRhs ) noexcept
     _winPtr = aRhs._winPtr;
     aRhs._winPtr.SetNull();
     _isOpen = aRhs._isOpen;
+    _size = aRhs._size;
 
     // Update the window pointer
     SetWindowLongPtr( _winPtr.Get_AsIs<HWND>(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>( this ) );

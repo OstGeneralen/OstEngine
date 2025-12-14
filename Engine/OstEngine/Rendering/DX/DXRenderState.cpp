@@ -3,9 +3,7 @@
 #include "OstEngine/OstEngineMinimal.h"
 
 #include <OstEngine/Rendering/DX/DXRenderer.h>
-
-#include <d3d11.h>
-#include <dxgi.h>
+#include <OstEngine/Rendering/DX/DXRenderContext.h>
 
 // ------------------------------------------------------------
 
@@ -60,14 +58,12 @@ void ost::CDXRenderState::Bind()
     OST_ASSERT( _pixelShader != nullptr, "Cannot bind a Render Pipeline with no valid pixel shader" );
     OST_ASSERT( _inputLayout != nullptr, "Cannot bind a Render Pipeline with no valid input layout" );
 
-    ID3D11DeviceContext* context = _renderer->GetDeviceContextPointer();
-
     // Set Input Layout
-    context->IASetInputLayout( _inputLayout );
+    dx::DeviceContext->IASetInputLayout( _inputLayout );
 
     // Bind Shaders
-    context->VSSetShader( _vertexShader, NULL, 0 );
-    context->PSSetShader( _pixelShader, NULL, 0 );
+    dx::DeviceContext->VSSetShader( _vertexShader, NULL, 0 );
+    dx::DeviceContext->PSSetShader( _pixelShader, NULL, 0 );
 }
 
 // ------------------------------------------------------------
@@ -76,14 +72,12 @@ void ost::CDXRenderState::Unbind()
 {
     OST_ASSERT( _renderer != nullptr, "Cannot unbind a Render Pipeline with no valid renderer" );
 
-    ID3D11DeviceContext* context = _renderer->GetDeviceContextPointer();
-
     // Set Input Layout
-    context->IASetInputLayout( NULL );
+    dx::DeviceContext->IASetInputLayout( NULL );
 
     // Bind Shaders
-    context->VSSetShader( NULL, NULL, 0 );
-    context->PSSetShader( NULL, NULL, 0 );
+    dx::DeviceContext->VSSetShader( NULL, NULL, 0 );
+    dx::DeviceContext->PSSetShader( NULL, NULL, 0 );
 }
 
 // ------------------------------------------------------------

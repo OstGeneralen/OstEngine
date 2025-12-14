@@ -6,17 +6,14 @@ struct vertexInfo
 
 struct pixelInfo
 {
-    float4 position : SV_POSITION;
+    float4 position : SV_Position;
     float4 color : COLOR;
 };
-
-SamplerState Texture;
-float4x4 WorldView;
 
 pixelInfo vertexMain(vertexInfo input)
 {
     pixelInfo output;
-    output.position = mul(WorldView, float4(input.position.xyz, 1));
+    output.position = input.position;
     output.color = input.color;
     return output;
 }

@@ -27,8 +27,6 @@ namespace ost
         void Clear( const SColor& aClearColor );
         void Present();
 
-        ID3D11Device* GetDevicePointer();
-        ID3D11DeviceContext* GetDeviceContextPointer();
         const SDXRendererDebugInfo& GetDebugInfo() const;
 
         CDXRenderState CreateRenderState( const std::string& aRenderStateName );
@@ -36,8 +34,6 @@ namespace ost
         SDXRendererDebugInfo _debugInfo;
 
         IDXGISwapChain* _swapChainPtr;
-        ID3D11Device* _devicePtr;
-        ID3D11DeviceContext* _deviceContextPtr;
         ID3D11RenderTargetView* _renderTargetViewPtr;
     };
 }

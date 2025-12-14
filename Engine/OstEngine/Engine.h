@@ -4,6 +4,8 @@
 #include <OstEngine/Application/InputReader.h>
 #include <OstEngine/Input/InputSystem.h>
 #include <OstEngine/Rendering/DX/DXRenderer.h>
+#include <OstEngine/Rendering/DX/DXRenderState.h>
+#include <OstEngine/Rendering/DX/DXModel.h>
 #include <Windows.h>
 
 namespace ost
@@ -31,9 +33,13 @@ namespace ost
         CDXRenderer _dxRenderer;
         CInputReader _inputReader;
         CInputSystem _inputSystem;
+        CDXRenderState _defaultRenderState;
+        CDXModel _triA;
+        CDXModel _triB;
 
     private:
         CEngine();
         static CEngine* _instancePtr;
+        
     };
 } // namespace ost
