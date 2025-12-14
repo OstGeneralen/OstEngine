@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\JSON\;$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +130,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\JSON\;$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,10 +145,13 @@
     <ClInclude Include="OstEngine\Application\InputReader.h" />
     <ClInclude Include="OstEngine\Application\KeyCodes.h" />
     <ClInclude Include="OstEngine\Debug\Assert.h" />
+    <ClInclude Include="OstEngine\Debug\EngineLogInstances.h" />
     <ClInclude Include="OstEngine\Debug\GUI\GUILogOutput.h" />
     <ClInclude Include="OstEngine\Debug\Logging\Logger.h" />
+    <ClInclude Include="OstEngine\Debug\Logging\LogInstance.h" />
     <ClInclude Include="OstEngine\Debug\Logging\LogLevel.h" />
     <ClInclude Include="OstEngine\Debug\Logging\LogMessage.h" />
+    <ClInclude Include="OstEngine\Debug\Logging\LogScope.h" />
     <ClInclude Include="OstEngine\Engine.h" />
     <ClInclude Include="OstEngine\EngineBuildFlags.h" />
     <ClInclude Include="OstEngine\EngineConfig.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="OstEngine\Rendering\DX\EngineInfoGui.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.h" />
     <ClInclude Include="OstEngine\Rendering\DX\OSRFileReader.h" />
+    <ClInclude Include="OstEngine\Rendering\ModelLoader.h" />
     <ClInclude Include="OstEngine\Rendering\RenderData\Vertex.h" />
     <ClInclude Include="OstEngine\Rendering\Window.h" />
     <ClInclude Include="OstEngine\Types.h" />
@@ -194,8 +198,11 @@
   <ItemGroup>
     <ClCompile Include="OstEngine\Application\InputReader.cpp" />
     <ClCompile Include="OstEngine\Application\KeyCodes.cpp" />
+    <ClCompile Include="OstEngine\Debug\EngineLogInstances.cpp" />
     <ClCompile Include="OstEngine\Debug\GUI\GUILogOutput.cpp" />
     <ClCompile Include="OstEngine\Debug\Logging\Logger.cpp" />
+    <ClCompile Include="OstEngine\Debug\Logging\LogInstance.cpp" />
+    <ClCompile Include="OstEngine\Debug\Logging\LogScope.cpp" />
     <ClCompile Include="OstEngine\Engine.cpp" />
     <ClCompile Include="OstEngine\EngineConfig.cpp" />
     <ClCompile Include="OstEngine\ImGui\imgui.cpp" />
@@ -217,6 +224,7 @@
     <ClCompile Include="OstEngine\Rendering\DX\DXShaderCompiler.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\EngineInfoGui.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\OSRFileReader.cpp" />
+    <ClCompile Include="OstEngine\Rendering\ModelLoader.cpp" />
     <ClCompile Include="OstEngine\Rendering\Window.cpp" />
     <ClCompile Include="OstEngine\Utility\Timer.cpp" />
   </ItemGroup>

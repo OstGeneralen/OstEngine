@@ -10,6 +10,8 @@
 
 #include <json.hpp>
 
+#include <OstEngine/Debug/EngineLogInstances.h>
+
 using namespace nlohmann;
 
 namespace osrFormat
@@ -186,6 +188,8 @@ namespace osrFormat
 
 bool ost::COSRFileReader::TryReadFromFile( const std::string& aPath, SDXRenderStateDescriptor& outInto )
 {
+    RendererLog.BeginLog( "Reading .osr file '{}'", aPath );
+
     // Read the json content
     try
     {
@@ -209,16 +213,20 @@ bool ost::COSRFileReader::TryReadFromFile( const std::string& aPath, SDXRenderSt
     {
         if (e.InnerMessage.length() == 0)
         {
-            Logging::Error( "Osr Read Error for {}\n\t> {}", aPath, e.what());
+            RendererLog.Error( "Osr Read Error: {}", e.what());
         }
         else
         {
-            Logging::Error( "Osr Read Error for {}\n\t> {}\n\t> {}", aPath, e.what(), e.InnerMessage );
+            RendererLog.BeginError( "Osr Read Error: {}", e.what() );
+            RendererLog.Error( "{}", e.InnerMessage );
+            RendererLog.EndScope();
         }
 
+        RendererLog.EndScope();
         return false;
     }
 
-    Logging::Confirm( "Successfully parsed .osr file '{}'", aPath );
+    RendererLog.Confirm( "Successfully parsed .osr file '{}'", aPath );
+    RendererLog.EndScope();
     return true;
 }

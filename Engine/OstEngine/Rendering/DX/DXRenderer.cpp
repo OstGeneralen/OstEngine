@@ -9,6 +9,8 @@
 #include <OstEngine/Rendering/DX/DXShaderCompiler.h>
 #include <OstEngine/Types.h>
 
+#include <OstEngine/Debug/EngineLogInstances.h>
+
 #include <filesystem>
 
 #include <d3d11.h>
@@ -97,9 +99,10 @@ void ost::CDXRenderer::Initialize( CWindow& aWindow )
     _debugInfo.AdapterName = std::string( wadapterName.begin(), wadapterName.end() );
     _debugInfo.VRAM = adapterDesc.DedicatedVideoMemory / 1024u / 1024u / 1024u;
 
-    Logging::Confirm( "d3d11 initialized" );
-    Logging::Log( "Graphics Adapter: {}", _debugInfo.AdapterName );
-    Logging::Log( "Graphics Memory: {}gb", _debugInfo.VRAM );
+    RendererLog.BeginConfirm( "D3D11 Initialized Successfully" );
+    RendererLog.Log( "Graphics Adapter: {}", _debugInfo.AdapterName );
+    RendererLog.Log( "Graphics Memory: {}gb", _debugInfo.VRAM );
+    RendererLog.EndScope();
 }
 
 // ------------------------------------------------------------
@@ -141,15 +144,19 @@ ost::CDXRenderState ost::CDXRenderer::CreateRenderState( const std::string& aRen
     const std::string osrFileName = aRenderStateName + ".osr";
     const std::string shaderFileName = aRenderStateName + ".hlsl";
 
+    RendererLog.BeginLog( "Create Render State for {}", aRenderStateName );
+
     if ( std::filesystem::exists( osrFileName ) == false )
     {
-        Logging::Error( "Cannot create render state from '{}'. Missing .osr file\n\t> Expected: '{}'", osrFileName );
+        RendererLog.Error( "Cannot create render state from '{}'. Missing .osr file\n\t> Expected: '{}'", osrFileName );
+        RendererLog.EndScope();
         return CDXRenderState();
     }
     if ( std::filesystem::exists( shaderFileName ) == false )
     {
-        Logging::Error( "Cannot create render state from '{}'. Missing .hlsl file\n\t> Expected: '{}'",
-                        shaderFileName );
+        RendererLog.Error( "Cannot create render state from '{}'. Missing .hlsl file\n\t> Expected: '{}'",
+                           shaderFileName );
+        RendererLog.EndScope();
         return CDXRenderState();
     }
 
@@ -158,7 +165,8 @@ ost::CDXRenderState ost::CDXRenderer::CreateRenderState( const std::string& aRen
     desc.InitFromFile( osrFileName );
     if ( !desc.IsValid() )
     {
-        Logging::Error( "Failed to create render state '{}'", osrFileName );
+        RendererLog.Error( "Failed to create render state '{}'", osrFileName );
+        RendererLog.EndScope();
         return CDXRenderState();
     }
 
@@ -168,16 +176,14 @@ ost::CDXRenderState ost::CDXRenderer::CreateRenderState( const std::string& aRen
     vertexCompiler.CompileShader( desc.VertexMain, EDxShaderType::Vertex );
     if ( vertexCompiler.HasErrors() )
     {
-        Logging::Error( "Failed to compile shader: '{}'", shaderFileName );
-        Logging::Error( "{}", vertexCompiler.GetErrorString() );
+        RendererLog.EndScope();
         return CDXRenderState();
     }
 
     pixelCompiler.CompileShader( desc.PixelMain, EDxShaderType::Pixel );
     if ( vertexCompiler.HasErrors() )
     {
-        Logging::Error( "Failed to compile shader: '{}'", shaderFileName );
-        Logging::Error( "{}", pixelCompiler.GetErrorString() );
+        RendererLog.EndScope();
         return CDXRenderState();
     }
 
@@ -190,9 +196,9 @@ ost::CDXRenderState ost::CDXRenderer::CreateRenderState( const std::string& aRen
     for ( Int32 i = 0; i < desc.NumElements; ++i )
     {
         Int32 byteOffset = 0;
-        if (i > 0)
+        if ( i > 0 )
         {
-            byteOffset = layoutDescs[i-1].AlignedByteOffset + desc.ElementDescs[i - 1].ByteSize;
+            byteOffset = layoutDescs[i - 1].AlignedByteOffset + desc.ElementDescs[i - 1].ByteSize;
         }
 
         layoutDescs[i] = desc.ElementDescs[i].D3DDesc;
@@ -206,13 +212,13 @@ ost::CDXRenderState ost::CDXRenderer::CreateRenderState( const std::string& aRen
 
     if ( r != S_OK )
     {
-        Logging::Error( "Failed to create input layout for shader '{}' (Error code: {})", shaderFileName, r );
+        RendererLog.Error( "Failed to create input layout for shader '{}' (Error code: {})", shaderFileName, r );
         renderState._vertexShader->Release();
         renderState._pixelShader->Release();
+        RendererLog.EndScope();
         return CDXRenderState();
     }
-
-    Logging::Confirm( "Successfully compiled shader '{}'", shaderFileName );
+    RendererLog.EndScope();
 
     // TODO: Implement creation based on input here
     return std::move( renderState );

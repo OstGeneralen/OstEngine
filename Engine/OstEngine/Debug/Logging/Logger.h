@@ -1,6 +1,7 @@
 #pragma once
 #include <OstEngine/Debug/Logging/LogLevel.h>
 #include <OstEngine/Debug/Logging/LogMessage.h>
+#include <OstEngine/Debug/Logging/LogScope.h>
 
 #include <vector>
 
@@ -9,12 +10,14 @@
 namespace ost
 {
     class Logging;
+    class CLogInstance;
 
     namespace log
     {
         class CLogger
         {
             friend Logging;
+            friend CLogInstance;
 
         public:
             using LoggerIterator = std::vector<SLogMessage>::const_iterator;
@@ -36,6 +39,9 @@ namespace ost
     class Logging
     {
     public:
+        template<typename ... TFmt>
+        static log::SLogScope BeginLogScope( std::string_view aStr, TFmt&&... aFmt );
+
         template <typename... TFmt>
         static void Log( std::string_view aStr, TFmt&&... aFmt );
 
@@ -48,6 +54,12 @@ namespace ost
         template <typename... TFmt>
         static void Error( std::string_view aStr, TFmt&&... aFmt );
     };
+
+    template <typename... TFmt>
+    inline log::SLogScope ost::Logging::BeginLogScope( std::string_view aStr, TFmt&&... aFmt )
+    {
+        return log::SLogScope( aStr, aFmt... );
+    }
 
     template <typename... TFmt>
     inline void ost::Logging::Log( std::string_view aStr, TFmt&&... aFmt )

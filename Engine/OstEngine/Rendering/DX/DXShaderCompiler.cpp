@@ -1,6 +1,7 @@
 #include "DXShaderCompiler.h"
 
 #include <OstEngine/OstEngineMinimal.h>
+#include <OstEngine/Debug/EngineLogInstances.h>
 #include <OstEngine/Rendering/DX/DXRenderContext.h>
 
 #include <d3dcompiler.h>
@@ -53,13 +54,17 @@ void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShader
     {
     case ost::EDxShaderType::Vertex:
         target = "vs_5_0";
-        Logging::Log( "Compiling Vertex Shader:\n\t> File: '{}'\n\t> Entry: '{}'", std::string(_shaderFilePath.begin(), _shaderFilePath.end()), aEntry );
+        RendererLog.BeginLog( "Compiling Vertex Shader" );
         break;
     case ost::EDxShaderType::Pixel:
         target = "ps_5_0";
-        Logging::Log( "Compiling Pixel Shader:\n\t> File: '{}'\n\t> Entry: '{}'", std::string(_shaderFilePath.begin(), _shaderFilePath.end()), aEntry );
+        RendererLog.BeginLog( "Compiling Pixel Shader" );
         break;
     }
+
+    RendererLog.Log( "Shader File: {}", std::string( _shaderFilePath.begin(), _shaderFilePath.end() ) );
+    RendererLog.Log( "Entry Point: {}", aEntry );
+
 
     ID3DBlob* errorBlob;
     HRESULT result = D3DCompileFromFile( _shaderFilePath.c_str(), NULL, NULL, aEntry.c_str(), target.c_str(),
@@ -69,7 +74,11 @@ void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShader
     {
         _compiledType = EDxShaderType::Invalid;
         _hasErrors = true;
-        _errorMessage = static_cast<char*>( errorBlob->GetBufferPointer() );
+
+        RendererLog.BeginError( "Shader Compile Error" );
+        RendererLog.Error( "{}", static_cast<char*>( errorBlob->GetBufferPointer() ) );
+        RendererLog.EndScope(); // Error scope
+        RendererLog.EndScope(); // Main Scope
         errorBlob->Release();
         return;
     }
@@ -88,13 +97,15 @@ void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShader
 
     if ( result != S_OK )
     {
-        _errorMessage = "Failed to create the shader resource";
+        RendererLog.Error( "Failed to create the shader resource" );
         _hasErrors = true;
         _vertexShader = nullptr;
         _pixelShader = nullptr;
         _shaderBlob->Release();
     }
 
+    RendererLog.Confirm( "Compile Successful" );
+    RendererLog.EndScope();
     _compiledType = aType;
 }
 

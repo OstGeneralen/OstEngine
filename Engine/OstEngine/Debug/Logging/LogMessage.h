@@ -5,6 +5,7 @@
 #include <format>
 #include <string>
 #include <string_view>
+#include <vector>
 
 // ------------------------------------------------------------
 
@@ -28,6 +29,7 @@ namespace ost
             std::string Message;
             std::string FormattedTime;
             std::chrono::system_clock::time_point Timestamp;
+            std::vector<SLogMessage> Inner;
         };
     } // namespace log
 } // namespace ost
