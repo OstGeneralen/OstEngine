@@ -17,10 +17,20 @@
 #endif // DX
 
 #include <OstEngine/ImGui/ImGuiHandling.h>
+#include <OstEngine/Rendering/DX/DXConstantBuffer.h>
 #include <OstEngine/Rendering/DX/EngineInfoGui.h>
+#include <OstEngine/Rendering/RenderCore.h>
 
 ost::CEngine* ost::CEngine::_instancePtr = nullptr;
 ost::SColor clearColor;
+
+CBUFFER_STRUCTURE struct ColorCBuffer
+{
+    ost::SColorFlt32 Color;
+};
+
+ColorCBuffer b;
+ost::CDXConstantBuffer buffer;
 
 ost::CEngine* ost::CEngine::Instance()
 {
@@ -54,14 +64,6 @@ void ost::CEngine::Initialize( HINSTANCE aAppInstance )
     clearColor = cfg.ClearColor;
 
     DeveloperGUI::Init( _window, _dxRenderer );
-
-    _defaultRenderState = std::move(_dxRenderer.CreateRenderState( "Engine/Shaders/DefaultShader" ));
-
-    _triA.AddVertex( { -0.5f, -0.5f, 0.f, 1.f }, 0x0000FFFF )
-        .AddVertex( { 0.0f, 0.5f, 0.0f, 1.0f }, 0x00FF00FF )
-        .AddVertex( { 0.5f, -0.5f, 0.0f, 1.0f }, 0xFF0000FF );
-
-    _triA.InitializeResource();
 }
 
 void ost::CEngine::Deinitialize()
@@ -83,29 +85,13 @@ void ost::CEngine::Run( IGame& aAppInterface )
         _window.RunEventLoop();
         _inputSystem.Update( _inputReader );
 
-        DeveloperGUI::BeginFrame();
-
-        // ImGui::SetNextWindowPos( ImVec2{ 0, 0 } );
-        // ImGui::SetNextWindowSize( ImGui::GetIO().DisplaySize );
-        // ImGui::Begin( "Editor", 0, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDecoration |
-        // ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove ); ImGui::Text( "OstEngine Application" );
-        // ImGui::Indent( 20.0f );
-        // ImGui::Text( "Adapter: %s", _dxRenderer.GetDebugInfo().AdapterName.c_str() );
-        // ImGui::Text( "VRAM: %ugb", _dxRenderer.GetDebugInfo().VRAM );
-        // ImGui::Indent( 0.0f );
-        // ImGui::End();
-
         _dxRenderer.Clear( clearColor );
+        
+        aAppInterface.Update();
+        aAppInterface.Render();
 
-        // aAppInterface.Update();
-        // aAppInterface.Render();
-
-        _defaultRenderState.Bind();
-        _triA.Render();
-        //_defaultRenderState.Unbind();
-
+        DeveloperGUI::BeginFrame();
         gui::GUI_LogOutput::DisplayStandalone();
-
         DeveloperGUI::EndFrame();
 
         _dxRenderer.Present();
@@ -115,6 +101,11 @@ void ost::CEngine::Run( IGame& aAppInterface )
 ost::CInputSystem& ost::CEngine::GetInputSystem()
 {
     return _inputSystem;
+}
+
+ost::CDXRenderer& ost::CEngine::GetRenderer()
+{
+    return _dxRenderer;
 }
 
 // ost::CRenderer& ost::CEngine::GetRenderer()
@@ -127,10 +118,9 @@ ost::CInputSystem& ost::CEngine::GetInputSystem()
 //     //return _textureLoader;
 // }
 
-
 bool ost::CEngine::EngineEventProcessor( Uint32 aMsg, Int64 wparam, Uint64 lparam )
 {
-    if (DeveloperGUI::WndProcHandling(_window, aMsg, wparam, lparam))
+    if ( DeveloperGUI::WndProcHandling( _window, aMsg, wparam, lparam ) )
     {
         return true;
     }

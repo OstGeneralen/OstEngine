@@ -10,11 +10,13 @@ struct pixelInfo
     float4 color : COLOR;
 };
 
+float4 Color : register(b0);
+
 pixelInfo vertexMain(vertexInfo input)
 {
     pixelInfo output;
     output.position = input.position;
-    output.color = input.color;
+    output.color = Color;
     return output;
 }
 

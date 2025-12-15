@@ -1,4 +1,5 @@
 #pragma once
+#include <OstEngine/Rendering/DX/DXConstantBuffer.h>
 
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
@@ -22,7 +23,11 @@ namespace ost
         CDXRenderState& operator=( CDXRenderState&& aOther ) noexcept;
 
         void Bind();
+        void BindConstantBuffer(const CDXConstantBuffer& aBuffer);
+
         void Unbind();
+
+
 
     private:
         CDXRenderState( CDXRenderer& aParentRenderer, ID3D11VertexShader* aVS, ID3D11PixelShader* aPS,

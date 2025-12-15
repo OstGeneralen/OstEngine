@@ -9,32 +9,6 @@ ost::IGame* GameMain()
 
 void CGame::Load()
 {
-    ost::TMatrix4x4<float> ident;
-    ost::TMatrix4x4<float> trans;
-    trans.M14 = 10;
-    trans.M24 = 10;
-    trans.M34 = 10;
-
-    ost::TMatrix4x4<float> loc;
-    loc.M14 = 2;
-    loc.M24 = 4;
-    loc.M34 = 6;
-
-    ost::TMatrix4x4<float> mulIdent = trans * ident;
-    ost::TMatrix4x4<float> mulLoc = trans * loc;
-
-    const float identX = mulIdent.M14;
-    const float identY = mulIdent.M24;
-    const float identZ = mulIdent.M34;
-
-    const float mlocX = mulLoc.M14;
-    const float mlocY = mulLoc.M24;
-    const float mlocZ = mulLoc.M34;
-
-    ost::TVector4<float> testVec{2,4,0,1};
-
-    auto resVec = loc * testVec;
-
     _moveInputAction = ost::SInputAction( INPUT_CALLBACK( InputMove ) );
     {
         using namespace ost;
@@ -48,8 +22,16 @@ void CGame::Load()
     _engine = ost::CEngine::Instance();
     _engine->GetInputSystem().RegisterAction( _moveInputAction );
 
-    //ost::STexture* testTexture = _engine->GetTextureLoader().GetTexture( "Assets/Textures/TestTexture.bmp" );
-    //_testSprite.Create( *testTexture );
+    _triangleModel.AddVertex( { -0.5f, -0.5f, 0.0f, 1.0f }, 0x00000000 )
+        .AddVertex( { 0.5f, 0.5f, 0.0f, 1.0f }, 0x00000000 )
+        .AddVertex( { 0.5f, -0.5f, 0.0f, 1.0f }, 0x00000000 );
+
+    _triangleModel.InitializeResource();
+
+    _colorBuffer.Color = ost::SColorFlt32{ 1.0f, 0.0f, 0.0f, 1.0f };
+    _colorConstantBuffer.Initialize( _colorBuffer );
+
+    _renderState = _engine->GetRenderer().CreateRenderState( "Engine/Shaders/DefaultShader" );
 }
 
 void CGame::Update()
@@ -61,11 +43,20 @@ void CGame::Update()
         int x = 0;
         x++;
     }
+
+    _colorBuffer.Color.B = static_cast<float>( ( sin( _frameTimer.GetTotalTime() ) + 1.0 ) / 2.0 );
+    _colorBuffer.Color.G = static_cast<float>( ( cos( _frameTimer.GetTotalTime() ) + 1.0 ) / 2.0 );
 }
 
 void CGame::Render()
 {
-    //_engine->GetRenderer().DrawSprite( _testSprite );
+    _colorConstantBuffer.Update( _colorBuffer );
+    _renderState.Bind();
+    _renderState.BindConstantBuffer(_colorConstantBuffer);
+    
+    _triangleModel.Render();
+
+    _renderState.Unbind();
 }
 
 void CGame::InputMove( const ost::InputValue& aValue )

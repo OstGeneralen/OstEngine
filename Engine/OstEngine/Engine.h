@@ -23,6 +23,8 @@ namespace ost
         void Run(IGame& aAppInterface);
 
         CInputSystem& GetInputSystem();
+        CDXRenderer& GetRenderer();
+
     private:
         void Initialize( HINSTANCE aAppInstance );
         void Deinitialize();

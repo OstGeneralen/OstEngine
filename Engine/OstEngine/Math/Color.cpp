@@ -4,7 +4,7 @@
 // Flt32 Color
 // ------------------------------------------------------------
 
-inline ost::SColorFlt32::SColorFlt32()
+ost::SColorFlt32::SColorFlt32()
     : R{ 0.0f }
     , G{ 0.0f }
     , B{ 0.0f }

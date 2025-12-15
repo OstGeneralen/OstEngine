@@ -51,6 +51,14 @@ ost::CDXRenderState& ost::CDXRenderState::operator=( CDXRenderState&& aOther ) n
 
 // ------------------------------------------------------------
 
+void ost::CDXRenderState::BindConstantBuffer( const CDXConstantBuffer& aBuffer )
+{
+    ID3D11Buffer* buffer = aBuffer.GetDXResource();
+    dx::DeviceContext->VSSetConstantBuffers( 0, 1, &buffer );
+}
+
+// ------------------------------------------------------------
+
 void ost::CDXRenderState::Bind()
 {
     OST_ASSERT( _renderer != nullptr, "Cannot bind a Render Pipeline with no valid renderer" );
