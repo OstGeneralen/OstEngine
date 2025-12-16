@@ -21,19 +21,7 @@ namespace ost
 	class CDXRenderer
 	{
     public:
-        void Initialize( CWindow& aWindow );
-        void Deinitialize();
-
-        void Clear( const SColor& aClearColor );
-        void Present();
-
         const SDXRendererDebugInfo& GetDebugInfo() const;
-
         CDXRenderState CreateRenderState( const std::string& aRenderStateName );
-	private:
-        SDXRendererDebugInfo _debugInfo;
-
-        IDXGISwapChain* _swapChainPtr;
-        ID3D11RenderTargetView* _renderTargetViewPtr;
     };
 }

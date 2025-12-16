@@ -8,7 +8,7 @@ namespace ost
 
     namespace DeveloperGUI
     {
-        extern void Init(CWindow& aWindow, CDXRenderer& aRenderer);
+        extern void Init(CWindow& aWindow);
         extern void Deinit();
 
         extern void BeginFrame();

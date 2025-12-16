@@ -16,6 +16,7 @@
 #include <Windows.h>
 #endif // DX
 
+#include <OstEngine/Rendering/DX/DXHandling.h>
 #include <OstEngine/ImGui/ImGuiHandling.h>
 #include <OstEngine/Rendering/DX/DXConstantBuffer.h>
 #include <OstEngine/Rendering/DX/EngineInfoGui.h>
@@ -60,17 +61,17 @@ void ost::CEngine::Initialize( HINSTANCE aAppInstance )
     Logging::Confirm( "Window created with title '{}', resolution {}x{}", cfg.WindowTitle, cfg.Resolution.X,
                       cfg.Resolution.Y );
 
-    _dxRenderer.Initialize( _window );
+    dx::Initialize( _window );
     clearColor = cfg.ClearColor;
 
-    DeveloperGUI::Init( _window, _dxRenderer );
+    DeveloperGUI::Init( _window );
 }
 
 void ost::CEngine::Deinitialize()
 {
     DeveloperGUI::Deinit();
 
-    _dxRenderer.Deinitialize();
+    dx::Shutdown();
 
     Logging::Confirm( "Engine shutdown complete, terminating process" );
 }
@@ -85,7 +86,7 @@ void ost::CEngine::Run( IGame& aAppInterface )
         _window.RunEventLoop();
         _inputSystem.Update( _inputReader );
 
-        _dxRenderer.Clear( clearColor );
+        dx::BeginRenderFrame( clearColor );
         
         aAppInterface.Update();
         aAppInterface.Render();
@@ -94,7 +95,7 @@ void ost::CEngine::Run( IGame& aAppInterface )
         gui::GUI_LogOutput::DisplayStandalone();
         DeveloperGUI::EndFrame();
 
-        _dxRenderer.Present();
+        dx::PresentRenderFrame();
     }
 }
 

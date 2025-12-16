@@ -3,7 +3,7 @@
 #include "OstEngine/OstEngineMinimal.h"
 
 #include <OstEngine/Rendering/DX/DXRenderer.h>
-#include <OstEngine/Rendering/DX/DXRenderContext.h>
+#include <OstEngine/Rendering/DX/DXHandling.h>
 
 // ------------------------------------------------------------
 

@@ -4,11 +4,11 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 
-#include <OstEngine/Rendering/DX/DXRenderContext.h>
+#include <OstEngine/Rendering/DX/DXHandling.h>
 #include <OstEngine/Rendering/Window.h>
 #include <Windows.h>
 
-void ost::DeveloperGUI::Init( CWindow& aWindow, CDXRenderer& aRenderer )
+void ost::DeveloperGUI::Init( CWindow& aWindow )
 {
 #if ENABLE_GUI
     IMGUI_CHECKVERSION();

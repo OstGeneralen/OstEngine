@@ -159,9 +159,6 @@
     <ClInclude Include="OstEngine\Rendering\DX\DXModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Rendering\DX\DXRenderContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OstEngine\Rendering\ModelLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -180,7 +177,10 @@
     <ClInclude Include="OstEngine\Rendering\DX\DXConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Rendering\DX\DXTexture2D.h">
+    <ClInclude Include="OstEngine\Rendering\DX\DXHandling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OstEngine\Utility\ByteSize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -279,6 +279,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OstEngine\Rendering\DX\DXConstantBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\Rendering\DX\DXHandling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

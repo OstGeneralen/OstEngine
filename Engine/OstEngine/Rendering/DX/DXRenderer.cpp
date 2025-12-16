@@ -4,12 +4,13 @@
 #include "../Window.h"
 
 #include <OstEngine/Debug/Logging/Logger.h>
-#include <OstEngine/Rendering/DX/DXRenderContext.h>
 #include <OstEngine/Rendering/DX/DXRenderStateDescriptor.h>
 #include <OstEngine/Rendering/DX/DXShaderCompiler.h>
 #include <OstEngine/Types.h>
 
 #include <OstEngine/Debug/EngineLogInstances.h>
+
+#include "DXHandling.h"
 
 #include <filesystem>
 
@@ -17,126 +18,7 @@
 #include <dxgi.h>
 
 // ------------------------------------------------------------
-// DXRenderContext Initialization
-// ------------------------------------------------------------
-
-ID3D11Device* ost::dx::Device = nullptr;
-ID3D11DeviceContext* ost::dx::DeviceContext = nullptr;
-
-// ------------------------------------------------------------
 // DX Renderer
-// ------------------------------------------------------------
-
-void ost::CDXRenderer::Initialize( CWindow& aWindow )
-{
-    DXGI_SWAP_CHAIN_DESC scDesc = {};
-    ZeroMemory( &scDesc, sizeof( scDesc ) );
-    scDesc.BufferCount = 1;
-    scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    scDesc.BufferDesc.Width = aWindow.GetSize().X;
-    scDesc.BufferDesc.Height = aWindow.GetSize().Y;
-    scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    scDesc.SampleDesc.Count = 1;
-    scDesc.Windowed = true;
-    scDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    scDesc.OutputWindow = aWindow.GetWindowPointer().Get_AsIs<HWND>();
-
-    D3D_FEATURE_LEVEL featureLevels[] = {
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_11_1,
-    };
-    const Uint32 numLevels = ARRAYSIZE( featureLevels );
-
-    // clang-format off
-    HRESULT result = D3D11CreateDeviceAndSwapChain(
-        NULL,
-        D3D_DRIVER_TYPE_HARDWARE,
-        NULL,
-        0,
-        featureLevels,
-        numLevels,
-        D3D11_SDK_VERSION,
-        &scDesc,
-        &_swapChainPtr,
-        &dx::Device,
-        NULL,
-        &dx::DeviceContext
-    );
-    // clang-format on
-
-    OST_ASSERT( result == S_OK, "DXRenderer failed to create either device or swapchain" );
-
-    ID3D11Texture2D* backBuffer = nullptr;
-    result = _swapChainPtr->GetBuffer( 0, IID_PPV_ARGS( &backBuffer ) );
-
-    OST_ASSERT( result == S_OK, "DXRenderer failed to create back buffer" );
-
-    result = dx::Device->CreateRenderTargetView( backBuffer, NULL, &_renderTargetViewPtr );
-    backBuffer->Release();
-
-    OST_ASSERT( result == S_OK, "DXRenderer failed to create Render Target View" );
-
-    dx::DeviceContext->OMSetRenderTargets( 1, &_renderTargetViewPtr, NULL );
-
-    D3D11_VIEWPORT viewport;
-    viewport.Width = (Float32)aWindow.GetSize().X;
-    viewport.Height = (Float32)aWindow.GetSize().Y;
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    dx::DeviceContext->RSSetViewports( 1, &viewport );
-
-    // INIT DEBUG INFO
-    IDXGIDevice* dxgiDevice;
-    IDXGIAdapter* dxgiAdapter;
-    DXGI_ADAPTER_DESC adapterDesc;
-
-    dx::Device->QueryInterface( &dxgiDevice );
-    dxgiDevice->GetAdapter( &dxgiAdapter );
-    dxgiAdapter->GetDesc( &adapterDesc );
-    std::wstring wadapterName = adapterDesc.Description;
-    _debugInfo.AdapterName = std::string( wadapterName.begin(), wadapterName.end() );
-    _debugInfo.VRAM = adapterDesc.DedicatedVideoMemory / 1024u / 1024u / 1024u;
-
-    RendererLog.BeginConfirm( "D3D11 Initialized Successfully" );
-    RendererLog.Log( "Graphics Adapter: {}", _debugInfo.AdapterName );
-    RendererLog.Log( "Graphics Memory: {}gb", _debugInfo.VRAM );
-    RendererLog.EndScope();
-}
-
-// ------------------------------------------------------------
-
-void ost::CDXRenderer::Deinitialize()
-{
-    _swapChainPtr->Release();
-    dx::DeviceContext->Release();
-    dx::Device->Release();
-}
-
-// ------------------------------------------------------------
-
-void ost::CDXRenderer::Clear( const SColor& aClearColor )
-{
-    const SColorFlt32 fltColor = aClearColor;
-    const Float32 c[4] = { fltColor.R, fltColor.G, fltColor.B, fltColor.A };
-    dx::DeviceContext->ClearRenderTargetView( _renderTargetViewPtr, c );
-}
-
-// ------------------------------------------------------------
-
-void ost::CDXRenderer::Present()
-{
-    _swapChainPtr->Present( 1, 0 );
-}
-
-// ------------------------------------------------------------
-
-const ost::SDXRendererDebugInfo& ost::CDXRenderer::GetDebugInfo() const
-{
-    return _debugInfo;
-}
-
 // ------------------------------------------------------------
 
 ost::CDXRenderState ost::CDXRenderer::CreateRenderState( const std::string& aRenderStateName )

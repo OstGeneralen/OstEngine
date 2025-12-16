@@ -1,6 +1,6 @@
 #include "DXConstantBuffer.h"
 
-#include <OstEngine/Rendering/DX/DXRenderContext.h>
+#include <OstEngine/Rendering/DX/DXHandling.h>
 
 constexpr static Uint32 ByteAlignment = 16u;
 

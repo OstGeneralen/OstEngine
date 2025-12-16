@@ -2,7 +2,7 @@
 
 #include <OstEngine/OstEngineMinimal.h>
 #include <OstEngine/Debug/EngineLogInstances.h>
-#include <OstEngine/Rendering/DX/DXRenderContext.h>
+#include <OstEngine/Rendering/DX/DXHandling.h>
 
 #include <d3dcompiler.h>
 
