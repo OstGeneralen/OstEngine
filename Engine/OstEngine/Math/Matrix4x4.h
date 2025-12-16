@@ -2,6 +2,7 @@
 #include <OstEngine/Math/Matrix3x3.h>
 #include <OstEngine/Math/Vector4.h>
 #include <OstEngine/Math/Vector3.h>
+#include <OstEngine/Math/AngleUnit.h>
 
 namespace ost
 {
@@ -23,6 +24,12 @@ namespace ost
         TMatrix4x4 GetTransposed() const;
 
         TMatrix4x4 GetInverse() const;
+
+        static TMatrix4x4 Translation( const TVector3<T>& aTranslation );
+        static TMatrix4x4 Scale( const TVector3<T>& aTranslation );
+
+        static TMatrix4x4 OrthographicProjection( const TVector3<T>& aMin, const TVector3<T>& aMax );
+        static TMatrix4x4 PerspectiveProjection( T aAspect, math::Radians aFov, T aNearPlaneDistance, T aFarPlaneDistance );
     };
 
     template <typename T>
@@ -123,6 +130,58 @@ namespace ost
         return result;
     }
 
-    
+    template <typename T>
+    inline ost::TMatrix4x4<T> ost::TMatrix4x4<T>::OrthographicProjection( const TVector3<T>& aMin, const TVector3<T>& aMax )
+    {
+        TMatrix4x4<T> mat;
+
+        mat.M11 = static_cast<T>( 2 ) / ( aMax.X - aMin.X );
+        mat.M22 = static_cast<T>( 2 ) / ( aMax.Y - aMin.Y );
+        mat.M33 = static_cast<T>( 2 ) / ( aMax.Z - aMin.Z );
+
+        mat.M14 = -( ( aMax.X + aMin.X ) / ( aMax.X - aMin.X ) );
+        mat.M24 = -( ( aMax.Y + aMin.Y ) / ( aMax.Y - aMin.Y ) );
+        mat.M34 = -( ( aMax.Z + aMin.Z ) / ( aMax.Z - aMin.Z ) );
+
+        return mat;
+    }
+
+    template <typename T>
+    inline TMatrix4x4<T> ost::TMatrix4x4<T>::PerspectiveProjection( T aAspect, math::Radians aFOV, T aNearPlaneDistance,
+                                                                 T aFarPlaneDistance )
+    {
+        TMatrix4x4<T> mat;
+
+        const T focalLength = static_cast<T>( 1 ) / static_cast<T>(tan( aFOV.Get() / 2.0f));
+        const T Q = aFarPlaneDistance / ( aFarPlaneDistance - aNearPlaneDistance );
+
+        mat.M11 = focalLength / aAspect;
+        mat.M22 = focalLength;
+        mat.M33 = Q;
+        mat.M43 = static_cast<T>( 1 );
+        mat.M34 = -( aNearPlaneDistance * Q );
+
+        return mat;
+    }
+
+    template <typename T>
+    inline ost::TMatrix4x4<T> ost::TMatrix4x4<T>::Translation( const TVector3<T>& aTranslation )
+    {
+        TMatrix4x4<T> mat;
+        mat.M14 = aTranslation.X;
+        mat.M24 = aTranslation.Y;
+        mat.M34 = aTranslation.Z;
+        return mat;
+    }
+
+    template <typename T>
+    inline TMatrix4x4<T> ost::TMatrix4x4<T>::Scale( const TVector3<T>& aScale )
+    {
+        TMatrix4x4<T> mat;
+        mat.M11 = aScale.X;
+        mat.M22 = aScale.Y;
+        mat.M33 = aScale.Z;
+        return mat;
+    }
 
 } // namespace ost

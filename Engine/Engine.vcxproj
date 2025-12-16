@@ -176,6 +176,7 @@
     <ClInclude Include="OstEngine\Math\Matrix4x4.h" />
     <ClInclude Include="OstEngine\Math\NumericUtils.h" />
     <ClInclude Include="OstEngine\Math\Rect.h" />
+    <ClInclude Include="OstEngine\Math\Transform.h" />
     <ClInclude Include="OstEngine\Math\Vector2.h" />
     <ClInclude Include="OstEngine\Math\Vector3.h" />
     <ClInclude Include="OstEngine\Math\Vector4.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="OstEngine\IO\Input\InputSystem.cpp" />
     <ClCompile Include="OstEngine\Math\AngleUnit.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />
+    <ClCompile Include="OstEngine\Math\Transform.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\DXConstantBuffer.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\DXHandling.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\DXModel.cpp" />

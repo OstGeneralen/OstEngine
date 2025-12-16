@@ -31,5 +31,20 @@ namespace ost
                 return aMax;
             return aValue;
 		}
+
+		template<typename T>
+		inline T ClampDegrees(const T aDegrees)
+		{
+            T newDegrees = aDegrees;
+			if (aDegrees < 0)
+			{
+                newDegress = ClampDegrees(newDegrees + static_cast<T>( 360 ));
+			}
+			else if (aDegrees > static_cast<T>(360))
+			{
+                newDegrees = ClampDegrees( newDegrees - static_cast<T>( 360 ) );
+			}
+			return newDegrees;
+		}
 	}
 }
