@@ -197,6 +197,7 @@
     <ClInclude Include="OstEngine\Rendering\Window.h" />
     <ClInclude Include="OstEngine\Types.h" />
     <ClInclude Include="OstEngine\Utility\ByteSize.h" />
+    <ClInclude Include="OstEngine\Utility\StringUtility.h" />
     <ClInclude Include="OstEngine\Utility\Timer.h" />
     <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
   </ItemGroup>
@@ -235,6 +236,7 @@
     <ClCompile Include="OstEngine\Rendering\DX\OSRFileReader.cpp" />
     <ClCompile Include="OstEngine\Rendering\ModelLoader.cpp" />
     <ClCompile Include="OstEngine\Rendering\Window.cpp" />
+    <ClCompile Include="OstEngine\Utility\StringUtility.cpp" />
     <ClCompile Include="OstEngine\Utility\Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

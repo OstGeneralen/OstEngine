@@ -19,7 +19,7 @@ void ost::CDXModel::InitializeResource()
     ZeroMemory( &vertDesc, sizeof( vertDesc ) );
     vertDesc.Usage = D3D11_USAGE_IMMUTABLE;
     vertDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertDesc.ByteWidth = sizeof( SVertex_Pos4_Col4 ) * _vertices.size();
+    vertDesc.ByteWidth = sizeof( SVertex_Pos4_Col4 ) * static_cast<UINT>(_vertices.size());
     vertDesc.CPUAccessFlags = 0;
     vertDesc.MiscFlags = 0;
     vertDesc.StructureByteStride = 0;
@@ -36,7 +36,7 @@ void ost::CDXModel::Render()
     Uint32 offset = 0;
     dx::DeviceContext->IASetVertexBuffers( 0, 1, &_dxVertexBuffer, &stride, &offset );
 
-    dx::DeviceContext->Draw( _vertices.size(), 0 );
+    dx::DeviceContext->Draw( static_cast<UINT>(_vertices.size()), 0 );
 
 }
     // ------------------------------------------------------------

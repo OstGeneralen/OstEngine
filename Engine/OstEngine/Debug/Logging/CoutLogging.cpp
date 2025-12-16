@@ -39,7 +39,7 @@ namespace
     void SetColor( int aColorCode )
     {
         HANDLE cHnd = GetStdHandle( STD_OUTPUT_HANDLE );
-        SetConsoleTextAttribute( cHnd, aColorCode );
+        SetConsoleTextAttribute( cHnd, static_cast<WORD>(aColorCode) );
     }
 
     void PrintMessage(const ost::log::SLogMessage& aMsg, int aLevel)

@@ -23,7 +23,7 @@ void ost::SEngineConfig::LoadFromFile( const std::string& configPath )
         Resolution = Vector2i{ resCfg["w"], resCfg["h"] };
 
         json clrCfg = configFileRoot["clear_color"];
-        ClearColor = SColor( clrCfg["r"].get<float>(), clrCfg["g"].get<float>(), clrCfg["b"].get<float>(), 1.0f );
+        ClearColor = SColorFlt32( clrCfg["r"].get<float>(), clrCfg["g"].get<float>(), clrCfg["b"].get<float>(), 1.0f );
         
         Logging::Confirm( "Successfully loaded config from '{}'", configPath );
     }

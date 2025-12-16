@@ -121,7 +121,7 @@ namespace osrFormat
     {
         try
         {
-            return fromRoot["layoutElements"].size();
+            return static_cast<Int32>(fromRoot["layoutElements"].size());
         }
         catch ( const std::exception& e )
         {
@@ -201,7 +201,7 @@ bool ost::COSRFileReader::TryReadFromFile( const std::string& aPath, SDXRenderSt
 
         outInto.NumElements = osrFormat::TryReadNumLayoutElements( root );
 
-        for ( Int32 i = 0; i < outInto.NumElements; ++i )
+        for ( Uint32 i = 0; i < outInto.NumElements; ++i )
         {
             SDXInputElementDesc& target = outInto.ElementDescs[i];
             target = osrFormat::TryReadElementDesc( root, i );

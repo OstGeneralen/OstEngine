@@ -38,7 +38,7 @@ namespace ost
             T newDegrees = aDegrees;
 			if (aDegrees < 0)
 			{
-                newDegress = ClampDegrees(newDegrees + static_cast<T>( 360 ));
+                newDegrees = ClampDegrees(newDegrees + static_cast<T>( 360 ));
 			}
 			else if (aDegrees > static_cast<T>(360))
 			{

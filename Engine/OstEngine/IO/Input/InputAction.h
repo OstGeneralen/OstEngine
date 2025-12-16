@@ -1,14 +1,14 @@
 #pragma once
-#include <OstEngine/IO/Input/InputReader.h>
-#include <OstEngine/IO/Input/KeyCodes.h>
 #include <OstEngine/IO/Input/InputActionType.h>
+#include <OstEngine/IO/Input/InputReader.h>
 #include <OstEngine/IO/Input/InputValue.h>
+#include <OstEngine/IO/Input/KeyCodes.h>
 
 #include <cassert>
 #include <functional>
 #include <vector>
 
-#define INPUT_CALLBACK( functionName ) [&]( auto iv ) { functionName##(iv); }
+#define INPUT_CALLBACK( functionName ) [&]( auto iv ) { functionName##( iv ); }
 
 namespace ost
 {
@@ -48,7 +48,7 @@ namespace ost
         EKeyCode Down = EKeyCode::Unknown;
         EKeyCode Left = EKeyCode::Unknown;
         EKeyCode Right = EKeyCode::Unknown;
-        
+
         EInputActionType GetType() const
         {
             return EInputActionType::Axis2D;
@@ -58,29 +58,10 @@ namespace ost
 
     namespace InputBinding
     {
-        static SInputBinding_Button CreateButton( EKeyCode aKey )
-        {
-            SInputBinding_Button b;
-            b.Key = aKey;
-            return b;
-        }
-        static SInputBinding_NegativePositive CreateNegativePositive( EKeyCode aNegative, EKeyCode aPositive )
-        {
-            SInputBinding_NegativePositive b;
-            b.Negative = aNegative;
-            b.Positive = aPositive;
-            return b;
-        }
-        static SInputBinding_UpDownLeftRight CreateUpDownLeftRight( EKeyCode aUp, EKeyCode aDown, EKeyCode aLeft,
-                                                                    EKeyCode aRight )
-        {
-            SInputBinding_UpDownLeftRight b;
-            b.Up = aUp;
-            b.Down = aDown;
-            b.Left = aLeft;
-            b.Right = aRight;
-            return b;
-        }
+        extern SInputBinding_Button CreateButton( EKeyCode aKey );
+        extern SInputBinding_NegativePositive CreateNegativePositive( EKeyCode aNegative, EKeyCode aPositive );
+        extern SInputBinding_UpDownLeftRight CreateUpDownLeftRight( EKeyCode aUp, EKeyCode aDown, EKeyCode aLeft,
+                                                                    EKeyCode aRight );
     } // namespace InputBinding
 
     struct SInputAction

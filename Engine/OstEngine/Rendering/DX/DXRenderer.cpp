@@ -75,9 +75,9 @@ ost::CDXRenderState ost::CDXRenderer::CreateRenderState( const std::string& aRen
     renderState._pixelShader = pixelCompiler.GetPixelShader();
 
     D3D11_INPUT_ELEMENT_DESC* layoutDescs = new D3D11_INPUT_ELEMENT_DESC[desc.NumElements];
-    for ( Int32 i = 0; i < desc.NumElements; ++i )
+    for ( Uint32 i = 0; i < desc.NumElements; ++i )
     {
-        Int32 byteOffset = 0;
+        Uint32 byteOffset = 0;
         if ( i > 0 )
         {
             byteOffset = layoutDescs[i - 1].AlignedByteOffset + desc.ElementDescs[i - 1].ByteSize;

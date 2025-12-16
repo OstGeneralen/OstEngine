@@ -8,7 +8,9 @@
 
 bool ost::CInputReader::ProcessInputEvent( Uint32 msg, Int64 w, Uint64 l )
 {
-    const EKeyCode engineKeyCode = Keycode::ConvertVirtualKC( w );
+    l; // Fix unreferenced
+
+    const EKeyCode engineKeyCode = Keycode::ConvertVirtualKC( static_cast<Uint32>(w) );
     if ( engineKeyCode == EKeyCode::Unknown )
         return false;
 

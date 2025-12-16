@@ -1,8 +1,9 @@
 #include "DXShaderCompiler.h"
 
-#include <OstEngine/OstEngineMinimal.h>
 #include <OstEngine/Debug/EngineLogInstances.h>
+#include <OstEngine/OstEngineMinimal.h>
 #include <OstEngine/Rendering/DX/DXHandling.h>
+#include <OstEngine/Utility/StringUtility.h>
 
 #include <d3dcompiler.h>
 
@@ -48,7 +49,6 @@ void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShader
     compileFlags = compileFlags | D3DCOMPILE_DEBUG;
 #endif
 
-
     std::string target = "";
     switch ( aType )
     {
@@ -62,9 +62,8 @@ void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShader
         break;
     }
 
-    RendererLog.Detail( "Shader File: {}", std::string( _shaderFilePath.begin(), _shaderFilePath.end() ) );
+    RendererLog.Detail( "Shader File: {}", stringUtils::WStringToString( _shaderFilePath) );
     RendererLog.Detail( "Entry Point: {}", aEntry );
-
 
     ID3DBlob* errorBlob;
     HRESULT result = D3DCompileFromFile( _shaderFilePath.c_str(), NULL, NULL, aEntry.c_str(), target.c_str(),
@@ -87,11 +86,11 @@ void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShader
     {
     case ost::EDxShaderType::Vertex:
         result = dx::Device->CreateVertexShader( _shaderBlob->GetBufferPointer(), _shaderBlob->GetBufferSize(), NULL,
-                                              &_vertexShader );
+                                                 &_vertexShader );
         break;
     case ost::EDxShaderType::Pixel:
         result = dx::Device->CreatePixelShader( _shaderBlob->GetBufferPointer(), _shaderBlob->GetBufferSize(), NULL,
-                                             &_pixelShader );
+                                                &_pixelShader );
         break;
     }
 

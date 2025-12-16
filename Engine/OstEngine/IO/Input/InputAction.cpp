@@ -4,6 +4,31 @@
 
 #include <OstEngine/Math/NumericUtils.h>
 
+ost::SInputBinding_Button ost::InputBinding::CreateButton( EKeyCode aKey )
+{
+    SInputBinding_Button b;
+    b.Key = aKey;
+    return b;
+}
+ost::SInputBinding_NegativePositive ost::InputBinding::CreateNegativePositive( EKeyCode aNegative,
+                                                                                 EKeyCode aPositive )
+{
+    SInputBinding_NegativePositive b;
+    b.Negative = aNegative;
+    b.Positive = aPositive;
+    return b;
+}
+ost::SInputBinding_UpDownLeftRight ost::InputBinding::CreateUpDownLeftRight( EKeyCode aUp, EKeyCode aDown, EKeyCode aLeft,
+                                                            EKeyCode aRight )
+{
+    SInputBinding_UpDownLeftRight b;
+    b.Up = aUp;
+    b.Down = aDown;
+    b.Left = aLeft;
+    b.Right = aRight;
+    return b;
+}
+
 // ------------------------------------------------------------
 // BINDING EVALUATIONS
 // ------------------------------------------------------------

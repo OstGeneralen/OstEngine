@@ -29,6 +29,14 @@ namespace ost
         T GetDeterminant() const;
     };
 
+    template<typename T>
+    static TVector3<T> operator*(const TVector3<T>& aVec, const TMatrix3x3<T>& aMat)
+    {
+        return TVector3<T>( aVec.X * aMat.M11 + aVec.Y * aMat.M12 + aVec.Z * aMat.M13,
+                            aVec.X * aMat.M21 + aVec.Y * aMat.M22 + aVec.Z * aMat.M23,
+                            aVec.X * aMat.M31 + aVec.Y * aMat.M32 + aVec.Z * aMat.M33 );
+    }
+
     template <typename T>
     static TMatrix3x3<T> operator*( const TMatrix3x3<T>& aFirst, const TMatrix3x3<T>& aSecond );
 

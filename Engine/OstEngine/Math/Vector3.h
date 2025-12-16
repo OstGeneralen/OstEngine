@@ -42,7 +42,14 @@ namespace ost
         TVector3<T>& operator-=( const TVector3& aOther );
         TVector3<T>& operator*=( const T aScalar );
         TVector3<T>& operator/=( const T aScalar );
-    };
+
+        TVector3<T> operator+( const TVector3<T>& aOther ) const;
+        TVector3<T> operator-( const TVector3<T>& aOther ) const;
+        TVector3<T> operator*( const T aOther ) const;
+        TVector3<T> operator/( const T aOther ) const;
+
+        bool operator==( const TVector3<T>& aOther ) const;
+     };
 
     // ------------------------------------------------------------
     // Typed Vector3s
@@ -52,27 +59,6 @@ namespace ost
 	using Vector3i = TVector3<Int32>;
 	using Vector3u = TVector3<Uint32>;
     // ------------------------------------------------------------
-
-    template <typename T>
-    static TVector3<T> operator+( const TVector3<T>& aFirst, const TVector3<T>& aSecond );
-
-    template <typename T>
-    static TVector3<T> operator-( const TVector3<T>& aFirst, const TVector3<T>& aSecond );
-
-    template <typename T>
-    static TVector3<T> operator*( const TVector3<T>& aVector, const T aScalar );
-
-    template <typename T>
-    static TVector3<T> operator/( const TVector3<T>& aVector, const T aScalar );
-
-    template <typename T>
-    static bool operator==( const TVector3<T>& aFirst, const TVector3<T>& aSecond );
-
-    template <>
-    static bool operator==<Float32>( const TVector3<Float32>& aFirst, const TVector3<Float32>& aSecond );
-
-    template <>
-    static bool operator== <Float64>( const TVector3<Float64>& aFirst, const TVector3<Float64>& aSecond );
 
     // ------------------------------------------------------------
     // Begin Definition
@@ -192,47 +178,47 @@ namespace ost
     }
 
     template <typename T>
-    TVector3<T> operator+( const TVector3<T>& aFirst, const TVector3<T>& aSecond )
+    inline TVector3<T> TVector3<T>::operator+( const TVector3<T>& aSecond ) const
     {
-        return TVector3<T>( aFirst.X + aSecond.X, aFirst.Y + aSecond.Y, aFirst.Z + aSecond.Z );
+        return TVector3<T>( X + aSecond.X, Y + aSecond.Y, Z + aSecond.Z );
     }
 
     template <typename T>
-    TVector3<T> operator-( const TVector3<T>& aFirst, const TVector3<T>& aSecond )
+    inline TVector3<T> TVector3<T>::operator-( const TVector3<T>& aSecond ) const
     {
-        return TVector3<T>( aFirst.X - aSecond.X, aFirst.Y - aSecond.Y, aFirst.Z - aSecond.Z );
+        return TVector3<T>( X - aSecond.X, Y - aSecond.Y, Z - aSecond.Z );
     }
 
     template <typename T>
-    TVector3<T> operator*( const TVector3<T>& aVector, const T aScalar )
+    inline TVector3<T> TVector3<T>::operator*( const T aScalar ) const
     {
-        return TVector3<T>( aVector.X * aScalar, aVector.Y * aScalar, aVector.Z * aScalar );
+        return TVector3<T>( X * aScalar, Y * aScalar, Z * aScalar );
     }
 
     template <typename T>
-    TVector3<T> operator/( const TVector3<T>& aVector, const T aScalar )
+    inline TVector3<T> TVector3<T>::operator/( const T aScalar ) const
     {
-        return TVector3<T>( aVector.X / aScalar, aVector.Y / aScalar, aVector.Z / aScalar );
+        return TVector3<T>( X / aScalar, Y / aScalar, Z / aScalar );
     }
 
     template <typename T>
-    bool operator==( const TVector3<T>& aFirst, const TVector3<T>& aSecond )
+    inline bool TVector3<T>::operator==( const TVector3<T>& aSecond ) const
     {
-        return ( aFirst.X == aSecond.X ) && ( aFirst.Y == aSecond.Y ) && ( aFirst.Z == aSecond.Z );
+        return ( X == aSecond.X ) && ( Y == aSecond.Y ) && ( Z == aSecond.Z );
     }
 
     template <>
-    bool operator==( const TVector3<Float32>& aFirst, const TVector3<Float32>& aSecond )
+    inline bool TVector3<Float32>::operator==( const TVector3<Float32>& aSecond ) const
     {
-        return NumericUtils::NearlyEqual( aFirst.X, aSecond.X ) && NumericUtils::NearlyEqual( aFirst.Y, aSecond.Y ) &&
-               NumericUtils::NearlyEqual( aFirst.Z, aSecond.Z );
+        return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y ) &&
+               NumericUtils::NearlyEqual( Z, aSecond.Z );
     }
 
     template <>
-    bool operator==( const TVector3<Float64>& aFirst, const TVector3<Float64>& aSecond )
+    inline bool TVector3<Float64>::operator==( const TVector3<Float64>& aSecond ) const
     {
-        return NumericUtils::NearlyEqual( aFirst.X, aSecond.X ) && NumericUtils::NearlyEqual( aFirst.Y, aSecond.Y ) &&
-               NumericUtils::NearlyEqual( aFirst.Z, aSecond.Z );
+        return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y ) &&
+               NumericUtils::NearlyEqual( Z, aSecond.Z );
     }
 
 } // namespace ost

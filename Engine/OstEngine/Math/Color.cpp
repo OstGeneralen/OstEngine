@@ -65,7 +65,8 @@ ost::SColor::SColor( Uint8 aR, Uint8 aG, Uint8 aB, Uint8 aA )
 }
 
 ost::SColor::SColor( const SColorFlt32& aFltColor )
-    : SColor( aFltColor.R, aFltColor.G, aFltColor.B, aFltColor.A )
+    : SColor( static_cast<Uint8>( aFltColor.R * 255.0f ), static_cast<Uint8>( aFltColor.G * 255.0f ),
+              static_cast<Uint8>( aFltColor.B * 255.0f ), static_cast<Uint8>( aFltColor.A * 255.0f ) )
 {
 }
 

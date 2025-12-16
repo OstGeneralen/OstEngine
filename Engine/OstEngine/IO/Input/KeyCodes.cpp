@@ -38,8 +38,6 @@ ost::EKeyCode ost::Keycode::ConvertVirtualKC( Uint32 aVKC )
         return EKeyCode::Left;
     case VK_RIGHT:
         return EKeyCode::Right;
-
-
-        return EKeyCode::Unknown;
     }
+    return EKeyCode::Unknown;
 }

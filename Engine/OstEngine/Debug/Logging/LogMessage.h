@@ -18,8 +18,6 @@ namespace ost
             template <typename... TFmtArgs>
             static SLogMessage Make( ELogLevel aVerbosity, std::string_view aFmtStr, TFmtArgs&&... aFmtArgs )
             {
-                std::chrono::system_clock::now();
-
                 return SLogMessage{ aVerbosity, std::vformat( aFmtStr, std::make_format_args( aFmtArgs... ) ),
                                     std::format( "{:%H:%M:%S}", std::chrono::floor<std::chrono::seconds>( std::chrono::system_clock::now() )), std::chrono::system_clock::now() };
                 

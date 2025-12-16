@@ -3,6 +3,7 @@
 #include "../../Debug/Logging/LogInstance.h"
 
 #include <Windows.h>
+#include <OstEngine/Utility/StringUtility.h>
 
 // ------------------------------------------------------------
 
@@ -66,7 +67,7 @@ bool ost::dx::Initialize( ost::CWindow& aForWindow )
         const Uint64 dedicatedSystemMemory = static_cast<Uint64>( adapterDesc.DedicatedSystemMemory );
         const Uint64 sharedSystemMemory = static_cast<Uint64>( adapterDesc.SharedSystemMemory );
 
-        DeviceInformation.AdapterName = std::string( adapterNameW.begin(), adapterNameW.end() );
+        DeviceInformation.AdapterName = stringUtils::WStringToString( adapterNameW );
         DeviceInformation.DedicatedVideoMemory = ByteSize::Bytes( dedicatedVideoMemory );
         DeviceInformation.DedicatedSystemMemory = ByteSize::Bytes( dedicatedSystemMemory );
         DeviceInformation.SharedSystemMemory = ByteSize::Bytes( sharedSystemMemory );

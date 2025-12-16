@@ -87,7 +87,7 @@ ost::CWindow::CWindow( const char* aTitle, const Vector2i& aSize, void* aAppInst
         }
 
         FILE* stdIn = nullptr;
-        if (freopen_s(&stdOut, "CONOUT$", "r", stdin) != 0)
+        if (freopen_s(&stdIn, "CONOUT$", "r", stdin) != 0)
         {
         }
 
