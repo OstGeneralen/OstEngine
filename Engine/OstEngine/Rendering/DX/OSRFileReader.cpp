@@ -188,8 +188,6 @@ namespace osrFormat
 
 bool ost::COSRFileReader::TryReadFromFile( const std::string& aPath, SDXRenderStateDescriptor& outInto )
 {
-    RendererLog.BeginLog( "Reading .osr file '{}'", aPath );
-
     // Read the json content
     try
     {
@@ -222,11 +220,9 @@ bool ost::COSRFileReader::TryReadFromFile( const std::string& aPath, SDXRenderSt
             RendererLog.EndScope();
         }
 
-        RendererLog.EndScope();
         return false;
     }
 
     RendererLog.Confirm( "Successfully parsed .osr file '{}'", aPath );
-    RendererLog.EndScope();
     return true;
 }

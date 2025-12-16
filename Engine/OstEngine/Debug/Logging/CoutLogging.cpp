@@ -3,11 +3,13 @@
 #include <Windows.h>
 #include <iostream>
 
-#define CCOLOR_GRAY 8
+#define CCOLOR_GRAY 7
 #define CCOLOR_RED 12
 #define CCOLOR_GREEN 10
 #define CCOLOR_YELLOW 14
-#define CCOLOR_WHITE 7
+#define CCOLOR_WHITE 15
+#define CCOLOR_LOWLIGHT 8
+#define CCOLOR_CYAN 11
 
 // ------------------------------------------------------------
 
@@ -17,6 +19,10 @@ namespace
     {
         switch ( l )
         {
+        case ost::log::ELogLevel::Info:
+            return CCOLOR_CYAN;
+        case ost::log::ELogLevel::Detail:
+            return CCOLOR_LOWLIGHT;
         case ost::log::ELogLevel::Message:
             return CCOLOR_WHITE;
         case ost::log::ELogLevel::Confirm:
@@ -40,14 +46,14 @@ namespace
     {
         if (aLevel == 0)
         {
-            ::SetColor( CCOLOR_GRAY );
+            ::SetColor( CCOLOR_LOWLIGHT );
             std::cout << '[' << aMsg.FormattedTime << "] ";
             ::SetColor( ::LogLevelToColor( aMsg.Verbosity ) );
             std::cout << aMsg.Message << '\n';
         }
         else
         {
-            ::SetColor( CCOLOR_GRAY );
+            ::SetColor( CCOLOR_LOWLIGHT );
             std::cout << " ........ ";
             for (int i = 0; i < aLevel; ++i)
             {

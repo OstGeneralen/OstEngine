@@ -73,10 +73,10 @@ bool ost::dx::Initialize( ost::CWindow& aForWindow )
     }
 
     DXLog.BeginConfirm( "Successfully initialized D3D11" );
-    DXLog.Log( "Adapter: {}", DeviceInformation.AdapterName );
-    DXLog.Log( "Dedicated VRAM: {}gb", DeviceInformation.DedicatedVideoMemory.Num );
-    DXLog.Log( "Dedicated Sys: {}gb", DeviceInformation.DedicatedSystemMemory.Num );
-    DXLog.Log( "Shared Sys: {}gb", DeviceInformation.SharedSystemMemory.Num );
+    DXLog.Detail( "Adapter: {}", DeviceInformation.AdapterName );
+    DXLog.Detail( "Dedicated VRAM: {}gb", DeviceInformation.DedicatedVideoMemory.Num );
+    DXLog.Detail( "Dedicated Sys: {}gb", DeviceInformation.DedicatedSystemMemory.Num );
+    DXLog.Detail( "Shared Sys: {}gb", DeviceInformation.SharedSystemMemory.Num );
     DXLog.EndScope();
     
     return true;

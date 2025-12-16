@@ -21,9 +21,15 @@ namespace ost
             }
 
             template <typename... TArgs>
+            void BeginInfo( std::string_view aMsg, TArgs&&... aFmt )
+            {
+                BeginScope( std::move( SLogMessage::Make( ELogLevel::Info, aMsg, aFmt... ) ) );
+            }
+
+            template <typename... TArgs>
             void BeginConfirm( std::string_view aMsg, TArgs&&... aFmt )
             {
-                BeginScope(  std::move(SLogMessage::Make( ELogLevel::Confirm, aMsg, aFmt... ) ) );
+                BeginScope( std::move( SLogMessage::Make( ELogLevel::Confirm, aMsg, aFmt... ) ) );
             }
 
             template <typename... TArgs>
@@ -39,9 +45,23 @@ namespace ost
             }
 
             template <typename... TArgs>
+            void Detail( std::string_view aMsg, TArgs&&... aFmt )
+            {
+                SLogMessage msg = SLogMessage::Make( ELogLevel::Detail, aMsg, aFmt... );
+                LogMessage( std::move( msg ) );
+            }
+
+            template <typename... TArgs>
             void Log( std::string_view aMsg, TArgs&&... aFmt )
             {
                 SLogMessage msg = SLogMessage::Make( ELogLevel::Message, aMsg, aFmt... );
+                LogMessage( std::move( msg ) );
+            }
+
+            template <typename... TArgs>
+            void Info( std::string_view aMsg, TArgs&&... aFmt )
+            {
+                SLogMessage msg = SLogMessage::Make( ELogLevel::Info, aMsg, aFmt... );
                 LogMessage( std::move( msg ) );
             }
 

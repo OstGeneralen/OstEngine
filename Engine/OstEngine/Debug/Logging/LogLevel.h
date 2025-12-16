@@ -9,8 +9,10 @@ namespace ost
 	{
 		enum class ELogLevel 
 		{
+			Detail,
 			Message,
 			Confirm,
+			Info,
 			Warning,
 			Error,
 		};

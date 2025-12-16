@@ -54,16 +54,16 @@ void ost::CDXShaderCompiler::CompileShader( const std::string& aEntry, EDxShader
     {
     case ost::EDxShaderType::Vertex:
         target = "vs_5_0";
-        RendererLog.BeginLog( "Compiling Vertex Shader" );
+        RendererLog.BeginInfo( "Compiling Vertex Shader" );
         break;
     case ost::EDxShaderType::Pixel:
         target = "ps_5_0";
-        RendererLog.BeginLog( "Compiling Pixel Shader" );
+        RendererLog.BeginInfo( "Compiling Pixel Shader" );
         break;
     }
 
-    RendererLog.Log( "Shader File: {}", std::string( _shaderFilePath.begin(), _shaderFilePath.end() ) );
-    RendererLog.Log( "Entry Point: {}", aEntry );
+    RendererLog.Detail( "Shader File: {}", std::string( _shaderFilePath.begin(), _shaderFilePath.end() ) );
+    RendererLog.Detail( "Entry Point: {}", aEntry );
 
 
     ID3DBlob* errorBlob;

@@ -28,7 +28,7 @@ namespace ost
             LoggerIterator begin() const;
             LoggerIterator end() const;
 
-            void PushMessage(SLogMessage&& aMsg);
+            void PushMessage( SLogMessage&& aMsg );
 
         private:
             CLogger() = default;
@@ -42,11 +42,17 @@ namespace ost
     class Logging
     {
     public:
-        template<typename ... TFmt>
+        template <typename... TFmt>
         static log::SLogScope BeginLogScope( std::string_view aStr, TFmt&&... aFmt );
 
         template <typename... TFmt>
+        static void Detail( std::string_view aStr, TFmt&&... aFmt );
+
+        template <typename... TFmt>
         static void Log( std::string_view aStr, TFmt&&... aFmt );
+
+        template <typename... TFmt>
+        static void Info( std::string_view aStr, TFmt&&... aFmt );
 
         template <typename... TFmt>
         static void Confirm( std::string_view aStr, TFmt&&... aFmt );
@@ -65,31 +71,39 @@ namespace ost
     }
 
     template <typename... TFmt>
+    inline void ost::Logging::Detail( std::string_view aStr, TFmt&&... aFmt )
+    {
+        log::CLogger::Instance().PushMessage( log::SLogMessage::Make( log::ELogLevel::Detail, aStr, aFmt... ) );
+    }
+
+    template <typename... TFmt>
     inline void ost::Logging::Log( std::string_view aStr, TFmt&&... aFmt )
     {
-        log::CLogger::Instance().PushMessage(
-            log::SLogMessage::Make( log::ELogLevel::Message, aStr, aFmt... ) );
+        log::CLogger::Instance().PushMessage( log::SLogMessage::Make( log::ELogLevel::Message, aStr, aFmt... ) );
+    }
+
+    template <typename... TFmt>
+    inline void ost::Logging::Info( std::string_view aStr, TFmt&&... aFmt )
+    {
+        log::CLogger::Instance().PushMessage( log::SLogMessage::Make( log::ELogLevel::Info, aStr, aFmt... ) );
     }
 
     template <typename... TFmt>
     inline void ost::Logging::Confirm( std::string_view aStr, TFmt&&... aFmt )
     {
-        log::CLogger::Instance().PushMessage(
-            log::SLogMessage::Make( log::ELogLevel::Confirm, aStr, aFmt... ) );
+        log::CLogger::Instance().PushMessage( log::SLogMessage::Make( log::ELogLevel::Confirm, aStr, aFmt... ) );
     }
 
     template <typename... TFmt>
     inline void ost::Logging::Warning( std::string_view aStr, TFmt&&... aFmt )
     {
-        log::CLogger::Instance().PushMessage(
-            log::SLogMessage::Make( log::ELogLevel::Warning, aStr, aFmt... ) );
+        log::CLogger::Instance().PushMessage( log::SLogMessage::Make( log::ELogLevel::Warning, aStr, aFmt... ) );
     }
 
     template <typename... TFmt>
     inline void ost::Logging::Error( std::string_view aStr, TFmt&&... aFmt )
     {
-        log::CLogger::Instance().PushMessage(
-            log::SLogMessage::Make( log::ELogLevel::Error, aStr, aFmt... ) );
+        log::CLogger::Instance().PushMessage( log::SLogMessage::Make( log::ELogLevel::Error, aStr, aFmt... ) );
     }
 } // namespace ost
 

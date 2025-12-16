@@ -92,7 +92,7 @@ void ost::CEngine::Run( IGame& aAppInterface )
         aAppInterface.Render();
 
         DeveloperGUI::BeginFrame();
-        gui::GUI_LogOutput::DisplayStandalone();
+        //gui::GUI_LogOutput::DisplayStandalone();
         DeveloperGUI::EndFrame();
 
         dx::PresentRenderFrame();
