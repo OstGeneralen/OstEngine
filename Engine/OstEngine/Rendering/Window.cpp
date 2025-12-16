@@ -1,5 +1,7 @@
 #include "Window.h"
 #include <Windows.h>
+#include <iostream>
+#include <OstEngine/Debug/Logging/Logger.h>
 
 // ------------------------------------------------------------
 
@@ -38,7 +40,7 @@ ost::CWindow::CWindow()
 
 // ------------------------------------------------------------
 
-ost::CWindow::CWindow( const char* aTitle, const Vector2i& aSize, void* aAppInstance )
+ost::CWindow::CWindow( const char* aTitle, const Vector2i& aSize, void* aAppInstance, bool aIncludeConsole )
 {
     const std::string titleStr = aTitle;
     const std::wstring titleWstr{ titleStr.begin(), titleStr.end() };
@@ -76,6 +78,25 @@ ost::CWindow::CWindow( const char* aTitle, const Vector2i& aSize, void* aAppInst
     // clang-format on
 
     _isOpen = _winPtr;
+
+    if ( aIncludeConsole && AllocConsole())
+    {
+        FILE* stdOut = nullptr;
+        if (freopen_s(&stdOut, "CONOUT$", "w", stdout) != 0)
+        {
+        }
+
+        FILE* stdIn = nullptr;
+        if (freopen_s(&stdOut, "CONOUT$", "r", stdin) != 0)
+        {
+        }
+
+        std::cout.clear();
+        std::cin.clear();
+        std::cerr.clear();
+
+        log::CLogger::Instance().EnableConsoleLogging();
+    }
 }
 
 // ------------------------------------------------------------

@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
+    <ClInclude Include="OstEngine\Debug\Logging\CoutLogging.h" />
     <ClInclude Include="OstEngine\IO\Input\InputReader.h" />
     <ClInclude Include="OstEngine\IO\Input\KeyCodes.h" />
     <ClInclude Include="OstEngine\Debug\Assert.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="OstEngine\Debug\Logging\CoutLogging.cpp" />
     <ClCompile Include="OstEngine\IO\Input\InputReader.cpp" />
     <ClCompile Include="OstEngine\IO\Input\KeyCodes.cpp" />
     <ClCompile Include="OstEngine\Debug\EngineLogInstances.cpp" />

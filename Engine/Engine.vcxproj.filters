@@ -183,6 +183,9 @@
     <ClInclude Include="OstEngine\Utility\ByteSize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OstEngine\Debug\Logging\CoutLogging.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OstEngine\Engine.cpp">
@@ -282,6 +285,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OstEngine\Rendering\DX\DXHandling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OstEngine\Debug\Logging\CoutLogging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

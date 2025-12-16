@@ -16,21 +16,24 @@ namespace ost
     {
         class CLogger
         {
-            friend Logging;
-            friend CLogInstance;
-
         public:
             using LoggerIterator = std::vector<SLogMessage>::const_iterator;
 
         public:
             static CLogger& Instance();
+
+            void EnableConsoleLogging();
+
             // Allow iterating the messages via range-for
             LoggerIterator begin() const;
             LoggerIterator end() const;
 
+            void PushMessage(SLogMessage&& aMsg);
+
         private:
             CLogger() = default;
             std::vector<SLogMessage> _messages;
+            bool _consoleLoggingEnabled = false;
         };
 
     } // namespace log
@@ -64,28 +67,28 @@ namespace ost
     template <typename... TFmt>
     inline void ost::Logging::Log( std::string_view aStr, TFmt&&... aFmt )
     {
-        log::CLogger::Instance()._messages.emplace_back(
+        log::CLogger::Instance().PushMessage(
             log::SLogMessage::Make( log::ELogLevel::Message, aStr, aFmt... ) );
     }
 
     template <typename... TFmt>
     inline void ost::Logging::Confirm( std::string_view aStr, TFmt&&... aFmt )
     {
-        log::CLogger::Instance()._messages.emplace_back(
+        log::CLogger::Instance().PushMessage(
             log::SLogMessage::Make( log::ELogLevel::Confirm, aStr, aFmt... ) );
     }
 
     template <typename... TFmt>
     inline void ost::Logging::Warning( std::string_view aStr, TFmt&&... aFmt )
     {
-        log::CLogger::Instance()._messages.emplace_back(
+        log::CLogger::Instance().PushMessage(
             log::SLogMessage::Make( log::ELogLevel::Warning, aStr, aFmt... ) );
     }
 
     template <typename... TFmt>
     inline void ost::Logging::Error( std::string_view aStr, TFmt&&... aFmt )
     {
-        log::CLogger::Instance()._messages.emplace_back(
+        log::CLogger::Instance().PushMessage(
             log::SLogMessage::Make( log::ELogLevel::Error, aStr, aFmt... ) );
     }
 } // namespace ost

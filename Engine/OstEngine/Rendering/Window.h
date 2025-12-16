@@ -18,7 +18,7 @@ namespace ost
 	{
 	public:
         CWindow();    
-		CWindow( const char* aTitle, const Vector2i& aSize, void* aAppInstance );
+		CWindow( const char* aTitle, const Vector2i& aSize, void* aAppInstance, bool aIncludeConsole = true );
         ~CWindow();
 
 		CWindow( CWindow&& aOther ) noexcept;

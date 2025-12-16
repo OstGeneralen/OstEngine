@@ -1,10 +1,13 @@
 #include "LogInstance.h"
+
 #include "Logger.h"
+
+#include <utility>
 
 // ------------------------------------------------------------
 
 ost::log::CLogInstance::CLogInstance( const std::string& aName )
-    : _name{aName}
+    : _name{ aName }
 {
 }
 
@@ -12,10 +15,10 @@ ost::log::CLogInstance::CLogInstance( const std::string& aName )
 
 void ost::log::CLogInstance::EndScope()
 {
-    if (_activeMessageStack.size() == 1)
+    if ( _activeMessageStack.size() == 1 )
     {
         // This means we're about to pop the last message so we want to move it across to the logger
-        CLogger::Instance()._messages.push_back( _activeMessageStack.top() );
+        CLogger::Instance().PushMessage( std::move( _activeMessageStack.top() ) );
         _activeMessageStack.pop();
     }
     else if ( _activeMessageStack.size() > 1 )
@@ -30,7 +33,7 @@ void ost::log::CLogInstance::EndScope()
 
 void ost::log::CLogInstance::BeginScope( SLogMessage&& aMsg )
 {
-    if (_activeMessageStack.empty())
+    if ( _activeMessageStack.empty() )
     {
         _activeMessageStack.push( aMsg );
     }
@@ -44,10 +47,10 @@ void ost::log::CLogInstance::BeginScope( SLogMessage&& aMsg )
 
 void ost::log::CLogInstance::LogMessage( SLogMessage&& aMsg )
 {
-    if (_activeMessageStack.empty())
+    if ( _activeMessageStack.empty() )
     {
         // If the stack is empty, we just log the message directly
-        CLogger::Instance()._messages.push_back( aMsg );
+        CLogger::Instance().PushMessage( std::move( aMsg ) );
     }
     else
     {
