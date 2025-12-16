@@ -2,7 +2,7 @@
 #include <OstEngine/Application/GameInterface.h>
 #include <OstEngine/Engine.h>
 #include <OstEngine/Utility/Timer.h>
-#include <OstEngine/Input/InputAction.h>
+#include <OstEngine/IO/Input/InputAction.h>
 
 #include <OstEngine/Rendering/DX/DXRenderState.h>
 #include <OstEngine/Rendering/DX/DXConstantBuffer.h>

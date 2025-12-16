@@ -1,8 +1,8 @@
 #pragma once
-#include <OstEngine/Application/InputReader.h>
-#include <OstEngine/Application/KeyCodes.h>
-#include <OstEngine/Input/InputActionType.h>
-#include <OstEngine/Input/InputValue.h>
+#include <OstEngine/IO/Input/InputReader.h>
+#include <OstEngine/IO/Input/KeyCodes.h>
+#include <OstEngine/IO/Input/InputActionType.h>
+#include <OstEngine/IO/Input/InputValue.h>
 
 #include <cassert>
 #include <functional>

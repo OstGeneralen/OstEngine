@@ -1,5 +1,5 @@
 #pragma once
-#include <OstEngine/Application/KeyCodes.h>
+#include <OstEngine/IO/Input/KeyCodes.h>
 #include <OstEngine/Types.h>
 #include <bitset>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <OstEngine/Application/InputReader.h>
+#include <OstEngine/IO/Input/InputReader.h>
 #include <vector>
 
 namespace ost

@@ -142,8 +142,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
-    <ClInclude Include="OstEngine\Application\InputReader.h" />
-    <ClInclude Include="OstEngine\Application\KeyCodes.h" />
+    <ClInclude Include="OstEngine\IO\Input\InputReader.h" />
+    <ClInclude Include="OstEngine\IO\Input\KeyCodes.h" />
     <ClInclude Include="OstEngine\Debug\Assert.h" />
     <ClInclude Include="OstEngine\Debug\EngineLogInstances.h" />
     <ClInclude Include="OstEngine\Debug\GUI\GUILogOutput.h" />
@@ -164,10 +164,10 @@
     <ClInclude Include="OstEngine\ImGui\imstb_rectpack.h" />
     <ClInclude Include="OstEngine\ImGui\imstb_textedit.h" />
     <ClInclude Include="OstEngine\ImGui\imstb_truetype.h" />
-    <ClInclude Include="OstEngine\Input\InputAction.h" />
-    <ClInclude Include="OstEngine\Input\InputActionType.h" />
-    <ClInclude Include="OstEngine\Input\InputSystem.h" />
-    <ClInclude Include="OstEngine\Input\InputValue.h" />
+    <ClInclude Include="OstEngine\IO\Input\InputAction.h" />
+    <ClInclude Include="OstEngine\IO\Input\InputActionType.h" />
+    <ClInclude Include="OstEngine\IO\Input\InputSystem.h" />
+    <ClInclude Include="OstEngine\IO\Input\InputValue.h" />
     <ClInclude Include="OstEngine\Math\AngleUnit.h" />
     <ClInclude Include="OstEngine\Math\Color.h" />
     <ClInclude Include="OstEngine\Math\Matrix2x2.h" />
@@ -186,6 +186,7 @@
     <ClInclude Include="OstEngine\Rendering\DX\DXRenderer.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXRenderState.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXShaderCompiler.h" />
+    <ClInclude Include="OstEngine\Rendering\DX\DXTexture2D.h" />
     <ClInclude Include="OstEngine\Rendering\DX\EngineInfoGui.h" />
     <ClInclude Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.h" />
     <ClInclude Include="OstEngine\Rendering\DX\OSRFileReader.h" />
@@ -198,8 +199,8 @@
     <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OstEngine\Application\InputReader.cpp" />
-    <ClCompile Include="OstEngine\Application\KeyCodes.cpp" />
+    <ClCompile Include="OstEngine\IO\Input\InputReader.cpp" />
+    <ClCompile Include="OstEngine\IO\Input\KeyCodes.cpp" />
     <ClCompile Include="OstEngine\Debug\EngineLogInstances.cpp" />
     <ClCompile Include="OstEngine\Debug\GUI\GUILogOutput.cpp" />
     <ClCompile Include="OstEngine\Debug\Logging\Logger.cpp" />
@@ -215,8 +216,8 @@
     <ClCompile Include="OstEngine\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="OstEngine\ImGui\imgui_tables.cpp" />
     <ClCompile Include="OstEngine\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="OstEngine\Input\InputAction.cpp" />
-    <ClCompile Include="OstEngine\Input\InputSystem.cpp" />
+    <ClCompile Include="OstEngine\IO\Input\InputAction.cpp" />
+    <ClCompile Include="OstEngine\IO\Input\InputSystem.cpp" />
     <ClCompile Include="OstEngine\Math\AngleUnit.cpp" />
     <ClCompile Include="OstEngine\Math\Color.cpp" />
     <ClCompile Include="OstEngine\Rendering\DX\DXConstantBuffer.cpp" />

@@ -2,7 +2,7 @@
 #include <OstEngine/Types.h>
 #include <OstEngine/Math/Vectors.h>
 #include <OstEngine/Utility/UntypedPointer.h>
-#include <OstEngine/Application/InputReader.h>
+#include <OstEngine/IO/Input/InputReader.h>
 #include <functional>
 
 namespace ost

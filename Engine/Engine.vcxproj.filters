@@ -51,22 +51,22 @@
     <ClInclude Include="OstEngine\Utility\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Application\InputReader.h">
+    <ClInclude Include="OstEngine\IO\Input\InputReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Application\KeyCodes.h">
+    <ClInclude Include="OstEngine\IO\Input\KeyCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Input\InputSystem.h">
+    <ClInclude Include="OstEngine\IO\Input\InputSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Input\InputValue.h">
+    <ClInclude Include="OstEngine\IO\Input\InputValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Input\InputActionType.h">
+    <ClInclude Include="OstEngine\IO\Input\InputActionType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OstEngine\Input\InputAction.h">
+    <ClInclude Include="OstEngine\IO\Input\InputAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OstEngine\Math\Vector3.h">
@@ -180,6 +180,9 @@
     <ClInclude Include="OstEngine\Rendering\DX\DXConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OstEngine\Rendering\DX\DXTexture2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OstEngine\Engine.cpp">
@@ -197,16 +200,16 @@
     <ClCompile Include="OstEngine\Utility\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OstEngine\Application\InputReader.cpp">
+    <ClCompile Include="OstEngine\IO\Input\InputReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OstEngine\Application\KeyCodes.cpp">
+    <ClCompile Include="OstEngine\IO\Input\KeyCodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OstEngine\Input\InputAction.cpp">
+    <ClCompile Include="OstEngine\IO\Input\InputAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OstEngine\Input\InputSystem.cpp">
+    <ClCompile Include="OstEngine\IO\Input\InputSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OstEngine\Math\AngleUnit.cpp">
