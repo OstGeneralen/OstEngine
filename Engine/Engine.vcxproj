@@ -228,6 +228,7 @@
     <ClCompile Include="Src\Math\AngleUnit.cpp" />
     <ClCompile Include="Src\Math\Color.cpp" />
     <ClCompile Include="Src\Math\Transform.cpp" />
+    <ClCompile Include="Src\Rendering\Camera.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXConstantBuffer.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXHandling.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXModel.cpp" />
