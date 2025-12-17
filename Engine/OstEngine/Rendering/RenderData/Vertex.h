@@ -5,9 +5,10 @@
 
 namespace ost
 {
-	struct SVertex_Pos4_Col4
+	struct SDefaltVertex
 	{
-        Vector4f Position;
-        SColorFlt32 Color;
+        Vector3f Position;
+        Vector3f Normal;
+        Vector2f UV;
 	};
 }

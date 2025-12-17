@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
+    <ClInclude Include="OstEngine\Rendering\Camera.h" />
     <ClInclude Include="Src\Debug\Logging\CoutLogging.h" />
     <ClInclude Include="OstEngine\IO\Input\InputReader.h" />
     <ClInclude Include="OstEngine\IO\Input\KeyCodes.h" />
@@ -200,6 +201,8 @@
     <ClInclude Include="OstEngine\Utility\StringUtility.h" />
     <ClInclude Include="OstEngine\Utility\Timer.h" />
     <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
+    <ClInclude Include="Src\Rendering\OstEngineDefaultRenderer.h" />
+    <ClInclude Include="Src\Rendering\RenderData\EngineInputConstantBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Debug\Logging\CoutLogging.cpp" />
@@ -235,6 +238,7 @@
     <ClCompile Include="Src\Rendering\DX\EngineInfoGui.cpp" />
     <ClCompile Include="Src\Rendering\DX\OSRFileReader.cpp" />
     <ClCompile Include="Src\Rendering\ModelLoader.cpp" />
+    <ClCompile Include="Src\Rendering\OstEngineDefaultRenderer.cpp" />
     <ClCompile Include="Src\Rendering\Window.cpp" />
     <ClCompile Include="Src\Utility\StringUtility.cpp" />
     <ClCompile Include="Src\Utility\Timer.cpp" />
