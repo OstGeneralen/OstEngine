@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +130,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;$(ProjectDir);$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,12 +142,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
-    <ClInclude Include="OstEngine\Debug\Logging\CoutLogging.h" />
+    <ClInclude Include="Src\Debug\Logging\CoutLogging.h" />
     <ClInclude Include="OstEngine\IO\Input\InputReader.h" />
     <ClInclude Include="OstEngine\IO\Input\KeyCodes.h" />
     <ClInclude Include="OstEngine\Debug\Assert.h" />
-    <ClInclude Include="OstEngine\Debug\EngineLogInstances.h" />
-    <ClInclude Include="OstEngine\Debug\GUI\GUILogOutput.h" />
+    <ClInclude Include="Src\Debug\EngineLogInstances.h" />
+    <ClInclude Include="Src\Debug\GUI\GUILogOutput.h" />
     <ClInclude Include="OstEngine\Debug\Logging\Logger.h" />
     <ClInclude Include="OstEngine\Debug\Logging\LogInstance.h" />
     <ClInclude Include="OstEngine\Debug\Logging\LogLevel.h" />
@@ -155,16 +155,16 @@
     <ClInclude Include="OstEngine\Debug\Logging\LogScope.h" />
     <ClInclude Include="OstEngine\Engine.h" />
     <ClInclude Include="OstEngine\EngineBuildFlags.h" />
-    <ClInclude Include="OstEngine\EngineConfig.h" />
-    <ClInclude Include="OstEngine\ImGui\imconfig.h" />
-    <ClInclude Include="OstEngine\ImGui\imgui.h" />
-    <ClInclude Include="OstEngine\ImGui\ImGuiHandling.h" />
-    <ClInclude Include="OstEngine\ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="OstEngine\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="OstEngine\ImGui\imgui_internal.h" />
-    <ClInclude Include="OstEngine\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="OstEngine\ImGui\imstb_textedit.h" />
-    <ClInclude Include="OstEngine\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Src\EngineConfig.h" />
+    <ClInclude Include="Src\ImGui\imconfig.h" />
+    <ClInclude Include="Src\ImGui\imgui.h" />
+    <ClInclude Include="Src\ImGui\ImGuiHandling.h" />
+    <ClInclude Include="Src\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Src\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Src\ImGui\imgui_internal.h" />
+    <ClInclude Include="Src\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Src\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Src\ImGui\imstb_truetype.h" />
     <ClInclude Include="OstEngine\IO\Input\InputAction.h" />
     <ClInclude Include="OstEngine\IO\Input\InputActionType.h" />
     <ClInclude Include="OstEngine\IO\Input\InputSystem.h" />
@@ -182,15 +182,15 @@
     <ClInclude Include="OstEngine\Math\Vector4.h" />
     <ClInclude Include="OstEngine\Math\Vectors.h" />
     <ClInclude Include="OstEngine\OstEngineMinimal.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\DXConstantBuffer.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\DXHandling.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\DXModel.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\DXRenderer.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\DXRenderState.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\DXShaderCompiler.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\EngineInfoGui.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.h" />
-    <ClInclude Include="OstEngine\Rendering\DX\OSRFileReader.h" />
+    <ClInclude Include="Src\Rendering\DX\DXConstantBuffer.h" />
+    <ClInclude Include="Src\Rendering\DX\DXHandling.h" />
+    <ClInclude Include="Src\Rendering\DX\DXModel.h" />
+    <ClInclude Include="Src\Rendering\DX\DXRenderer.h" />
+    <ClInclude Include="Src\Rendering\DX\DXRenderState.h" />
+    <ClInclude Include="Src\Rendering\DX\DXShaderCompiler.h" />
+    <ClInclude Include="Src\Rendering\DX\EngineInfoGui.h" />
+    <ClInclude Include="Src\Rendering\DX\DXRenderStateDescriptor.h" />
+    <ClInclude Include="Src\Rendering\DX\OSRFileReader.h" />
     <ClInclude Include="OstEngine\Rendering\ModelLoader.h" />
     <ClInclude Include="OstEngine\Rendering\RenderCore.h" />
     <ClInclude Include="OstEngine\Rendering\RenderData\Vertex.h" />
@@ -202,42 +202,42 @@
     <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OstEngine\Debug\Logging\CoutLogging.cpp" />
-    <ClCompile Include="OstEngine\IO\Input\InputReader.cpp" />
-    <ClCompile Include="OstEngine\IO\Input\KeyCodes.cpp" />
-    <ClCompile Include="OstEngine\Debug\EngineLogInstances.cpp" />
-    <ClCompile Include="OstEngine\Debug\GUI\GUILogOutput.cpp" />
-    <ClCompile Include="OstEngine\Debug\Logging\Logger.cpp" />
-    <ClCompile Include="OstEngine\Debug\Logging\LogInstance.cpp" />
-    <ClCompile Include="OstEngine\Debug\Logging\LogScope.cpp" />
-    <ClCompile Include="OstEngine\Engine.cpp" />
-    <ClCompile Include="OstEngine\EngineConfig.cpp" />
-    <ClCompile Include="OstEngine\ImGui\imgui.cpp" />
-    <ClCompile Include="OstEngine\ImGui\ImGuiHandling.cpp" />
-    <ClCompile Include="OstEngine\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="OstEngine\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="OstEngine\ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="OstEngine\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="OstEngine\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="OstEngine\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="OstEngine\IO\Input\InputAction.cpp" />
-    <ClCompile Include="OstEngine\IO\Input\InputSystem.cpp" />
-    <ClCompile Include="OstEngine\Math\AngleUnit.cpp" />
-    <ClCompile Include="OstEngine\Math\Color.cpp" />
-    <ClCompile Include="OstEngine\Math\Transform.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\DXConstantBuffer.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\DXHandling.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\DXModel.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\DXRenderer.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\DXRenderState.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\DXRenderStateDescriptor.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\DXShaderCompiler.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\EngineInfoGui.cpp" />
-    <ClCompile Include="OstEngine\Rendering\DX\OSRFileReader.cpp" />
-    <ClCompile Include="OstEngine\Rendering\ModelLoader.cpp" />
-    <ClCompile Include="OstEngine\Rendering\Window.cpp" />
-    <ClCompile Include="OstEngine\Utility\StringUtility.cpp" />
-    <ClCompile Include="OstEngine\Utility\Timer.cpp" />
+    <ClCompile Include="Src\Debug\Logging\CoutLogging.cpp" />
+    <ClCompile Include="Src\IO\Input\InputReader.cpp" />
+    <ClCompile Include="Src\IO\Input\KeyCodes.cpp" />
+    <ClCompile Include="Src\Debug\EngineLogInstances.cpp" />
+    <ClCompile Include="Src\Debug\GUI\GUILogOutput.cpp" />
+    <ClCompile Include="Src\Debug\Logging\Logger.cpp" />
+    <ClCompile Include="Src\Debug\Logging\LogInstance.cpp" />
+    <ClCompile Include="Src\Debug\Logging\LogScope.cpp" />
+    <ClCompile Include="Src\Engine.cpp" />
+    <ClCompile Include="Src\EngineConfig.cpp" />
+    <ClCompile Include="Src\ImGui\imgui.cpp" />
+    <ClCompile Include="Src\ImGui\ImGuiHandling.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\IO\Input\InputAction.cpp" />
+    <ClCompile Include="Src\IO\Input\InputSystem.cpp" />
+    <ClCompile Include="Src\Math\AngleUnit.cpp" />
+    <ClCompile Include="Src\Math\Color.cpp" />
+    <ClCompile Include="Src\Math\Transform.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DXConstantBuffer.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DXHandling.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DXModel.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DXRenderer.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DXRenderState.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DXRenderStateDescriptor.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DXShaderCompiler.cpp" />
+    <ClCompile Include="Src\Rendering\DX\EngineInfoGui.cpp" />
+    <ClCompile Include="Src\Rendering\DX\OSRFileReader.cpp" />
+    <ClCompile Include="Src\Rendering\ModelLoader.cpp" />
+    <ClCompile Include="Src\Rendering\Window.cpp" />
+    <ClCompile Include="Src\Utility\StringUtility.cpp" />
+    <ClCompile Include="Src\Utility\Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

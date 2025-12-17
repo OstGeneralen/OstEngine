@@ -1,6 +1,6 @@
 #pragma once
 #include <OstEngine/OstEngineMinimal.h>
-#include <OstEngine/Rendering/DX/DXModel.h>
+#include <Src/Rendering/DX/DXModel.h>
 #include <string>
 
 namespace ost

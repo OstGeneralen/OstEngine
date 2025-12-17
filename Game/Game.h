@@ -4,8 +4,6 @@
 #include <OstEngine/Utility/Timer.h>
 #include <OstEngine/IO/Input/InputAction.h>
 
-#include <OstEngine/Rendering/DX/DXRenderState.h>
-#include <OstEngine/Rendering/DX/DXConstantBuffer.h>
 #include <OstEngine/Rendering/RenderCore.h>
 #include <OstEngine/Math/Color.h>
 
@@ -33,7 +31,4 @@ private:
     ost::SInputAction _moveInputAction;
 
     ColorBuffer _colorBuffer;
-    ost::CDXRenderState _renderState;
-    ost::CDXModel _triangleModel;
-    ost::CDXConstantBuffer _colorConstantBuffer;
 };

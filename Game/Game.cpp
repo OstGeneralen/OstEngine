@@ -22,41 +22,41 @@ void CGame::Load()
     _engine = ost::CEngine::Instance();
     _engine->GetInputSystem().RegisterAction( _moveInputAction );
 
-    _triangleModel.AddVertex( { -0.5f, -0.5f, 0.0f, 1.0f }, 0x00000000 )
-        .AddVertex( { 0.5f, 0.5f, 0.0f, 1.0f }, 0x00000000 )
-        .AddVertex( { 0.5f, -0.5f, 0.0f, 1.0f }, 0x00000000 );
+    //_triangleModel.AddVertex( { -0.5f, -0.5f, 0.0f, 1.0f }, 0x00000000 )
+    //    .AddVertex( { 0.5f, 0.5f, 0.0f, 1.0f }, 0x00000000 )
+    //    .AddVertex( { 0.5f, -0.5f, 0.0f, 1.0f }, 0x00000000 );
+    //
+    //_triangleModel.InitializeResource();
+    //
+    //_colorBuffer.Color = ost::SColorFlt32{ 1.0f, 0.0f, 0.0f, 1.0f };
+    //_colorConstantBuffer.Initialize( _colorBuffer );
 
-    _triangleModel.InitializeResource();
-
-    _colorBuffer.Color = ost::SColorFlt32{ 1.0f, 0.0f, 0.0f, 1.0f };
-    _colorConstantBuffer.Initialize( _colorBuffer );
-
-    _renderState = _engine->GetRenderer().CreateRenderState( "Engine/Shaders/DefaultShader" );
+    //_renderState = _engine->GetRenderer().CreateRenderState( "Engine/Shaders/DefaultShader" );
 }
 
 void CGame::Update()
 {
-    _frameTimer.Update();
-    float deltaTime = _frameTimer.GetDeltaTime();
-    if ( _velocity.MagnitudeSqr() > 0.0f )
-    {
-        int x = 0;
-        x++;
-    }
-
-    _colorBuffer.Color.B = static_cast<float>( ( sin( _frameTimer.GetTotalTime() ) + 1.0 ) / 2.0 );
-    _colorBuffer.Color.G = static_cast<float>( ( cos( _frameTimer.GetTotalTime() ) + 1.0 ) / 2.0 );
+    //_frameTimer.Update();
+    //float deltaTime = _frameTimer.GetDeltaTime();
+    //if ( _velocity.MagnitudeSqr() > 0.0f )
+    //{
+    //    int x = 0;
+    //    x++;
+    //}
+    //
+    //_colorBuffer.Color.B = static_cast<float>( ( sin( _frameTimer.GetTotalTime() ) + 1.0 ) / 2.0 );
+    //_colorBuffer.Color.G = static_cast<float>( ( cos( _frameTimer.GetTotalTime() ) + 1.0 ) / 2.0 );
 }
 
 void CGame::Render()
 {
-    _colorConstantBuffer.Update( _colorBuffer );
-    _renderState.Bind();
-    _renderState.BindConstantBuffer(_colorConstantBuffer);
-    
-    _triangleModel.Render();
-
-    _renderState.Unbind();
+    //_colorConstantBuffer.Update( _colorBuffer );
+    //_renderState.Bind();
+    //_renderState.BindConstantBuffer(_colorConstantBuffer);
+    //
+    //_triangleModel.Render();
+    //
+    //_renderState.Unbind();
 }
 
 void CGame::InputMove( const ost::InputValue& aValue )

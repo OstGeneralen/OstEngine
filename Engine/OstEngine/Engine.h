@@ -1,11 +1,11 @@
 #pragma once
-#include <OstEngine/Rendering/Window.h>
+#include "OstEngine/Rendering/Window.h"
+
+#include <Src/Rendering/DX/DXRenderState.h>
 #include <OstEngine/Application/GameInterface.h>
 #include <OstEngine/IO/Input/InputReader.h>
 #include <OstEngine/IO/Input/InputSystem.h>
-#include <OstEngine/Rendering/DX/DXRenderer.h>
-#include <OstEngine/Rendering/DX/DXRenderState.h>
-#include <OstEngine/Rendering/DX/DXModel.h>
+
 #include <Windows.h>
 
 namespace ost
@@ -20,10 +20,9 @@ namespace ost
         static void ShutdownEngine();
 
     public:
-        void Run(IGame& aAppInterface);
+        void Run( IGame& aAppInterface );
 
         CInputSystem& GetInputSystem();
-        CDXRenderer& GetRenderer();
 
     private:
         void Initialize( HINSTANCE aAppInstance );
@@ -32,16 +31,12 @@ namespace ost
         bool EngineEventProcessor( Uint32 aMsg, Int64 wparam, Uint64 lparam );
 
         CWindow _window;
-        CDXRenderer _dxRenderer;
         CInputReader _inputReader;
         CInputSystem _inputSystem;
         CDXRenderState _defaultRenderState;
-        CDXModel _triA;
-        CDXModel _triB;
 
     private:
         CEngine();
         static CEngine* _instancePtr;
-        
     };
 } // namespace ost
