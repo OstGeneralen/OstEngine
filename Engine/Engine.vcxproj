@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +130,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;$(SolutionDir)ThirdParty\SDL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -186,12 +186,8 @@
     <ClInclude Include="Src\Rendering\DX\DXConstantBuffer.h" />
     <ClInclude Include="Src\Rendering\DX\DXHandling.h" />
     <ClInclude Include="Src\Rendering\DX\DXModel.h" />
-    <ClInclude Include="Src\Rendering\DX\DXRenderer.h" />
-    <ClInclude Include="Src\Rendering\DX\DXRenderState.h" />
-    <ClInclude Include="Src\Rendering\DX\DXShaderCompiler.h" />
+    <ClInclude Include="Src\Rendering\DX\DXOstEngineDefaults.h" />
     <ClInclude Include="Src\Rendering\DX\EngineInfoGui.h" />
-    <ClInclude Include="Src\Rendering\DX\DXRenderStateDescriptor.h" />
-    <ClInclude Include="Src\Rendering\DX\OSRFileReader.h" />
     <ClInclude Include="OstEngine\Rendering\ModelLoader.h" />
     <ClInclude Include="OstEngine\Rendering\RenderCore.h" />
     <ClInclude Include="OstEngine\Rendering\RenderData\Vertex.h" />
@@ -232,12 +228,9 @@
     <ClCompile Include="Src\Rendering\DX\DXConstantBuffer.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXHandling.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXModel.cpp" />
-    <ClCompile Include="Src\Rendering\DX\DXRenderer.cpp" />
-    <ClCompile Include="Src\Rendering\DX\DXRenderState.cpp" />
-    <ClCompile Include="Src\Rendering\DX\DXRenderStateDescriptor.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DXOstEngineDefaults.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXShaderCompiler.cpp" />
     <ClCompile Include="Src\Rendering\DX\EngineInfoGui.cpp" />
-    <ClCompile Include="Src\Rendering\DX\OSRFileReader.cpp" />
     <ClCompile Include="Src\Rendering\ModelLoader.cpp" />
     <ClCompile Include="Src\Rendering\OstEngineDefaultRenderer.cpp" />
     <ClCompile Include="Src\Rendering\Window.cpp" />

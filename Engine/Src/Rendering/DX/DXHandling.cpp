@@ -1,9 +1,11 @@
 #include "DXHandling.h"
 
 #include "OstEngine//Debug/Logging/LogInstance.h"
+#include "Src/Rendering/DX/DXOstEngineDefaults.h"
+
+#include <OstEngine/Utility/StringUtility.h>
 
 #include <Windows.h>
-#include <OstEngine/Utility/StringUtility.h>
 
 // ------------------------------------------------------------
 
@@ -79,7 +81,10 @@ bool ost::dx::Initialize( ost::CWindow& aForWindow )
     DXLog.Detail( "Dedicated Sys: {}gb", DeviceInformation.DedicatedSystemMemory.Num );
     DXLog.Detail( "Shared Sys: {}gb", DeviceInformation.SharedSystemMemory.Num );
     DXLog.EndScope();
-    
+
+    // Initialize the basic render pipeline data that will be used for all rendering
+    InitializeEngineDefaults();
+
     return true;
 }
 
@@ -88,6 +93,16 @@ bool ost::dx::Initialize( ost::CWindow& aForWindow )
 void ost::dx::Shutdown()
 {
     internal::CleanupReturnFalse();
+}
+
+// ------------------------------------------------------------
+
+void ost::dx::UpdateEngineWorldData( const SEngineDataRenderInput& aWorldData )
+{
+    D3D11_MAPPED_SUBRESOURCE mapped;
+    DeviceContext->Map( WorldDataBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped );
+    memcpy_s( mapped.pData, sizeof( SEngineDataRenderInput ), &aWorldData, sizeof( SEngineDataRenderInput ) );
+    DeviceContext->Unmap( WorldDataBuffer, 0 );
 }
 
 // ------------------------------------------------------------
@@ -163,7 +178,7 @@ void ost::dx::BeginRenderFrame( const ost::SColorFlt32& aClearColor )
 
 void ost::dx::PresentRenderFrame()
 {
-    internal::SwapChain->Present(1, 0);
+    internal::SwapChain->Present( 1, 0 );
 }
 
 // ------------------------------------------------------------

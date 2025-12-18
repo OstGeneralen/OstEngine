@@ -2,6 +2,7 @@
 #include <OstEngine/Math/Color.h>
 #include <OstEngine/Rendering/Window.h>
 #include <OstEngine/Utility/ByteSize.h>
+#include <Src/Rendering/RenderData/EngineInputConstantBuffer.h>
 
 #include <string>
 
@@ -28,6 +29,8 @@ namespace ost
         extern bool Initialize( CWindow& aForWindow );
         extern void ResizeViewport( const Vector2i& aSize );
         extern void Shutdown();
+
+        extern void UpdateEngineWorldData(const SEngineDataRenderInput& aWorldData);
 
         extern ID3D11VertexShader* CompileVertexShaderFromFile( const std::string& aPath, const std::string& aEntry, void** outShaderBuffer, Uint64& outBufferSize  );
         extern ID3D11PixelShader* CompilePixelShaderFromFile( const std::string& aPath, const std::string& aEntry );

@@ -11,7 +11,6 @@
 #pragma comment( lib, "d3d11.lib" )
 #pragma comment( lib, "dxgi.lib" )
 #pragma comment( lib, "d3dcompiler.lib" )
-#include "Src/Rendering/DX/DXRenderer.h"
 
 #include <Windows.h>
 #endif // DX
@@ -19,21 +18,17 @@
 #include "Src/ImGui/ImGuiHandling.h"
 
 #include <OstEngine/Rendering/RenderCore.h>
+#include <OstEngine/Utility/Timer.h>
 
-#include <Src/Rendering/DX/DXConstantBuffer.h>
 #include <Src/Rendering/DX/DXHandling.h>
 #include <Src/Rendering/DX/EngineInfoGui.h>
 
+#include <OstEngine/Rendering/Camera.h>
+#include <Src/Rendering/RenderData/EngineInputConstantBuffer.h>
+
 ost::CEngine* ost::CEngine::_instancePtr = nullptr;
 ost::SColor clearColor;
-
-CBUFFER_STRUCTURE struct ColorCBuffer
-{
-    ost::SColorFlt32 Color;
-};
-
-ColorCBuffer b;
-ost::CDXConstantBuffer buffer;
+ost::CCamera defaultCamera;
 
 ost::CEngine* ost::CEngine::Instance()
 {
@@ -67,6 +62,8 @@ void ost::CEngine::Initialize( HINSTANCE aAppInstance )
     clearColor = cfg.ClearColor;
 
     DeveloperGUI::Init( _window );
+
+    defaultCamera.InitializeOrthographic( { 16.0f, 9.0f } );
 }
 
 void ost::CEngine::Deinitialize()
@@ -80,15 +77,25 @@ void ost::CEngine::Deinitialize()
 
 void ost::CEngine::Run( IGame& aAppInterface )
 {
+    CTimer frameTimer;
+    
     aAppInterface.Load();
 
     while ( _window.IsOpen() )
     {
+        frameTimer.Update();
+
         _inputReader.BeginFrame();
         _window.RunEventLoop();
         _inputSystem.Update( _inputReader );
 
         dx::BeginRenderFrame( clearColor );
+        
+        // Update the constant buffer with the current camera and total time
+        SEngineDataRenderInput worldData;
+        worldData.ViewProjectionMatrix = defaultCamera.GetViewProjection();
+        worldData.TotalTime = static_cast<Float32>( frameTimer.GetTotalTime() );
+        dx::UpdateEngineWorldData( worldData );
 
         aAppInterface.Update();
         aAppInterface.Render();

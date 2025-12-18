@@ -87,9 +87,6 @@
     <ClInclude Include="OstEngine\Math\Matrix2x2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Rendering\DX\DXRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Src\ImGui\imconfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -132,25 +129,13 @@
     <ClInclude Include="Src\Debug\GUI\GUILogOutput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Rendering\DX\DXRenderState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OstEngine\OstEngineMinimal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OstEngine\Debug\Assert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Rendering\DX\DXRenderStateDescriptor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Rendering\DX\OSRFileReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Src\ImGui\ImGuiHandling.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Rendering\DX\DXShaderCompiler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OstEngine\Rendering\RenderData\Vertex.h">
@@ -201,6 +186,9 @@
     <ClInclude Include="Src\Rendering\RenderData\EngineInputConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Rendering\DX\DXOstEngineDefaults.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Engine.cpp">
@@ -233,9 +221,6 @@
     <ClCompile Include="Src\Math\AngleUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Rendering\DX\DXRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\ImGui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -264,15 +249,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Debug\GUI\GUILogOutput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Rendering\DX\DXRenderState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Rendering\DX\DXRenderStateDescriptor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Rendering\DX\OSRFileReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\ImGui\ImGuiHandling.cpp">
@@ -315,6 +291,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Rendering\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Rendering\DX\DXOstEngineDefaults.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

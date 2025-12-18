@@ -6,8 +6,7 @@ namespace ost
 {
 	CBUFFER_STRUCTURE struct SEngineDataRenderInput
 	{
-        TMatrix4x4<float> ViewMatrix;
-        TMatrix4x4<float> ProjectionMatrix;
+        TMatrix4x4<float> ViewProjectionMatrix;
         CBUFFER_DATA( Float32, TotalTime )
 	};
 }

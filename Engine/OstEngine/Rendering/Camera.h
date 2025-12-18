@@ -14,6 +14,8 @@ namespace ost
         void InitializeOrthographic( const Vector2f& aSize );
         void InitializePerspective( Float32 aAspect, math::Radians aFov );
 
+        TMatrix4x4<float> GetViewProjection() const;
+
     private:
         TMatrix4x4<float> _projectionMatrix;
     };
