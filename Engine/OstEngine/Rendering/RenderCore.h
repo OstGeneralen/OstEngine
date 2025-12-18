@@ -33,6 +33,6 @@ struct PadType
 // ------------------------------------------------------------
 #define CBUFFER_DATA( DataType, Name )                                                                          \
     DataType Name;                                                                                              \
-    const Byte PADDING_##Name[PadType<DataType>::PaddingBytes];
+    Byte PADDING_##Name[PadType<DataType>::PaddingBytes];
 
 #define CBUFFER_STRUCTURE __declspec( align(16) )
