@@ -2,17 +2,18 @@
 #include <concepts>
 #include <type_traits>
 
+template<typename T>
+concept PointerType = std::is_pointer_v<T>;
+
+template<typename T>
+concept NonPointerType = !std::is_pointer_v<T>;
+
 // ------------------------------------------------------------
 
 namespace ost
 {
     struct SUntypedPtr
     {
-        SUntypedPtr()
-            : _ptr{ nullptr }
-        {
-        }
-
         template<typename T>
         SUntypedPtr(T* aPtr)
             : _ptr{ static_cast<void*>(aPtr) }
@@ -25,23 +26,22 @@ namespace ost
         {
         }
 
-        SUntypedPtr( const SUntypedPtr& aOther )
-        {
-            *this = aOther;
-        }
+        SUntypedPtr();
+        SUntypedPtr( const SUntypedPtr& aOther );
+        SUntypedPtr( SUntypedPtr&& aOther ) noexcept;
+        SUntypedPtr& operator=( const SUntypedPtr& aRhs );
+        SUntypedPtr& operator=( SUntypedPtr&& aRhs ) noexcept;
+        operator bool() const;
 
-        SUntypedPtr( SUntypedPtr&& aOther ) noexcept
-        {
-            *this = std::move( aOther );
-        }
-
-        void SetNull()
-        {
-            _ptr = nullptr;
-        }
-
-        template<typename T>
+        template<NonPointerType T>
         SUntypedPtr& operator=(T* aPtr)
+        {
+            _ptr = static_cast<void*>( aPtr );
+            return *this;
+        }
+
+        template<PointerType T>
+        SUntypedPtr& operator=(T aPtr)
         {
             _ptr = static_cast<void*>( aPtr );
             return *this;
@@ -54,48 +54,29 @@ namespace ost
             return *this;
         }
 
-        SUntypedPtr& operator=( const SUntypedPtr& aRhs )
-        {
-            _ptr = aRhs._ptr;
-            return *this;
-        }
-
-        SUntypedPtr& operator=( SUntypedPtr&& aRhs ) noexcept
-        {
-            _ptr = aRhs._ptr;
-            aRhs._ptr = nullptr;
-            return *this;
-        }
-
-        operator bool() const
-        {
-            return _ptr != nullptr;
-        }
-
-        template<typename T>
-        T Get_AsIs()
-        {
-            return static_cast<T>( _ptr );
-        }
-
-        template <typename T>
-        const T Get_AsIs() const 
-        {
-            return static_cast<const T>( _ptr );
-        }
-
-        template <typename T>
+        template <NonPointerType T>
         T* Get()
         {
             return static_cast<T*>( _ptr );
         }
 
-        template <typename T>
+        template <NonPointerType T>
         const T* Get() const
         {
             return static_cast<const T*>( _ptr );
         }
 
+        template<PointerType T>
+        T Get()
+        {
+            return static_cast<T>( _ptr );
+        }
+
+        template <PointerType T>
+        const T Get() const
+        {
+            return static_cast<const T>( _ptr );
+        }
     private:
         void* _ptr;
     };

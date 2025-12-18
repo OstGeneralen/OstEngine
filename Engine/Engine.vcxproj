@@ -142,7 +142,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
+    <ClInclude Include="OstEngine\Rendering\2D\Sprite.h" />
+    <ClInclude Include="OstEngine\Rendering\2D\SpriteDrawCommand.h" />
+    <ClInclude Include="OstEngine\Rendering\2D\SpriteRenderer.h" />
     <ClInclude Include="OstEngine\Rendering\Camera.h" />
+    <ClInclude Include="OstEngine\Rendering\RenderData\Texture.h" />
+    <ClInclude Include="OstEngine\Rendering\RendererBase.h" />
+    <ClInclude Include="OstEngine\Rendering\ShaderBundle.h" />
     <ClInclude Include="Src\Debug\Logging\CoutLogging.h" />
     <ClInclude Include="OstEngine\IO\Input\InputReader.h" />
     <ClInclude Include="OstEngine\IO\Input\KeyCodes.h" />
@@ -183,6 +189,7 @@
     <ClInclude Include="OstEngine\Math\Vector4.h" />
     <ClInclude Include="OstEngine\Math\Vectors.h" />
     <ClInclude Include="OstEngine\OstEngineMinimal.h" />
+    <ClInclude Include="Src\Rendering\DX\DDSTextureLoader11.h" />
     <ClInclude Include="Src\Rendering\DX\DXConstantBuffer.h" />
     <ClInclude Include="Src\Rendering\DX\DXHandling.h" />
     <ClInclude Include="Src\Rendering\DX\DXModel.h" />
@@ -224,7 +231,10 @@
     <ClCompile Include="Src\Math\AngleUnit.cpp" />
     <ClCompile Include="Src\Math\Color.cpp" />
     <ClCompile Include="Src\Math\Transform.cpp" />
+    <ClCompile Include="Src\Rendering\2D\SpriteDrawCommand.cpp" />
+    <ClCompile Include="Src\Rendering\2D\SpriteRenderer.cpp" />
     <ClCompile Include="Src\Rendering\Camera.cpp" />
+    <ClCompile Include="Src\Rendering\DX\DDSTextureLoader11.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXConstantBuffer.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXHandling.cpp" />
     <ClCompile Include="Src\Rendering\DX\DXModel.cpp" />
@@ -233,9 +243,12 @@
     <ClCompile Include="Src\Rendering\DX\EngineInfoGui.cpp" />
     <ClCompile Include="Src\Rendering\ModelLoader.cpp" />
     <ClCompile Include="Src\Rendering\OstEngineDefaultRenderer.cpp" />
+    <ClCompile Include="Src\Rendering\RenderData\Texture.cpp" />
+    <ClCompile Include="Src\Rendering\ShaderBundle.cpp" />
     <ClCompile Include="Src\Rendering\Window.cpp" />
     <ClCompile Include="Src\Utility\StringUtility.cpp" />
     <ClCompile Include="Src\Utility\Timer.cpp" />
+    <ClCompile Include="Src\Utility\UntypedPointer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

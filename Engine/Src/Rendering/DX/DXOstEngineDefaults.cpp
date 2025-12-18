@@ -5,6 +5,12 @@
 
 // ------------------------------------------------------------
 
+ID3D11Buffer* ost::dx::WorldDataBuffer = nullptr;
+ID3D11Buffer* ost::dx::PerObjectBuffer = nullptr;
+ID3D11SamplerState* ost::dx::SamplerState = nullptr;
+
+// ------------------------------------------------------------
+
 void ost::dx::InitializeEngineDefaults()
 {
     // Create the Cbuffer that contains the world data (view projection matrix, total time)
@@ -40,6 +46,63 @@ void ost::dx::InitializeEngineDefaults()
     samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     dx::Device->CreateSamplerState( &samplerDesc, &SamplerState );
+}
+
+// ------------------------------------------------------------
+
+ID3D11InputLayout* ost::dx::CreateInputLayout( void* aBufPtr, Uint64 aBufSize )
+{
+    // Create the input layout
+    D3D11_INPUT_ELEMENT_DESC inputDesc[3];
+    ZeroMemory( &inputDesc, sizeof( inputDesc ) );
+
+    // Vector3 position
+    inputDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    inputDesc[0].SemanticName = "POSITION";
+    inputDesc[0].AlignedByteOffset = 0;
+    inputDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+    // Vector3 normal
+    inputDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    inputDesc[1].SemanticName = "NORMAL";
+    inputDesc[1].AlignedByteOffset = sizeof(Float32) * 3;
+    inputDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+
+    // Vector2 uv
+    inputDesc[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+    inputDesc[2].SemanticName = "TEXCOORD";
+    inputDesc[2].AlignedByteOffset = sizeof(Float32) * 6;
+    inputDesc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+
+    ID3D11InputLayout* il;
+    dx::Device->CreateInputLayout( inputDesc, 3, aBufPtr, aBufSize, &il );
+    return il;
+}
+
+// ------------------------------------------------------------
+
+void ost::dx::UseEngineDefaults()
+{
+    ID3D11Buffer* cbuffs[2] = { WorldDataBuffer, PerObjectBuffer };
+    DeviceContext->VSSetConstantBuffers( 0, 2, cbuffs );
+    DeviceContext->VSSetSamplers( 0, 1, &SamplerState );
+
+    DeviceContext->PSGetConstantBuffers( 0, 2, cbuffs );
+    DeviceContext->PSSetSamplers( 0, 1, &SamplerState );
+}
+
+// ------------------------------------------------------------
+
+
+void ost::dx::UpdatePerObjectBuffer( const TMatrix4x4<float>& aModelMat )
+{
+    D3D11_MAPPED_SUBRESOURCE mapped;
+    dx::DeviceContext->Map( PerObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped );
+    const Uint64 matSize = sizeof( TMatrix4x4<float> );
+    memcpy_s( mapped.pData, matSize, &aModelMat, matSize );
+    dx::DeviceContext->Unmap( PerObjectBuffer, 0 );
 }
 
 // ------------------------------------------------------------

@@ -36,7 +36,7 @@ bool ost::dx::Initialize( ost::CWindow& aForWindow )
 {
     const Int32 windowWidth = aForWindow.GetSize().X;
     const Int32 windowHeight = aForWindow.GetSize().Y;
-    HWND windowHandle = aForWindow.GetWindowPointer().Get_AsIs<HWND>();
+    HWND windowHandle = aForWindow.GetWindowPointer().Get<HWND>();
 
     if ( !internal::InitDeviceAndSwapChain( windowWidth, windowHeight, windowHandle ) )
     {
@@ -131,8 +131,8 @@ bool internal::InitDeviceAndSwapChain( Int32 w, Int32 h, HWND hwnd )
     HRESULT result = D3D11CreateDeviceAndSwapChain(
         NULL,
         D3D_DRIVER_TYPE_HARDWARE,
-        NULL,
         0,
+        D3D11_CREATE_DEVICE_DEBUG,
         featureLevels,
         numLevels,
         D3D11_SDK_VERSION,

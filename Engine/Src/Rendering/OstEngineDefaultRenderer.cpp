@@ -10,10 +10,8 @@ namespace
 
 void ost::CDefaultRenderer::Initialize()
 {
-    void* bufferPtr = nullptr;
-    Uint64 bufferSize = 0u;
-
-    _vertexShader = dx::CompileVertexShaderFromFile( ::shaderPath, "vsMain", &bufferPtr, bufferSize );
+    ID3DBlob* shaderBlob;
+    _vertexShader = dx::CompileVertexShaderFromFile( ::shaderPath, "vsMain", &shaderBlob);
     _pixelShader = dx::CompilePixelShaderFromFile( ::shaderPath, "psMain" );
 
     // Create the input layout
@@ -35,7 +33,8 @@ void ost::CDefaultRenderer::Initialize()
     inputDesc[2].SemanticName = "TEXCOORD";
     inputDesc[2].AlignedByteOffset = 24;
 
-    dx::Device->CreateInputLayout( inputDesc, 3, bufferPtr, bufferSize, &_inputLayout );
+    dx::Device->CreateInputLayout( inputDesc, 3, shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
+                                   &_inputLayout );
 
     // Create the engineInput cbuffer
     D3D11_BUFFER_DESC bufferDesc;

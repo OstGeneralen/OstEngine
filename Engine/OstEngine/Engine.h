@@ -1,7 +1,6 @@
 #pragma once
 #include "OstEngine/Rendering/Window.h"
 
-#include <Src/Rendering/DX/DXRenderState.h>
 #include <OstEngine/Application/GameInterface.h>
 #include <OstEngine/IO/Input/InputReader.h>
 #include <OstEngine/IO/Input/InputSystem.h>
@@ -33,7 +32,6 @@ namespace ost
         CWindow _window;
         CInputReader _inputReader;
         CInputSystem _inputSystem;
-        CDXRenderState _defaultRenderState;
 
     private:
         CEngine();

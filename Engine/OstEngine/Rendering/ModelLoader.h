@@ -7,6 +7,6 @@ namespace ost
 {
 	namespace ModelLoading
 	{
-        extern void Load( const std::string& aPath, CDXModel& aInto );
+        //extern void Load( const std::string& aPath, CDXModel& aInto );
 	}
 }

@@ -19,7 +19,7 @@ ID3DBlob* CompileShaderFromFile( const std::string& aPath, const std::string& aE
     UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 
 #if _DEBUG
-    compileFlags = compileFlags | D3DCOMPILE_DEBUG;
+    compileFlags = compileFlags | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
     auto logDetails = [&]() {
@@ -31,7 +31,7 @@ ID3DBlob* CompileShaderFromFile( const std::string& aPath, const std::string& aE
     std::wstring pathWide = ost::stringUtils::StringToWString( aPath );
     ID3DBlob* errorBlob;
     ID3DBlob* shaderBlob;
-    HRESULT result = D3DCompileFromFile( pathWide.c_str(), NULL, NULL, aEntry.c_str(), aTarget.c_str(), compileFlags, 0,
+    HRESULT result = D3DCompileFromFile( pathWide.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, aEntry.c_str(), aTarget.c_str(), compileFlags, 0,
                                          &shaderBlob, &errorBlob );
 
     if ( result != S_OK )
@@ -55,7 +55,7 @@ ID3DBlob* CompileShaderFromFile( const std::string& aPath, const std::string& aE
 // ------------------------------------------------------------
 
 ID3D11VertexShader* ost::dx::CompileVertexShaderFromFile( const std::string& aPath, const std::string& aEntry,
-                                                          void** outShaderBuffer, Uint64& outBufferSize )
+                                                          ID3DBlob** aOutBlob )
 {
     ID3DBlob* blob = CompileShaderFromFile( aPath, aEntry, "vs_5_0" );
     if ( blob == nullptr )
@@ -67,15 +67,13 @@ ID3D11VertexShader* ost::dx::CompileVertexShaderFromFile( const std::string& aPa
     HRESULT result = Device->CreateVertexShader( blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &shader );
     if ( result == S_OK )
     {
-        ( *outShaderBuffer ) = blob->GetBufferPointer();
-        outBufferSize = blob->GetBufferSize();
+        ( *aOutBlob ) = blob;
     }
     else
     {
         ShaderCompileLog.Error( "Failed to create shader resource for sucessfully compiled shader" );
     }
 
-    blob->Release();
     return shader;
 }
 
@@ -83,7 +81,7 @@ ID3D11VertexShader* ost::dx::CompileVertexShaderFromFile( const std::string& aPa
 
 ID3D11PixelShader* ost::dx::CompilePixelShaderFromFile( const std::string& aPath, const std::string& aEntry )
 {
-    ID3DBlob* blob = CompileShaderFromFile( aPath, aEntry, "vs_5_0" );
+    ID3DBlob* blob = CompileShaderFromFile( aPath, aEntry, "ps_5_0" );
     if ( blob == nullptr )
     {
         return nullptr;

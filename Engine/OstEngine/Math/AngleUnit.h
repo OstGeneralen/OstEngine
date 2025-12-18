@@ -36,7 +36,6 @@ namespace ost
 
             Radians& operator=( const Radians& ) = default;
             Radians& operator=( const Degrees& d );
-            Radians& operator=( Float32 v );
 
             void Set( Float32 aRadianValue );
             Float32 Get() const;

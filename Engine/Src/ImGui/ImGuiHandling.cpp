@@ -16,7 +16,7 @@ void ost::DeveloperGUI::Init( CWindow& aWindow )
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
-    ImGui_ImplWin32_Init( aWindow.GetWindowPointer().Get_AsIs<void*>() );
+    ImGui_ImplWin32_Init( aWindow.GetWindowPointer().Get<void*>() );
     ImGui_ImplDX11_Init( dx::Device, dx::DeviceContext );
 #endif
 }
@@ -50,5 +50,5 @@ void ost::DeveloperGUI::EndFrame()
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 bool ost::DeveloperGUI::WndProcHandling( CWindow& aWindow, Uint32 aMsg, Int64 wparam, Uint64 lparam )
 {
-    return ImGui_ImplWin32_WndProcHandler( aWindow.GetWindowPointer().Get_AsIs<HWND>(), aMsg, wparam, lparam );
+    return ImGui_ImplWin32_WndProcHandler( aWindow.GetWindowPointer().Get<HWND>(), aMsg, wparam, lparam );
 }

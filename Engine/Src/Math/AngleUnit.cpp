@@ -6,7 +6,7 @@ using namespace ost::math;
 // ------------------------------------------------------------
 // DEGREES
 // ------------------------------------------------------------
-inline Degrees::Degrees( const Radians& r )
+Degrees::Degrees( const Radians& r )
     : _value{ r.Get() * RadToDeg }
 {
 }
@@ -16,9 +16,10 @@ Degrees::Degrees( Float32 v )
 {
 }
 
-inline Degrees& Degrees::operator=( const Radians& r )
+Degrees& Degrees::operator=( const Radians& r )
 {
     _value = r.Get() * RadToDeg;
+    return *this;
 }
 
 void ost::math::Degrees::Set( Float32 aRadianValue )
@@ -26,7 +27,7 @@ void ost::math::Degrees::Set( Float32 aRadianValue )
     _value = aRadianValue;
 }
 
-inline Float32 Degrees::Get() const
+Float32 Degrees::Get() const
 {
     return _value;
 }
@@ -35,7 +36,7 @@ inline Float32 Degrees::Get() const
 // RADIANS
 // ------------------------------------------------------------
 
-inline Radians::Radians( const Degrees& r )
+Radians::Radians( const Degrees& r )
     : _value{ r.Get() * DegToRad }
 {
 }
@@ -45,9 +46,10 @@ Radians::Radians( Float32 v )
 {
 }
 
-inline Radians& Radians::operator=( const Degrees& r )
+Radians& Radians::operator=( const Degrees& r )
 {
     _value = r.Get() * DegToRad;
+    return *this;
 }
 
 void Radians::Set( Float32 aDegreeValue )
@@ -55,8 +57,9 @@ void Radians::Set( Float32 aDegreeValue )
     _value = aDegreeValue;
 }
 
-inline Float32 Radians::Get() const
+Float32 Radians::Get() const
 {
+    return _value;
 }
 
 // ------------------------------------------------------------

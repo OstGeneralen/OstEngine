@@ -1,7 +1,7 @@
 #include "GUILogOutput.h"
 
 #include <OstEngine/Debug/Logging/Logger.h>
-#include <OstEngine/ImGui/imgui.h>
+#include "Src/ImGui/imgui.h"
 
 bool ost::gui::GUI_LogOutput::Expanded = false;
 

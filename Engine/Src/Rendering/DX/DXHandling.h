@@ -32,7 +32,7 @@ namespace ost
 
         extern void UpdateEngineWorldData(const SEngineDataRenderInput& aWorldData);
 
-        extern ID3D11VertexShader* CompileVertexShaderFromFile( const std::string& aPath, const std::string& aEntry, void** outShaderBuffer, Uint64& outBufferSize  );
+        extern ID3D11VertexShader* CompileVertexShaderFromFile( const std::string& aPath, const std::string& aEntry, ID3DBlob** aOutBlob  );
         extern ID3D11PixelShader* CompilePixelShaderFromFile( const std::string& aPath, const std::string& aEntry );
 
         extern void BeginRenderFrame( const ost::SColorFlt32& aClearColor );

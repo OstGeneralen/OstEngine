@@ -60,6 +60,7 @@ ost::CTransform& ost::CTransform::Scale( const Vector3f& aFactors )
 ost::CTransform& ost::CTransform::SetPosition( const Vector3f& aPosition )
 {
     _translation = aPosition;
+    _needsRecalc = true;
     return *this;
 }
 
@@ -71,7 +72,7 @@ ost::CTransform& ost::CTransform::SetRotation( const Vector3f& aEulers )
     _rotation.X = NumericUtils::ClampDegrees( _rotation.X );
     _rotation.Y = NumericUtils::ClampDegrees( _rotation.Y );
     _rotation.Z = NumericUtils::ClampDegrees( _rotation.Z );
-
+    _needsRecalc = true;
     return *this;
 }
 
@@ -80,7 +81,7 @@ ost::CTransform& ost::CTransform::SetRotation( const Vector3f& aEulers )
 ost::CTransform& ost::CTransform::SetScale( const Vector3f& aScale )
 {
     _scale = aScale;
-
+    _needsRecalc = true;
     return *this;
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <OstEngine/Math/AngleUnit.h>
 #include <OstEngine/Math/Matrix2x2.h>
+#include <OstEngine/Math/Vector3.h>
 
 namespace ost
 {
@@ -8,13 +9,13 @@ namespace ost
     class TMatrix3x3
     {
     public:
-        T M11, M21, M31;
-        T M12, M22, M32;
-        T M13, M23, M33;
+        T M11, M12, M13;
+        T M21, M22, M23;
+        T M31, M32, M33;
 
     public:
         TMatrix3x3();
-        TMatrix3x3( T a11, T a21, T a31, T a12, T a22, T a32, T a13, T a23, T a33 );
+        TMatrix3x3( T a11, T a12, T a13, T a21, T a22, T a23, T a31, T a32, T a33 );
         TMatrix3x3( const TMatrix3x3& ) = default;
 
         static TMatrix3x3 RotationX( math::Radians r );
@@ -32,9 +33,9 @@ namespace ost
     template<typename T>
     static TVector3<T> operator*(const TVector3<T>& aVec, const TMatrix3x3<T>& aMat)
     {
-        return TVector3<T>( aVec.X * aMat.M11 + aVec.Y * aMat.M12 + aVec.Z * aMat.M13,
-                            aVec.X * aMat.M21 + aVec.Y * aMat.M22 + aVec.Z * aMat.M23,
-                            aVec.X * aMat.M31 + aVec.Y * aMat.M32 + aVec.Z * aMat.M33 );
+        return TVector3<T>( aVec.X * aMat.M11 + aVec.Y * aMat.M21 + aVec.Z * aMat.M31,
+                            aVec.X * aMat.M12 + aVec.Y * aMat.M22 + aVec.Z * aMat.M32,
+                            aVec.X * aMat.M13 + aVec.Y * aMat.M23 + aVec.Z * aMat.M33 );
     }
 
     template <typename T>
@@ -73,7 +74,7 @@ namespace ost
     }
 
     template <typename T>
-    inline ost::TMatrix3x3<T>::TMatrix3x3( T a11, T a21, T a31, T a12, T a22, T a32, T a13, T a23, T a33 )
+    inline ost::TMatrix3x3<T>::TMatrix3x3( T a11, T a12, T a13, T a21, T a22, T a23, T a31, T a32, T a33 )
         : M11{ a11 }
         , M22{ a22 }
         , M33{ a33 }
@@ -106,17 +107,17 @@ namespace ost
     TMatrix3x3<T> operator*( const TMatrix3x3<T>& aFirst, const TMatrix3x3<T>& aSecond )
     {
         TMatrix3x3<T> result;
-        result.M11 = ( aFirst.M11 * aSecond.M11 ) + ( aFirst.M21 * aSecond.M12 ) + ( aFirst.M31 * aSecond.M13 );
-        result.M12 = ( aFirst.M12 * aSecond.M11 ) + ( aFirst.M22 * aSecond.M12 ) + ( aFirst.M32 * aSecond.M13 );
-        result.M13 = ( aFirst.M13 * aSecond.M11 ) + ( aFirst.M23 * aSecond.M12 ) + ( aFirst.M33 * aSecond.M13 );
+        result.M11 = ( aFirst.M11 * aSecond.M11 ) + ( aFirst.M12 * aSecond.M21 ) + ( aFirst.M13 * aSecond.M31 );
+        result.M21 = ( aFirst.M21 * aSecond.M11 ) + ( aFirst.M22 * aSecond.M21 ) + ( aFirst.M23 * aSecond.M31 );
+        result.M31 = ( aFirst.M31 * aSecond.M11 ) + ( aFirst.M32 * aSecond.M21 ) + ( aFirst.M33 * aSecond.M31 );
 
-        result.M21 = ( aFirst.M11 * aSecond.M21 ) + ( aFirst.M21 * aSecond.M22 ) + ( aFirst.M31 * aSecond.M23 );
-        result.M22 = ( aFirst.M12 * aSecond.M21 ) + ( aFirst.M22 * aSecond.M22 ) + ( aFirst.M32 * aSecond.M23 );
-        result.M23 = ( aFirst.M13 * aSecond.M21 ) + ( aFirst.M23 * aSecond.M22 ) + ( aFirst.M33 * aSecond.M23 );
+        result.M12 = ( aFirst.M11 * aSecond.M12 ) + ( aFirst.M12 * aSecond.M22 ) + ( aFirst.M13 * aSecond.M32 );
+        result.M22 = ( aFirst.M21 * aSecond.M12 ) + ( aFirst.M22 * aSecond.M22 ) + ( aFirst.M23 * aSecond.M32 );
+        result.M32 = ( aFirst.M31 * aSecond.M12 ) + ( aFirst.M32 * aSecond.M22 ) + ( aFirst.M33 * aSecond.M32 );
 
-        result.M31 = ( aFirst.M11 * aSecond.M31 ) + ( aFirst.M21 * aSecond.M32 ) + ( aFirst.M31 * aSecond.M33 );
-        result.M32 = ( aFirst.M12 * aSecond.M31 ) + ( aFirst.M22 * aSecond.M32 ) + ( aFirst.M32 * aSecond.M33 );
-        result.M33 = ( aFirst.M13 * aSecond.M31 ) + ( aFirst.M23 * aSecond.M32 ) + ( aFirst.M33 * aSecond.M33 );
+        result.M13 = ( aFirst.M11 * aSecond.M13 ) + ( aFirst.M12 * aSecond.M23 ) + ( aFirst.M13 * aSecond.M33 );
+        result.M23 = ( aFirst.M21 * aSecond.M13 ) + ( aFirst.M22 * aSecond.M23 ) + ( aFirst.M23 * aSecond.M33 );
+        result.M33 = ( aFirst.M31 * aSecond.M13 ) + ( aFirst.M32 * aSecond.M23 ) + ( aFirst.M33 * aSecond.M33 );
         return result;
     }
 
@@ -160,6 +161,26 @@ namespace ost
         result.M13 = cofactor31;
         result.M23 = cofactor32;
         result.M33 = cofactor33;
+
+        const T det = ( M11 * cofactor11 ) + ( M12 * cofactor12 ) + ( M13 * cofactor13 );
+
+        // Safety check to avoid division by zero
+        if ( std::abs( det ) < static_cast<T>( 0.000001 ) )
+        {
+            return TMatrix3x3<T>(); // Or handle error
+        }
+
+        const T invDet = static_cast<T>( 1 ) / det;
+
+        result.M11 *= invDet;
+        result.M12 *= invDet;
+        result.M13 *= invDet;
+        result.M21 *= invDet;
+        result.M22 *= invDet;
+        result.M23 *= invDet;
+        result.M31 *= invDet;
+        result.M32 *= invDet;
+        result.M33 *= invDet;
 
         return result;
     }

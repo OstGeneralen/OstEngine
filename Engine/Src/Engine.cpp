@@ -4,6 +4,8 @@
 #include "Src/Debug/GUI/GUILogOutput.h"
 #include "Src/EngineConfig.h"
 
+#include "Src/Rendering/DX/DXOstEngineDefaults.h"
+
 #include <OstEngine/Debug/Logging/Logger.h>
 
 #define DX_RENDERING 1
@@ -59,6 +61,8 @@ void ost::CEngine::Initialize( HINSTANCE aAppInstance )
                       cfg.Resolution.Y );
 
     dx::Initialize( _window );
+    dx::InitializeEngineDefaults();
+
     clearColor = cfg.ClearColor;
 
     DeveloperGUI::Init( _window );
@@ -93,11 +97,11 @@ void ost::CEngine::Run( IGame& aAppInterface )
         
         // Update the constant buffer with the current camera and total time
         SEngineDataRenderInput worldData;
-        worldData.ViewProjectionMatrix = defaultCamera.GetViewProjection();
+        worldData.ViewProjectionMatrix = aAppInterface.GetCamera().GetViewProjection();
         worldData.TotalTime = static_cast<Float32>( frameTimer.GetTotalTime() );
         dx::UpdateEngineWorldData( worldData );
 
-        aAppInterface.Update();
+        aAppInterface.Update(frameTimer);
         aAppInterface.Render();
 
         DeveloperGUI::BeginFrame();

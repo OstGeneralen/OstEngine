@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 
 namespace ost
 {
@@ -11,7 +12,7 @@ namespace ost
 
     public:
         TMatrix2x2();
-        TMatrix2x2( T a11, T a21, T a12, T a22 );
+        TMatrix2x2( T a11, T a12, T a21, T a22 );
         TMatrix2x2( const TMatrix2x2& ) = default;
 
         TMatrix2x2& Transpose();
@@ -25,8 +26,8 @@ namespace ost
     template <typename T>
     inline ost::TMatrix2x2<T>::TMatrix2x2()
         : M11{ 1 }
-        , M21{ 0 }
         , M12{ 0 }
+        , M21{ 0 }
         , M22{ 1 }
     {
     }

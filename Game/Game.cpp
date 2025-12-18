@@ -1,65 +1,52 @@
 #include "Game.h"
 #include <OstEngine/Math/Matrix4x4.h>
+#include <OstEngine/Rendering/2D/SpriteRenderer.h>
+#include <OstEngine/Rendering/2D/Sprite.h>
+#include <OstEngine/Rendering/RenderData/Texture.h>
+#include <cmath>
 
 CGame gameInstance;
+
 ost::IGame* GameMain()
 {
     return &gameInstance;
 }
 
+ost::CTexture texture;
+ost::SSprite sprite;
+ost::CSpriteRenderer spriteRenderer;
+
 void CGame::Load()
 {
-    _moveInputAction = ost::SInputAction( INPUT_CALLBACK( InputMove ) );
-    {
-        using namespace ost;
-        using namespace ost::InputBinding;
-        const auto wasdBinding = CreateUpDownLeftRight( EKeyCode::W, EKeyCode::S, EKeyCode::A, EKeyCode::D );
-        const auto arwsBinding = CreateUpDownLeftRight( EKeyCode::Up, EKeyCode::Down, EKeyCode::Left, EKeyCode::Right );
-        _moveInputAction.AddBinding( wasdBinding );
-        _moveInputAction.AddBinding( arwsBinding );
-    }
-
     _engine = ost::CEngine::Instance();
-    _engine->GetInputSystem().RegisterAction( _moveInputAction );
+    _camera.InitializePerspective( 16.0f / 9.0f, ost::math::Degrees(70.0f) );
+    _camera.Transform.Translate( { -2.f, 0.0f, -10.0f } );
+    //_camera.InitializeOrthographic( { 16.0f, 9.0f } );  
 
-    //_triangleModel.AddVertex( { -0.5f, -0.5f, 0.0f, 1.0f }, 0x00000000 )
-    //    .AddVertex( { 0.5f, 0.5f, 0.0f, 1.0f }, 0x00000000 )
-    //    .AddVertex( { 0.5f, -0.5f, 0.0f, 1.0f }, 0x00000000 );
-    //
-    //_triangleModel.InitializeResource();
-    //
-    //_colorBuffer.Color = ost::SColorFlt32{ 1.0f, 0.0f, 0.0f, 1.0f };
-    //_colorConstantBuffer.Initialize( _colorBuffer );
-
-    //_renderState = _engine->GetRenderer().CreateRenderState( "Engine/Shaders/DefaultShader" );
+    spriteRenderer.Initialize();
+    texture.LoadDDS( "Assets/Textures/TestTexture.dds" );
+    sprite.Texture = &texture;
+    sprite.Transform.Translate( { -1, -1, 0 } );
 }
 
-void CGame::Update()
+void CGame::Update( const ost::CTimer& aTimer )
 {
-    //_frameTimer.Update();
-    //float deltaTime = _frameTimer.GetDeltaTime();
-    //if ( _velocity.MagnitudeSqr() > 0.0f )
-    //{
-    //    int x = 0;
-    //    x++;
-    //}
-    //
-    //_colorBuffer.Color.B = static_cast<float>( ( sin( _frameTimer.GetTotalTime() ) + 1.0 ) / 2.0 );
-    //_colorBuffer.Color.G = static_cast<float>( ( cos( _frameTimer.GetTotalTime() ) + 1.0 ) / 2.0 );
+
+    _camera.Transform.SetPosition( { sinf( static_cast<Float32>( aTimer.GetTotalTime() ) ) * 5.0f,
+                                     cosf( static_cast<Float32>( aTimer.GetTotalTime() ) ) * 5.0f, -10.0f } );
+ 
+    
+    //_camera.Transform.Translate( { 1.0f * aTimer.GetDeltaTime(), 0.0f, 1.0f * aTimer.GetDeltaTime() } );
 }
 
 void CGame::Render()
 {
-    //_colorConstantBuffer.Update( _colorBuffer );
-    //_renderState.Bind();
-    //_renderState.BindConstantBuffer(_colorConstantBuffer);
-    //
-    //_triangleModel.Render();
-    //
-    //_renderState.Unbind();
+    spriteRenderer.Draw( sprite );
+    spriteRenderer.Render();
 }
 
-void CGame::InputMove( const ost::InputValue& aValue )
+const ost::CCamera& CGame::GetCamera() const
 {
-    _velocity = aValue.Axis2DValue;
+    return _camera;
 }
+

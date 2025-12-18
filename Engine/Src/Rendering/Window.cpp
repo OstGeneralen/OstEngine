@@ -106,8 +106,9 @@ ost::CWindow::~CWindow()
 {
     if ( _winPtr )
     {
-        DestroyWindow( _winPtr.Get_AsIs<HWND>() );
-        _winPtr.SetNull();
+        DestroyWindow( _winPtr.Get<HWND>() );
+        void* n = nullptr;
+        _winPtr = n;
     }
 }
 
@@ -118,8 +119,9 @@ ost::CWindow::CWindow( CWindow&& aOther ) noexcept
     , _isOpen{ aOther._isOpen }
     , _size{ aOther._size }
 {
-    aOther._winPtr.SetNull();
-    SetWindowLongPtr( _winPtr.Get_AsIs<HWND>(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>( this ) );
+    void* n = nullptr;
+    aOther._winPtr = n;
+    SetWindowLongPtr( _winPtr.Get<HWND>(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>( this ) );
 }
 
 // ------------------------------------------------------------
@@ -127,12 +129,13 @@ ost::CWindow::CWindow( CWindow&& aOther ) noexcept
 ost::CWindow& ost::CWindow::operator=( CWindow&& aRhs ) noexcept
 {
     _winPtr = aRhs._winPtr;
-    aRhs._winPtr.SetNull();
+    void* n = nullptr;
+    aRhs._winPtr = n;
     _isOpen = aRhs._isOpen;
     _size = aRhs._size;
 
     // Update the window pointer
-    SetWindowLongPtr( _winPtr.Get_AsIs<HWND>(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>( this ) );
+    SetWindowLongPtr( _winPtr.Get<HWND>(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>( this ) );
     return *this;
 }
 
@@ -140,8 +143,8 @@ ost::CWindow& ost::CWindow::operator=( CWindow&& aRhs ) noexcept
 
 void ost::CWindow::RunEventLoop()
 {
-    ShowWindow( _winPtr.Get_AsIs<HWND>(), 1 );
-    UpdateWindow( _winPtr.Get_AsIs<HWND>() );
+    ShowWindow( _winPtr.Get<HWND>(), 1 );
+    UpdateWindow( _winPtr.Get<HWND>() );
 
     MSG msg = {};
     while ( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )

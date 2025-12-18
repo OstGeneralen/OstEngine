@@ -1,10 +1,9 @@
 #pragma once
-#include <Src/Rendering/DX/DXRenderer.h>
 
 namespace ost
 {
     namespace gui
     {
-        extern void DisplayEngineInfo( const CDXRenderer& aRenderer );
+        extern void DisplayEngineInfo( );
     }
 } // namespace ost
