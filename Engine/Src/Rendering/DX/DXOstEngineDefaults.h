@@ -12,7 +12,7 @@ namespace ost
 
 		extern void UseEngineDefaults();
 
-		extern void UpdatePerObjectBuffer( const TMatrix4x4<float>& aModelMat );
+		extern void UpdatePerObjectBuffer( const Matrix4x4& aModelMat );
 
         extern ID3D11Buffer* WorldDataBuffer;
         extern ID3D11Buffer* PerObjectBuffer;

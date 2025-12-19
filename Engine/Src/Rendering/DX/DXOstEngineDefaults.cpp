@@ -27,7 +27,7 @@ void ost::dx::InitializeEngineDefaults()
     // Create the perObject cbuffer
     D3D11_BUFFER_DESC perObjectBufferDesc;
     ZeroMemory( &perObjectBufferDesc, sizeof( perObjectBufferDesc ) );
-    perObjectBufferDesc.ByteWidth = sizeof( TMatrix4x4<float> );
+    perObjectBufferDesc.ByteWidth = sizeof( Matrix4x4 );
     perObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     perObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     perObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -96,11 +96,11 @@ void ost::dx::UseEngineDefaults()
 // ------------------------------------------------------------
 
 
-void ost::dx::UpdatePerObjectBuffer( const TMatrix4x4<float>& aModelMat )
+void ost::dx::UpdatePerObjectBuffer( const Matrix4x4& aModelMat )
 {
     D3D11_MAPPED_SUBRESOURCE mapped;
     dx::DeviceContext->Map( PerObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped );
-    const Uint64 matSize = sizeof( TMatrix4x4<float> );
+    const Uint64 matSize = sizeof( Matrix4x4 );
     memcpy_s( mapped.pData, matSize, &aModelMat, matSize );
     dx::DeviceContext->Unmap( PerObjectBuffer, 0 );
 }

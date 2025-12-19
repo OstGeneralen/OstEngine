@@ -2,8 +2,8 @@
   "window_title": "Window",
   "windowed_mode": false,
   "resolution": {
-    "w": 1920,
-    "h": 1080
+    "w": 1600,
+    "h": 900
   },
   "clear_color": {
     "r": 0.2,

@@ -1,6 +1,8 @@
 #pragma once
+#include <OstEngine/Math/DxMath.h>
 #include <OstEngine/Math/NumericUtils.h>
 #include <OstEngine/Types.h>
+
 #include <cmath>
 
 namespace ost
@@ -12,9 +14,15 @@ namespace ost
     class TVector3
     {
     public:
-        T X;
-        T Y;
-        T Z;
+        using DxVecUtil = DxVecTypeUtility<T, 3>;
+
+        // clang-format off
+        union
+        {
+            DxVecUtil::DxVecType Vec;
+            struct { T X, Y, Z; };
+        };
+        // clang-format on
 
     public:
         TVector3();
@@ -49,15 +57,14 @@ namespace ost
         TVector3<T> operator/( const T aOther ) const;
 
         bool operator==( const TVector3<T>& aOther ) const;
-     };
+    };
 
     // ------------------------------------------------------------
     // Typed Vector3s
     // ------------------------------------------------------------
     using Vector3f = TVector3<Float32>;
-	using Vector3d = TVector3<Float64>;
-	using Vector3i = TVector3<Int32>;
-	using Vector3u = TVector3<Uint32>;
+    using Vector3i = TVector3<Int32>;
+    using Vector3u = TVector3<Uint32>;
     // ------------------------------------------------------------
 
     // ------------------------------------------------------------
@@ -90,54 +97,49 @@ namespace ost
     template <typename T>
     inline T ost::TVector3<T>::Dot( const TVector3& aOther ) const
     {
-        return ( X * aOther.X ) + ( Y * aOther.Y ) + ( Z * aOther.Z );
+        T result;
+        DxVecUtil::StoreSingle( result,
+                          DirectX::XMVector3Dot( DxVecUtil::ToXMVec( Vec ), DxVecUtil::ToXMVec( aOther.Vec ) ) );
+        return result;
     }
 
-    template<typename T>
-    inline TVector3<T> ost::TVector3<T>::Cross(const TVector3& aOther) const
+    template <typename T>
+    inline TVector3<T> ost::TVector3<T>::Cross( const TVector3& aOther ) const
     {
-        const T cx = ( Y * aOther.Z ) - ( Z * aOther.Y );
-        const T cy = ( Z * aOther.X ) - ( X * aOther.Z );
-        const T cz = ( X * aOther.Y ) - ( Y * aOther.X );
-        return TVector3<T>{ cx, cy, cz };
+        TVector3 result;
+        DxVecUtil::Store( result.Vec,
+                          DirectX::XMVector3Cross( DxVecUtil::ToXMVec( Vec ), DxVecUtil::ToXMVec( aOther.Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline T ost::TVector3<T>::MagnitudeSqr() const
     {
-        return ( X * X ) + ( Y * Y ) + ( Z * Z );
+        T result;
+        DxVecUtil::StoreSingle( result, DirectX::XMVector3LengthSq( DxVecUtil::ToXMVec( Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline T ost::TVector3<T>::Magnitude() const
     {
-        return sqrt( MagnitudeSqr() );
+        T result;
+        DxVecUtil::StoreSingle( result, DirectX::XMVector3Length( DxVecUtil::ToXMVec( Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline TVector3<T> ost::TVector3<T>::GetNormalized() const
     {
-        const T magnitude = Magnitude();
-        if ( magnitude == static_cast<T>( 0 ) )
-        {
-            return TVector3<T>();
-        }
-        else
-        {
-            return TVector3<T>( X, Y, Z ) / magnitude;
-        }
+        TVector3 result;
+        DxVecUtil::Store(result.Vec,  DirectX::XMVector3Normalize( DxVecUtil::ToXMVec( Vec ) ));
+        return result;
     }
 
     template <typename T>
     inline TVector3<T>& ost::TVector3<T>::Normalize()
     {
-        const T magnitude = Magnitude();
-        if ( magnitude > static_cast<T>( 0 ) )
-        {
-            X /= magnitude;
-            Y /= magnitude;
-            Z /= magnitude;
-        }
+        DxVecUtil::Store( Vec, DirectX::XMVector3Normalize( DxVecUtil::ToXMVec( Vec ) ) );
         return *this;
     }
 
@@ -213,12 +215,4 @@ namespace ost
         return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y ) &&
                NumericUtils::NearlyEqual( Z, aSecond.Z );
     }
-
-    template <>
-    inline bool TVector3<Float64>::operator==( const TVector3<Float64>& aSecond ) const
-    {
-        return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y ) &&
-               NumericUtils::NearlyEqual( Z, aSecond.Z );
-    }
-
 } // namespace ost

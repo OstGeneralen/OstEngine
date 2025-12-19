@@ -49,7 +49,7 @@ void ost::CDefaultRenderer::Initialize()
     // Create the perObject cbuffer
     D3D11_BUFFER_DESC perObjectBufferDesc;
     ZeroMemory( &perObjectBufferDesc, sizeof( perObjectBufferDesc ) );
-    perObjectBufferDesc.ByteWidth = sizeof( TMatrix4x4<float> );
+    perObjectBufferDesc.ByteWidth = sizeof( Matrix4x4 );
     perObjectBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     perObjectBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     perObjectBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -126,7 +126,7 @@ void ost::CDefaultRenderer::PerformRender()
         // (The per object buffer and the texture resource)
         D3D11_MAPPED_SUBRESOURCE instanceData;
         dx::DeviceContext->Map( _perObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &instanceData );
-        memcpy_s( instanceData.pData, sizeof( TMatrix4x4<float> ), &( cmd.ModelMatrix ), sizeof( TMatrix4x4<float> ) );
+        memcpy_s( instanceData.pData, sizeof( Matrix4x4 ), &( cmd.ModelMatrix ), sizeof( Matrix4x4 ) );
         dx::DeviceContext->Unmap( _perObjectBuffer, 0 );
 
         dx::DeviceContext->VSSetShaderResources( 0, 1, &( cmd.TextureResource ) );

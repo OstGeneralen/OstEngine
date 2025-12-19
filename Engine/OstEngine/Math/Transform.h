@@ -24,16 +24,16 @@ namespace ost
         const Vector3f& GetRotation() const;
         const Vector3f& GetScale() const;
 
-        const TMatrix4x4<Float32>& GetMatrix() const;
-        const TMatrix4x4<Float32>& GetInverseMatrix() const;
+        const Matrix4x4& GetMatrix() const;
+        const Matrix4x4& GetInverseMatrix() const;
     private:
         Vector3f _translation;
         Vector3f _rotation;
         Vector3f _scale;
 
         void Recalc() const;
-        mutable TMatrix4x4<Float32> _matrix;
-        mutable TMatrix4x4<Float32> _inverseMatrix;
+        mutable Matrix4x4 _matrix;
+        mutable Matrix4x4 _inverseMatrix;
         mutable bool _needsRecalc;
     };
 }

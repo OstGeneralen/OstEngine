@@ -12,7 +12,7 @@ namespace ost
     struct SDefaultRendererDrawCommand
     {
         SDefaltVertex Vertices[4];
-        TMatrix4x4<float> ModelMatrix;
+        Matrix4x4 ModelMatrix;
         ID3D11ShaderResourceView* TextureResource;
     };
 

@@ -7,6 +7,8 @@
 
 #include <Windows.h>
 
+#include <OstEngine/Math/Vector4.h>
+
 // ------------------------------------------------------------
 
 ost::log::CLogInstance DXLog( "D3D11" );
@@ -162,6 +164,8 @@ void ost::dx::ResizeViewport( const ost::Vector2i& aSize )
     viewport.MaxDepth = 1.0f;
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
+
+    
 
     ost::dx::DeviceContext->RSSetViewports( 1, &viewport );
 }

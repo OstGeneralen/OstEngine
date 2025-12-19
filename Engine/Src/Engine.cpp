@@ -85,6 +85,9 @@ void ost::CEngine::Run( IGame& aAppInterface )
     
     aAppInterface.Load();
 
+    Vector4f test;
+    test.Magnitude();
+
     while ( _window.IsOpen() )
     {
         frameTimer.Update();

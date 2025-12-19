@@ -110,17 +110,17 @@ const ost::Vector3f& ost::CTransform::GetScale() const
 
 void ost::CTransform::Recalc() const
 {
-    const TMatrix4x4<float> tMat = TMatrix4x4<float>::Translation( _translation );
-    const TMatrix4x4<float> sMat = TMatrix4x4<float>::Scale( _scale );
+    const Matrix4x4 tMat = Matrix4x4::Translation( _translation );
+    const Matrix4x4 sMat = Matrix4x4::Scale( _scale );
     
     const math::Degrees xRot = _rotation.X;
     const math::Degrees yRot = _rotation.Y;
     const math::Degrees zRot = _rotation.Z;
 
-    const TMatrix3x3<float> rX = TMatrix3x3<float>::RotationX( xRot );
-    const TMatrix3x3<float> rY = TMatrix3x3<float>::RotationY( yRot );
-    const TMatrix3x3<float> rZ = TMatrix3x3<float>::RotationZ( zRot );
-    const TMatrix4x4<float> rMat = rX * rY * rZ;
+    const Matrix3x3 rX = Matrix3x3::RotationX( xRot );
+    const Matrix3x3 rY = Matrix3x3::RotationY( yRot );
+    const Matrix3x3 rZ = Matrix3x3::RotationZ( zRot );
+    const Matrix4x4 rMat = rX * rY * rZ;
 
     _matrix = sMat * rMat * tMat;
     _inverseMatrix = _matrix.GetInverse();
@@ -129,7 +129,7 @@ void ost::CTransform::Recalc() const
 
 // ------------------------------------------------------------
 
-const ost::TMatrix4x4<Float32>& ost::CTransform::GetMatrix() const
+const ost::Matrix4x4& ost::CTransform::GetMatrix() const
 {
     if (_needsRecalc)
     {
@@ -140,7 +140,7 @@ const ost::TMatrix4x4<Float32>& ost::CTransform::GetMatrix() const
 
 // ------------------------------------------------------------
 
-const ost::TMatrix4x4<Float32>& ost::CTransform::GetInverseMatrix() const
+const ost::Matrix4x4& ost::CTransform::GetInverseMatrix() const
 {
     if (_needsRecalc)
     {

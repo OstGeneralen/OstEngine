@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\DXMath\Include\;$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +130,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\DXMath\Include\;$(ProjectDir);$(SolutionDir)ThirdParty\Include\;$(SolutionDir)ThirdParty\JSON\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +142,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
+    <ClInclude Include="OstEngine\Math\DxMath.h" />
+    <ClInclude Include="OstEngine\Math\DxMath\DirectXMath.h" />
+    <ClInclude Include="OstEngine\Math\DxMath\DirectXPackedVector.h" />
     <ClInclude Include="OstEngine\Rendering\2D\Sprite.h" />
     <ClInclude Include="OstEngine\Rendering\2D\SpriteDrawCommand.h" />
     <ClInclude Include="OstEngine\Rendering\2D\SpriteRenderer.h" />
@@ -230,6 +233,8 @@
     <ClCompile Include="Src\IO\Input\InputSystem.cpp" />
     <ClCompile Include="Src\Math\AngleUnit.cpp" />
     <ClCompile Include="Src\Math\Color.cpp" />
+    <ClCompile Include="Src\Math\Matrix3x3.cpp" />
+    <ClCompile Include="Src\Math\Matrix4x4.cpp" />
     <ClCompile Include="Src\Math\Transform.cpp" />
     <ClCompile Include="Src\Rendering\2D\SpriteDrawCommand.cpp" />
     <ClCompile Include="Src\Rendering\2D\SpriteRenderer.cpp" />
@@ -249,6 +254,13 @@
     <ClCompile Include="Src\Utility\StringUtility.cpp" />
     <ClCompile Include="Src\Utility\Timer.cpp" />
     <ClCompile Include="Src\Utility\UntypedPointer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OstEngine\Math\DxMath\DirectXMathConvert.inl" />
+    <None Include="OstEngine\Math\DxMath\DirectXMathMatrix.inl" />
+    <None Include="OstEngine\Math\DxMath\DirectXMathMisc.inl" />
+    <None Include="OstEngine\Math\DxMath\DirectXMathVector.inl" />
+    <None Include="OstEngine\Math\DxMath\DirectXPackedVector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

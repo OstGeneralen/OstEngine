@@ -1,6 +1,8 @@
 #pragma once
+#include <OstEngine/Math/DxMath.h>
 #include <OstEngine/Math/NumericUtils.h>
 #include <OstEngine/Types.h>
+
 #include <cmath>
 
 namespace ost
@@ -12,10 +14,16 @@ namespace ost
     class TVector2
     {
     public:
-        T X;
-        T Y;
+        using DxVecUtil = DxVecTypeUtility<T, 2>;
 
-    public:
+        // clang-format off
+        union
+        {
+            DxVecUtil::DxVecType Vec;
+            struct { T X, Y; };
+        };
+        // clang-format on
+
         TVector2();
         TVector2( const T aX, const T aY );
 
@@ -53,7 +61,6 @@ namespace ost
     // Typed Vector3s
     // ------------------------------------------------------------
     using Vector2f = TVector2<Float32>;
-    using Vector2d = TVector2<Float64>;
     using Vector2i = TVector2<Int32>;
     using Vector2u = TVector2<Uint32>;
     // ------------------------------------------------------------
@@ -85,44 +92,40 @@ namespace ost
     template <typename T>
     inline T ost::TVector2<T>::Dot( const TVector2& aOther ) const
     {
-        return ( X * aOther.X ) + ( Y * aOther.Y );
+        T result;
+        DxVecUtil::StoreSingle( result,
+                                DirectX::XMVector2Dot( DxVecUtil::ToXMVec( Vec ), DxVecUtil::ToXMVec( aOther.Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline T ost::TVector2<T>::MagnitudeSqr() const
     {
-        return ( X * X ) + ( Y * Y );
+        T result;
+        DxVecUtil::StoreSingle( result, DirectX::XMVector2LengthSq( DxVecUtil::ToXMVec( Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline T ost::TVector2<T>::Magnitude() const
     {
-        return sqrt( MagnitudeSqr() );
+        T result;
+        DxVecUtil::StoreSingle( result, DirectX::XMVector2Length( DxVecUtil::ToXMVec( Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline TVector2<T> ost::TVector2<T>::GetNormalized() const
     {
-        const T magnitude = Magnitude();
-        if ( magnitude == static_cast<T>( 0 ) )
-        {
-            return TVector2<T>();
-        }
-        else
-        {
-            return TVector2<T>( X, Y ) / magnitude;
-        }
+        TVector2 result;
+        DxVecUtil::Store( result.Vec, DirectX::XMVector2Normalize( DxVecUtil::ToXMVec( Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline TVector2<T>& ost::TVector2<T>::Normalize()
     {
-        const T magnitude = Magnitude();
-        if ( magnitude > static_cast<T>( 0 ) )
-        {
-            X /= magnitude;
-            Y /= magnitude;
-        }
+        DxVecUtil::Store( Vec, DirectX::XMVector2Normalize( DxVecUtil::ToXMVec( Vec ) ) );
         return *this;
     }
 
@@ -193,11 +196,4 @@ namespace ost
     {
         return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y );
     }
-
-    template <>
-    inline bool TVector2<Float64>::operator==( const TVector2<Float64>& aSecond ) const
-    {
-        return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y );
-    }
-
 } // namespace ost

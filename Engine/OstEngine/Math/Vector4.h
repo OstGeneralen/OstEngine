@@ -1,6 +1,8 @@
 #pragma once
+#include <OstEngine/Math/DxMath.h>
 #include <OstEngine/Math/NumericUtils.h>
 #include <OstEngine/Types.h>
+
 #include <cmath>
 
 namespace ost
@@ -12,10 +14,15 @@ namespace ost
     class TVector4
     {
     public:
-        T X;
-        T Y;
-        T Z;
-        T W;
+        using DxVecUtil = DxVecTypeUtility<T, 4>;
+
+        // clang-format off
+        union
+        {
+            DxVecUtil::DxVecType Vec;
+            struct { T X, Y, Z, W; };
+        };
+        // clang-format on
 
     public:
         TVector4();
@@ -55,7 +62,6 @@ namespace ost
     // Typed Vector3s
     // ------------------------------------------------------------
     using Vector4f = TVector4<Float32>;
-    using Vector4d = TVector4<Float64>;
     using Vector4i = TVector4<Int32>;
     using Vector4u = TVector4<Uint32>;
     // ------------------------------------------------------------
@@ -90,48 +96,42 @@ namespace ost
     }
 
     template <typename T>
-    inline T ost::TVector4<T>::Dot( const TVector4& aOther ) const
+    inline T ost::TVector4<T>::Dot( const TVector4<T>& aOther ) const
     {
-        return ( X * aOther.X ) + ( Y * aOther.Y ) + ( Z * aOther.Z ) + ( W * aOther.W );
+        T result;
+        DxVecUtil::StoreSingle( result,
+                                DirectX::XMVector4Dot( DxVecUtil::ToXMVec( Vec ), DxVecUtil::ToXMVec( aOther.Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline T ost::TVector4<T>::MagnitudeSqr() const
     {
-        return ( X * X ) + ( Y * Y ) + ( Z * Z ) + ( W * W );
+        T result;
+        DxVecUtil::StoreSingle( result, DirectX::XMVector4LengthSq( DxVecUtil::ToXMVec( Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline T ost::TVector4<T>::Magnitude() const
     {
-        return sqrt( MagnitudeSqr() );
+        T result;
+        DxVecUtil::StoreSingle( result, DirectX::XMVector4Length( DxVecUtil::ToXMVec( Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline TVector4<T> ost::TVector4<T>::GetNormalized() const
     {
-        const T magnitude = Magnitude();
-        if ( magnitude == static_cast<T>( 0 ) )
-        {
-            return TVector4<T>();
-        }
-        else
-        {
-            return TVector4<T>( X, Y, Z, W ) / magnitude;
-        }
+        TVector4 result;
+        DxVecUtil::Store( result.Vec, DirectX::XMVector4Normalize( DxVecUtil::ToXMVec( Vec ) ) );
+        return result;
     }
 
     template <typename T>
     inline TVector4<T>& ost::TVector4<T>::Normalize()
     {
-        const T magnitude = Magnitude();
-        if ( magnitude > static_cast<T>( 0 ) )
-        {
-            X /= magnitude;
-            Y /= magnitude;
-            Z /= magnitude;
-            W /= magnitude;
-        }
+        DxVecUtil::Store( Vec, DirectX::XMVector4Normalize( DxVecUtil::ToXMVec( Vec ) ) );
         return *this;
     }
 
@@ -178,7 +178,7 @@ namespace ost
     template <typename T>
     inline TVector4<T> TVector4<T>::operator+( const TVector4<T>& aSecond ) const
     {
-        return TVector4<T>(X + aSecond.X, Y + aSecond.Y, Z + aSecond.Z, W + aSecond.W );
+        return TVector4<T>( X + aSecond.X, Y + aSecond.Y, Z + aSecond.Z, W + aSecond.W );
     }
 
     template <typename T>
@@ -200,10 +200,9 @@ namespace ost
     }
 
     template <typename T>
-    inline bool TVector4<T>::operator==(  const TVector4<T>& aSecond ) const
+    inline bool TVector4<T>::operator==( const TVector4<T>& aSecond ) const
     {
-        return ( X == aSecond.X ) && ( Y == aSecond.Y ) && ( Z == aSecond.Z ) &&
-               ( W == aSecond.W );
+        return ( X == aSecond.X ) && ( Y == aSecond.Y ) && ( Z == aSecond.Z ) && ( W == aSecond.W );
     }
 
     template <>
@@ -212,14 +211,4 @@ namespace ost
         return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y ) &&
                NumericUtils::NearlyEqual( Z, aSecond.Z ) && NumericUtils::NearlyEqual( W, aSecond.W );
     }
-
-    template <>
-    inline bool TVector4<Float64>::operator==( const TVector4<Float64>& aSecond ) const
-    {
-        return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y ) &&
-               NumericUtils::NearlyEqual( Z, aSecond.Z ) && NumericUtils::NearlyEqual( W, aSecond.W );
-    }
-
-
-
 } // namespace ost

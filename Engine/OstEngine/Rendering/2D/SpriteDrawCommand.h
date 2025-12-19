@@ -12,7 +12,7 @@ namespace ost
         SSpriteDrawCommand( const SSpriteDrawCommand& ) = default;
         SSpriteDrawCommand( const SSprite& aFromSprite );
 
-        TMatrix4x4<float> ModelMatrix;
+        Matrix4x4 ModelMatrix;
         SUntypedPtr TextureResource;
 	};
 }

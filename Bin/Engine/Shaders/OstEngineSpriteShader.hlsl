@@ -1,13 +1,13 @@
 cbuffer WorldInfo : register(b0)
 {
-    float4x4 viewProjectionMat;
+    row_major float4x4 viewProjectionMat;
     float totalTime;
     float3 padding;
 }
 
 cbuffer PerObject : register(b1)
 {
-    float4x4 modelMat;
+    row_major float4x4 modelMat;
 }
 
 struct vertexInfo
@@ -30,10 +30,10 @@ pixelInfo vsMain(vertexInfo input)
 {
     pixelInfo output;
     
-    float4x4 mvpMat = modelMat * viewProjectionMat;
+    float4x4 mvpMat = mul(modelMat, viewProjectionMat);
     float4 posV4 = float4(input.position.x, input.position.y, input.position.z, 1.0f);
     
-    output.position = mul(mvpMat, posV4);
+    output.position = mul(posV4, mvpMat);
     output.pixelUV = input.vertexUV;
     return output;
 }
