@@ -1,4 +1,4 @@
-#include "OstEngine/Math/Color.h"
+#include "OstEngine/Common/Math/Color.h"
 
 // ------------------------------------------------------------
 // Flt32 Color
@@ -12,6 +12,8 @@ ost::SColorFlt32::SColorFlt32()
 {
 }
 
+// ------------------------------------------------------------
+
 ost::SColorFlt32::SColorFlt32( float aR, float aG, float aB, float aA )
     : R{ aR }
     , G( aG )
@@ -19,6 +21,8 @@ ost::SColorFlt32::SColorFlt32( float aR, float aG, float aB, float aA )
     , A{ aA }
 {
 }
+
+// ------------------------------------------------------------
 
 ost::SColorFlt32::SColorFlt32( const SColor& aColor )
     : R{ static_cast<float>( aColor.R ) / 255.0f }
@@ -28,6 +32,8 @@ ost::SColorFlt32::SColorFlt32( const SColor& aColor )
 {
 }
 
+// ------------------------------------------------------------
+
 ost::SColorFlt32& ost::SColorFlt32::operator=( const SColor& aColor )
 {
     R = static_cast<float>( aColor.R ) / 255.0f;
@@ -36,6 +42,10 @@ ost::SColorFlt32& ost::SColorFlt32::operator=( const SColor& aColor )
     A = static_cast<float>( aColor.A ) / 255.0f;
     return *this;
 }
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------
 
 // ------------------------------------------------------------
 // Standard SColor (Uint8)
@@ -50,11 +60,15 @@ ost::SColor::SColor()
 {
 }
 
+// ------------------------------------------------------------
+
 ost::SColor::SColor( const Uint32 aHex )
     : SColor()
 {
     *this = aHex;
 }
+
+// ------------------------------------------------------------
 
 ost::SColor::SColor( Uint8 aR, Uint8 aG, Uint8 aB, Uint8 aA )
     : R{ aR }
@@ -64,11 +78,15 @@ ost::SColor::SColor( Uint8 aR, Uint8 aG, Uint8 aB, Uint8 aA )
 {
 }
 
+// ------------------------------------------------------------
+
 ost::SColor::SColor( const SColorFlt32& aFltColor )
     : SColor( static_cast<Uint8>( aFltColor.R * 255.0f ), static_cast<Uint8>( aFltColor.G * 255.0f ),
               static_cast<Uint8>( aFltColor.B * 255.0f ), static_cast<Uint8>( aFltColor.A * 255.0f ) )
 {
 }
+
+// ------------------------------------------------------------
 
 ost::SColor& ost::SColor::operator=( const Uint32 aHex )
 {
@@ -79,6 +97,8 @@ ost::SColor& ost::SColor::operator=( const Uint32 aHex )
     return *this;
 }
 
+// ------------------------------------------------------------
+
 ost::SColor& ost::SColor::operator=( const SColorFlt32& aFltColor )
 {
     R = static_cast<Uint8>( 255.0f * aFltColor.R );
@@ -87,3 +107,7 @@ ost::SColor& ost::SColor::operator=( const SColorFlt32& aFltColor )
     A = static_cast<Uint8>( 255.0f * aFltColor.A );
     return *this;
 }
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------

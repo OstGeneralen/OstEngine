@@ -142,9 +142,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OstEngine\Application\GameInterface.h" />
-    <ClInclude Include="OstEngine\Math\DxMath.h" />
-    <ClInclude Include="OstEngine\Math\DxMath\DirectXMath.h" />
-    <ClInclude Include="OstEngine\Math\DxMath\DirectXPackedVector.h" />
     <ClInclude Include="OstEngine\Rendering\2D\Sprite.h" />
     <ClInclude Include="OstEngine\Rendering\2D\SpriteDrawCommand.h" />
     <ClInclude Include="OstEngine\Rendering\2D\SpriteRenderer.h" />
@@ -155,7 +152,6 @@
     <ClInclude Include="OstEngine\Rendering\RendererBase.h" />
     <ClInclude Include="OstEngine\Rendering\ShaderBundle.h" />
     <ClInclude Include="OstEngine\Utility\IDIndexableList.h" />
-    <ClInclude Include="OstEngine\Utility\IDType.h" />
     <ClInclude Include="OstEngine\Utility\SparseList.h" />
     <ClInclude Include="Src\Debug\Logging\CoutLogging.h" />
     <ClInclude Include="OstEngine\IO\Input\InputReader.h" />
@@ -184,18 +180,7 @@
     <ClInclude Include="OstEngine\IO\Input\InputActionType.h" />
     <ClInclude Include="OstEngine\IO\Input\InputSystem.h" />
     <ClInclude Include="OstEngine\IO\Input\InputValue.h" />
-    <ClInclude Include="OstEngine\Math\AngleUnit.h" />
-    <ClInclude Include="OstEngine\Math\Color.h" />
-    <ClInclude Include="OstEngine\Math\Matrix2x2.h" />
-    <ClInclude Include="OstEngine\Math\Matrix3x3.h" />
-    <ClInclude Include="OstEngine\Math\Matrix4x4.h" />
-    <ClInclude Include="OstEngine\Math\NumericUtils.h" />
     <ClInclude Include="OstEngine\Math\Rect.h" />
-    <ClInclude Include="OstEngine\Math\Transform.h" />
-    <ClInclude Include="OstEngine\Math\Vector2.h" />
-    <ClInclude Include="OstEngine\Math\Vector3.h" />
-    <ClInclude Include="OstEngine\Math\Vector4.h" />
-    <ClInclude Include="OstEngine\Math\Vectors.h" />
     <ClInclude Include="OstEngine\OstEngineMinimal.h" />
     <ClInclude Include="Src\Rendering\DX\DDSTextureLoader11.h" />
     <ClInclude Include="Src\Rendering\DX\DXConstantBuffer.h" />
@@ -207,11 +192,7 @@
     <ClInclude Include="OstEngine\Rendering\RenderCore.h" />
     <ClInclude Include="OstEngine\Rendering\RenderData\Vertex.h" />
     <ClInclude Include="OstEngine\Rendering\Window.h" />
-    <ClInclude Include="OstEngine\Types.h" />
-    <ClInclude Include="OstEngine\Utility\ByteSize.h" />
-    <ClInclude Include="OstEngine\Utility\StringUtility.h" />
     <ClInclude Include="OstEngine\Utility\Timer.h" />
-    <ClInclude Include="OstEngine\Utility\UntypedPointer.h" />
     <ClInclude Include="Src\Rendering\OstEngineDefaultRenderer.h" />
     <ClInclude Include="Src\Rendering\RenderData\EngineInputConstantBuffer.h" />
   </ItemGroup>
@@ -236,11 +217,6 @@
     <ClCompile Include="Src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Src\IO\Input\InputAction.cpp" />
     <ClCompile Include="Src\IO\Input\InputSystem.cpp" />
-    <ClCompile Include="Src\Math\AngleUnit.cpp" />
-    <ClCompile Include="Src\Math\Color.cpp" />
-    <ClCompile Include="Src\Math\Matrix3x3.cpp" />
-    <ClCompile Include="Src\Math\Matrix4x4.cpp" />
-    <ClCompile Include="Src\Math\Transform.cpp" />
     <ClCompile Include="Src\Rendering\2D\SpriteDrawCommand.cpp" />
     <ClCompile Include="Src\Rendering\2D\SpriteRenderer.cpp" />
     <ClCompile Include="Src\Rendering\Camera.cpp" />
@@ -256,16 +232,12 @@
     <ClCompile Include="Src\Rendering\RenderData\Texture.cpp" />
     <ClCompile Include="Src\Rendering\ShaderBundle.cpp" />
     <ClCompile Include="Src\Rendering\Window.cpp" />
-    <ClCompile Include="Src\Utility\StringUtility.cpp" />
     <ClCompile Include="Src\Utility\Timer.cpp" />
-    <ClCompile Include="Src\Utility\UntypedPointer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="OstEngine\Math\DxMath\DirectXMathConvert.inl" />
-    <None Include="OstEngine\Math\DxMath\DirectXMathMatrix.inl" />
-    <None Include="OstEngine\Math\DxMath\DirectXMathMisc.inl" />
-    <None Include="OstEngine\Math\DxMath\DirectXMathVector.inl" />
-    <None Include="OstEngine\Math\DxMath\DirectXPackedVector.inl" />
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{dbfb1d8a-15ce-4d4a-85c4-da4053184755}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

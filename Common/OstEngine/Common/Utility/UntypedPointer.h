@@ -2,6 +2,8 @@
 #include <concepts>
 #include <type_traits>
 
+// ------------------------------------------------------------
+
 template<typename T>
 concept PointerType = std::is_pointer_v<T>;
 

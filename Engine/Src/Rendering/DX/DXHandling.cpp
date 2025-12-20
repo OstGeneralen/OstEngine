@@ -3,11 +3,11 @@
 #include "OstEngine//Debug/Logging/LogInstance.h"
 #include "Src/Rendering/DX/DXOstEngineDefaults.h"
 
-#include <OstEngine/Utility/StringUtility.h>
+#include <OstEngine/Common/Utility/StringUtility.h>
 
 #include <Windows.h>
 
-#include <OstEngine/Math/Vector4.h>
+#include <OstEngine/Common/Math/Vector4.h>
 
 // ------------------------------------------------------------
 
@@ -71,10 +71,10 @@ bool ost::dx::Initialize( ost::CWindow& aForWindow )
         const Uint64 dedicatedSystemMemory = static_cast<Uint64>( adapterDesc.DedicatedSystemMemory );
         const Uint64 sharedSystemMemory = static_cast<Uint64>( adapterDesc.SharedSystemMemory );
 
-        DeviceInformation.AdapterName = stringUtils::WStringToString( adapterNameW );
-        DeviceInformation.DedicatedVideoMemory = ByteSize::Bytes( dedicatedVideoMemory );
-        DeviceInformation.DedicatedSystemMemory = ByteSize::Bytes( dedicatedSystemMemory );
-        DeviceInformation.SharedSystemMemory = ByteSize::Bytes( sharedSystemMemory );
+        DeviceInformation.AdapterName = util::string::WStringToString( adapterNameW );
+        DeviceInformation.DedicatedVideoMemory = Bytes( dedicatedVideoMemory );
+        DeviceInformation.DedicatedSystemMemory = Bytes( dedicatedSystemMemory );
+        DeviceInformation.SharedSystemMemory = Bytes( sharedSystemMemory );
     }
 
     DXLog.BeginConfirm( "Successfully initialized D3D11" );

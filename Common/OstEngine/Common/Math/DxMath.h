@@ -1,6 +1,8 @@
 #pragma once
-#include <OstEngine/Math/DxMath/DirectXMath.h>
+#include <OstEngine/Common/Math/DxMath/DirectXMath.h>
 #include <OstEngine/Types.h>
+
+// ------------------------------------------------------------
 
 namespace ost
 {
@@ -9,10 +11,9 @@ namespace ost
     {
     };
 
-    template<>
+    template <>
     struct DxVecTypeUtility<Float64, 2>
     {
-
     };
 
     template <>
@@ -23,10 +24,13 @@ namespace ost
     template <>
     struct DxVecTypeUtility<Float64, 4>
     {
-
     };
 
-    template<>
+    // ------------------------------------------------------------
+    // Float32
+    // ------------------------------------------------------------
+
+    template <>
     struct DxVecTypeUtility<Float32, 2>
     {
         using DxVecType = DirectX::XMFLOAT2;
@@ -44,47 +48,6 @@ namespace ost
         static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
         {
             DirectX::XMStoreFloat2( &vt, xmv );
-        }
-    };
-
-    template <>
-    struct DxVecTypeUtility<Int32, 2>
-    {
-        using DxVecType = DirectX::XMINT2;
-        static DirectX::XMVECTOR ToXMVec( const DxVecType& vt )
-        {
-            return DirectX::XMLoadInt2( reinterpret_cast<const uint32_t*>( &vt ) );
-        }
-
-        static void StoreSingle( Int32& c, DirectX::XMVECTOR xmv )
-        {
-            DirectX::XMStoreInt( reinterpret_cast<uint32_t*>( &c ), xmv );
-        }
-
-        static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
-        {
-            DirectX::XMStoreInt2( reinterpret_cast<uint32_t*>( &vt ), xmv );
-        }
-    };
-
-    template <>
-    struct DxVecTypeUtility<Uint32, 2>
-    {
-        using DxVecType = DirectX::XMUINT2;
-
-        static DirectX::XMVECTOR ToXMVec( const DxVecType& vt )
-        {
-            return DirectX::XMLoadUInt2( &vt );
-        }
-
-        static void StoreSingle( Uint32& c, DirectX::XMVECTOR xmv )
-        {
-            DirectX::XMStoreInt( &c, xmv );
-        }
-
-        static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
-        {
-            DirectX::XMStoreUInt2( &vt, xmv );
         }
     };
 
@@ -110,6 +73,51 @@ namespace ost
     };
 
     template <>
+    struct DxVecTypeUtility<Float32, 4>
+    {
+        using DxVecType = DirectX::XMFLOAT4;
+
+        static DirectX::XMVECTOR ToXMVec( const DxVecType& vt )
+        {
+            return DirectX::XMLoadFloat4( &vt );
+        }
+
+        static void StoreSingle( Float32& c, DirectX::XMVECTOR xmv )
+        {
+            DirectX::XMStoreFloat( &c, xmv );
+        }
+
+        static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
+        {
+            DirectX::XMStoreFloat4( &vt, xmv );
+        }
+    };
+
+    // ------------------------------------------------------------
+    // Int32
+    // ------------------------------------------------------------
+
+    template <>
+    struct DxVecTypeUtility<Int32, 2>
+    {
+        using DxVecType = DirectX::XMINT2;
+        static DirectX::XMVECTOR ToXMVec( const DxVecType& vt )
+        {
+            return DirectX::XMLoadInt2( reinterpret_cast<const uint32_t*>( &vt ) );
+        }
+
+        static void StoreSingle( Int32& c, DirectX::XMVECTOR xmv )
+        {
+            DirectX::XMStoreInt( reinterpret_cast<uint32_t*>( &c ), xmv );
+        }
+
+        static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
+        {
+            DirectX::XMStoreInt2( reinterpret_cast<uint32_t*>( &vt ), xmv );
+        }
+    };
+
+    template <>
     struct DxVecTypeUtility<Int32, 3>
     {
         using DxVecType = DirectX::XMINT3;
@@ -127,6 +135,52 @@ namespace ost
         static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
         {
             DirectX::XMStoreInt3( reinterpret_cast<uint32_t*>( &vt ), xmv );
+        }
+    };
+
+    template <>
+    struct DxVecTypeUtility<Int32, 4>
+    {
+        using DxVecType = DirectX::XMINT4;
+
+        static DirectX::XMVECTOR ToXMVec( const DxVecType& vt )
+        {
+            return DirectX::XMLoadInt4( reinterpret_cast<const uint32_t*>( &vt ) );
+        }
+
+        static void StoreSingle( Int32& c, DirectX::XMVECTOR xmv )
+        {
+            DirectX::XMStoreInt( reinterpret_cast<uint32_t*>( &c ), xmv );
+        }
+
+        static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
+        {
+            DirectX::XMStoreInt4( reinterpret_cast<uint32_t*>( &vt ), xmv );
+        }
+    };
+
+    // ------------------------------------------------------------
+    // Uint32
+    // ------------------------------------------------------------
+
+    template <>
+    struct DxVecTypeUtility<Uint32, 2>
+    {
+        using DxVecType = DirectX::XMUINT2;
+
+        static DirectX::XMVECTOR ToXMVec( const DxVecType& vt )
+        {
+            return DirectX::XMLoadUInt2( &vt );
+        }
+
+        static void StoreSingle( Uint32& c, DirectX::XMVECTOR xmv )
+        {
+            DirectX::XMStoreInt( &c, xmv );
+        }
+
+        static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
+        {
+            DirectX::XMStoreUInt2( &vt, xmv );
         }
     };
 
@@ -152,48 +206,6 @@ namespace ost
     };
 
     template <>
-    struct DxVecTypeUtility<Float32, 4>
-    {
-        using DxVecType = DirectX::XMFLOAT4;
-
-        static DirectX::XMVECTOR ToXMVec( const DxVecType& vt )
-        {
-            return DirectX::XMLoadFloat4( &vt );
-        }
-
-        static void StoreSingle( Float32& c, DirectX::XMVECTOR xmv )
-        {
-            DirectX::XMStoreFloat( &c, xmv );
-        }
-
-        static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
-        {
-            DirectX::XMStoreFloat4( &vt, xmv );
-        }
-    };
-
-    template <>
-    struct DxVecTypeUtility<Int32, 4>
-    {
-        using DxVecType = DirectX::XMINT4;
-
-        static DirectX::XMVECTOR ToXMVec( const DxVecType& vt )
-        {
-            return DirectX::XMLoadInt4( reinterpret_cast<const uint32_t*>( &vt ) );
-        }
-
-        static void StoreSingle( Int32& c, DirectX::XMVECTOR xmv )
-        {
-            DirectX::XMStoreInt( reinterpret_cast<uint32_t*>( &c ), xmv );
-        }
-
-        static void Store( DxVecType& vt, DirectX::XMVECTOR xmv )
-        {
-            DirectX::XMStoreInt4( reinterpret_cast<uint32_t*>( &vt ), xmv );
-        }
-    };
-
-    template <>
     struct DxVecTypeUtility<Uint32, 4>
     {
         using DxVecType = DirectX::XMUINT4;
@@ -215,3 +227,7 @@ namespace ost
     };
 
 } // namespace ost
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------

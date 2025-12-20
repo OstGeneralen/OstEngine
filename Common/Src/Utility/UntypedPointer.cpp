@@ -1,4 +1,4 @@
-#include "OstEngine/Utility/UntypedPointer.h"
+#include "OstEngine/Common/Utility/UntypedPointer.h"
 
 // ------------------------------------------------------------
 
@@ -7,10 +7,14 @@ ost::SUntypedPtr::SUntypedPtr()
 {
 }
 
+// ------------------------------------------------------------
+
 ost::SUntypedPtr::SUntypedPtr( const SUntypedPtr& aOther )
     : _ptr{aOther._ptr}
 {
 }
+
+// ------------------------------------------------------------
 
 ost::SUntypedPtr::SUntypedPtr( SUntypedPtr&& aOther ) noexcept
     : _ptr{aOther._ptr}
@@ -18,11 +22,15 @@ ost::SUntypedPtr::SUntypedPtr( SUntypedPtr&& aOther ) noexcept
     aOther._ptr = nullptr;
 }
 
+// ------------------------------------------------------------
+
 ost::SUntypedPtr& ost::SUntypedPtr::operator=( const SUntypedPtr& aRhs )
 {
     _ptr = aRhs._ptr;
     return *this;
 }
+
+// ------------------------------------------------------------
 
 ost::SUntypedPtr& ost::SUntypedPtr::operator=( SUntypedPtr&& aRhs ) noexcept
 {
@@ -30,6 +38,8 @@ ost::SUntypedPtr& ost::SUntypedPtr::operator=( SUntypedPtr&& aRhs ) noexcept
     aRhs._ptr = nullptr;
     return *this;
 }
+
+// ------------------------------------------------------------
 
 ost::SUntypedPtr::operator bool() const
 {

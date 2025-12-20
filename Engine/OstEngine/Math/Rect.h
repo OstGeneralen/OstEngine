@@ -1,5 +1,5 @@
 #pragma once
-#include <OstEngine/Math/Vector2.h>
+#include <OstEngine/Common/Math/Vector2.h>
 #include <SDL3/SDL_rect.h>
 
 namespace ost

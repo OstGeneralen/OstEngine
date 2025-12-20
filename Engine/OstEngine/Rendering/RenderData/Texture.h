@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "OstEngine/Utility/UntypedPointer.h"
-#include "OstEngine/Math/Vector2.h"
+#include "OstEngine/Common/Utility/UntypedPointer.h"
+#include "OstEngine/Common/Math/Vector2.h"
 
 // ------------------------------------------------------------
 

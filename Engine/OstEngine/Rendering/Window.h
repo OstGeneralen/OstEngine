@@ -1,7 +1,7 @@
 #pragma once
 #include <OstEngine/Types.h>
-#include <OstEngine/Math/Vectors.h>
-#include <OstEngine/Utility/UntypedPointer.h>
+#include <OstEngine/Common/Math/Vectors.h>
+#include <OstEngine/Common/Utility/UntypedPointer.h>
 #include <OstEngine/IO/Input/InputReader.h>
 #include <functional>
 

@@ -1,7 +1,7 @@
 #pragma once
-#include <OstEngine/Math/Color.h>
+#include <OstEngine/Common/Math/Color.h>
 #include <OstEngine/Rendering/Window.h>
-#include <OstEngine/Utility/ByteSize.h>
+#include <OstEngine/Common/Utility/ByteSize.h>
 #include <Src/Rendering/RenderData/EngineInputConstantBuffer.h>
 
 #include <string>
@@ -16,9 +16,9 @@ namespace ost
         struct SDXDeviceInfo
         {
             std::string AdapterName = "";
-            ByteSize::Gigabytes DedicatedVideoMemory = ByteSize::Gigabytes( (Uint64)0u );
-            ByteSize::Gigabytes DedicatedSystemMemory = ByteSize::Gigabytes( (Uint64)0u );
-            ByteSize::Gigabytes SharedSystemMemory = ByteSize::Gigabytes( (Uint64)0u );
+            Gigabytes DedicatedVideoMemory = Gigabytes( (Uint64)0u );
+            Gigabytes DedicatedSystemMemory = Gigabytes( (Uint64)0u );
+            Gigabytes SharedSystemMemory = Gigabytes( (Uint64)0u );
         };
 
         extern SDXDeviceInfo DeviceInformation;

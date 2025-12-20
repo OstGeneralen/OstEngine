@@ -1,8 +1,8 @@
 #pragma once
-#include <OstEngine/Math/Vector2.h>
-#include <OstEngine/Math/Transform.h>
-#include <OstEngine/Math/Matrix4x4.h>
-#include <OstEngine/Math/AngleUnit.h>
+#include <OstEngine/Common/Math/Vector2.h>
+#include <OstEngine/Common/Math/Transform.h>
+#include <OstEngine/Common/Math/Matrix4x4.h>
+#include <OstEngine/Common/Math/AngleUnit.h>
 
 namespace ost
 {
@@ -12,7 +12,7 @@ namespace ost
         CTransform Transform;
 
         void InitializeOrthographic( const Vector2f& aSize );
-        void InitializePerspective( Float32 aAspect, math::Radians aFov );
+        void InitializePerspective( Float32 aAspect, Radians aFov );
 
         Matrix4x4 GetViewProjection() const;
 

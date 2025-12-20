@@ -2,7 +2,7 @@
 #include "Src/Rendering/DX/DXHandling.h"
 
 #include <OstEngine/OstEngineMinimal.h>
-#include <OstEngine/Utility/StringUtility.h>
+#include <OstEngine/Common/Utility/StringUtility.h>
 
 #include <filesystem>
 
@@ -28,7 +28,7 @@ ID3DBlob* CompileShaderFromFile( const std::string& aPath, const std::string& aE
         ShaderCompileLog.Detail( "Target: {}", aTarget );
     };
 
-    std::wstring pathWide = ost::stringUtils::StringToWString( aPath );
+    std::wstring pathWide = ost::util::string::StringToWString( aPath );
     ID3DBlob* errorBlob;
     ID3DBlob* shaderBlob;
     HRESULT result = D3DCompileFromFile( pathWide.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, aEntry.c_str(), aTarget.c_str(), compileFlags, 0,

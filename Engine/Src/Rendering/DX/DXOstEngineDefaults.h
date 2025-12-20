@@ -1,6 +1,6 @@
 #pragma once
 #include "OstEngine/Types.h"
-#include "OstEngine/Math/Matrix4x4.h"
+#include "OstEngine/Common/Math/Matrix4x4.h"
 #include <d3d11.h>
 
 namespace ost

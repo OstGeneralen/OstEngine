@@ -1,6 +1,6 @@
 #pragma once
 #include <OstEngine/Rendering/RenderCore.h>
-#include <OstEngine/Math/Matrix4x4.h>
+#include <OstEngine/Common/Math/Matrix4x4.h>
 
 namespace ost
 {

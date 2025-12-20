@@ -1,9 +1,10 @@
 #pragma once
-#include <OstEngine/Math/AngleUnit.h>
-#include <OstEngine/Math/DxMath/DirectXMath.h>
-#include <OstEngine/Math/Vector3.h>
-#include <OstEngine/Math/Vector4.h>
-#include <OstEngine/Math/Matrix3x3.h>
+#include "OstEngine/Common/Math/AngleUnit.h"
+#include "OstEngine/Common/Math/Matrix3x3.h"
+#include "OstEngine/Common/Math/Vector3.h"
+#include "OstEngine/Common/Math/Vector4.h"
+
+#include <OstEngine/Common/Math/DxMath/DirectXMath.h>
 
 namespace ost
 {
@@ -31,13 +32,15 @@ namespace ost
 
         Matrix4x4 GetInverse() const;
 
+        void Decompose();
+
         static Matrix4x4 Translation( const Vector3f& aTranslation );
         static Matrix4x4 Scale( const Vector3f& aTranslation );
 
         static Matrix4x4 OrthographicProjection( const Vector3f& aMin, const Vector3f& aMax );
-        static Matrix4x4 PerspectiveProjection( Float32 aAspect, math::Radians aFov, Float32 aNearPlaneDistance,
-                                                 Float32 aFarPlaneDistance );
-        
+        static Matrix4x4 PerspectiveProjection( Float32 aAspect, Radians aFov, Float32 aNearPlaneDistance,
+                                                Float32 aFarPlaneDistance );
+
         Matrix4x4 operator*( const Matrix4x4& aRhs ) const;
     };
 

@@ -1,6 +1,6 @@
 #pragma once
-#include "OstEngine/Math/Matrix4x4.h"
-#include "OstEngine/Utility/UntypedPointer.h"
+#include "OstEngine/Common/Math/Matrix4x4.h"
+#include "OstEngine/Common/Utility/UntypedPointer.h"
 
 namespace ost
 {

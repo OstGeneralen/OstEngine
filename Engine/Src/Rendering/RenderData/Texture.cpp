@@ -1,7 +1,7 @@
 #include "OstEngine/Rendering/RenderData/Texture.h"
 
 #include "OstEngine/Debug/Logging/LogInstance.h"
-#include "OstEngine/Utility/StringUtility.h"
+#include "OstEngine/Common/Utility/StringUtility.h"
 #include "Src/Rendering/DX/DDSTextureLoader11.h"
 #include "Src/Rendering/DX/DXHandling.h"
 
@@ -11,7 +11,7 @@ ost::log::CLogInstance TextureLoadLog{ "TextureLoad" };
 
 void ost::CTexture::LoadDDS( const std::string& aPath )
 {
-    const std::wstring wPath = stringUtils::StringToWString( aPath );
+    const std::wstring wPath = util::string::StringToWString( aPath );
 
     ID3D11ShaderResourceView* resourceView;
     HRESULT result = DirectX::CreateDDSTextureFromFile( dx::Device, wPath.c_str(), nullptr, &resourceView );

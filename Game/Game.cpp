@@ -1,8 +1,9 @@
 #include "Game.h"
-#include <OstEngine/Math/Matrix4x4.h>
+#include <OstEngine/Common/Math/Matrix4x4.h>
 #include <OstEngine/Rendering/2D/SpriteRenderer.h>
 #include <OstEngine/Rendering/2D/Sprite.h>
 #include <OstEngine/Rendering/RenderData/Texture.h>
+#include <OstEngine/Common/Math/AngleUnit.h>
 #include <cmath>
 
 CGame gameInstance;
@@ -19,7 +20,7 @@ ost::CSpriteRenderer spriteRenderer;
 void CGame::Load()
 {
     _engine = ost::CEngine::Instance();
-    _camera.InitializePerspective( 16.0f / 9.0f, ost::math::Degrees(70.0f) );
+    _camera.InitializePerspective( 16.0f / 9.0f, Degrees(70.0f) );
     //_camera.InitializeOrthographic( { 16.0f, 9.0f } );  
     _camera.Transform.Translate( { -2.f, 0.0f, -10.0f } );
 
@@ -32,12 +33,12 @@ void CGame::Load()
 void CGame::Update( const ost::CTimer& aTimer )
 {
 
-    _camera.Transform.SetPosition( { sinf( static_cast<Float32>( aTimer.GetTotalTime() ) ) * 5.0f,
-                                     cosf( static_cast<Float32>( aTimer.GetTotalTime() ) ) * 5.0f, -10.0f } );
+    //_camera.Transform.SetPosition( { sinf( static_cast<Float32>( aTimer.GetTotalTime() ) ) * 5.0f,
+    //                                 cosf( static_cast<Float32>( aTimer.GetTotalTime() ) ) * 5.0f, -10.0f } );
     
     
     ost::Vector3f r = { 0.0f, sinf( static_cast<Float32>( aTimer.GetTotalTime() ) ), 0.0f }; 
-    _camera.Transform.SetRotation( r * ost::math::RadToDeg * 0.5f );
+    _camera.Transform.SetRotation( r * math::RadToDeg * 0.5f );
 
     //_camera.Transform.Translate( { 1.0f * aTimer.GetDeltaTime(), 0.0f, 1.0f * aTimer.GetDeltaTime() } );
 }

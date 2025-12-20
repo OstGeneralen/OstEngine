@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OstEngine/Math/Matrix4x4.h"
+#include "OstEngine/Common/Math/Matrix4x4.h"
 #include "OstEngine/Rendering/RenderData/Vertex.h"
 #include "Src/Rendering/RenderData/EngineInputConstantBuffer.h"
 

@@ -1,6 +1,6 @@
 #pragma once
-#include <OstEngine/Math/Color.h>
-#include <OstEngine/Math/Vectors.h>
+#include <OstEngine/Common/Math/Color.h>
+#include <OstEngine/Common/Math/Vectors.h>
 #include <string>
 
 namespace ost

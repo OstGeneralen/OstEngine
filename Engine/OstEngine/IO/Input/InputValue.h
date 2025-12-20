@@ -1,5 +1,5 @@
 #pragma once
-#include <OstEngine/Math/Vectors.h>
+#include <OstEngine/Common/Math/Vectors.h>
 
 // --------------------------------------------------
 

@@ -2,7 +2,7 @@
 // A bundle of VS, PS + Input Layout
 // ------------------------------------------------------------
 #pragma once
-#include "OstEngine/Utility/UntypedPointer.h"
+#include "OstEngine/Common/Utility/UntypedPointer.h"
 
 #include <string>
 

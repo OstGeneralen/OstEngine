@@ -1,10 +1,10 @@
-#include "OstEngine/Utility/StringUtility.h"
+#include "OstEngine/Common/Utility/StringUtility.h"
 
 #include <sstream>
 
 // ------------------------------------------------------------
 
-std::string ost::stringUtils::WStringToString( const std::wstring& aWStr )
+std::string ost::util::string::WStringToString( const std::wstring& aWStr )
 {
     std::stringstream buildStream;
     for ( auto c : aWStr )
@@ -17,9 +17,11 @@ std::string ost::stringUtils::WStringToString( const std::wstring& aWStr )
 
 // ------------------------------------------------------------
 
-std::wstring ost::stringUtils::StringToWString( const std::string& aStr )
+std::wstring ost::util::string::StringToWString( const std::string& aStr )
 {
     return std::wstring( aStr.begin(), aStr.end() );
 }
 
+// ------------------------------------------------------------
+// ------------------------------------------------------------
 // ------------------------------------------------------------

@@ -1,16 +1,15 @@
 #pragma once
-#include <OstEngine/Math/AngleUnit.h>
-#include <OstEngine/Math/Matrix2x2.h>
-#include <OstEngine/Math/Vector3.h>
-#include <OstEngine/Math/DxMath/DirectXMath.h>
+#include "OstEngine/Common/Math/AngleUnit.h"
+#include "OstEngine/Common/Math/Vector3.h"
+
+#include <OstEngine/Common/Math/DxMath/DirectXMath.h>
 
 namespace ost
 {
     class Matrix3x3
     {
     public:
-        union
-        {
+        union {
             DirectX::XMFLOAT3X3 Mat;
             struct
             {
@@ -19,14 +18,16 @@ namespace ost
                 Float32 M31, M32, M33;
             };
         };
+
     public:
         Matrix3x3();
-        Matrix3x3( Float32 a11, Float32 a12, Float32 a13, Float32 a21, Float32 a22, Float32 a23, Float32 a31, Float32 a32, Float32 a33 );
+        Matrix3x3( Float32 a11, Float32 a12, Float32 a13, Float32 a21, Float32 a22, Float32 a23, Float32 a31,
+                   Float32 a32, Float32 a33 );
         Matrix3x3( const Matrix3x3& ) = default;
 
-        static Matrix3x3 RotationX( math::Radians r );
-        static Matrix3x3 RotationY( math::Radians r );
-        static Matrix3x3 RotationZ( math::Radians r );
+        static Matrix3x3 RotationX( Radians r );
+        static Matrix3x3 RotationY( Radians r );
+        static Matrix3x3 RotationZ( Radians r );
 
         Matrix3x3& Transpose();
         Matrix3x3 GetTransposed() const;

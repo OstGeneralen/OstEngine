@@ -13,7 +13,7 @@ void ost::CCamera::InitializeOrthographic( const Vector2f& aSize )
 
 // ------------------------------------------------------------
 
-void ost::CCamera::InitializePerspective( Float32 aAspect, math::Radians aFov )
+void ost::CCamera::InitializePerspective( Float32 aAspect, Radians aFov )
 {
     _projectionMatrix = Matrix4x4::PerspectiveProjection( aAspect, aFov, 0.001f, 100.0f );
 }

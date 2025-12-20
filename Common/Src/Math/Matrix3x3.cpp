@@ -1,8 +1,8 @@
-#include "OstEngine/Math/Matrix3x3.h"
+#include "OstEngine/Common/Math/Matrix3x3.h"
 
 // ------------------------------------------------------------
 
-inline ost::Matrix3x3::Matrix3x3()
+ost::Matrix3x3::Matrix3x3()
     : M11{ 1.f }
     , M12{ 0.f }
     , M13{ 0.f }
@@ -14,6 +14,8 @@ inline ost::Matrix3x3::Matrix3x3()
     , M33{ 1.f }
 {
 }
+
+// ------------------------------------------------------------
 
 ost::Matrix3x3::Matrix3x3( Float32 a11, Float32 a12, Float32 a13, Float32 a21, Float32 a22, Float32 a23, Float32 a31,
                            Float32 a32, Float32 a33 )
@@ -30,6 +32,8 @@ ost::Matrix3x3::Matrix3x3( Float32 a11, Float32 a12, Float32 a13, Float32 a21, F
 {
 }
 
+// ------------------------------------------------------------
+
 ost::Matrix3x3 ost::Matrix3x3::GetInverse() const
 {
     DirectX::XMMATRIX matrix = DirectX::XMLoadFloat3x3( &Mat );
@@ -40,6 +44,8 @@ ost::Matrix3x3 ost::Matrix3x3::GetInverse() const
     return result;
 }
 
+// ------------------------------------------------------------
+
 Float32 ost::Matrix3x3::GetDeterminant() const
 {
     DirectX::XMVECTOR det = DirectX::XMMatrixDeterminant( DirectX::XMLoadFloat3x3( &Mat ) );
@@ -49,7 +55,9 @@ Float32 ost::Matrix3x3::GetDeterminant() const
     return result;
 }
 
-ost::Matrix3x3 ost::Matrix3x3::RotationX( math::Radians r )
+// ------------------------------------------------------------
+
+ost::Matrix3x3 ost::Matrix3x3::RotationX( Radians r )
 {
     DirectX::XMMATRIX mat = DirectX::XMMatrixRotationX( r.Get() );
     Matrix3x3 result;
@@ -57,7 +65,9 @@ ost::Matrix3x3 ost::Matrix3x3::RotationX( math::Radians r )
     return result;
 }
 
-ost::Matrix3x3 ost::Matrix3x3::RotationY( math::Radians r )
+// ------------------------------------------------------------
+
+ost::Matrix3x3 ost::Matrix3x3::RotationY( Radians r )
 {
     DirectX::XMMATRIX mat = DirectX::XMMatrixRotationY( r.Get() );
     Matrix3x3 result;
@@ -65,8 +75,9 @@ ost::Matrix3x3 ost::Matrix3x3::RotationY( math::Radians r )
     return result;
 }
 
+// ------------------------------------------------------------
 
-ost::Matrix3x3 ost::Matrix3x3::RotationZ( math::Radians r )
+ost::Matrix3x3 ost::Matrix3x3::RotationZ( Radians r )
 {
     DirectX::XMMATRIX mat = DirectX::XMMatrixRotationZ( r.Get() );
     Matrix3x3 result;
@@ -74,7 +85,9 @@ ost::Matrix3x3 ost::Matrix3x3::RotationZ( math::Radians r )
     return result;
 }
 
-ost::Matrix3x3 ost::Matrix3x3::operator*(const Matrix3x3& aRhs) const
+// ------------------------------------------------------------
+
+ost::Matrix3x3 ost::Matrix3x3::operator*( const Matrix3x3& aRhs ) const
 {
     DirectX::XMMATRIX m1 = DirectX::XMLoadFloat3x3( &( Mat ) );
     DirectX::XMMATRIX m2 = DirectX::XMLoadFloat3x3( &( aRhs.Mat ) );
@@ -83,6 +96,8 @@ ost::Matrix3x3 ost::Matrix3x3::operator*(const Matrix3x3& aRhs) const
     DirectX::XMStoreFloat3x3( &( result.Mat ), r );
     return result;
 }
+
+// ------------------------------------------------------------
 
 ost::Vector3f ost::operator*( const Vector3f& aV, const Matrix3x3& aM )
 {

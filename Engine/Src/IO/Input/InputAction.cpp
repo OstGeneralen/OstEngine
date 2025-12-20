@@ -2,7 +2,7 @@
 
 #include "OstEngine/IO/Input/InputSystem.h"
 
-#include <OstEngine/Math/NumericUtils.h>
+#include <OstEngine/Common/Utility/NumericUtils.h>
 
 ost::SInputBinding_Button ost::InputBinding::CreateButton( EKeyCode aKey )
 {
@@ -74,8 +74,8 @@ bool ost::SInputBinding_UpDownLeftRight::Evaluate( const CInputReader& aInput, I
     {
         newX += 1.0f;
     }
-    newX = NumericUtils::Clamp( newX, -1.0f, 1.0f );
-    newY = NumericUtils::Clamp( newY, -1.0f, 1.0f );
+    newX = util::numeric::Clamp( newX, -1.0f, 1.0f );
+    newY = util::numeric::Clamp( newY, -1.0f, 1.0f );
     const Vector2f newValue{ newX, newY };
     outValue.Axis2DValue += newValue;
     return true;
@@ -169,8 +169,8 @@ void ost::SInputAction::Evaluate( const CInputReader& aInput )
         shouldInvokeCallback = newValue.ButtonValue != _value.ButtonValue;
         break;
     case ost::EInputActionType::Axis1D:
-        newValue.Axis1DValue = NumericUtils::Clamp( newValue.Axis1DValue, -1.0f, 1.0f );
-        shouldInvokeCallback = NumericUtils::NearlyEqual( newValue.Axis1DValue, _value.Axis1DValue ) == false;
+        newValue.Axis1DValue = util::numeric::Clamp( newValue.Axis1DValue, -1.0f, 1.0f );
+        shouldInvokeCallback = util::numeric::NearlyEqual( newValue.Axis1DValue, _value.Axis1DValue ) == false;
         break;
     case ost::EInputActionType::Axis2D:
         newValue.Axis2DValue.Normalize();

@@ -1,7 +1,7 @@
 #pragma once
-#include <OstEngine/Math/DxMath.h>
-#include <OstEngine/Math/NumericUtils.h>
-#include <OstEngine/Types.h>
+#include "OstEngine/Common/Math/DxMath.h"
+#include "OstEngine/Common/Utility/NumericUtils.h"
+#include "OstEngine/Types.h"
 
 #include <cmath>
 
@@ -212,7 +212,7 @@ namespace ost
     template <>
     inline bool TVector3<Float32>::operator==( const TVector3<Float32>& aSecond ) const
     {
-        return NumericUtils::NearlyEqual( X, aSecond.X ) && NumericUtils::NearlyEqual( Y, aSecond.Y ) &&
-               NumericUtils::NearlyEqual( Z, aSecond.Z );
+        return util::numeric::NearlyEqual( X, aSecond.X ) && util::numeric::NearlyEqual( Y, aSecond.Y ) &&
+               util::numeric::NearlyEqual( Z, aSecond.Z );
     }
 } // namespace ost

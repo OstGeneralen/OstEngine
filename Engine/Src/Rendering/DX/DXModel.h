@@ -1,7 +1,7 @@
 #pragma once
 #include <OstEngine/OstEngineMinimal.h>
-#include <OstEngine/Math/Color.h>
-#include <OstEngine/Math/Vectors.h>
+#include <OstEngine/Common/Math/Color.h>
+#include <OstEngine/Common/Math/Vectors.h>
 #include <OstEngine/Rendering/RenderData/Vertex.h>
 
 #include <vector>
