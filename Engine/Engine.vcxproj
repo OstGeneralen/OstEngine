@@ -149,9 +149,14 @@
     <ClInclude Include="OstEngine\Rendering\2D\SpriteDrawCommand.h" />
     <ClInclude Include="OstEngine\Rendering\2D\SpriteRenderer.h" />
     <ClInclude Include="OstEngine\Rendering\Camera.h" />
+    <ClInclude Include="OstEngine\Rendering\Material\Material.h" />
+    <ClInclude Include="OstEngine\Rendering\RenderData\RenderPacket.h" />
     <ClInclude Include="OstEngine\Rendering\RenderData\Texture.h" />
     <ClInclude Include="OstEngine\Rendering\RendererBase.h" />
     <ClInclude Include="OstEngine\Rendering\ShaderBundle.h" />
+    <ClInclude Include="OstEngine\Utility\IDIndexableList.h" />
+    <ClInclude Include="OstEngine\Utility\IDType.h" />
+    <ClInclude Include="OstEngine\Utility\SparseList.h" />
     <ClInclude Include="Src\Debug\Logging\CoutLogging.h" />
     <ClInclude Include="OstEngine\IO\Input\InputReader.h" />
     <ClInclude Include="OstEngine\IO\Input\KeyCodes.h" />
