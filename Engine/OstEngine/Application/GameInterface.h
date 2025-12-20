@@ -8,6 +8,7 @@ namespace ost
     {
     public:
         virtual const CCamera& GetCamera() const = 0;
+        virtual const Vector3f& GetSunDirection() const = 0;
 
         virtual void Load() = 0;
         virtual void Update( const ost::CTimer& aTimer ) = 0;

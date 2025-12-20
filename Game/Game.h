@@ -12,6 +12,7 @@ public:
     void Render() override;
 
     const ost::CCamera& GetCamera() const override;
+    const ost::Vector3f& GetSunDirection() const override;
 
 private:
     ost::CEngine* _engine;

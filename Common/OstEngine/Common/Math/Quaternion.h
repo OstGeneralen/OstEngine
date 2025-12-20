@@ -21,8 +21,11 @@ namespace ost
 
 		CQuaternion();
         CQuaternion( float aX, float aY, float aZ, float aW );
+        CQuaternion( const Vector3f& aEuler );
         CQuaternion( const CQuaternion& ) = default;
         CQuaternion( CQuaternion&& ) noexcept = default;
+
+		CQuaternion& operator=( const CQuaternion& ) = default; 
 
 		CQuaternion& SetEulers( const EulerAngles& aEulers );
 		CQuaternion operator*( const CQuaternion& aRhs ) const;
@@ -31,5 +34,14 @@ namespace ost
 		Matrix3x3 ToRotationMatrix() const;
 	};
 
-	static Vector3f operator*( const Vector3f& aV, const CQuaternion& aQ );
+	static Vector3f operator*(const Vector3f& aV, const CQuaternion& aQ)
+	{
+        DirectX::XMVECTOR v = DirectX::XMLoadFloat3( &( aV.Vec ) );
+        DirectX::XMVECTOR q = DirectX::XMLoadFloat4( &( aQ.Quat ) );
+        DirectX::XMVECTOR r = DirectX::XMVector3Rotate( v, q );
+
+        Vector3f result;
+        DirectX::XMStoreFloat3( &result.Vec, r );
+        return result;
+	}
 }

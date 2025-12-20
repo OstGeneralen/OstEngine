@@ -31,11 +31,34 @@ ost::CTransform& ost::CTransform::Translate( const Vector3f& aOffset )
 
 // ------------------------------------------------------------
 
+ost::CTransform& ost::CTransform::RotateAround( const Vector3f& aWorldPoint, const Vector3f& aEuler )
+{
+    const CQuaternion rotation( aEuler );
+
+    const Vector3f offset = _translation - aWorldPoint;
+    const Vector3f rotatedOffset = offset * rotation;
+    SetPosition( rotatedOffset );
+    SetRotation( _rotation * rotation );
+    return *this;
+}
+
+// ------------------------------------------------------------
+
 ost::CTransform& ost::CTransform::Rotate( const Vector3f& aEuler )
 {
-    CQuaternion rBy = CQuaternion().SetEulers( EulerAngles( Degrees( aEuler.X),  Degrees(aEuler.Y), Degrees(aEuler.Z)));
+    CQuaternion rBy =
+        CQuaternion().SetEulers( EulerAngles( Degrees( aEuler.X ), Degrees( aEuler.Y ), Degrees( aEuler.Z ) ) );
     _rotation *= rBy;
 
+    _needsRecalc = true;
+    return *this;
+}
+
+// ------------------------------------------------------------
+
+ost::CTransform& ost::CTransform::Rotate( const CQuaternion& aQuat )
+{
+    _rotation *= aQuat;
     _needsRecalc = true;
     return *this;
 }
@@ -76,6 +99,15 @@ ost::CTransform& ost::CTransform::SetPosition( const Vector3f& aPosition )
 ost::CTransform& ost::CTransform::SetRotation( const Vector3f& aEulers )
 {
     _rotation.SetEulers( EulerAngles( Degrees( aEulers.X ), Degrees( aEulers.Y ), Degrees( aEulers.Z ) ) );
+    _needsRecalc = true;
+    return *this;
+}
+
+// ------------------------------------------------------------
+
+ost::CTransform& ost::CTransform::SetRotation( const CQuaternion& aQuat )
+{
+    _rotation = aQuat;
     _needsRecalc = true;
     return *this;
 }
@@ -143,6 +175,36 @@ const ost::Matrix4x4& ost::CTransform::GetInverseMatrix() const
         Recalc();
     }
     return _inverseMatrix;
+}
+
+// ------------------------------------------------------------
+
+ost::Vector3f ost::CTransform::TransformPoint( const Vector3f& aP ) const
+{
+    Vector4f v4 = { aP.X, aP.Y, aP.Z, 1.0f };
+    v4 = v4 * GetMatrix();
+    return Vector3f{ v4.X, v4.Y, v4.Z };
+}
+
+ost::Vector3f ost::CTransform::InverseTransformPoint( const Vector3f& aP ) const
+{
+    Vector4f v4 = { aP.X, aP.Y, aP.Z, 1.0f };
+    v4 = v4 * GetInverseMatrix();
+    return Vector3f{ v4.X, v4.Y, v4.Z };
+}
+
+ost::Vector3f ost::CTransform::TransformDirection( const Vector3f& aD ) const
+{
+    Vector4f v4 = { aD.X, aD.Y, aD.Z, 0.0f };
+    v4 = v4 * GetMatrix();
+    return Vector3f{ v4.X, v4.Y, v4.Z };
+}
+
+ost::Vector3f ost::CTransform::InverseTransformDirection( const Vector3f& aD ) const
+{
+    Vector4f v4 = { aD.X, aD.Y, aD.Z, 0.0f };
+    v4 = v4 * GetInverseMatrix();
+    return Vector3f{ v4.X, v4.Y, v4.Z };
 }
 
 // ------------------------------------------------------------

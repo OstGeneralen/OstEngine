@@ -19,6 +19,13 @@ ost::CQuaternion::CQuaternion( float aX, float aY, float aZ, float aW )
 
 // ------------------------------------------------------------
 
+ost::CQuaternion::CQuaternion( const Vector3f& aEulerRadians )
+{
+    SetEulers( { Degrees( aEulerRadians.X ), Degrees( aEulerRadians.Y ), Degrees( aEulerRadians.Z ) });
+}
+
+// ------------------------------------------------------------
+
 ost::CQuaternion& ost::CQuaternion::SetEulers( const EulerAngles& aEulers )
 {
     const Vector3f eulerRad = aEulers.ToEulerVectorRadians();
@@ -57,16 +64,16 @@ ost::CQuaternion& ost::CQuaternion::operator*=( const CQuaternion& aRhs )
 
 // ------------------------------------------------------------
 
-ost::Vector3f ost::operator*( const Vector3f& aV, const CQuaternion& aQ )
-{
-    DirectX::XMVECTOR v = DirectX::XMLoadFloat3( &( aV.Vec ) );
-    DirectX::XMVECTOR q = DirectX::XMLoadFloat4( &( aQ.Quat ) );
-    DirectX::XMVECTOR r = DirectX::XMVector3Rotate( v, q );
-
-    Vector3f result;
-    DirectX::XMStoreFloat3( &result.Vec, r );
-    return result;
-}
+//ost::Vector3f ost::operator*( const Vector3f& aV, const CQuaternion& aQ )
+//{
+//    DirectX::XMVECTOR v = DirectX::XMLoadFloat3( &( aV.Vec ) );
+//    DirectX::XMVECTOR q = DirectX::XMLoadFloat4( &( aQ.Quat ) );
+//    DirectX::XMVECTOR r = DirectX::XMVector3Rotate( v, q );
+//
+//    Vector3f result;
+//    DirectX::XMStoreFloat3( &result.Vec, r );
+//    return result;
+//}
 
 // ------------------------------------------------------------
 

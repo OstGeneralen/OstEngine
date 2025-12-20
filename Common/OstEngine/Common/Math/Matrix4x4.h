@@ -44,5 +44,15 @@ namespace ost
         Matrix4x4 operator*( const Matrix4x4& aRhs ) const;
     };
 
-    static Vector4f operator*( const Vector4f& aV, const Matrix4x4& aM );
+    static Vector4f operator*(const Vector4f& aV, const Matrix4x4& aM)
+    {
+        DirectX::XMVECTOR v = DirectX::XMLoadFloat4( &( aV.Vec ) );
+        DirectX::XMMATRIX m = DirectX::XMLoadFloat4x4( &( aM.Mat ) );
+
+        DirectX::XMVECTOR rv = DirectX::XMVector4Transform( v, m );
+        Vector4f r;
+        DirectX::XMStoreFloat4( &( r.Vec ), rv );
+
+        return r;
+    }
 } // namespace ost

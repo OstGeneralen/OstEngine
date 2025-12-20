@@ -128,17 +128,17 @@ ost::Matrix4x4 ost::Matrix4x4::PerspectiveProjection( Float32 aAspect, Radians a
 
 // ------------------------------------------------------------
 
-ost::Vector4f ost::operator*( const Vector4f& aV, const Matrix4x4& aM )
-{
-    DirectX::XMVECTOR v = DirectX::XMLoadFloat4( &( aV.Vec ) );
-    DirectX::XMMATRIX m = DirectX::XMLoadFloat4x4( &( aM.Mat ) );
-
-    DirectX::XMVECTOR rv = DirectX::XMVector4Transform( v, m );
-    Vector4f r;
-    DirectX::XMStoreFloat4( &( r.Vec ), rv );
-
-    return r;
-}
+//ost::Vector4f ost::operator*( const Vector4f& aV, const Matrix4x4& aM )
+//{
+//    DirectX::XMVECTOR v = DirectX::XMLoadFloat4( &( aV.Vec ) );
+//    DirectX::XMMATRIX m = DirectX::XMLoadFloat4x4( &( aM.Mat ) );
+//
+//    DirectX::XMVECTOR rv = DirectX::XMVector4Transform( v, m );
+//    Vector4f r;
+//    DirectX::XMStoreFloat4( &( r.Vec ), rv );
+//
+//    return r;
+//}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

@@ -13,12 +13,16 @@ namespace ost
 
         CTransform& Move( const Vector3f& aMove );
         CTransform& Translate( const Vector3f& aOffset );
+        
+        CTransform& RotateAround( const Vector3f& aWorldPoint, const Vector3f& aEuler );
         CTransform& Rotate( const Vector3f& aEuler );
+        CTransform& Rotate( const CQuaternion& aQuat );
 
         CTransform& Scale( const Float32 aFactor );
         CTransform& Scale( const Vector3f& aFactors );
 
         CTransform& SetPosition( const Vector3f& aPosition );
+        CTransform& SetRotation( const CQuaternion& aQuat );
         CTransform& SetRotation( const Vector3f& aEulers );
         CTransform& SetScale( const Vector3f& aScale );
 
@@ -28,6 +32,18 @@ namespace ost
 
         const Matrix4x4& GetMatrix() const;
         const Matrix4x4& GetInverseMatrix() const;
+
+        // Move point from this transforms space into outer space
+        Vector3f TransformPoint( const Vector3f& aP ) const;
+
+        // Move direction from this transforms space into outer space
+        Vector3f TransformDirection( const Vector3f& aD ) const;
+        
+        // Move point from outer space into this transforms space
+        Vector3f InverseTransformPoint( const Vector3f& aP ) const;
+
+        // Move direction from outer space into this transforms space
+        Vector3f InverseTransformDirection( const Vector3f& aD ) const;
 
     private:
         Vector3f _translation;

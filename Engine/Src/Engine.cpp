@@ -102,6 +102,7 @@ void ost::CEngine::Run( IGame& aAppInterface )
         SEngineDataRenderInput worldData;
         worldData.ViewProjectionMatrix = aAppInterface.GetCamera().GetViewProjection();
         worldData.TotalTime = static_cast<Float32>( frameTimer.GetTotalTime() );
+        worldData.SunDirection = aAppInterface.GetSunDirection();
         dx::UpdateEngineWorldData( worldData );
 
         aAppInterface.Update(frameTimer);
