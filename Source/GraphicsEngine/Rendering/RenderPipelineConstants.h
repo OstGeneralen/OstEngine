@@ -6,24 +6,6 @@
 
 namespace ost
 {
-    namespace PipelineConstant
-    {
-        inline static Uint32 Get( ETextureSlot s ) noexcept
-        {
-            return static_cast<Uint32>(s);
-        }
-        
-        inline static Uint32 Get( ESamplerSlot s ) noexcept
-        {
-            return static_cast<Uint32>(s);
-        }
-        
-        inline static Uint32 Get( EBufferSlot s ) noexcept
-        {
-            return static_cast<Uint32>(s);
-        }
-    };
-
     enum class ETextureSlot : Uint32
     {
         Material0,
@@ -55,6 +37,25 @@ namespace ost
         LightBuffer = 12,
         Animation = 13,
     };
+
+    namespace PipelineConstant
+    {
+        inline static Uint32 Get(ETextureSlot s) noexcept
+        {
+            return static_cast<Uint32>(s);
+        }
+
+        inline static Uint32 Get(ESamplerSlot s) noexcept
+        {
+            return static_cast<Uint32>(s);
+        }
+
+        inline static Uint32 Get(EBufferSlot s) noexcept
+        {
+            return static_cast<Uint32>(s);
+        }
+    }; // namespace PipelineConstant
+
 } // namespace ost
 
 // ------------------------------------------------------------

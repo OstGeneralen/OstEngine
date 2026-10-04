@@ -1,4 +1,6 @@
 #include <Windows.h>
+#include <Engine/OstEngine.h>
+#include <GraphicsEngine/GraphicsEngine.h>
 
 
 // Forward declare the window procedure
@@ -20,20 +22,17 @@ int main()
     ShowWindow(window, SW_NORMAL);
     UpdateWindow(window);
 
-    ost::RenderHardwareInterface rhi;
-    rhi.InitializeForWindow(window);
+    ost::OstEngine engine;
+    ost::GraphicsEngine& gfxEngine = engine.GetGraphicsEngine();
 
-    ost::ShaderResource vertexShader = rhi.CreateVertexShader(vertexShaderBytecode);
-    ost::ShaderResource pixelShader = rhi.CreatePixelShader(pixelShaderBytecode);
-
-    const std::vector<ost::Vertex> meshVertices = {
-        {{-1, -1, 0}, ost::colours::Red},
-        {{0, 1, 0}, ost::colours::Green},
-        {{1, -1, 0}, ost::colours::Blue},
-    };
-    const std::vector<Uint32> meshIndices = {0, 1, 2};
-
-    ost::MeshResource triangleMesh = rhi.CreateMesh(meshVertices, meshIndices);
+    ost::GraphicsEngineSettings gfxEngineSettings;
+    gfxEngineSettings.output.clientSize = {1600, 900};
+    gfxEngineSettings.output.nativeWindowHandle = window;
+    gfxEngineSettings.output.renderSize = {1,1};
+    gfxEngineSettings.renderer.clearColor = ost::Colors::Red;
+    
+    gfxEngine.Initialize( gfxEngineSettings );
+    
 
     while (running)
     {
@@ -44,14 +43,9 @@ int main()
             DispatchMessage(&msg);
         }
 
-        rhi.Clear();
-
-        rhi.Draw(triangleMesh, vertexShader, pixelShader);
-
-        rhi.Present();
+        gfxEngine.DoRender();
     }
 
-    rhi.Shutdown();
 
     DestroyWindow(window);
     UnregisterClass("AppWindowClass", GetModuleHandle(NULL));

@@ -9,6 +9,8 @@
 
 #include <Utility/Assert.h>
 
+#include <d3d11_1.h>
+
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -120,11 +122,11 @@ void ost::GraphicsEngine::DoRender(bool maintainCommandList)
     _rhi->ClearDepthStencil(_depthStencilTexture);
 
     // Sort by material and mesh
-    std::sort(_commands.begin(), _commands.end(), [](const RenderCommand& cmdA, const RenderCommand& cmdB) {
-        const SizeType sortIndexA = (reinterpret_cast<SizeType>(cmdA.pMaterial) << 32) | (reinterpret_cast<SizeType>(cmdA.pMesh) & 0x00000000FFFFFFFF);
-        const SizeType sortIndexB = (reinterpret_cast<SizeType>(cmdA.pMaterial) << 32) | (reinterpret_cast<SizeType>(cmdA.pMesh) & 0x00000000FFFFFFFF);
-        return sortIndexA <=> sortIndexB;
-    });
+    //std::sort(_commands.begin(), _commands.end(), [](const RenderCommand& cmdA, const RenderCommand& cmdB) {
+    //    const SizeType sortIndexA = (reinterpret_cast<SizeType>(cmdA.pMaterial) << 32) | (reinterpret_cast<SizeType>(cmdA.pMesh) & 0x00000000FFFFFFFF);
+    //    const SizeType sortIndexB = (reinterpret_cast<SizeType>(cmdA.pMaterial) << 32) | (reinterpret_cast<SizeType>(cmdA.pMesh) & 0x00000000FFFFFFFF);
+    //    return sortIndexA <=> sortIndexB;
+    //});
 
     const Material* currentMaterial = nullptr;
     const Mesh* currentMesh = nullptr;
@@ -140,10 +142,10 @@ void ost::GraphicsEngine::DoRender(bool maintainCommandList)
             _rhi->UpdateBuffer(currentMaterial->GetVariablesBuffer(), currentMaterial->GetVariablesData(), currentMaterial->GetVariablesByteCount());
             _rhi->SetBuffer(currentMaterial->GetVariablesBuffer(), PipelineConstant::Get(EBufferSlot::MaterialProperties), EPipelineStage_VS | EPipelineStage_PS);
 
+            
             for (SizeType textureIndex = 0; textureIndex < currentMaterial->GetTextureCount(); ++textureIndex)
             {
-                _rhi->SetTexture(currentMaterial->GetTextures()[textureIndex], PipelineConstant::Get(ETextureSlot::Material0) + textureIndex,
-                                 EPipelineStage_VS | EPipelineStage_PS);
+                _rhi->SetTexture(currentMaterial->GetTextures()[textureIndex], PipelineConstant::Get(ETextureSlot::Material0), EPipelineStage_VS | EPipelineStage_PS);
             }
         }
 

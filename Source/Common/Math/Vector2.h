@@ -4,7 +4,7 @@
 
 #include <OstTypes.h>
 
-#include <DirectXMath/DirectXMath.h>
+#include <DirectXMath.h>
 
 // ------------------------------------------------------------
 
@@ -44,8 +44,8 @@ namespace ost
         union 
         {
             Vector2Data<T>::DirectXType dxType;
-            struct { Float32 X, Y; };
-            Float32 Arr[2];
+            struct { T X, Y; };
+            T Arr[2];
         };
         // clang-format on
 

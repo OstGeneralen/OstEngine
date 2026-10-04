@@ -4,3 +4,6 @@
 [submodule "Dependencies/Assimp"]
 	path = Dependencies/Assimp
 	url = https://github.com/assimp/assimp
+[submodule "Dependencies/DirectXMath"]
+	path = Dependencies/DirectXMath
+	url = https://github.com/microsoft/DirectXMath

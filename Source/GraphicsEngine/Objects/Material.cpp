@@ -1,6 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Material.h"
 
+#include <d3d11_1.h>
+
 #include <Memory/Memory.h>
 
 using namespace ost;

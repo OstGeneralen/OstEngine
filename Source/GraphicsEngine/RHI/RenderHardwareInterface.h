@@ -20,6 +20,9 @@ namespace ost
     class RenderHardwareInterface
     {
     public: // Lifetime
+        RenderHardwareInterface();
+        ~RenderHardwareInterface();
+
         bool Initialize(const Vector2u& renderSize, void* winHnd, Texture& outBackbuffer);
 
         void ResizeBackbuffer(const Vector2u& newSize, Texture& inOutBackbuffer);
@@ -48,8 +51,8 @@ namespace ost
         void SetRenderTarget(const Texture& renderTarget, const Texture* pDepthTarget = nullptr) const;
         void SetRenderTargets(const Texture* pRenderTargets, SizeType numTargets, const Texture* pDepthTarget = nullptr) const;
 
-        void SetMeshBuffers( const Mesh& mesh ) const;
-        void Draw( const Mesh& mesh ) const;
+        void SetMeshBuffers(const Mesh& mesh) const;
+        void Draw(const Mesh& mesh) const;
 
         void Present() const;
 

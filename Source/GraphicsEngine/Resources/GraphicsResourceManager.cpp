@@ -3,6 +3,8 @@
 
 #include "RHI/RenderHardwareInterface.h"
 
+#include <d3d11_1.h>
+
 using namespace ost;
 
 // ------------------------------------------------------------

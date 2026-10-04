@@ -67,12 +67,15 @@ namespace ost::MaterialFactoryInternal
 
             (*ppData) = buffer;
             (*pBytes) = bufferSize;
+
+            return S_OK;
         }
 
         HRESULT Close(LPCVOID pData) override
         {
             const char* pBuffer = reinterpret_cast<const char*>(pData);
             delete[] pBuffer;
+            return S_OK;
         }
     };
 } // namespace ost::MaterialFactoryInternal
@@ -134,6 +137,8 @@ bool MaterialFactory::CreateMaterial(const MaterialDesc& desc, Material& outMate
     ReflectMaterialProperties(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), outMaterial);
 
     _pRHI->CreateBuffer(outMaterial.GetVariablesByteCount(), outMaterial._variablesBuffer);
+
+    return true;
 }
 
 // ------------------------------------------------------------

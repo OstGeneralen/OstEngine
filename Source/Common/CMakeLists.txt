@@ -32,9 +32,12 @@ set_target_properties(OstSTL PROPERTIES
     RELEASE_POSTFIX "_release"
 )
 
+target_link_libraries(OstSTL
+    PUBLIC DirectXMath
+)
+
 target_include_directories(OstSTL
     PUBLIC ${OSTENGINE_INCLUDE_DIR}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty
     #PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )

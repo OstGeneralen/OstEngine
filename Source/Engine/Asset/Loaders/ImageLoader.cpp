@@ -28,6 +28,11 @@ void ImageLoader::Load(ImageAsset& asset) const
     OST_ASSERT(metadata.dimension == DirectX::TEX_DIMENSION_TEXTURE2D, "Only supports texture 2D currently");
 
     // Translate and ensure supported format
+    if (metadata.format == DXGI_FORMAT_BC7_TYPELESS)
+    {
+        metadata.format = DXGI_FORMAT_BC7_UNORM;
+    }
+
     switch (metadata.format)
     {
     case DXGI_FORMAT_BC7_UNORM:
@@ -41,7 +46,7 @@ void ImageLoader::Load(ImageAsset& asset) const
     }
 
     asset.cpuData.mipCount = metadata.mipLevels;
-    asset.cpuData.dimensions = {metadata.width, metadata.height};
+    asset.cpuData.dimensions = Vector2u{static_cast<Uint32>(metadata.width), static_cast<Uint32>(metadata.height)};
 
     // Now we copy across the various image pixel data into the assigned buffers
     asset.cpuData.images = List<ResourceTextureDesc::ImageData>{scratchImg.GetImageCount()};

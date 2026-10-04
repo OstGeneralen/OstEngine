@@ -18,6 +18,7 @@ namespace ost
         OstEngine();
         ~OstEngine();
 
+        GraphicsEngine& GetGraphicsEngine();
         const GraphicsEngine& GetGraphicsEngine() const;
 
     private:

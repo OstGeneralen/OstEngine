@@ -11,6 +11,8 @@ add_library(OstEngine STATIC
     Asset/ModelAsset.h
     Asset/Loaders/ImageLoader.h
     Asset/Loaders/ImageLoader.cpp
+    Asset/Loaders/ModelLoader.h
+    Asset/Loaders/ModelLoader.cpp
 )
 
 set_target_properties(OstEngine PROPERTIES

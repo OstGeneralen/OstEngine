@@ -5,7 +5,7 @@
 
 #include <OstTypes.h>
 
-#include <DirectXMath/DirectXMath.h>
+#include <DirectXMath.h>
 
 // ------------------------------------------------------------
 

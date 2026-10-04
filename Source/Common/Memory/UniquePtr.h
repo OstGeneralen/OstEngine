@@ -23,7 +23,7 @@ namespace ost
     {
     public:
         template <typename T2>
-        friend UniquePtr<T2>;
+        friend class UniquePtr;
 
         // Disallow copies
         UniquePtr(const UniquePtr&) = delete;
@@ -96,6 +96,7 @@ namespace ost
             if (_raw)
             {
                 delete _raw;
+                _raw = nullptr;
             }
         }
 

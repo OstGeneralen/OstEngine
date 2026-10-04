@@ -4,7 +4,6 @@
 
 #include "ShaderSlots.hlsli"
 
-
 // Samplers
 SamplerState PointWrap : SAMPLER_SLOT_POINT_WRAP;
 SamplerState PointClamp : SAMPLER_SLOT_POINT_CLAMP;

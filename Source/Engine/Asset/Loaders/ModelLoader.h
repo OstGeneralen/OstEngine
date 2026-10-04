@@ -1,17 +1,17 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/Asset/ImageAsset.h"
+#include "Engine/Asset/ModelAsset.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class ImageLoader
+    class ModelLoader
     {
     public:
-        void Load(ImageAsset& asset) const; 
+        void LoadAsset(ModelAsset& model);
     };
-}
+} // namespace ost
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

@@ -9,6 +9,16 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
+RenderHardwareInterface::RenderHardwareInterface() = default;
+RenderHardwareInterface::~RenderHardwareInterface()
+{
+    _swapChain.Reset();
+    _immediateContext.Reset();
+    _device.Reset();
+}
+
+// ------------------------------------------------------------
+
 bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHnd, Texture& outBackbuffer)
 {
     HWND hwnd = static_cast<HWND>(winHnd);
@@ -33,6 +43,7 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
                 bestVram = adapterDesc.DedicatedVideoMemory;
                 selectedAdapter = currentEvalAdapter;
             }
+            currentAdapterIndex++;
         }
     }
 
@@ -183,7 +194,7 @@ bool RenderHardwareInterface::CreateDepthStencilTexture(const Vector2u& dimensio
     D3D11_TEXTURE2D_DESC texDesc = {};
     texDesc.ArraySize = 1;
     texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | (allowAsResource ? D3D11_BIND_SHADER_RESOURCE : 0);
-    texDesc.Format = DXGI_FORMAT_X24_TYPELESS_G8_UINT;
+    texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     texDesc.Width = dimensions.X;
     texDesc.Height = dimensions.Y;
     texDesc.MipLevels = 1;

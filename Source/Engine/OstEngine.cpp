@@ -2,10 +2,12 @@
 #include "OstEngine.h"
 
 #include <Utility/Assert.h>
+#include <GraphicsEngine/GraphicsEngine.h>
+
+ost::OstEngine* ost::pEngine = nullptr;
+
 
 using namespace ost;
-
-OstEngine* pEngine = nullptr;
 
 // ------------------------------------------------------------
 
@@ -13,6 +15,7 @@ OstEngine::OstEngine()
 {
     OST_ASSERT(pEngine == nullptr, "Only one engine instance allowed per runtime");
     pEngine = this;
+    _graphicsEngine = Ptr::NewUnique<GraphicsEngine>();
 }
 
 OstEngine::~OstEngine()

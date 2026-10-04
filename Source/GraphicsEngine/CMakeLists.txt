@@ -39,8 +39,8 @@ target_include_directories(OstGraphicsEngine
 )
 
 target_link_libraries(OstGraphicsEngine
-    PRIVATE d3d11.lib
-    PRIVATE dxgi.lib
+    PUBLIC d3d11.lib
+    PUBLIC dxgi.lib
     PRIVATE d3dcompiler.lib
     PUBLIC OstSTL
 )
