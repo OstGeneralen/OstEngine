@@ -1,0 +1,34 @@
+BasedOnStyle: Microsoft
+IndentWidth: 4
+
+NamespaceIndentation: All
+SpacesInParentheses: No
+
+AccessModifierOffset: -4
+ColumnLimit: 170
+
+IncludeBlocks: Regroup
+SortIncludes: true
+
+IncludeCategories:
+  - Regex: '^<.*pch\.h>$|^".*pch\.h"$' 
+    Priority: -1
+    SortPriority: -1
+
+  - Regex: '^\"[^\"]*\"$' 
+    Priority: 2
+    SortPriority: 2
+
+  - Regex: '<dxgi\.h|d3d11\.h|d3d11_1\.h|d3dcompiler\.h>$' 
+    Priority: 3
+    SortPriority: 3
+
+  - Regex: '^<[^\/]*>$' 
+    Priority: 4
+    SortPriority: 4
+
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+BreakTemplateDeclarations: Yes
+BreakConstructorInitializers: BeforeComma
