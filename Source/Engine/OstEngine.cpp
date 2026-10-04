@@ -22,6 +22,11 @@ OstEngine::~OstEngine()
 
 // ------------------------------------------------------------
 
+GraphicsEngine& ost::OstEngine::GetGraphicsEngine()
+{
+    return *_graphicsEngine;
+}
+
 const GraphicsEngine& ost::OstEngine::GetGraphicsEngine() const
 {
     return *_graphicsEngine;

@@ -1,20 +1,17 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/Asset/Asset.h"
-
-#include <GraphicsEngine/Objects/ObjectHandles.h>
-#include <GraphicsEngine/Objects/Texture.h>
+#include "Memory/Blob.h"
+#include <string>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct ImageAsset : Asset
+    namespace FileUtility
     {
-        ResourceTextureDesc cpuData;
-        TextureHandle gpuHandle;
-    };
-} // namespace ost
+        extern Blob ReadFileToBlob( const std::string& path );
+    }
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

@@ -3,6 +3,7 @@
 
 #include "RHI/RenderHardwareInterface.h"
 #include "Rendering/RenderPipelineConstants.h"
+#include "Resources/GraphicsResourceManager.h"
 
 #include <algorithm>
 
@@ -61,7 +62,8 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
 
     _rhi->CreateDepthStencilTexture(renderSize, false, _depthStencilTexture);
 
-    _resourceManager.Initialize(*_rhi);
+    _resourceManager = Ptr::NewUnique<GraphicsResourceManager>();
+    _resourceManager->Initialize(*_rhi);
 
     _activeSettings = settings;
 }
@@ -97,15 +99,15 @@ void GraphicsEngine::UpdateSettings(const GraphicsEngineSettings& newSettings)
 
 void GraphicsEngine::Draw(const ModelHandle& modelHandle, const Matrix4x4& transform)
 {
-    const Model& model = _resourceManager.Get(modelHandle);
+    const Model& model = _resourceManager->Get(modelHandle);
 
     for (const auto& submeshHandle : model.meshHandles)
     {
-        const Mesh& mesh = _resourceManager.Get(submeshHandle);
+        const Mesh& mesh = _resourceManager->Get(submeshHandle);
 
         RenderCommand cmd;
         cmd.pMesh = &mesh;
-        cmd.pMaterial = &_resourceManager.Get(model.materials[mesh.materialIndex]);
+        cmd.pMaterial = &_resourceManager->Get(model.materials[mesh.materialIndex]);
         cmd.transform = transform;
 
         _commands.Add(cmd);
@@ -160,6 +162,13 @@ void ost::GraphicsEngine::DoRender(bool maintainCommandList)
     }
 
     _rhi->Present();
+}
+
+// ------------------------------------------------------------
+
+IGraphicsResourceManager& ost::GraphicsEngine::GetResourceManager()
+{
+    return *_resourceManager;
 }
 
 // ------------------------------------------------------------

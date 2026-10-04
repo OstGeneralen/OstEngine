@@ -2,17 +2,17 @@
 #pragma once
 #include "Engine/Asset/Asset.h"
 
+#include <GraphicsEngine/Objects/Model.h>
 #include <GraphicsEngine/Objects/ObjectHandles.h>
-#include <GraphicsEngine/Objects/Texture.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct ImageAsset : Asset
+    struct ModelAsset : Asset
     {
-        ResourceTextureDesc cpuData;
-        TextureHandle gpuHandle;
+        StaticModelDesc cpuData;
+        ModelHandle gpuHandle;
     };
 } // namespace ost
 

@@ -61,6 +61,9 @@ namespace ost
         R_Uint8,
         R_Unorm8,
 
+        DDS_BC7,
+        DDS_BC7_SRGB,
+
         DepthStencil,
     };
 

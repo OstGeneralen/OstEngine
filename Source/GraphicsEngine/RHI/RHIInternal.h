@@ -32,7 +32,10 @@ namespace ost
             case EDataFormat::R_Float32: return DXGI_FORMAT_R32_FLOAT;
             case EDataFormat::R_Uint8: return DXGI_FORMAT_R8_UINT;
             case EDataFormat::R_Unorm8: return DXGI_FORMAT_R8_UNORM;
-            
+
+            case EDataFormat::DDS_BC7: return DXGI_FORMAT_BC7_UNORM;
+            case EDataFormat::DDS_BC7_SRGB: return DXGI_FORMAT_BC7_UNORM_SRGB;
+
             case EDataFormat::DepthStencil: return DXGI_FORMAT_D24_UNORM_S8_UINT;
                 // clang-format on
             }

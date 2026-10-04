@@ -1,11 +1,11 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/GraphicsEngineSettings.h"
-#include "GraphicsEngine/Objects/GraphicsResourceManager.h"
 #include "GraphicsEngine/Objects/ObjectHandles.h"
 #include "GraphicsEngine/Objects/PipelineStateObject.h"
 #include "GraphicsEngine/Objects/Texture.h"
 #include "GraphicsEngine/Rendering/RenderCommand.h"
+#include "GraphicsEngine/Resources/IGraphicsResourceManager.h"
 
 #include <Math/Vector2.h>
 #include <Memory/UniquePtr.h>
@@ -16,6 +16,7 @@
 namespace ost
 {
     class RenderHardwareInterface;
+    class GraphicsResourceManager;
 
     class GraphicsEngine
     {
@@ -38,10 +39,12 @@ namespace ost
 
         void DoRender(bool maintainCommandList = false);
 
+        IGraphicsResourceManager& GetResourceManager();
+
     private:
         GraphicsEngineSettings _activeSettings;
         UniquePtr<RenderHardwareInterface> _rhi;
-        GraphicsResourceManager _resourceManager;
+        UniquePtr<GraphicsResourceManager> _resourceManager;
 
         List<RenderCommand> _commands;
 

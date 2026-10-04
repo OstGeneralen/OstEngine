@@ -1,18 +1,30 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/Asset/Asset.h"
+#include "Engine/Asset/AssetGuid.h"
 
-#include <GraphicsEngine/Objects/ObjectHandles.h>
-#include <GraphicsEngine/Objects/Texture.h>
+#include <OstTypes.h>
+#include <string>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct ImageAsset : Asset
+    enum class EAssetState
     {
-        ResourceTextureDesc cpuData;
-        TextureHandle gpuHandle;
+        Pending,
+        Loading,
+        Ready,
+    };
+
+    struct Asset
+    {
+        // Lookup data
+        AssetGuid guid;
+        std::string name;
+        std::string path;
+
+        // Load state
+        EAssetState state;
     };
 } // namespace ost
 

@@ -5,8 +5,12 @@ add_library(OstEngine STATIC
     Debugging/Logger.cpp
     OstEngine.h
     OstEngine.cpp
+    Asset/Asset.h
+    Asset/AssetGuid.h
     Asset/ImageAsset.h
-    Asset/ImageAsset.cpp
+    Asset/ModelAsset.h
+    Asset/Loaders/ImageLoader.h
+    Asset/Loaders/ImageLoader.cpp
 )
 
 set_target_properties(OstEngine PROPERTIES

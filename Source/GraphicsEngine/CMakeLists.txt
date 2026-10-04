@@ -11,8 +11,6 @@ add_library(OstGraphicsEngine STATIC
     Objects/Buffer.cpp
     Objects/PipelineStateObject.h
     Objects/PipelineStateObject.cpp
-    Objects/GraphicsResourceManager.h
-    Objects/GraphicsResourceManager.cpp
     GraphicsEngine.h
     GraphicsEngine.cpp
     GraphicsEngineSettings.h
@@ -20,11 +18,14 @@ add_library(OstGraphicsEngine STATIC
     Objects/Material.h
     Rendering/Vertex.h
     Objects/Material.cpp
-    Rendering/MaterialFactory.h
-    Rendering/MaterialFactory.cpp
     Rendering/RenderPipelineConstants.h
     Objects/ObjectHandles.h
     Rendering/RenderCommand.h
+    Resources/MaterialFactory.h
+    Resources/MaterialFactory.cpp
+    Resources/IGraphicsResourceManager.h
+    Resources/GraphicsResourceManager.h
+    Resources/GraphicsResourceManager.cpp
 )
 
 set_target_properties(OstGraphicsEngine PROPERTIES

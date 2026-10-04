@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.2)
 
 add_library(OstSTL
-    INTERFACE
+    STATIC
     Math/Vector2.h
     Math/Vector3.h
     Math/Math.h
@@ -21,6 +21,8 @@ add_library(OstSTL
     Container/SparseList.h
     Memory/UniquePtr.h
     Utility/TypeID.h
+    Utility/File.h
+    Utility/File.cpp
 )
 
 set_target_properties(OstSTL PROPERTIES
@@ -31,8 +33,8 @@ set_target_properties(OstSTL PROPERTIES
 )
 
 target_include_directories(OstSTL
-    INTERFACE ${OSTENGINE_INCLUDE_DIR}
-    INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-    INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty
-    #PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC ${OSTENGINE_INCLUDE_DIR}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty
+    #PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )

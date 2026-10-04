@@ -22,6 +22,8 @@ namespace ost
             Uint32 slice;
             SizeType numBytes;
             void* pData;
+
+            List<Uint8> data;
         };
 
         List<ImageData> images;

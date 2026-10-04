@@ -1,20 +1,17 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/Asset/Asset.h"
-
-#include <GraphicsEngine/Objects/ObjectHandles.h>
-#include <GraphicsEngine/Objects/Texture.h>
+#include "Engine/Asset/ImageAsset.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct ImageAsset : Asset
+    class ImageLoader
     {
-        ResourceTextureDesc cpuData;
-        TextureHandle gpuHandle;
+    public:
+        void Load( ImageAsset& asset ) const; 
     };
-} // namespace ost
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
