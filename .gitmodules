@@ -1,0 +1,6 @@
+[submodule "Dependencies/DirectXTex"]
+	path = Dependencies/DirectXTex
+	url = https://github.com/microsoft/DirectXTex.git
+[submodule "Dependencies/Assimp"]
+	path = Dependencies/Assimp
+	url = https://github.com/assimp/assimp

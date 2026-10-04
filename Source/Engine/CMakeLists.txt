@@ -16,13 +16,11 @@ set_target_properties(OstEngine PROPERTIES
 
 target_include_directories(OstEngine
     PUBLIC ${OSTENGINE_INCLUDE_DIR}
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/Include
 )
-
-
 
 target_link_libraries(OstEngine
     PUBLIC OstSTL
     PUBLIC OstGraphicsEngine
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/Lib/assimp-vc143-mt.lib
+    PRIVATE DirectXTex
+    PRIVATE assimp
 )
