@@ -9,6 +9,7 @@ set(OSTENGINE_LIB_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Artefacts/Lib)
 set(OSTENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Engine)
 
 set(OST_COMMON_NAME OstCommon)
+set(OST_LOGGER_NAME OstLogger)
 set(OST_ENGINE_NAME OstEngine)
 set(OST_GRAPHICS_ENGINE_NAME OstGraphicsEngine)
 
@@ -55,7 +56,8 @@ OstAddSubdirEnsureCompliant(Dependencies/DirectXTex DirectXTex)
 OstAddSubdirEnsureCompliant(Dependencies/Assimp assimp)
 
 # Our packages
-OstAddSubdirEnsureCompliant(Shared/OstUtilities OstCommon)
-OstAddSubdirEnsureCompliant(Engine/GraphicsEngine OstGraphicsEngine)
-OstAddSubdirEnsureCompliant(Engine/Engine OstEngine)
+OstAddSubdirEnsureCompliant(Shared/OstUtilities ${OST_COMMON_NAME})
+OstAddSubdirEnsureCompliant(Shared/OstLogger ${OST_LOGGER_NAME})
+OstAddSubdirEnsureCompliant(Engine/GraphicsEngine ${OST_GRAPHICS_ENGINE_NAME})
+OstAddSubdirEnsureCompliant(Engine/Engine ${OST_ENGINE_NAME})
 OstAddSubdirEnsureCompliant(Game App)

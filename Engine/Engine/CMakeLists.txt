@@ -3,8 +3,6 @@ project(${OST_ENGINE_NAME})
 
 
 add_library(${PROJECT_NAME} STATIC
-    Debugging/Logger.h
-    Debugging/Logger.cpp
     OstEngine.h
     OstEngine.cpp
     Asset/Asset.h
@@ -28,6 +26,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC ${OST_COMMON_NAME}
+    PUBLIC ${OST_LOGGER_NAME}
     PUBLIC ${OST_GRAPHICS_ENGINE_NAME}
     PRIVATE DirectXTex
     PRIVATE assimp

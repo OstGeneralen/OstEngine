@@ -44,4 +44,5 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC dxgi.lib
     PRIVATE d3dcompiler.lib
     PUBLIC ${OST_COMMON_NAME}
+    PUBLIC ${OST_LOGGER_NAME}
 )

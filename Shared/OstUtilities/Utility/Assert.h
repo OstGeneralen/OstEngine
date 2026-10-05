@@ -17,18 +17,23 @@
 
 namespace ost::internal::utility
 {
+    inline void AssertFailImpl()
+    {
+#if defined(_MSC_VER)
+        __debugbreak();
+#else
+        static_assert(false, "Need assert implementation for current build target!");
+#endif
+    }
+
     inline void AssertionHandler(bool cnd, std::string_view cndMsg, std::string_view msg)
     {
         // If the condition is passed, we don't actually debugbreak right
         if (cnd)
             return;
 
-#if defined(_MSC_VER)
         std::cerr << "ASSERTION FAILED " << cndMsg << " " << msg << std::endl;
-        __debugbreak();
-#else
-// Todo: Implement other compilers here should we want to a target them
-#endif
+        AssertFailImpl();
     }
 } // namespace ost::internal::utility
 
