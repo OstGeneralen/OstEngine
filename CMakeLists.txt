@@ -8,26 +8,54 @@ set(OSTENGINE_DLL_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Bin)
 set(OSTENGINE_LIB_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Artefacts/Lib)
 set(OSTENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 
+set(OST_COMMON_NAME OstCommon)
+set(OST_ENGINE_NAME OstEngine)
+set(OST_GRAPHICS_ENGINE_NAME OstGraphicsEngine)
+
 # ===================================================================================
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 # ===================================================================================
+# Define helper functions
 
-add_subdirectory(Dependencies/DirectXMath)
+function(OstAddSubdirEnsureCompliant moduleSubdir subdirName)
+    add_subdirectory(${moduleSubdir})
 
-set(DIRECTXMATH_HEADER_ONLY ON CACHE BOOL "" FORCE)
+    set_target_properties( ${subdirName} PROPERTIES 
+        ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${OST_ENGINE_LIB_OUTPUT_DIR}
+        ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OST_ENGINE_LIB_OUTPUT_DIR}
+        LIBRARY_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_DLL_OUTPUT_DIR}
+        LIBRARY_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_DLL_OUTPUT_DIR}
+        DEBUG_POSTFIX "_d"
+    )
+endfunction()
 
-add_subdirectory(Dependencies/DirectXTex)
-set_target_properties(DirectXTex PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_LIB_OUTPUT_DIR} ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_LIB_OUTPUT_DIR} DEBUG_POSTFIX "_d")      
+function(OstForceSetOption optionName toggle)
+    set(${optionName} ${toggle} CACHE BOOL "" FORCE)
+endfunction()
 
-add_subdirectory(Dependencies/Assimp)
-set_target_properties(assimp PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_LIB_OUTPUT_DIR} ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_LIB_OUTPUT_DIR} DEBUG_POSTFIX "_d" LIBRARY_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_DLL_OUTPUT_DIR} LIBRARY_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_DLL_OUTPUT_DIR})      
+# ===================================================================================
+# Overridden configuration options
 
+# DirectXMath
+OstForceSetOption(DIRECTXMATH_HEADER_ONLY ON)   # Required to be ON, else DirectXMath and DirectXTex starts conflicting on the Math lib use
 
+# Assimp
+OstForceSetOption(ASSIMP_BUILD_TESTS OFF)       # Kinda assume this is indeed tested so let's not bother building the tests for ourselves
+OstForceSetOption(ASSIMP_INSTALL OFF)           # Don't install, let's keep it small
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Source/Common)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Source/GraphicsEngine)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Source/Engine)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Source/Application)
+# ===================================================================================
+# Add Subdirectories
+
+# Dependencies
+OstAddSubdirEnsureCompliant(Dependencies/DirectXMath DirectXMath)
+OstAddSubdirEnsureCompliant(Dependencies/DirectXTex DirectXTex)
+OstAddSubdirEnsureCompliant(Dependencies/Assimp assimp)
+
+# Our packages
+OstAddSubdirEnsureCompliant(Source/Common OstCommon)
+OstAddSubdirEnsureCompliant(Source/GraphicsEngine OstGraphicsEngine)
+OstAddSubdirEnsureCompliant(Source/Engine OstEngine)
+OstAddSubdirEnsureCompliant(Source/Application App)

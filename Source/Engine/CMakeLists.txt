@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 4.2)
+project(${OST_ENGINE_NAME})
 
-add_library(OstEngine STATIC
+
+add_library(${PROJECT_NAME} STATIC
     Debugging/Logger.h
     Debugging/Logger.cpp
     OstEngine.h
@@ -15,18 +17,18 @@ add_library(OstEngine STATIC
     Asset/Loaders/ModelLoader.cpp
 )
 
-set_target_properties(OstEngine PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_LIB_OUTPUT_DIR}
     ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_LIB_OUTPUT_DIR}
 )
 
-target_include_directories(OstEngine
+target_include_directories(${PROJECT_NAME}
     PUBLIC ${OSTENGINE_INCLUDE_DIR}
 )
 
-target_link_libraries(OstEngine
-    PUBLIC OstSTL
-    PUBLIC OstGraphicsEngine
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC ${OST_COMMON_NAME}
+    PUBLIC ${OST_GRAPHICS_ENGINE_NAME}
     PRIVATE DirectXTex
     PRIVATE assimp
 )

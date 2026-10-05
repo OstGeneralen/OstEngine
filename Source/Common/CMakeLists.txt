@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 4.2)
+project(${OST_COMMON_NAME})
 
-add_library(OstSTL
+add_library(${PROJECT_NAME}
     STATIC
     Math/Vector2.h
     Math/Vector3.h
@@ -25,18 +26,18 @@ add_library(OstSTL
     Utility/File.cpp
 )
 
-set_target_properties(OstSTL PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_LIB_OUTPUT_DIR}
     ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_LIB_OUTPUT_DIR}
     DEBUG_POSTFIX "_debug"
     RELEASE_POSTFIX "_release"
 )
 
-target_link_libraries(OstSTL
+target_link_libraries(${PROJECT_NAME}
     PUBLIC DirectXMath
 )
 
-target_include_directories(OstSTL
+target_include_directories(${PROJECT_NAME}
     PUBLIC ${OSTENGINE_INCLUDE_DIR}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
     #PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}

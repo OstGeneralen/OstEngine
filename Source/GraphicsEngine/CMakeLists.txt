@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 4.2)
+project(${OST_GRAPHICS_ENGINE_NAME})
 
-add_library(OstGraphicsEngine STATIC
+add_library(${PROJECT_NAME} STATIC
     RHI/RenderHardwareInterface.h
     RHI/RenderHardwareInterface.cpp
     RHI/RHIMinimal.h
@@ -28,19 +29,19 @@ add_library(OstGraphicsEngine STATIC
     Resources/GraphicsResourceManager.cpp
 )
 
-set_target_properties(OstGraphicsEngine PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_LIB_OUTPUT_DIR}
     ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_LIB_OUTPUT_DIR}
 )
 
-target_include_directories(OstGraphicsEngine
+target_include_directories(${PROJECT_NAME}
     PUBLIC ${OSTENGINE_INCLUDE_DIR}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(OstGraphicsEngine
+target_link_libraries(${PROJECT_NAME}
     PUBLIC d3d11.lib
     PUBLIC dxgi.lib
     PRIVATE d3dcompiler.lib
-    PUBLIC OstSTL
+    PUBLIC ${OST_COMMON_NAME}
 )
