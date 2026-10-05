@@ -24,6 +24,8 @@ add_library(${PROJECT_NAME}
     Utility/TypeID.h
     Utility/File.h
     Utility/File.cpp
+    Utility/Timer.h
+    Utility/Timer.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
