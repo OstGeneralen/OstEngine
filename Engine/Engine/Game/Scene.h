@@ -11,6 +11,7 @@ namespace ost
 {
     class Component;
     class Actor;
+    class EngineContext;
 
     class Scene
     {
@@ -22,7 +23,7 @@ namespace ost
 
         const List<UniquePtr<Actor>>& GetActors() const;
 
-        void Update(Float32 deltaTime);
+        void Tick(EngineContext& context);
 
     private:
         List<UniquePtr<Actor>> _actors;

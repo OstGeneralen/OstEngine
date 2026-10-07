@@ -9,6 +9,7 @@ namespace ost
 {
     class IGame;
     extern UniquePtr<IGame> CreateGameInstance();
+    class EngineContext;
 
     class IGame
     {
@@ -17,22 +18,9 @@ namespace ost
 
         virtual ~IGame() = default;
 
-        virtual void Load() = 0;
-        virtual void Unload() = 0;
-
-        virtual void Update(Float32 deltaTime) = 0;
-
-        OstEngine& GetEngine()
-        {
-            return *_pEngine;
-        }
-        const OstEngine& GetEngine() const
-        {
-            return *_pEngine;
-        }
-
-    private:
-        OstEngine* _pEngine;
+        virtual void Load(EngineContext& context) = 0;
+        virtual void Unload(EngineContext& context) = 0;
+        virtual void Update(EngineContext& context) = 0;
     };
 } // namespace ost
 

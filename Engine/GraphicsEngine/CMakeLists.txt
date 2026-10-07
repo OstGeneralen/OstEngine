@@ -30,6 +30,7 @@ add_library(${PROJECT_NAME} STATIC
     Rendering/Buffers.h
     Resources/ShaderCompiler.h
     Resources/ShaderCompiler.cpp
+    Rendering/IRenderer.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

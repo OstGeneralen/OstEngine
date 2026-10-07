@@ -38,7 +38,7 @@ const Component* ost::Actor::GetComponent(TypeID componentType) const
 Component& ost::Actor::AddComponent(TypeID componentType, UniquePtr<Component>&& component)
 {
     auto& added = _components.Insert(componentType, std::move(component));
-    added->Created();
+    _pendingLoadComponents.Push( added.Get() );
     return *added;
 }
 
@@ -55,13 +55,19 @@ void ost::Actor::SetParent(Actor* parent)
     _parent = parent;
 }
 
-void Actor::Tick(Float32 deltaTime)
+void Actor::Tick(EngineContext& context)
 {
+    Component* loadComponent = nullptr;
+    while(_pendingLoadComponents.TryPop(loadComponent))
+    {
+        loadComponent->Start( context );
+    }
+
     for(auto&[type, comp] : _components)
     {
         if(comp->ShouldTick())
         {
-            comp->Update( deltaTime );
+            comp->Update( context );
         }
     }
 }

@@ -4,6 +4,7 @@
 
 #include <Container/List.h>
 #include <Container/Map.h>
+#include <Container/Queue.h>
 #include <Memory/UniquePtr.h>
 #include <Utility/TypeID.h>
 
@@ -13,6 +14,7 @@ namespace ost
 {
     class Scene;
     class Component;
+    class EngineContext;
 
     class Actor
     {
@@ -44,7 +46,7 @@ namespace ost
             return static_cast<T&>(AddComponent(TypeID::Get<T>(), Ptr::NewUnique<T>(*this, std::forward<TArgs>(args)...)));
         }
 
-        void Tick(Float32 deltaTime);
+        void Tick(EngineContext& context);
 
         Actor* GetParent();
         void SetParent(Actor* parent);
@@ -58,6 +60,7 @@ namespace ost
         Transform _transform;
 
         Map<TypeID, UniquePtr<Component>> _components;
+        Queue<Component*> _pendingLoadComponents;
 
         // Hierarchy
         List<Actor*> _children;

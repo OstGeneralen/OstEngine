@@ -5,6 +5,7 @@
 #include "GraphicsEngine/Objects/ObjectHandles.h"
 #include "GraphicsEngine/Objects/PipelineStateObject.h"
 #include "GraphicsEngine/Objects/Texture.h"
+#include "GraphicsEngine/Rendering/IRenderer.h"
 #include "GraphicsEngine/Rendering/RenderCommand.h"
 #include "GraphicsEngine/Resources/IGraphicsResourceManager.h"
 
@@ -19,23 +20,27 @@ namespace ost
     class RenderHardwareInterface;
     class GraphicsResourceManager;
 
-    class GraphicsEngine
+    class GraphicsEngine : public IRenderer
     {
     public:
         GraphicsEngine();
         ~GraphicsEngine();
+
+        bool IsInitialized() const;
 
         void Initialize(const GraphicsEngineSettings& settings);
         void Shutdown();
 
         void UpdateSettings(const GraphicsEngineSettings& newSettings);
 
-        
-        void PushRenderCommand(const ModelHandle& model, const Matrix4x4& transform);
-        void ExecuteRenderCommands(const Matrix4x4& view);
-        void ClearRenderCommands();  
-
         IGraphicsResourceManager& GetResourceManager();
+
+    public: // IRenderer
+        void PushRenderCommand(const ModelHandle& model, const Matrix4x4& transform) override;
+        void ExecuteRenderCommands(const Matrix4x4& view) override;
+        void ClearRenderCommands() override;
+
+        Vector2f GetRenderDimensions() const override;
 
     private:
         GraphicsEngineSettings _activeSettings;

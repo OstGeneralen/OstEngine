@@ -27,7 +27,7 @@ void Application::Startup()
     _graphicsEngineSettings.renderer.clearColor = Colors::Black;
 
     _graphicsEngine.Initialize(_graphicsEngineSettings);
-    _coreEngine.GetAssetManager().SetResourceManager(_graphicsEngine.GetResourceManager());
+    _coreEngine.Initialize(CreateGameInstance(), _graphicsEngine.GetResourceManager());
 }
 
 void ost::Application::Shutdown()
@@ -47,6 +47,11 @@ void ost::Application::BeginWindowResize()
 
 void ost::Application::ExitWindowResize()
 {
+    if (!_graphicsEngine.IsInitialized())
+    {
+        return;
+    }
+
     const Vector2u oldSize = _graphicsEngineSettings.output.clientSize;
     const Vector2u newSize = platform::GetClientSize(_window);
 
@@ -59,48 +64,16 @@ void ost::Application::ExitWindowResize()
 
 void ost::Application::Run()
 {
-    Timer appTimer;
-
-    auto gamePtr = CreateGameInstance();
-    _coreEngine.AssignToGameInstance(*gamePtr);
-    _coreEngine.GetAssetManager().SetResourceManager(_graphicsEngine.GetResourceManager());
-
-    gamePtr->Load();
-
     while (!_hasExitRequest)
     {
-        appTimer.Tick();
-
         platform::WindowUpdate(_window);
-
-        gamePtr->Update(appTimer.GetDeltaTime());
-
-        // Build the scene graph
-        auto& scene = _coreEngine.GetScene();
-
-        Matrix4x4 cameraMatrix;
-
-        scene.Update(appTimer.GetDeltaTime());
-
-        for (auto& actor : scene.GetActors())
-        {
-            if (const StaticMeshComponent* meshComponent = actor->GetComponent<StaticMeshComponent>())
-            {
-                _graphicsEngine.PushRenderCommand(meshComponent->GetModel(), actor->GetTransform().GetWorldTransform());
-            }
-
-            if (const CameraComponent* camera = actor->GetComponent<CameraComponent>())
-            {
-                cameraMatrix = actor->GetTransform().GetWorldTransform().GetInverse() * camera->GetProjectionMatrix();
-            }
-        }
-
-        _graphicsEngine.ExecuteRenderCommands(cameraMatrix);
+        _coreEngine.Tick();
+        _coreEngine.RenderScene(_graphicsEngine);
         _graphicsEngine.ClearRenderCommands();
     }
 
-    gamePtr->Unload();
-    gamePtr = nullptr;
+    // gamePtr->Unload();
+    // gamePtr = nullptr;
 }
 
 // ------------------------------------------------------------

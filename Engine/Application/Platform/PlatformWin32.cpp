@@ -143,6 +143,14 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
         pApp->ExitWindowResize();
         break;
     }
+    case WM_SIZE:
+    {
+        if(wparam == SIZE_MAXIMIZED || wparam == SIZE_RESTORED)
+        {
+            pApp->ExitWindowResize();
+        }
+        break;
+    }
     }
 
     return DefWindowProc(hwnd, msg, wparam, lparam);

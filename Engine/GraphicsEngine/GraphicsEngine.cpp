@@ -40,6 +40,11 @@ GraphicsEngine::~GraphicsEngine()
 
 // ------------------------------------------------------------
 
+bool ost::GraphicsEngine::IsInitialized() const
+{
+    return _rhi.IsValid();
+}
+
 void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
 {
     _rhi = Ptr::NewUnique<RenderHardwareInterface>();
@@ -185,6 +190,13 @@ void ost::GraphicsEngine::ExecuteRenderCommands(const Matrix4x4& view)
 void ost::GraphicsEngine::ClearRenderCommands()
 {
     _commands.Clear();
+}
+
+Vector2f ost::GraphicsEngine::GetRenderDimensions() const
+{
+    const Vector2f clientSize = _activeSettings.output.clientSize.VectorCast<Float32>();
+    const Vector2f renderDimensions = {clientSize.X * _activeSettings.output.renderSize.X, clientSize.Y * _activeSettings.output.renderSize.Y};
+    return renderDimensions;
 }
 
 // ------------------------------------------------------------

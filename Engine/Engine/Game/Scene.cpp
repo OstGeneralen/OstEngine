@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "Actor.h"
+#include "Engine/EngineContext.h"
 
 // ------------------------------------------------------------
 
@@ -24,11 +25,11 @@ const List<UniquePtr<Actor>>& Scene::GetActors() const
     return _actors;
 }
 
-void Scene::Update(Float32 deltaTime)
+void Scene::Tick(EngineContext& context)
 {
-    for(auto& a : _actors)
+    for (auto& a : _actors)
     {
-        a->Tick(deltaTime);
+        a->Tick(context);
     }
 }
 

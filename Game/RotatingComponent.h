@@ -1,5 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include <Engine/EngineContext.h>
 #include <Engine/Game/Actor.h>
 #include <Engine/Game/Component.h>
 
@@ -18,12 +19,11 @@ public:
         return true;
     }
 
-    void Update(Float32 deltaTime) override
+    void Update(ost::EngineContext& context) override
     {
-
         auto rotation = ost::Vector3f{1.0f, 1.0f, 1.0f};
         rotation.Normalize();
-        GetOwner().GetTransform().Rotate(ost::Quaternion::FromRotationAxis(rotation, 0.5f * deltaTime));
+        GetOwner().GetTransform().Rotate(ost::Quaternion::FromRotationAxis(rotation, 0.5f * context.GetTime().deltaTime));
     }
 };
 

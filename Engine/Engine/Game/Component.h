@@ -1,5 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "Engine/EngineContext.h"
 
 // ------------------------------------------------------------
 
@@ -21,14 +22,18 @@ namespace ost
             return false;
         }
 
-        virtual void Created()
+        virtual void Start(EngineContext& context)
         {
         }
-        virtual void Update(Float32 deltaTime)
+        virtual void Update(EngineContext& context)
         {
         }
 
         Actor& GetOwner()
+        {
+            return *_owner;
+        }
+        const Actor& GetOwner() const
         {
             return *_owner;
         }
