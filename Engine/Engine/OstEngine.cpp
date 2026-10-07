@@ -4,6 +4,7 @@
 #include "Game/Actor.h"
 #include "Game/Component.h"
 #include "Game/Components/CameraComponent.h"
+#include "Game/Components/SceneLightComponent.h"
 #include "Game/Components/StaticMeshComponent.h"
 #include "Game/GameInterface.h"
 
@@ -55,6 +56,21 @@ void OstEngine::RenderScene(IRenderer& renderer)
         if (const StaticMeshComponent* staticMeshComp = actor->GetComponent<StaticMeshComponent>())
         {
             renderer.PushRenderCommand(staticMeshComp->GetModel(), actor->GetTransform().GetWorldTransform());
+        }
+
+        if (const SceneLightComponent* sceneLight = actor->GetComponent<SceneLightComponent>())
+        {
+            RenderLight directional;
+            directional.lightType = ELightType::Directional;
+            directional.color = sceneLight->GetSunColor();
+            directional.direction = Vector4f(sceneLight->GetOwner().GetTransform().TransformDirection(Vector3f{0.0f, 0.0f, 1.0f}), 0.0f);
+
+            RenderLight ambient;
+            ambient.lightType = ELightType::Ambient;
+            ambient.color = sceneLight->GetAmbientColor();
+
+            renderer.PushLightCommand(directional);
+            renderer.PushLightCommand(ambient);
         }
     }
 

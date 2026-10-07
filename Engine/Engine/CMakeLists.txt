@@ -27,6 +27,7 @@ add_library(${PROJECT_NAME} STATIC
     EngineContext.h
     System/InputReader.h
     System/InputReader.cpp
+    Game/Components/SceneLightComponent.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

@@ -111,6 +111,25 @@ namespace ost
             return _rotation;
         }
 
+        void LookAt(const Vector3f& point, Vector3f up = Vector3f{0, 1, 0})
+        {
+            SetWorldRotation(Quaternion::LookAtRotation(GetWorldPosition(), point, up));
+        }
+
+        Vector3f TransformDirection(const Vector3f& direction) const
+        {
+            Vector4f worldDir = Vector4f{direction, 0.0f} * GetWorldTransform();
+            worldDir.Normalize();
+            return worldDir;
+        }
+
+        Vector3f TransformPosition(const Vector3f& position) const
+        {
+            Vector4f worldPos = Vector4f{position, 1.0f} * GetWorldTransform();
+            worldPos.Normalize();
+            return worldPos;
+        }
+
     private:
         void MarkWorldMatrixDirty()
         {

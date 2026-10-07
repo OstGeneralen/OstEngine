@@ -7,6 +7,7 @@
 #include <Engine/Asset/GraphicsAssetsManager.h>
 #include <Engine/EngineContext.h>
 #include <Engine/Game/Components/CameraComponent.h>
+#include <Engine/Game/Components/SceneLightComponent.h>
 #include <Engine/Game/Components/StaticMeshComponent.h>
 #include <Engine/Game/Scene.h>
 
@@ -32,6 +33,12 @@ void Game::Load(ost::EngineContext& context)
     camera.MakePerspective(90.0f * (3.141f / 180.0f), 16.0f / 9.0f);
     _cameraActor->GetTransform().Move({0.0f, 0.0f, -10.0f}, ost::ESpace::World);
     _cameraActor->AddComponent<InputMovementComponent>();
+
+    auto lightActor = scene.NewActor();
+    auto& sceneLight = lightActor->AddComponent<ost::SceneLightComponent>();
+    sceneLight.SetAmbientColor(ost::Color(0.02f, 0.02f, 0.05f, 1.0f));
+    sceneLight.SetSunColor(ost::Color(1.0f, 0.95f, 0.9f, 1.0f));
+    lightActor->GetTransform().Rotate(ost::Quaternion::FromRotationAxis({0, 0, 1}, 1.5f));
 }
 
 void Game::Unload(ost::EngineContext& context)

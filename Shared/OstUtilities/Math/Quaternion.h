@@ -3,9 +3,8 @@
 #include "Math/Math.h"
 #include "Math/Vector4.h"
 
-#include <OstTypes.h>
-
 #include <DirectXMath.h>
+#include <OstTypes.h>
 
 // ------------------------------------------------------------
 
@@ -28,6 +27,16 @@ namespace ost
         {
             Quaternion created;
             DxTypeStore(created.dxType, DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&axis.dxType), rad));
+            return created;
+        }
+
+        static Quaternion LookAtRotation(const Vector3f& eyePosition, const Vector3f& point, const Vector3f& up)
+        {
+            DirectX::XMMATRIX lookMatrix =
+                DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&eyePosition.dxType), DirectX::XMLoadFloat3(&point.dxType), DirectX::XMLoadFloat3(&up.dxType));
+
+            Quaternion created;
+            DxTypeStore(created.dxType, DirectX::XMQuaternionRotationMatrix(lookMatrix));
             return created;
         }
 

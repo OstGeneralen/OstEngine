@@ -64,6 +64,7 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
 
     _rhi->CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
     _rhi->CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
+    _rhi->CreateBuffer(sizeof(LightsBuffer), _lightBuffer);
 
     List<Uint8> vsBytecode = CompileShaderFromFile("EngineAssets/Shaders/TestShader.hlsl", EPipelineStage_VS);
     List<Uint8> psBytecode = CompileShaderFromFile("EngineAssets/Shaders/TestShader.hlsl", EPipelineStage_PS);
@@ -131,6 +132,11 @@ void GraphicsEngine::PushRenderCommand(const ModelHandle& modelHandle, const Mat
     }
 }
 
+void ost::GraphicsEngine::PushLightCommand(const RenderLight& light)
+{
+    _lightCommands.Add(light);
+}
+
 void ost::GraphicsEngine::ExecuteRenderCommands(const Matrix4x4& view)
 {
     _rhi->SetPSO(_defaultPSO);
@@ -145,6 +151,23 @@ void ost::GraphicsEngine::ExecuteRenderCommands(const Matrix4x4& view)
     _rhi->ClearDepthStencil(_depthStencilTexture);
 
     _rhi->SetRenderTarget(_backbufferTexture, &_depthStencilTexture);
+
+    // Update and Upload all lights
+    LightsBuffer lightBufferData = {};
+    for (const auto& lightCommand : _lightCommands)
+    {
+        if (lightCommand.lightType == ELightType::Directional)
+        {
+            lightBufferData.directional.direction = Vector4f(lightCommand.direction, 0.0f);
+            lightBufferData.directional.color = lightCommand.color;
+        }
+        else if (lightCommand.lightType == ELightType::Ambient)
+        {
+            lightBufferData.ambient.color = lightCommand.color;
+        }
+    }
+    _rhi->UpdateBuffer(_lightBuffer, &lightBufferData, sizeof(LightsBuffer));
+    _rhi->SetBuffer(_lightBuffer, static_cast<Uint32>(EBufferSlot::LightBuffer), EPipelineStage_VS | EPipelineStage_PS);
 
     // Sort by material and mesh
     // std::sort(_commands.begin(), _commands.end(), [](const RenderCommand& cmdA, const RenderCommand& cmdB) {
@@ -190,6 +213,7 @@ void ost::GraphicsEngine::ExecuteRenderCommands(const Matrix4x4& view)
 void ost::GraphicsEngine::ClearRenderCommands()
 {
     _commands.Clear();
+    _lightCommands.Clear();
 }
 
 Vector2f ost::GraphicsEngine::GetRenderDimensions() const

@@ -47,9 +47,6 @@ cbuffer LightBuffer : BUFFER_SLOT_LIGHT
     float4 Light_SunDir;
     float4 Light_SunCol;
     float4 Light_AmbientCol;
-
-    PointLightData Light_PointLights[16];
-    SpotLightData Light_SpotLights[16];
 };
 
 cbuffer AnimBuffer : BUFFER_SLOT_ANIMATION

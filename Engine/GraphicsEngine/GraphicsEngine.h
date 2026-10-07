@@ -37,6 +37,7 @@ namespace ost
 
     public: // IRenderer
         void PushRenderCommand(const ModelHandle& model, const Matrix4x4& transform) override;
+        void PushLightCommand( const RenderLight& light ) override;
         void ExecuteRenderCommands(const Matrix4x4& view) override;
         void ClearRenderCommands() override;
 
@@ -48,11 +49,13 @@ namespace ost
         UniquePtr<GraphicsResourceManager> _resourceManager;
 
         List<RenderCommand> _commands;
+        List<RenderLight> _lightCommands;
 
         PipelineStateObject _defaultPSO;
 
         Buffer _frameBuffer;
         Buffer _objectBuffer;
+        Buffer _lightBuffer;
 
         Texture _backbufferTexture;
         Texture _depthStencilTexture;
