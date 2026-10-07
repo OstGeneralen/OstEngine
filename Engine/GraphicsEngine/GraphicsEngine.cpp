@@ -2,20 +2,18 @@
 #include "GraphicsEngine.h"
 
 #include "RHI/RenderHardwareInterface.h"
+#include "Rendering/Buffers.h"
 #include "Rendering/RenderPipelineConstants.h"
 #include "Resources/GraphicsResourceManager.h"
+#include "Resources/ShaderCompiler.h"
+
+#include <d3d11_1.h>
 
 #include <algorithm>
 
 #include <Utility/Assert.h>
 
-#include <d3d11_1.h>
-
 using namespace ost;
-
-// ------------------------------------------------------------
-
-GraphicsEngine* GraphicsEngine::_pInstance = nullptr;
 
 // ------------------------------------------------------------
 
@@ -29,25 +27,15 @@ namespace
 
 // ------------------------------------------------------------
 
-GraphicsEngine& GraphicsEngine::GetInstance()
-{
-    return *_pInstance;
-}
-
-// ------------------------------------------------------------
-
 GraphicsEngine::GraphicsEngine()
     : _activeSettings{}
     , _rhi{}
 {
-    OST_ASSERT(_pInstance == nullptr, "May only have one graphics engine instance per runtime");
-    _pInstance = this;
 }
 
 GraphicsEngine::~GraphicsEngine()
 {
     _rhi = nullptr;
-    _pInstance = nullptr;
 }
 
 // ------------------------------------------------------------
@@ -68,6 +56,28 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
     _resourceManager->Initialize(*_rhi);
 
     _activeSettings = settings;
+
+    _rhi->CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
+    _rhi->CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
+
+    List<Uint8> vsBytecode = CompileShaderFromFile("EngineAssets/Shaders/TestShader.hlsl", EPipelineStage_VS);
+    List<Uint8> psBytecode = CompileShaderFromFile("EngineAssets/Shaders/TestShader.hlsl", EPipelineStage_PS);
+
+    PipelineStateObjectDesc psoDesc = {};
+    psoDesc.pixelShader.bytecodeSize = psBytecode.GetSize();
+    psoDesc.pixelShader.pBytecode = psBytecode.GetData();
+    psoDesc.vertexShader.bytecodeSize = vsBytecode.GetSize();
+    psoDesc.vertexShader.pBytecode = vsBytecode.GetData();
+
+    psoDesc.primitiveTopology = EPrimitiveTopology::TriangleList;
+
+    psoDesc.vertexLayout.Add(VertexElement{"POSITION", EDataSize::Float4});
+    psoDesc.vertexLayout.Add(VertexElement{"NORMAL", EDataSize::Float3});
+    psoDesc.vertexLayout.Add(VertexElement{"TANGENT", EDataSize::Float3});
+    psoDesc.vertexLayout.Add(VertexElement{"COLOR", EDataSize::Float4});
+    psoDesc.vertexLayout.Add(VertexElement{"TEXCOORD", EDataSize::Float2});
+
+    _rhi->CreatePSO(psoDesc, _defaultPSO);
 }
 
 void GraphicsEngine::Shutdown()
@@ -99,7 +109,7 @@ void GraphicsEngine::UpdateSettings(const GraphicsEngineSettings& newSettings)
 
 // ------------------------------------------------------------
 
-void GraphicsEngine::Draw(const ModelHandle& modelHandle, const Matrix4x4& transform)
+void GraphicsEngine::PushRenderCommand(const ModelHandle& modelHandle, const Matrix4x4& transform)
 {
     const Model& model = _resourceManager->Get(modelHandle);
 
@@ -109,20 +119,30 @@ void GraphicsEngine::Draw(const ModelHandle& modelHandle, const Matrix4x4& trans
 
         RenderCommand cmd;
         cmd.pMesh = &mesh;
-        cmd.pMaterial = &_resourceManager->Get(model.materials[mesh.materialIndex]);
+        // cmd.pMaterial = &_resourceManager->Get(model.materials[mesh.materialIndex]);
         cmd.transform = transform;
 
         _commands.Add(cmd);
     }
 }
 
-void ost::GraphicsEngine::DoRender(bool maintainCommandList)
+void ost::GraphicsEngine::ExecuteRenderCommands(const Matrix4x4& view)
 {
+    _rhi->SetPSO(_defaultPSO);
+
+    FrameBufferStructure frameBufferData;
+    frameBufferData.viewMatrix = view;
+    frameBufferData.inverseViewMatrix = view.GetInverse();
+    _rhi->UpdateBuffer(_frameBuffer, &frameBufferData, sizeof(FrameBufferStructure));
+    _rhi->SetBuffer(_frameBuffer, static_cast<Uint32>(EBufferSlot::FrameBuffer), EPipelineStage_PS | EPipelineStage_VS);
+
     _rhi->ClearRenderTarget(_backbufferTexture, _activeSettings.renderer.clearColor);
     _rhi->ClearDepthStencil(_depthStencilTexture);
 
+    _rhi->SetRenderTarget(_backbufferTexture, &_depthStencilTexture);
+
     // Sort by material and mesh
-    //std::sort(_commands.begin(), _commands.end(), [](const RenderCommand& cmdA, const RenderCommand& cmdB) {
+    // std::sort(_commands.begin(), _commands.end(), [](const RenderCommand& cmdA, const RenderCommand& cmdB) {
     //    const SizeType sortIndexA = (reinterpret_cast<SizeType>(cmdA.pMaterial) << 32) | (reinterpret_cast<SizeType>(cmdA.pMesh) & 0x00000000FFFFFFFF);
     //    const SizeType sortIndexB = (reinterpret_cast<SizeType>(cmdA.pMaterial) << 32) | (reinterpret_cast<SizeType>(cmdA.pMesh) & 0x00000000FFFFFFFF);
     //    return sortIndexA <=> sortIndexB;
@@ -134,36 +154,37 @@ void ost::GraphicsEngine::DoRender(bool maintainCommandList)
     for (const auto& cmd : _commands)
     {
         // Update Material if we're now drawing a different one
-        if (cmd.pMaterial != currentMaterial)
-        {
-            currentMaterial = cmd.pMaterial;
-            _rhi->SetPSO(currentMaterial->GetPSO());
+        // if (cmd.pMaterial != currentMaterial)
+        //{
+        //    currentMaterial = cmd.pMaterial;
+        //    _rhi->SetPSO(currentMaterial->GetPSO());
+        //
+        //    _rhi->UpdateBuffer(currentMaterial->GetVariablesBuffer(), currentMaterial->GetVariablesData(), currentMaterial->GetVariablesByteCount());
+        //    _rhi->SetBuffer(currentMaterial->GetVariablesBuffer(), PipelineConstant::Get(EBufferSlot::MaterialProperties), EPipelineStage_VS | EPipelineStage_PS);
+        //
+        //
+        //    for (SizeType textureIndex = 0; textureIndex < currentMaterial->GetTextureCount(); ++textureIndex)
+        //    {
+        //        _rhi->SetTexture(currentMaterial->GetTextures()[textureIndex], PipelineConstant::Get(ETextureSlot::Material0), EPipelineStage_VS | EPipelineStage_PS);
+        //    }
+        //}
 
-            _rhi->UpdateBuffer(currentMaterial->GetVariablesBuffer(), currentMaterial->GetVariablesData(), currentMaterial->GetVariablesByteCount());
-            _rhi->SetBuffer(currentMaterial->GetVariablesBuffer(), PipelineConstant::Get(EBufferSlot::MaterialProperties), EPipelineStage_VS | EPipelineStage_PS);
-
-            
-            for (SizeType textureIndex = 0; textureIndex < currentMaterial->GetTextureCount(); ++textureIndex)
-            {
-                _rhi->SetTexture(currentMaterial->GetTextures()[textureIndex], PipelineConstant::Get(ETextureSlot::Material0), EPipelineStage_VS | EPipelineStage_PS);
-            }
-        }
+        ObjectBufferStructure objectBufferData;
+        objectBufferData.objectTransform = cmd.transform;
+        _rhi->UpdateBuffer(_objectBuffer, &objectBufferData, sizeof(ObjectBufferStructure));
+        _rhi->SetBuffer(_objectBuffer, static_cast<Uint32>(EBufferSlot::ObjectBuffer), EPipelineStage_PS | EPipelineStage_VS);
 
         // Update mesh if we're now drawing a different one
-        if (cmd.pMesh != currentMesh)
-        {
-            _rhi->SetMeshBuffers(*cmd.pMesh);
-        }
-
-        _rhi->Draw(*cmd.pMesh);
-    }
-
-    if (!maintainCommandList)
-    {
-        _commands.Clear();
+        _rhi->Draw(*cmd.pMesh, cmd.pMesh != currentMesh);
+        currentMesh = cmd.pMesh;
     }
 
     _rhi->Present();
+}
+
+void ost::GraphicsEngine::ClearRenderCommands()
+{
+    _commands.Clear();
 }
 
 // ------------------------------------------------------------

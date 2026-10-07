@@ -1,18 +1,22 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <Data/ModelCPUData.h>
-#include <string>
+#include <Engine/Game/GameInterface.h>
+#include <Engine/Game/Actor.h>
+
 
 // ------------------------------------------------------------
 
-namespace ost
+class Game : public ost::IGame
 {
-    class ModelLoader
-    {
-    public:
-        void Load(const std::string& path, ModelCPUData& into);
-    };
-} // namespace ost
+public:
+    void Load() override;
+    void Unload() override;
+
+    void Update(Float32 deltaTime) override;
+private:
+    ost::Actor* _cameraActor;
+    ost::Actor* _meshActor;
+};
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

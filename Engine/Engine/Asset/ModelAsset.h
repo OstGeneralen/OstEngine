@@ -11,7 +11,6 @@ namespace ost
 {
     struct ModelAsset : Asset
     {
-        StaticModelDesc cpuData;
         ModelHandle gpuHandle;
     };
 } // namespace ost

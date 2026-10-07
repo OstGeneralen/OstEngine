@@ -1,11 +1,9 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "OstEngine.h"
 
+#include "Game/GameInterface.h"
+
 #include <Utility/Assert.h>
-#include <GraphicsEngine/GraphicsEngine.h>
-
-ost::OstEngine* ost::pEngine = nullptr;
-
 
 using namespace ost;
 
@@ -13,27 +11,28 @@ using namespace ost;
 
 OstEngine::OstEngine()
 {
-    OST_ASSERT(pEngine == nullptr, "Only one engine instance allowed per runtime");
-    pEngine = this;
-    _graphicsEngine = Ptr::NewUnique<GraphicsEngine>();
 }
 
 OstEngine::~OstEngine()
 {
-    pEngine = nullptr;
+}
+
+void ost::OstEngine::AssignToGameInstance(IGame& gameInstance)
+{
+    gameInstance._pEngine = this;
+}
+
+Scene& OstEngine::GetScene()
+{
+    return _scene;
+}
+
+const Scene& OstEngine::GetScene() const
+{
+    return _scene;
 }
 
 // ------------------------------------------------------------
-
-GraphicsEngine& ost::OstEngine::GetGraphicsEngine()
-{
-    return *_graphicsEngine;
-}
-
-const GraphicsEngine& ost::OstEngine::GetGraphicsEngine() const
-{
-    return *_graphicsEngine;
-}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

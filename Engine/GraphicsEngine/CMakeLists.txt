@@ -27,6 +27,9 @@ add_library(${PROJECT_NAME} STATIC
     Resources/IGraphicsResourceManager.h
     Resources/GraphicsResourceManager.h
     Resources/GraphicsResourceManager.cpp
+    Rendering/Buffers.h
+    Resources/ShaderCompiler.h
+    Resources/ShaderCompiler.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

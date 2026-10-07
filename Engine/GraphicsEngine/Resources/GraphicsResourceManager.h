@@ -4,6 +4,10 @@
 #include "GraphicsEngine/Resources/IGraphicsResourceManager.h"
 #include "GraphicsEngine/Resources/MaterialFactory.h"
 
+// Actual Resource Includes
+#include "GraphicsEngine/Objects/Model.h"
+#include "GraphicsEngine/Objects/Texture.h"
+
 #include <Container/SlotMap.h>
 
 // ------------------------------------------------------------
@@ -17,18 +21,15 @@ namespace ost
     public:
         void Initialize(const RenderHardwareInterface& rhi);
 
-        MaterialHandle Create(const MaterialDesc& desc) override;
-        TextureHandle Create(const ResourceTextureDesc& desc) override;
-        ModelHandle Create(const StaticModelDesc& desc) override;
+        TextureHandle Create(const TextureCPUData& data) override;
+        ModelHandle Create(const ModelCPUData& data) override;
 
         const Texture& Get(TextureHandle hnd) const override;
-        const Material& Get(MaterialHandle hnd) const override;
         const Model& Get(ModelHandle hnd) const override;
         const Mesh& Get(MeshHandle hnd) const override;
 
     private:
         SlotMap<Texture> _textures;
-        SlotMap<Material> _materials;
         SlotMap<Model> _models;
         SlotMap<Mesh> _meshes;
 

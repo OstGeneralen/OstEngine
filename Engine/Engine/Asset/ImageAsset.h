@@ -11,8 +11,7 @@ namespace ost
 {
     struct ImageAsset : Asset
     {
-        ResourceTextureDesc cpuData;
-        TextureHandle gpuHandle;
+        TextureHandle gpuHandle = {};
     };
 } // namespace ost
 

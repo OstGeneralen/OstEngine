@@ -13,18 +13,19 @@ namespace ost
     {
         Pending,
         Loading,
+        Loaded,
         Ready,
     };
 
     struct Asset
     {
         // Lookup data
-        AssetGuid guid;
-        std::string name;
-        std::string path;
+        AssetGuid guid = {};
+        std::string name = "";
+        std::string path = "";
 
         // Load state
-        EAssetState state;
+        EAssetState state = EAssetState::Pending;
     };
 } // namespace ost
 

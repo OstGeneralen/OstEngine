@@ -1,9 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "ModelLoader.h"
 
-#include "Engine/OstEngine.h"
-
-#include <GraphicsEngine/GraphicsEngine.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -12,30 +9,35 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void ModelLoader::LoadAsset(ModelAsset& asset)
+void ModelLoader::Load(const std::string& path, ModelCPUData& into)
 {
-    asset.state = EAssetState::Loading;
-
     // Load the data
     {
         Assimp::Importer importer;
-        const aiScene* importScene =
-            importer.ReadFile(asset.path, aiProcess_CalcTangentSpace | aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_GenNormals);
+        const aiScene* importScene = importer.ReadFile(path, aiProcess_CalcTangentSpace | aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_GenNormals);
 
-        auto& indices = asset.cpuData.indices;
-        auto& vertices = asset.cpuData.vertices;
-        auto& submeshes = asset.cpuData.meshes;
+        auto& indices = into.indexList;
+        auto& vertices = into.vertexList;
+        auto& submeshes = into.submeshes;
+
+        into.numMaterials = importScene->mNumMaterials;
 
         for (SizeType meshIndex = 0; meshIndex < importScene->mNumMeshes; ++meshIndex)
         {
             const aiMesh* importMesh = importScene->mMeshes[meshIndex];
 
-            StaticModelDesc::Submesh buildMesh;
-            buildMesh.indexCount = importMesh->mNumFaces * 3;
-            buildMesh.vertexCount = importMesh->mNumVertices;
+            Uint32 vertexLayoutMaskValue = 0;
+            vertexLayoutMaskValue |= importMesh->HasNormals() ? EModelVertexData_Normal : 0;
+            vertexLayoutMaskValue |= importMesh->HasTangentsAndBitangents() ? EModelVertexData_Tangent : 0;
+            vertexLayoutMaskValue |= importMesh->HasTextureCoords(0) ? EModelVertexData_UV : 0;
+            vertexLayoutMaskValue |= importMesh->HasVertexColors(0) ? EModelVertexData_Color : 0;
+
+            ModelCPUData::Mesh buildMesh;
+            buildMesh.indices.count = importMesh->mNumFaces * 3;
+            buildMesh.vertices.count = importMesh->mNumVertices;
             buildMesh.materialIndex = importMesh->mMaterialIndex;
-            buildMesh.vertexOffset = vertices.GetSize();
-            buildMesh.indexOffset = indices.GetSize();
+            buildMesh.vertices.offset = vertices.GetSize();
+            buildMesh.indices.offset = indices.GetSize();
             submeshes.Add(buildMesh);
 
             for (SizeType vertIndex = 0; vertIndex < importMesh->mNumVertices; ++vertIndex)
@@ -44,7 +46,7 @@ void ModelLoader::LoadAsset(ModelAsset& asset)
                 const aiVector3f& importNormal = importMesh->mNormals[vertIndex];
                 const aiVector3f& importTangent = importMesh->mTangents[vertIndex];
 
-                SurfaceVertex vertex;
+                ModelVertex vertex;
                 vertex.position = {importVert.x, importVert.y, importVert.z, 1};
                 vertex.normal = {importNormal.x, importNormal.y, importNormal.z};
                 vertex.tangent = {importTangent.x, importTangent.y, importTangent.z};
@@ -73,12 +75,6 @@ void ModelLoader::LoadAsset(ModelAsset& asset)
             }
         }
     }
-
-    // Build the resource
-    asset.gpuHandle = pEngine->GetGraphicsEngine().GetResourceManager().Create(asset.cpuData);
-    asset.cpuData = {};
-
-    asset.state = EAssetState::Ready;
 }
 
 // ------------------------------------------------------------

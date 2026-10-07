@@ -1,28 +1,24 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/RHI/RHIMinimal.h"
+#include <string>
 
-#include <OstTypes.h>
-
-#include <Container/List.h>
-#include <Math/Vector2.h>
+#include <GraphicsEngine/Objects/ObjectHandles.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct Texture
-    {
-        friend class RenderHardwareInterface;
+    class IGraphicsResourceManager;
 
-        Texture();
-        Texture(const Texture&);
-        ~Texture();
+    class GraphicsAssetsManager
+    {
+    public:
+        void SetResourceManager(IGraphicsResourceManager& gfxManager);
+
+        ModelHandle LoadModel(const std::string& modelFilePath);
 
     private:
-        ComPtr<RHIRenderTarget> _rtv;
-        ComPtr<RHIShaderResource> _srv;
-        ComPtr<RHIDepthStencil> _dsv;
+        IGraphicsResourceManager* _pGfxResourceManager;
     };
 } // namespace ost
 

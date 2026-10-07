@@ -55,7 +55,7 @@ namespace std
     template <>
     struct hash<ost::TypeID>
     {
-        size_t operator()(const ost::TypeID& tid) noexcept
+        size_t operator()(const ost::TypeID& tid) const noexcept
         {
             return static_cast<size_t>(tid);
         }

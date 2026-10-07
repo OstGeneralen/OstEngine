@@ -8,6 +8,10 @@
 #include "GraphicsEngine/Objects/PipelineStateObject.h"
 #include "GraphicsEngine/Objects/Texture.h"
 
+// Graphics Object Creation Data
+#include <Data/ModelCPUData.h>
+#include <Data/TextureCPUData.h>
+
 // Common
 #include <Container/List.h>
 #include <Math/Color.h>
@@ -28,7 +32,7 @@ namespace ost
         void ResizeBackbuffer(const Vector2u& newSize, Texture& inOutBackbuffer);
 
     public: // Resource Management
-        bool CreateTexture(const ResourceTextureDesc& desc, Texture& outTexture) const;
+        bool CreateTexture(const TextureCPUData& desc, Texture& outTexture) const;
         bool CreateRenderTargetTexture(const Vector2u& dimensions, EDataFormat format, bool allowAsResource, Texture& outTexture) const;
         bool CreateDepthStencilTexture(const Vector2u& dimensions, bool allowAsResource, Texture& outTexture) const;
 
@@ -51,8 +55,7 @@ namespace ost
         void SetRenderTarget(const Texture& renderTarget, const Texture* pDepthTarget = nullptr) const;
         void SetRenderTargets(const Texture* pRenderTargets, SizeType numTargets, const Texture* pDepthTarget = nullptr) const;
 
-        void SetMeshBuffers(const Mesh& mesh) const;
-        void Draw(const Mesh& mesh) const;
+        void Draw( const Mesh& mesh, bool uploadBuffers ) const;
 
         void Present() const;
 

@@ -19,13 +19,11 @@ cbuffer FrameBuffer : BUFFER_SLOT_FRAME
 {
     row_major float4x4 FrameBuf_ViewMatrix;
     row_major float4x4 FrameBuf_ViewMatrixInv;
-    row_major float4 FrameBuf_ViewPosition;
 };
 
 cbuffer ObjectBuffer : BUFFER_SLOT_OBJECT
 {
     row_major float4x4 ObjectBuf_Transform;
-    row_major float4x4 ObjectBuf_TransformInv;
 };
 
 struct PointLightData

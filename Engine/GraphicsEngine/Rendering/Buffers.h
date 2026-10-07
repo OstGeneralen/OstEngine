@@ -1,18 +1,24 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <Data/ModelCPUData.h>
-#include <string>
+#include <Math/Vector4.h>
+#include <Math/Matrix4x4.h>
+#include <Math/Color.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class ModelLoader
+    struct alignas(16) FrameBufferStructure
     {
-    public:
-        void Load(const std::string& path, ModelCPUData& into);
+        Matrix4x4 viewMatrix;
+        Matrix4x4 inverseViewMatrix;
     };
-} // namespace ost
+
+    struct alignas(16) ObjectBufferStructure
+    {
+        Matrix4x4 objectTransform;
+    };
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

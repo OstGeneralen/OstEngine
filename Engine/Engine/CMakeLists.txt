@@ -13,6 +13,17 @@ add_library(${PROJECT_NAME} STATIC
     Asset/Loaders/ImageLoader.cpp
     Asset/Loaders/ModelLoader.h
     Asset/Loaders/ModelLoader.cpp
+    Game/GameInterface.h
+    Asset/GraphicsAssetsManager.h
+    Asset/GraphicsAssetsManager.cpp
+    Game/Scene.h
+    Game/Actor.h
+    Game/Component.h
+    Game/Transform.h
+    Game/Actor.cpp
+    Game/Scene.cpp
+    Game/Components/StaticMeshComponent.h
+    Game/Components/CameraComponent.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

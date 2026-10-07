@@ -26,6 +26,8 @@ add_library(${PROJECT_NAME}
     Utility/File.cpp
     Utility/Timer.h
     Utility/Timer.cpp
+    Data/TextureCPUData.h
+    Data/ModelCPUData.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

@@ -1,28 +1,31 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/RHI/RHIMinimal.h"
-
-#include <OstTypes.h>
-
 #include <Container/List.h>
-#include <Math/Vector2.h>
+#include <Container/Map.h>
+#include <Memory/UniquePtr.h>
+#include <Utility/TypeID.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct Texture
-    {
-        friend class RenderHardwareInterface;
+    class Component;
+    class Actor;
 
-        Texture();
-        Texture(const Texture&);
-        ~Texture();
+    class Scene
+    {
+    public:
+        Scene();
+        ~Scene();
+
+        Actor* NewActor();
+
+        const List<UniquePtr<Actor>>& GetActors() const;
+
+        void Update(Float32 deltaTime);
 
     private:
-        ComPtr<RHIRenderTarget> _rtv;
-        ComPtr<RHIShaderResource> _srv;
-        ComPtr<RHIDepthStencil> _dsv;
+        List<UniquePtr<Actor>> _actors;
     };
 } // namespace ost
 

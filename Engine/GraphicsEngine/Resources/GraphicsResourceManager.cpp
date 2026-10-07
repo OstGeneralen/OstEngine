@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "GraphicsResourceManager.h"
 
+#include "GraphicsEngine/Rendering/Vertex.h"
 #include "RHI/RenderHardwareInterface.h"
 
 #include <d3d11_1.h>
@@ -17,39 +18,51 @@ void GraphicsResourceManager::Initialize(const RenderHardwareInterface& rhi)
 
 // ------------------------------------------------------------
 
-MaterialHandle GraphicsResourceManager::Create(const MaterialDesc& desc)
-{
-    Material created;
-    _materialFactory.CreateMaterial(desc, created);
-    return MaterialHandle{_materials.Add(std::move(created))};
-}
-
-TextureHandle GraphicsResourceManager::Create(const ResourceTextureDesc& desc)
+TextureHandle GraphicsResourceManager::Create(const TextureCPUData& data)
 {
     Texture created;
-    _pRHI->CreateTexture(desc, created);
+    _pRHI->CreateTexture(data, created);
     return TextureHandle{_textures.Add(std::move(created))};
 }
 
-ModelHandle GraphicsResourceManager::Create(const StaticModelDesc& desc)
+ModelHandle GraphicsResourceManager::Create(const ModelCPUData& data)
 {
     Model created;
-    _pRHI->CreateVertexBuffer(sizeof(SurfaceVertex), desc.vertices.GetSize(), desc.vertices.GetData(), created.vertexBuffer);
-    _pRHI->CreateIndexBuffer(desc.indices.GetSize(), desc.indices.GetData(), created.indexBuffer);
+
+    if (data.vertexLayoutMask & EModelVertexData_StaticMesh)
+    {
+        List<SurfaceVertex> vertices{data.vertexList.GetSize()};
+        for (SizeType i = 0; i < vertices.GetSize(); ++i)
+        {
+            vertices[i].position = data.vertexList[i].position;
+            vertices[i].normal = data.vertexList[i].normal;
+            vertices[i].tangent = data.vertexList[i].tangent;
+            vertices[i].uv = data.vertexList[i].uv;
+            vertices[i].color = data.vertexList[i].color;
+        }
+
+        _pRHI->CreateVertexBuffer(sizeof(SurfaceVertex), vertices.GetSize(), vertices.GetData(), created.vertexBuffer);
+    }
+    else
+    {
+        OST_ASSERT(false, "UNSUPPORTED VERTEX TYPE!");
+    }
+
+    _pRHI->CreateIndexBuffer(data.indexList.GetSize(), data.indexList.GetData(), created.indexBuffer);
 
     SizeType maxMaterialIndex = 0;
 
-    for (const auto& submesh : desc.meshes)
+    for (const auto& submesh : data.submeshes)
     {
         Mesh createdMesh;
         createdMesh.indexBuffer = created.indexBuffer;
         createdMesh.vertexBuffer = created.vertexBuffer;
 
-        createdMesh.vertexCount = submesh.vertexCount;
-        createdMesh.vertexOffset = submesh.vertexOffset;
+        createdMesh.vertexCount = submesh.vertices.count;
+        createdMesh.vertexOffset = submesh.vertices.offset;
 
-        createdMesh.indexCount = submesh.indexCount;
-        createdMesh.indexOffset = submesh.indexOffset;
+        createdMesh.indexCount = submesh.indices.count;
+        createdMesh.indexOffset = submesh.indices.offset;
 
         createdMesh.materialIndex = submesh.materialIndex;
 
@@ -61,7 +74,7 @@ ModelHandle GraphicsResourceManager::Create(const StaticModelDesc& desc)
         created.meshHandles.Add(_meshes.Add(createdMesh));
     }
 
-    created.materials = List<MaterialHandle>(maxMaterialIndex + 1);
+    created.materials = List<MaterialHandle>(data.numMaterials);
 
     return ModelHandle{_models.Add(created)};
 }
@@ -71,11 +84,6 @@ ModelHandle GraphicsResourceManager::Create(const StaticModelDesc& desc)
 const Texture& GraphicsResourceManager::Get(TextureHandle hnd) const
 {
     return _textures[static_cast<SizeType>(hnd)];
-}
-
-const Material& GraphicsResourceManager::Get(MaterialHandle hnd) const
-{
-    return _materials[static_cast<SizeType>(hnd)];
 }
 
 const Model& GraphicsResourceManager::Get(ModelHandle hnd) const

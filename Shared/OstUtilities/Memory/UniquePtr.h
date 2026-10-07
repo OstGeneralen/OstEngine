@@ -48,6 +48,13 @@ namespace ost
             Reset();
         }
 
+        template<typename T2>
+        UniquePtr( UniquePtr<T2>&& o ) noexcept
+            : _raw{o._raw}
+        {
+            o._raw = nullptr;
+        }
+
         UniquePtr& operator=(UniquePtr&& o) noexcept
         {
             Reset();

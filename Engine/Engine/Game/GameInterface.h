@@ -1,10 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/Asset/GraphicsAssetsManager.h"
-#include "Engine/Game/Scene.h"
-
 #include <OstTypes.h>
-
 #include <Memory/UniquePtr.h>
 
 // ------------------------------------------------------------
@@ -12,27 +8,31 @@
 namespace ost
 {
     class IGame;
-    class GraphicsEngine;
+    extern UniquePtr<IGame> CreateGameInstance();
 
-    class OstEngine
+    class IGame
     {
     public:
-        OstEngine();
-        ~OstEngine();
+        friend class OstEngine;
 
-        void AssignToGameInstance(IGame& gameInstance);
+        virtual ~IGame() = default;
 
-        GraphicsAssetsManager& GetAssetManager()
+        virtual void Load() = 0;
+        virtual void Unload() = 0;
+
+        virtual void Update(Float32 deltaTime) = 0;
+
+        OstEngine& GetEngine()
         {
-            return _gfxAssetManager;
+            return *_pEngine;
+        }
+        const OstEngine& GetEngine() const
+        {
+            return *_pEngine;
         }
 
-        Scene& GetScene();
-        const Scene& GetScene() const;
-
     private:
-        GraphicsAssetsManager _gfxAssetManager;
-        Scene _scene;
+        OstEngine* _pEngine;
     };
 } // namespace ost
 

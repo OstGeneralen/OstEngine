@@ -2,6 +2,8 @@
 #pragma once
 #include "RHI/RHIMinimal.h"
 
+#include <Data/TextureCPUData.h>
+
 // DXGI + Dx11
 #include <d3d11_1.h>
 #include <dxgi.h>
@@ -13,6 +15,19 @@ namespace ost
 
     namespace translate
     {
+        inline static constexpr DXGI_FORMAT TextureFormat(ETextureFormat fmt) noexcept
+        {
+            switch (fmt)
+            {
+            case ETextureFormat::DDS_BC7:
+                return DXGI_FORMAT_BC7_UNORM;
+            case ETextureFormat::DDS_BC7_SRGB:
+                return DXGI_FORMAT_BC7_UNORM_SRGB;
+            }
+
+            return DXGI_FORMAT_UNKNOWN;
+        }
+
         // Translate from RHI data format to backend data format
         inline static constexpr DXGI_FORMAT DataFormat(EDataFormat fmt) noexcept
         {

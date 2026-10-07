@@ -2,29 +2,14 @@
 #pragma once
 #include "GraphicsEngine/RHI/RHIMinimal.h"
 
-#include <OstTypes.h>
-
 #include <Container/List.h>
-#include <Math/Vector2.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct Texture
-    {
-        friend class RenderHardwareInterface;
-
-        Texture();
-        Texture(const Texture&);
-        ~Texture();
-
-    private:
-        ComPtr<RHIRenderTarget> _rtv;
-        ComPtr<RHIShaderResource> _srv;
-        ComPtr<RHIDepthStencil> _dsv;
-    };
-} // namespace ost
+    extern List<Uint8> CompileShaderFromFile(const std::string& filePath, EPipelineStage targetStage );
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

@@ -13,6 +13,8 @@ namespace ost
     {
         friend struct std::hash<AssetGuid>;
 
+        AssetGuid() = default;
+
         constexpr AssetGuid(Uint64 h, Uint64 l) noexcept
             : _high{h}
             , _low{l}

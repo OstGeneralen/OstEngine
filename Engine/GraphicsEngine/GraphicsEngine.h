@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/GraphicsEngineSettings.h"
+#include "GraphicsEngine/Objects/Buffer.h"
 #include "GraphicsEngine/Objects/ObjectHandles.h"
 #include "GraphicsEngine/Objects/PipelineStateObject.h"
 #include "GraphicsEngine/Objects/Texture.h"
@@ -21,12 +22,6 @@ namespace ost
     class GraphicsEngine
     {
     public:
-        static GraphicsEngine& GetInstance();
-
-    private:
-        static GraphicsEngine* _pInstance;
-
-    public:
         GraphicsEngine();
         ~GraphicsEngine();
 
@@ -35,9 +30,10 @@ namespace ost
 
         void UpdateSettings(const GraphicsEngineSettings& newSettings);
 
-        void Draw(const ModelHandle& model, const Matrix4x4& transform);
-
-        void DoRender(bool maintainCommandList = false);
+        
+        void PushRenderCommand(const ModelHandle& model, const Matrix4x4& transform);
+        void ExecuteRenderCommands(const Matrix4x4& view);
+        void ClearRenderCommands();  
 
         IGraphicsResourceManager& GetResourceManager();
 
@@ -47,6 +43,11 @@ namespace ost
         UniquePtr<GraphicsResourceManager> _resourceManager;
 
         List<RenderCommand> _commands;
+
+        PipelineStateObject _defaultPSO;
+
+        Buffer _frameBuffer;
+        Buffer _objectBuffer;
 
         Texture _backbufferTexture;
         Texture _depthStencilTexture;

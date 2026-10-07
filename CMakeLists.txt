@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 4.2)
 project(OstEngine)
 
 # ===================================================================================
+# THIS IS THE ONE TO UPDATE TO SET YOUR CURRENT BUILT GAME PROJECT
+set( GAME_PROJECT_NAME OstGameProject )
+set( GAME_PROJECT_SUBDIR Game )
+# ===================================================================================
 
 set(OSTENGINE_EXE_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Bin)
 set(OSTENGINE_DLL_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Bin)
@@ -29,6 +33,8 @@ function(OstAddSubdirEnsureCompliant moduleSubdir subdirName)
         ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OST_ENGINE_LIB_OUTPUT_DIR}
         LIBRARY_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_DLL_OUTPUT_DIR}
         LIBRARY_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_DLL_OUTPUT_DIR}
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${OSTENGINE_EXE_OUTPUT_DIR}
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${OSTENGINE_EXE_OUTPUT_DIR}
         DEBUG_POSTFIX "_d"
     )
 endfunction()
@@ -60,4 +66,5 @@ OstAddSubdirEnsureCompliant(Shared/OstUtilities ${OST_COMMON_NAME})
 OstAddSubdirEnsureCompliant(Shared/OstLogger ${OST_LOGGER_NAME})
 OstAddSubdirEnsureCompliant(Engine/GraphicsEngine ${OST_GRAPHICS_ENGINE_NAME})
 OstAddSubdirEnsureCompliant(Engine/Engine ${OST_ENGINE_NAME})
-OstAddSubdirEnsureCompliant(Game App)
+OstAddSubdirEnsureCompliant(Engine/Application OstEngineApplication)
+OstAddSubdirEnsureCompliant(${GAME_PROJECT_SUBDIR} ${GAME_PROJECT_NAME})

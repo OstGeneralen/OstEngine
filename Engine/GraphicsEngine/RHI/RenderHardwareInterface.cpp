@@ -85,6 +85,13 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
         return false;
     }
 
+    D3D11_VIEWPORT viewport = {};
+    viewport.MaxDepth = 1.0f;
+    viewport.MinDepth = 0.0f;
+    viewport.Width = renderSize.X;
+    viewport.Height = renderSize.Y;
+    _immediateContext->RSSetViewports(1, &viewport);
+
     return true;
 }
 
@@ -102,15 +109,22 @@ void RenderHardwareInterface::ResizeBackbuffer(const Vector2u& newSize, Texture&
     rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
     _device->CreateRenderTargetView(backbufferTexture.Get(), &rtvDesc, &inOutBackbuffer._rtv);
+
+    D3D11_VIEWPORT viewport = {};
+    viewport.MaxDepth = 1.0f;
+    viewport.MinDepth = 0.0f;
+    viewport.Width = newSize.X;
+    viewport.Height = newSize.Y;
+    _immediateContext->RSSetViewports(1, &viewport);
 }
 
 // ------------------------------------------------------------
 
-bool RenderHardwareInterface::CreateTexture(const ResourceTextureDesc& desc, Texture& outTexture) const
+bool RenderHardwareInterface::CreateTexture(const TextureCPUData& desc, Texture& outTexture) const
 {
     D3D11_TEXTURE2D_DESC textureDesc = {};
     textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    textureDesc.Format = translate::DataFormat(desc.format);
+    textureDesc.Format = translate::TextureFormat(desc.format);
     textureDesc.Height = desc.dimensions.Y;
     textureDesc.Width = desc.dimensions.X;
     textureDesc.MipLevels = desc.mipCount;
@@ -127,9 +141,9 @@ bool RenderHardwareInterface::CreateTexture(const ResourceTextureDesc& desc, Tex
     List<D3D11_SUBRESOURCE_DATA> imgData{desc.images.GetSize()};
     for (SizeType i = 0; i < imgData.GetSize(); ++i)
     {
-        imgData[i].pSysMem = desc.images[i].pData;
-        imgData[i].SysMemPitch = desc.images[i].pitch;
-        imgData[i].SysMemSlicePitch = desc.images[i].slice;
+        imgData[i].pSysMem = desc.images[i].data.GetData();
+        imgData[i].SysMemPitch = desc.images[i].rowPitch;
+        imgData[i].SysMemSlicePitch = desc.images[i].slicePitch;
     }
 
     ComPtr<RHITexture2D> textureResource;
@@ -290,12 +304,14 @@ bool RenderHardwareInterface::CreateBuffer(SizeType numBytes, Buffer& outBuffer,
     desc.ByteWidth = numBytes;
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.StructureByteStride = numBytes;
-    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.Usage = D3D11_USAGE_DYNAMIC;
 
     D3D11_SUBRESOURCE_DATA initialData = {};
     initialData.pSysMem = pInitialData;
 
     D3D11_SUBRESOURCE_DATA* pAssignedInitData = (pInitialData ? &initialData : nullptr);
+
+    outBuffer._allocSize = numBytes;
 
     if (FAILED(_device->CreateBuffer(&desc, pAssignedInitData, &outBuffer._buffer)))
     {
@@ -402,17 +418,17 @@ void RenderHardwareInterface::SetRenderTargets(const Texture* pRenderTargets, Si
     _immediateContext->OMSetRenderTargets(numTargets, rtvs, (pDepthTarget ? pDepthTarget->_dsv.Get() : nullptr));
 }
 
-void RenderHardwareInterface::SetMeshBuffers(const Mesh& mesh) const
+void RenderHardwareInterface::Draw(const Mesh& mesh, bool setBuffers) const
 {
-    UINT strides[] = {sizeof(SurfaceVertex)};
-    UINT offsets[] = {mesh.vertexOffset};
+    if (setBuffers)
+    {
+        UINT strides[] = {sizeof(SurfaceVertex)};
+        UINT offsets[] = {mesh.vertexOffset};
 
-    _immediateContext->IASetVertexBuffers(0, 1, mesh.vertexBuffer._buffer.GetAddressOf(), strides, offsets);
-    _immediateContext->IASetIndexBuffer(mesh.indexBuffer._buffer.Get(), DXGI_FORMAT_R32_UINT, mesh.indexOffset);
-}
+        _immediateContext->IASetVertexBuffers(0, 1, mesh.vertexBuffer._buffer.GetAddressOf(), strides, offsets);
+        _immediateContext->IASetIndexBuffer(mesh.indexBuffer._buffer.Get(), DXGI_FORMAT_R32_UINT, mesh.indexOffset);
+    }
 
-void RenderHardwareInterface::Draw(const Mesh& mesh) const
-{
     _immediateContext->DrawIndexed(mesh.indexCount, mesh.indexOffset, mesh.vertexOffset);
 }
 
