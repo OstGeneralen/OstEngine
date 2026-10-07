@@ -5,6 +5,7 @@ add_library(${PROJECT_NAME} STATIC
     Game.h
     Game.cpp
     RotatingComponent.h
+    InputMovementComponent.h
 )
 
 set_target_properties(${PROJECT_NAME}

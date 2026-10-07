@@ -10,6 +10,12 @@
 
 namespace ost
 {
+    enum class ESpace
+    {
+        Local,
+        World,
+    };
+
     class Transform
     {
     public:
@@ -51,9 +57,17 @@ namespace ost
             MarkWorldMatrixDirty();
         }
 
-        void Move(const Vector3f& offset)
+        void Move(const Vector3f& offset, ESpace space = ESpace::Local)
         {
-            SetPosition(_position + offset);
+            switch (space)
+            {
+            case ESpace::Local:
+                SetPosition(_position + _rotation.RotateVector(offset));
+                break;
+            case ESpace::World:
+                SetPosition(_position + offset);
+                break;
+            }
         }
 
         void Rotate(const Quaternion& rotation)

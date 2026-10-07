@@ -25,6 +25,8 @@ add_library(${PROJECT_NAME} STATIC
     Game/Components/StaticMeshComponent.h
     Game/Components/CameraComponent.h
     EngineContext.h
+    System/InputReader.h
+    System/InputReader.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

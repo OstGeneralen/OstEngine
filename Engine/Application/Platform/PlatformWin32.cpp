@@ -5,6 +5,8 @@
 
 #include <Windows.h>
 
+#include <Engine/System/InputReader.h>
+
 // ------------------------------------------------------------
 
 using namespace ost;
@@ -12,6 +14,8 @@ using namespace ost;
 // ------------------------------------------------------------
 
 LRESULT WindowProc(HWND, UINT, WPARAM, LPARAM);
+
+EKeyboard TranslateVirtualKey(WPARAM wp, LPARAM lp);
 
 // ------------------------------------------------------------
 
@@ -131,29 +135,113 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case WM_CLOSE: {
         pApp->RequestExit();
+        return 0;
         break;
     }
     case WM_ENTERSIZEMOVE: {
 
         pApp->BeginWindowResize();
+        return 0;
         break;
     }
     case WM_EXITSIZEMOVE: {
 
         pApp->ExitWindowResize();
+        return 0;
         break;
     }
-    case WM_SIZE:
-    {
-        if(wparam == SIZE_MAXIMIZED || wparam == SIZE_RESTORED)
+    case WM_SIZE: {
+        if (wparam == SIZE_MAXIMIZED || wparam == SIZE_RESTORED)
         {
             pApp->ExitWindowResize();
+            return 0;
+        }
+        break;
+    }
+    case WM_KEYDOWN: {
+        const EKeyboard key = TranslateVirtualKey(wparam, lparam);
+        if (key != EKeyboard::Unknown)
+        {
+            pApp->ProcessKeyEvent(key, true);
+        }
+        break;
+    }
+    case WM_KEYUP: {
+        const EKeyboard key = TranslateVirtualKey(wparam, lparam);
+        if (key != EKeyboard::Unknown)
+        {
+            pApp->ProcessKeyEvent(key, false);
         }
         break;
     }
     }
 
     return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+// ------------------------------------------------------------
+
+EKeyboard TranslateVirtualKey(WPARAM wp, LPARAM lp)
+{
+    if (wp >= 'A' && wp <= 'Z')
+    {
+        return static_cast<EKeyboard>(static_cast<SizeType>(EKeyboard::A) + (wp - 'A'));
+    }
+    if (wp >= VK_NUMPAD0 && wp <= VK_NUMPAD9)
+    {
+        return static_cast<EKeyboard>(static_cast<SizeType>(EKeyboard::NumPad0) + (wp - VK_NUMPAD0));
+    }
+    if (wp >= '0' && wp <= '9')
+    {
+        return static_cast<EKeyboard>(static_cast<SizeType>(EKeyboard::Num0) + (wp - '0'));
+    }
+
+    WORD vkCode = LOWORD(wp);
+    WORD flags = HIWORD(lp);
+
+    WORD scanCode = LOBYTE(flags);
+    BOOL isExtended = (flags & KF_EXTENDED) == KF_EXTENDED;
+
+    if (isExtended)
+    {
+        scanCode = MAKEWORD(scanCode, 0xE0);
+    }
+
+    // This is to convert from just VK_SHIFT into VK_LSHIFT and RSHIFT
+    // I don't like the ergonomics of this at all :)
+    switch (vkCode)
+    {
+    case VK_SHIFT:
+    case VK_CONTROL:
+        vkCode = LOWORD(MapVirtualKeyW(scanCode, MAPVK_VSC_TO_VK_EX));
+        break;
+    }
+
+    switch (vkCode)
+    {
+    case VK_LSHIFT:
+        return EKeyboard::LShift;
+    case VK_RSHIFT:
+        return EKeyboard::RShift;
+    case VK_LCONTROL:
+        return EKeyboard::LCtrl;
+    case VK_RCONTROL:
+        return EKeyboard::RCtrl;
+    case VK_RETURN:
+        return EKeyboard::Return;
+    case VK_SPACE:
+        return EKeyboard::Space;
+    case VK_UP:
+        return EKeyboard::Up;
+    case VK_DOWN:
+        return EKeyboard::Down;
+    case VK_LEFT:
+        return EKeyboard::Left;
+    case VK_RIGHT:
+        return EKeyboard::Right;
+    }
+
+    return EKeyboard::Unknown;
 }
 
 // ------------------------------------------------------------

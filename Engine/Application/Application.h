@@ -3,6 +3,7 @@
 #include "Platform/Platform.h"
 
 #include <Engine/OstEngine.h>
+#include <Engine/System/InputReader.h>
 #include <GraphicsEngine/GraphicsEngine.h>
 
 // ------------------------------------------------------------
@@ -22,6 +23,7 @@ namespace ost
         void RequestExit();
         void BeginWindowResize();
         void ExitWindowResize();
+        void ProcessKeyEvent( EKeyboard key, bool state );
 
         void Run();
 
@@ -32,7 +34,7 @@ namespace ost
         GraphicsEngine _graphicsEngine;
 
         platform::NativeWindow _window = nullptr;
-        
+
         bool _hasExitRequest = false;
     };
 } // namespace ost

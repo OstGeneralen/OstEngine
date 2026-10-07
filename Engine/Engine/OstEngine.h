@@ -4,6 +4,7 @@
 #include "Engine/EngineContext.h"
 #include "Engine/Game/GameInterface.h"
 #include "Engine/Game/Scene.h"
+#include "Engine/System/InputReader.h"
 
 #include <OstTypes.h>
 
@@ -27,14 +28,19 @@ namespace ost
         void Tick();
         void RenderScene(IRenderer& renderer);
 
+        InputReader& GetInputReader();
+
     public: // EngineContext
         GraphicsAssetsManager& GetAssetManager() override;
         const TimeStructure& GetTime() const override;
         Scene& GetScene() override;
+        const InputReader& GetInput() const;
 
     private:
         Timer _timer;
         TimeStructure _timeData;
+
+        InputReader _input;
 
         UniquePtr<IGame> _gameInstance;
 

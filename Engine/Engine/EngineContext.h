@@ -8,6 +8,7 @@ namespace ost
 {
     class GraphicsAssetsManager;
     class Scene;
+    class InputReader;
 
     struct TimeStructure
     {
@@ -24,6 +25,7 @@ namespace ost
         virtual GraphicsAssetsManager& GetAssetManager() = 0;
         virtual const TimeStructure& GetTime() const = 0;
         virtual Scene& GetScene() = 0;
+        virtual const InputReader& GetInput() const = 0;
     };
 } // namespace ost
 

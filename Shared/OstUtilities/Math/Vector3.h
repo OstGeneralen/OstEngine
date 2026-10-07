@@ -144,8 +144,8 @@ namespace ost
 
         inline Vector3 GetNormalized() const
         {
-            Vector3 norm;
-            DxTypeStore(norm.dxType, DirectX::XMVector3Normalize(DxTypeLoad(dxType)));
+            Vector3 norm = *this;
+            norm.Normalize();
             return norm;
         }
 

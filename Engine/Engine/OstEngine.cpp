@@ -38,6 +38,8 @@ void OstEngine::Tick()
 
     _gameInstance->Update(*this);
     _scene.Tick(*this);
+
+    _input.EndFrame();
 }
 
 void OstEngine::RenderScene(IRenderer& renderer)
@@ -59,6 +61,11 @@ void OstEngine::RenderScene(IRenderer& renderer)
     renderer.ExecuteRenderCommands(cameraComponent->GetViewMatrix(renderer.GetRenderDimensions()));
 }
 
+InputReader& OstEngine::GetInputReader()
+{
+    return _input;
+}
+
 // ------------------------------------------------------------
 // Engine Context
 
@@ -75,6 +82,11 @@ const TimeStructure& ost::OstEngine::GetTime() const
 Scene& OstEngine::GetScene()
 {
     return _scene;
+}
+
+const InputReader& OstEngine::GetInput() const
+{
+    return _input;
 }
 
 // ------------------------------------------------------------

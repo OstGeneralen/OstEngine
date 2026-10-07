@@ -62,6 +62,11 @@ void ost::Application::ExitWindowResize()
     }
 }
 
+void ost::Application::ProcessKeyEvent(EKeyboard key, bool state)
+{
+    _coreEngine.GetInputReader().ProcessKeyEvent(key, state);
+}
+
 void ost::Application::Run()
 {
     while (!_hasExitRequest)
