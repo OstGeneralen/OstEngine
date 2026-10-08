@@ -25,7 +25,7 @@ void Game::Load(ost::EngineContext& context)
     _scene = context.CreateScene(true);
 
     ost::Actor* meshActor = _scene->CreateActor();
-    meshActor->AddComponent<ost::StaticMeshComponent>(context.AssetManager().LoadModel("Meshes/DebugShape.fbx"));
+    meshActor->AddComponent<ost::StaticMeshComponent>(context.AssetManager().LoadModel("Meshes/MultiMeshModel.fbx"));
 
     ost::Actor* cameraActor = _scene->CreateActor();
     auto& camera = cameraActor->AddComponent<ost::CameraComponent>();

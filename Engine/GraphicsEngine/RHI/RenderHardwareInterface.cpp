@@ -423,10 +423,10 @@ void RenderHardwareInterface::Draw(const Mesh& mesh, bool setBuffers) const
     if (setBuffers)
     {
         UINT strides[] = {sizeof(SurfaceVertex)};
-        UINT offsets[] = {mesh.vertexOffset};
+        UINT offsets[] = {0};
 
         _immediateContext->IASetVertexBuffers(0, 1, mesh.vertexBuffer._buffer.GetAddressOf(), strides, offsets);
-        _immediateContext->IASetIndexBuffer(mesh.indexBuffer._buffer.Get(), DXGI_FORMAT_R32_UINT, mesh.indexOffset);
+        _immediateContext->IASetIndexBuffer(mesh.indexBuffer._buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
     }
 
     _immediateContext->DrawIndexed(mesh.indexCount, mesh.indexOffset, mesh.vertexOffset);

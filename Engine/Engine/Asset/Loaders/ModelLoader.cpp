@@ -68,10 +68,10 @@ void ModelLoader::Load(const std::string& path, ModelCPUData& into)
             for (SizeType faceIndex = 0; faceIndex < importMesh->mNumFaces; ++faceIndex)
             {
                 const aiFace& importFace = importMesh->mFaces[faceIndex];
-
-                indices.Add(importFace.mIndices[0]);
-                indices.Add(importFace.mIndices[1]);
-                indices.Add(importFace.mIndices[2]);
+                
+                indices.Add(importFace.mIndices[0]);// + buildMesh.vertices.offset);
+                indices.Add(importFace.mIndices[1]);// + buildMesh.vertices.offset);
+                indices.Add(importFace.mIndices[2]);// + buildMesh.vertices.offset);
             }
         }
     }

@@ -75,11 +75,11 @@ void OstEngine::RenderScene(IRenderer& renderer)
     switch (viewProxy.projectionType)
     {
     case ViewRenderProxy::EProjectionType::Perspective: {
-        projection = Matrix4x4::CreatePerspectiveProjection(viewProxy.lValue, renderDimensions.X / renderDimensions.Y, 0.001f, 1000.0f);
+        projection = Matrix4x4::CreatePerspectiveProjection(viewProxy.lValue, renderDimensions.X / renderDimensions.Y, 0.1f, 100000.0f);
         break;
     }
     case ViewRenderProxy::EProjectionType::Orthographic: {
-        projection = Matrix4x4::CreateOrthographicsProjection(viewProxy.lValue * renderDimensions.X, viewProxy.rValue * renderDimensions.Y, 0.001f, 1000.0f);
+        projection = Matrix4x4::CreateOrthographicsProjection(viewProxy.lValue * renderDimensions.X, viewProxy.rValue * renderDimensions.Y, 0.1f, 100000.0f);
         break;
     }
     }
