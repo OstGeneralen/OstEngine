@@ -10,6 +10,9 @@ namespace ost
 {
     namespace math
     {
+        static constexpr Float32 RadToDeg = 180.0f / 3.141f;
+        static constexpr Float32 DegToRad = 3.141f / 180.0f;
+
         template <typename T>
         inline T Abs(const T& v)
         {
@@ -45,7 +48,7 @@ namespace ost
         {
             return Abs(a - b) < 0.0001f;
         }
-        
+
         template <>
         inline bool Equals<Float64>(const Float64& a, const Float64& b)
         {
