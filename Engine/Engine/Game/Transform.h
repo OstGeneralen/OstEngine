@@ -5,6 +5,7 @@
 #include <Math/Quaternion.h>
 #include <Math/Vector3.h>
 #include <Math/Vector4.h>
+#include <Utility/Delegate.h>
 
 // ------------------------------------------------------------
 
@@ -20,6 +21,8 @@ namespace ost
     {
     public:
         friend class Actor; // Actors are the owners of transforms!
+
+        Delegate<> OnMarkedDirty;
 
         void SetWorldPosition(const Vector3f& position)
         {
@@ -138,6 +141,8 @@ namespace ost
                 // Early out here. If we're already at a dirty world matrix, let's not traverse hierarchy again.
                 return;
             }
+
+            OnMarkedDirty.Broadcast();
 
             _worldMatrixDirty = true;
             for (auto c : _children)

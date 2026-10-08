@@ -2,6 +2,8 @@
 #pragma once
 #include <OstTypes.h>
 
+#include <Memory/UniquePtr.h>
+
 // ------------------------------------------------------------
 
 namespace ost
@@ -22,10 +24,12 @@ namespace ost
     public:
         virtual ~EngineContext() = default;
 
-        virtual GraphicsAssetsManager& GetAssetManager() = 0;
-        virtual const TimeStructure& GetTime() const = 0;
-        virtual Scene& GetScene() = 0;
-        virtual const InputReader& GetInput() const = 0;
+        virtual const TimeStructure& Time() const = 0;
+
+        virtual GraphicsAssetsManager& AssetManager() = 0;
+
+        virtual UniquePtr<Scene> CreateScene(bool makeActive) = 0;
+        virtual void SetActiveScene(Scene& scene) = 0;
     };
 } // namespace ost
 

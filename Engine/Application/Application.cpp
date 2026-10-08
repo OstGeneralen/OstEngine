@@ -1,9 +1,5 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Application.h"
-
-#include <Engine/Game/Actor.h>
-#include <Engine/Game/Components/CameraComponent.h>
-#include <Engine/Game/Components/StaticMeshComponent.h>
 #include <Engine/Game/GameInterface.h>
 #include <Utility/Timer.h>
 

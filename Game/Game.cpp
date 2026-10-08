@@ -1,15 +1,15 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Game.h"
 
-#include "InputMovementComponent.h"
-#include "RotatingComponent.h"
-
 #include <Engine/Asset/GraphicsAssetsManager.h>
+#include <Engine/Components/CameraComponent.h>
+#include <Engine/Components/SceneLightComponent.h>
+#include <Engine/Components/StaticMeshComponent.h>
 #include <Engine/EngineContext.h>
-#include <Engine/Game/Components/CameraComponent.h>
-#include <Engine/Game/Components/SceneLightComponent.h>
-#include <Engine/Game/Components/StaticMeshComponent.h>
-#include <Engine/Game/Scene.h>
+#include <Engine/World/Actor.h>
+#include <Engine/World/Scene.h>
+
+#include "KeyboardMovementComponent.h"
 
 // ------------------------------------------------------------
 
@@ -22,23 +22,23 @@ ost::UniquePtr<ost::IGame> ost::CreateGameInstance()
 
 void Game::Load(ost::EngineContext& context)
 {
-    auto& scene = context.GetScene();
+    _scene = context.CreateScene(true);
 
-    _meshActor = scene.NewActor();
-    _meshActor->AddComponent<ost::StaticMeshComponent>(context.GetAssetManager().LoadModel("Meshes/DebugShape.fbx"));
-    _meshActor->AddComponent<RotatingComponent>();
+    ost::Actor* meshActor = _scene->CreateActor();
+    meshActor->AddComponent<ost::StaticMeshComponent>(context.AssetManager().LoadModel("Meshes/DebugShape.fbx"));
 
-    _cameraActor = scene.NewActor();
-    auto& camera = _cameraActor->AddComponent<ost::CameraComponent>();
-    camera.MakePerspective(90.0f * (3.141f / 180.0f), 16.0f / 9.0f);
-    _cameraActor->GetTransform().Move({0.0f, 0.0f, -10.0f}, ost::ESpace::World);
-    _cameraActor->AddComponent<InputMovementComponent>();
+    ost::Actor* cameraActor = _scene->CreateActor();
+    auto& camera = cameraActor->AddComponent<ost::CameraComponent>();
+    camera.MakePerspective(90.0f * (3.141f / 180.0f));
+    cameraActor->transform.Move({0.0f, 0.0f, -10.0f}, ost::ESpace::World);
+    cameraActor->AddComponent<KeyboardMovementComponent>();
 
-    auto lightActor = scene.NewActor();
+    ost::Vector3f sunDir = {0.5f, -1.0f, 0.0f};
+    sunDir.Normalize();
+
+    ost::Actor* lightActor = _scene->CreateActor();
     auto& sceneLight = lightActor->AddComponent<ost::SceneLightComponent>();
-    sceneLight.SetAmbientColor(ost::Color(0.02f, 0.02f, 0.05f, 1.0f));
-    sceneLight.SetSunColor(ost::Color(1.0f, 0.95f, 0.9f, 1.0f));
-    lightActor->GetTransform().Rotate(ost::Quaternion::FromRotationAxis({0, 0, 1}, 1.5f));
+    sceneLight.SetSunDirection( sunDir );
 }
 
 void Game::Unload(ost::EngineContext& context)

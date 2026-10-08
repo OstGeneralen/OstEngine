@@ -3,8 +3,8 @@
 #include "Engine/Asset/GraphicsAssetsManager.h"
 #include "Engine/EngineContext.h"
 #include "Engine/Game/GameInterface.h"
-#include "Engine/Game/Scene.h"
 #include "Engine/System/InputReader.h"
+#include "Engine/World/GameWorld.h"
 
 #include <OstTypes.h>
 
@@ -31,21 +31,23 @@ namespace ost
         InputReader& GetInputReader();
 
     public: // EngineContext
-        GraphicsAssetsManager& GetAssetManager() override;
-        const TimeStructure& GetTime() const override;
-        Scene& GetScene() override;
+        GraphicsAssetsManager& AssetManager() override;
+        const TimeStructure& Time() const override;
         const InputReader& GetInput() const;
+        
+        UniquePtr<Scene> CreateScene(bool makeActive) override;
+        void SetActiveScene(Scene& scene) override;
 
     private:
         Timer _timer;
         TimeStructure _timeData;
-
+        GameWorld _gameWorld;
         InputReader _input;
-
+        
         UniquePtr<IGame> _gameInstance;
+        Scene* _pActiveScene;
 
         GraphicsAssetsManager _gfxAssetManager;
-        Scene _scene;
     };
 } // namespace ost
 

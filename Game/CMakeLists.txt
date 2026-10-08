@@ -4,8 +4,8 @@ project(OstGameProject)
 add_library(${PROJECT_NAME} STATIC
     Game.h
     Game.cpp
-    RotatingComponent.h
-    InputMovementComponent.h
+    KeyboardMovementComponent.h
+    KeyboardMovementComponent.cpp
 )
 
 set_target_properties(${PROJECT_NAME}

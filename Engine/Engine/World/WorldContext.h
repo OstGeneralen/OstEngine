@@ -1,7 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <Container/List.h>
-#include <Container/Map.h>
+#include "Engine/World/Component.h"
+
 #include <Memory/UniquePtr.h>
 #include <Utility/TypeID.h>
 
@@ -9,24 +9,11 @@
 
 namespace ost
 {
-    class Component;
-    class Actor;
-    class EngineContext;
-
-    class Scene
+    class WorldContext
     {
     public:
-        Scene();
-        ~Scene();
-
-        Actor* NewActor();
-
-        const List<UniquePtr<Actor>>& GetActors() const;
-
-        void Tick(EngineContext& context);
-
-    private:
-        List<UniquePtr<Actor>> _actors;
+        virtual void RegisterComponent(Actor& actor, ActorComponent& component) = 0;
+        virtual void UnregisterComponent(Actor& actor, ActorComponent& component) = 0;
     };
 } // namespace ost
 

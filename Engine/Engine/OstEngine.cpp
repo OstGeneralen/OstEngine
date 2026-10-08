@@ -1,11 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "OstEngine.h"
 
-#include "Game/Actor.h"
-#include "Game/Component.h"
-#include "Game/Components/CameraComponent.h"
-#include "Game/Components/SceneLightComponent.h"
-#include "Game/Components/StaticMeshComponent.h"
+#include "Engine/World/Scene.h"
 #include "Game/GameInterface.h"
 
 #include <Utility/Assert.h>
@@ -33,48 +29,63 @@ void OstEngine::Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceMan
 void OstEngine::Tick()
 {
     _timer.Tick();
-    _timeData.clampedDeltaTime = _timer.GetRestrictedDeltaTime(1.0f);
-    _timeData.deltaTime = _timer.GetDeltaTime();
-    _timeData.totalTime = _timer.GetTotalTime();
 
     _gameInstance->Update(*this);
-    _scene.Tick(*this);
+
+    ComponentContext componentContext{_timer, _input};
+    _gameWorld.Tick(componentContext);
 
     _input.EndFrame();
 }
 
 void OstEngine::RenderScene(IRenderer& renderer)
 {
-    const CameraComponent* cameraComponent = nullptr;
-    for (auto& actor : _scene.GetActors())
+    for (const auto& meshProxy : _gameWorld.GetRenderGraph().GetStaticMeshProxies())
     {
-        if (const CameraComponent* cameraComp = actor->GetComponent<CameraComponent>())
-        {
-            cameraComponent = cameraComp;
-        }
-
-        if (const StaticMeshComponent* staticMeshComp = actor->GetComponent<StaticMeshComponent>())
-        {
-            renderer.PushRenderCommand(staticMeshComp->GetModel(), actor->GetTransform().GetWorldTransform());
-        }
-
-        if (const SceneLightComponent* sceneLight = actor->GetComponent<SceneLightComponent>())
-        {
-            RenderLight directional;
-            directional.lightType = ELightType::Directional;
-            directional.color = sceneLight->GetSunColor();
-            directional.direction = Vector4f(sceneLight->GetOwner().GetTransform().TransformDirection(Vector3f{0.0f, 0.0f, 1.0f}), 0.0f);
-
-            RenderLight ambient;
-            ambient.lightType = ELightType::Ambient;
-            ambient.color = sceneLight->GetAmbientColor();
-
-            renderer.PushLightCommand(directional);
-            renderer.PushLightCommand(ambient);
-        }
+        renderer.PushRenderCommand(meshProxy.hModel, meshProxy.transform);
     }
 
-    renderer.ExecuteRenderCommands(cameraComponent->GetViewMatrix(renderer.GetRenderDimensions()));
+    for (const auto& lightProxy : _gameWorld.GetRenderGraph().GetLightProxies())
+    {
+        RenderLight cmd;
+
+        switch (lightProxy.type)
+        {
+        case ELightProxyType::Directional: {
+
+            cmd.lightType = ELightType::Directional;
+            cmd.direction = lightProxy.direction;
+            cmd.color = lightProxy.color;
+            break;
+        }
+        case ELightProxyType::Ambient: {
+            cmd.lightType = ELightType::Ambient;
+            cmd.color = lightProxy.color;
+            break;
+        }
+        }
+
+        renderer.PushLightCommand(cmd);
+    }
+
+    const ViewRenderProxy& viewProxy = _gameWorld.GetRenderGraph().GetViewProxy();
+    const Vector2f renderDimensions = renderer.GetRenderDimensions();
+
+    Matrix4x4 projection;
+    switch (viewProxy.projectionType)
+    {
+    case ViewRenderProxy::EProjectionType::Perspective: {
+        projection = Matrix4x4::CreatePerspectiveProjection(viewProxy.lValue, renderDimensions.X / renderDimensions.Y, 0.001f, 1000.0f);
+        break;
+    }
+    case ViewRenderProxy::EProjectionType::Orthographic: {
+        projection = Matrix4x4::CreateOrthographicsProjection(viewProxy.lValue * renderDimensions.X, viewProxy.rValue * renderDimensions.Y, 0.001f, 1000.0f);
+        break;
+    }
+    }
+
+    Matrix4x4 viewProjection = viewProxy.transform.GetInverse() * projection;
+    renderer.ExecuteRenderCommands(viewProjection);
 }
 
 InputReader& OstEngine::GetInputReader()
@@ -85,19 +96,29 @@ InputReader& OstEngine::GetInputReader()
 // ------------------------------------------------------------
 // Engine Context
 
-GraphicsAssetsManager& OstEngine::GetAssetManager()
+GraphicsAssetsManager& OstEngine::AssetManager()
 {
     return _gfxAssetManager;
 }
 
-const TimeStructure& ost::OstEngine::GetTime() const
+const TimeStructure& ost::OstEngine::Time() const
 {
     return _timeData;
 }
 
-Scene& OstEngine::GetScene()
+UniquePtr<Scene> OstEngine::CreateScene(bool makeActive)
 {
-    return _scene;
+    UniquePtr<Scene> created = Ptr::NewUnique<Scene>(_gameWorld);
+    if (makeActive)
+    {
+        _pActiveScene = created.Get();
+    }
+    return created;
+}
+
+void OstEngine::SetActiveScene(Scene& scene)
+{
+    _pActiveScene = &scene;
 }
 
 const InputReader& OstEngine::GetInput() const

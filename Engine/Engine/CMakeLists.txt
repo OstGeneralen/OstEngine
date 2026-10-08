@@ -16,18 +16,33 @@ add_library(${PROJECT_NAME} STATIC
     Game/GameInterface.h
     Asset/GraphicsAssetsManager.h
     Asset/GraphicsAssetsManager.cpp
-    Game/Scene.h
-    Game/Actor.h
-    Game/Component.h
     Game/Transform.h
-    Game/Actor.cpp
-    Game/Scene.cpp
-    Game/Components/StaticMeshComponent.h
-    Game/Components/CameraComponent.h
     EngineContext.h
     System/InputReader.h
     System/InputReader.cpp
-    Game/Components/SceneLightComponent.h
+    World/Component.h
+    World/RenderGraph.h
+    World/ComponentInitializer.h
+    World/Component.cpp
+    Components/StaticMeshComponent.h
+    Components/StaticMeshComponent.cpp
+    World/RenderGraph.cpp
+    World/ComponentInitializer.cpp
+    World/ComponentTicker.h
+    World/IComponentTicker.h
+    World/ComponentTicker.cpp
+    World/ComponentContext.h
+    World/GameWorld.h
+    World/GameWorld.cpp
+    Components/CameraComponent.h
+    Components/CameraComponent.cpp
+    World/Actor.h
+    World/WorldContext.h
+    World/Actor.cpp
+    World/Scene.h
+    World/Scene.cpp
+    Components/SceneLightComponent.h
+    Components/SceneLightComponent.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

@@ -180,15 +180,15 @@ namespace ost
         }
 
     private:
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMFLOAT3& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMFLOAT3& dxt)
         {
             return DirectX::XMLoadFloat3(&dxt);
         }
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMINT3& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMINT3& dxt)
         {
             return DirectX::XMLoadSInt3(&dxt);
         }
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMUINT3& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMUINT3& dxt)
         {
             return DirectX::XMLoadUInt3(&dxt);
         }

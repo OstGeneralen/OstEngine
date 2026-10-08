@@ -1,25 +1,23 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
-#pragma once
-#include <Engine/Game/GameInterface.h>
-#include <Engine/World/Scene.h>
-#include <Memory/UniquePtr.h>
+#include "Scene.h"
+#include "Actor.h"
 
-
-// ------------------------------------------------------------
+using namespace ost;
 
 // ------------------------------------------------------------
 
-class Game : public ost::IGame
+Scene::Scene(WorldContext& worldContext)
+    : _actors{}
+    , _worldContext{worldContext}
 {
-public:
-    void Load(ost::EngineContext& context) override;
-    void Unload(ost::EngineContext& context) override;
+}
 
-    void Update(ost::EngineContext& context) override;
+// ------------------------------------------------------------
 
-private:
-    ost::UniquePtr<ost::Scene> _scene;
-};
+Actor* Scene::CreateActor()
+{
+    return _actors.Add(Ptr::NewUnique<Actor>(_worldContext)).Get();
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
