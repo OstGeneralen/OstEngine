@@ -2,7 +2,6 @@
 #pragma once
 #include "GraphicsEngine/Objects/ObjectHandles.h"
 #include "GraphicsEngine/Resources/IGraphicsResourceManager.h"
-#include "GraphicsEngine/Resources/MaterialFactory.h"
 
 // Actual Resource Includes
 #include "GraphicsEngine/Objects/Model.h"
@@ -32,8 +31,6 @@ namespace ost
         SlotMap<Texture> _textures;
         SlotMap<Model> _models;
         SlotMap<Mesh> _meshes;
-
-        MaterialFactory _materialFactory;
 
         const RenderHardwareInterface* _pRHI;
     };

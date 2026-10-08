@@ -16,14 +16,10 @@ add_library(${PROJECT_NAME} STATIC
     GraphicsEngine.cpp
     GraphicsEngineSettings.h
     Objects/Model.h
-    Objects/Material.h
     Rendering/Vertex.h
-    Objects/Material.cpp
     Rendering/RenderPipelineConstants.h
     Objects/ObjectHandles.h
     Rendering/RenderCommand.h
-    Resources/MaterialFactory.h
-    Resources/MaterialFactory.cpp
     Resources/IGraphicsResourceManager.h
     Resources/GraphicsResourceManager.h
     Resources/GraphicsResourceManager.cpp

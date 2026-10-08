@@ -13,7 +13,6 @@ using namespace ost;
 void GraphicsResourceManager::Initialize(const RenderHardwareInterface& rhi)
 {
     _pRHI = &rhi;
-    _materialFactory.Initialize(rhi);
 }
 
 // ------------------------------------------------------------
