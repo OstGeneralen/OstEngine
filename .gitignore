@@ -5,6 +5,7 @@
 *.pdb
 *.exe
 *.lib
+*.dll
 
 # Don't ignore any of the prebuilt static libraries we depend on
 !**/ThirdParty/Lib/*
