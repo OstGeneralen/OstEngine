@@ -3,6 +3,9 @@
 #include <OstTypes.h>
 
 // ------------------------------------------------------------
+// NOTE: Make sure these always match 1-1 with the relevant
+// resource binding in EngineAssets/Shaders/ShaderSlots.hlsli
+// ------------------------------------------------------------
 
 namespace ost
 {
@@ -16,6 +19,9 @@ namespace ost
         Material5,
         Material6,
         Material7,
+        Albedo,
+        Normal,
+        ORM,
     };
 
     enum class ESamplerSlot : Uint32

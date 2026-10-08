@@ -10,6 +10,10 @@
 #define MATERIAL_TEXTURE_SLOT_5 register(t5)
 #define MATERIAL_TEXTURE_SLOT_6 register(t6)
 #define MATERIAL_TEXTURE_SLOT_7 register(t7)
+#define TEXTURE_SLOT_ALBEDO register(t8)
+#define TEXTURE_SLOT_NORMAL register(t9)
+#define TEXTURE_SLOT_ORM register(t10)
+
 
 #define SAMPLER_SLOT_POINT_WRAP register(s0)
 #define SAMPLER_SLOT_BILINEAR_WRAP register(s1)
