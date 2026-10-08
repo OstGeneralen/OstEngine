@@ -2,9 +2,8 @@
 #pragma once
 #include "Math/Math.h"
 
-#include <OstTypes.h>
-
 #include <DirectXMath.h>
+#include <OstTypes.h>
 
 // ------------------------------------------------------------
 
@@ -157,28 +156,28 @@ namespace ost
         }
 
     private:
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMFLOAT2& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMFLOAT2& dxt)
         {
             return DirectX::XMLoadFloat2(&dxt);
         }
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMINT2& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMINT2& dxt)
         {
             return DirectX::XMLoadSInt2(&dxt);
         }
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMUINT2& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMUINT2& dxt)
         {
             return DirectX::XMLoadUInt2(&dxt);
         }
 
-        inline void DxTypeStore(DirectX::XMFLOAT2& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMFLOAT2& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreFloat2(&dxType, xmv);
         }
-        inline void DxTypeStore(DirectX::XMINT2& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMINT2& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreSInt2(&dxType, xmv);
         }
-        inline void DxTypeStore(DirectX::XMUINT2& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMUINT2& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreUInt2(&dxType, xmv);
         }

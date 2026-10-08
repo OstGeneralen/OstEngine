@@ -193,15 +193,15 @@ namespace ost
             return DirectX::XMLoadUInt3(&dxt);
         }
 
-        inline void DxTypeStore(DirectX::XMFLOAT3& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMFLOAT3& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreFloat3(&dxType, xmv);
         }
-        inline void DxTypeStore(DirectX::XMINT3& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMINT3& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreSInt3(&dxType, xmv);
         }
-        inline void DxTypeStore(DirectX::XMUINT3& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMUINT3& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreUInt3(&dxType, xmv);
         }

@@ -186,28 +186,28 @@ namespace ost
         }
 
     private:
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMFLOAT4& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMFLOAT4& dxt)
         {
             return DirectX::XMLoadFloat4(&dxt);
         }
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMINT4& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMINT4& dxt)
         {
             return DirectX::XMLoadSInt4(&dxt);
         }
-        inline DirectX::XMVECTOR DxTypeLoad(const DirectX::XMUINT4& dxt)
+        inline static DirectX::XMVECTOR DxTypeLoad(const DirectX::XMUINT4& dxt)
         {
             return DirectX::XMLoadUInt4(&dxt);
         }
 
-        inline void DxTypeStore(DirectX::XMFLOAT4& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMFLOAT4& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreFloat4(&dxType, xmv);
         }
-        inline void DxTypeStore(DirectX::XMINT4& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMINT4& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreSInt4(&dxType, xmv);
         }
-        inline void DxTypeStore(DirectX::XMUINT4& dxType, DirectX::XMVECTOR xmv)
+        inline static void DxTypeStore(DirectX::XMUINT4& dxType, DirectX::XMVECTOR xmv)
         {
             DirectX::XMStoreUInt4(&dxType, xmv);
         }
