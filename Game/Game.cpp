@@ -26,7 +26,7 @@ void Game::Load(ost::EngineContext& context)
 
     // Let there be a thing
     ost::Actor* meshActor = _scene->CreateActor();
-    meshActor->AddComponent<ost::StaticMeshComponent>(context.Assets().LoadModelFromFile("Meshes/Room.fbx"));
+    meshActor->AddComponent<ost::StaticMeshComponent>(context.Assets().LoadModelFromFile("Meshes/RoomColored.fbx"));
 
     // Let there be eyes
     ost::Actor* cameraActor = _scene->CreateActor();

@@ -8,7 +8,7 @@ SurfacePixel VSMain(SurfaceVertex vert)
     pixel.Normal = normalize(mul( float4(vert.Normal.xyz, 0), ObjectBuf_Transform ));
     pixel.Tangent = vert.Tangent;
     pixel.UV = vert.UV;
-    pixel.BaseColor = float4(1,1,1,1);
+    pixel.BaseColor = vert.BaseColor;
     return pixel;
 }
 
