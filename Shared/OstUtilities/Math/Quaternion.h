@@ -40,6 +40,16 @@ namespace ost
             return created;
         }
 
+        static Quaternion FromLookDirection(const Vector3f& position, const Vector3f& forward, const Vector3f& up)
+        {
+            DirectX::XMMATRIX mat =
+                DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&position.dxType), DirectX::XMLoadFloat3(&forward.dxType), DirectX::XMLoadFloat3(&up.dxType));
+
+            Quaternion created;
+            DxTypeStore(created.dxType, DirectX::XMQuaternionRotationMatrix(mat));
+            return created;
+        }
+
     public:
         Quaternion()
             : X{0}

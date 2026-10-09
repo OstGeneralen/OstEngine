@@ -1,24 +1,27 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <string>
+#include "Engine/World/Transform.h"
 
-#include <GraphicsEngine/Resources/ObjectHandles.h>
+#include <Container/List.h>
+#include <Memory/UniquePtr.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class IGraphicsResourceManager;
+    class WorldContext;
+    class Actor;
 
-    class GraphicsAssetsManager
+    class Scene
     {
     public:
-        void SetResourceManager(IGraphicsResourceManager& gfxManager);
+        Scene(WorldContext& worldContext);
 
-        ModelHandle LoadModel(const std::string& modelFilePath);
+        Actor* CreateActor();
 
     private:
-        IGraphicsResourceManager* _pGfxResourceManager;
+        List<UniquePtr<Actor>> _actors;
+        WorldContext& _worldContext;
     };
 } // namespace ost
 

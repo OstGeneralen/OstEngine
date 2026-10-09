@@ -10,7 +10,7 @@
 
 KeyboardMovementComponent::KeyboardMovementComponent()
 {
-    _shouldTick = true;
+    AddFlag(ost::EComponentFlag::Ticked);
 }
 
 void KeyboardMovementComponent::Update(ost::ComponentContext& context)

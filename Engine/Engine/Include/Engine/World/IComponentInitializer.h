@@ -1,25 +1,25 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <string>
-
-#include <GraphicsEngine/Resources/ObjectHandles.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class IGraphicsResourceManager;
+    class RenderComponent;
+    class ActorComponent;
+    class Actor;
 
-    class GraphicsAssetsManager
+    class IComponentInitializer
     {
     public:
-        void SetResourceManager(IGraphicsResourceManager& gfxManager);
+        virtual ~IComponentInitializer() = default;
 
-        ModelHandle LoadModel(const std::string& modelFilePath);
+        virtual void InitializeAsRenderComponent(RenderComponent& component) = 0;
+        virtual void DestroyAsRenderComponent(RenderComponent& component) = 0;
 
-    private:
-        IGraphicsResourceManager* _pGfxResourceManager;
+        virtual Actor& GetOwningActor() = 0;
     };
+
 } // namespace ost
 
 // ------------------------------------------------------------

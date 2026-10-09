@@ -3,7 +3,7 @@
 
 #include "KeyboardMovementComponent.h"
 
-#include <Engine/Asset/GraphicsAssetsManager.h>
+#include <Engine/Asset/IAssetManager.h>
 #include <Engine/Components/CameraComponent.h>
 #include <Engine/Components/SceneLightComponent.h>
 #include <Engine/Components/StaticMeshComponent.h>
@@ -26,7 +26,7 @@ void Game::Load(ost::EngineContext& context)
 
     // Let there be a thing
     ost::Actor* meshActor = _scene->CreateActor();
-    meshActor->AddComponent<ost::StaticMeshComponent>(context.AssetManager().LoadModel("Meshes/Room.fbx"));
+    meshActor->AddComponent<ost::StaticMeshComponent>(context.Assets().LoadModelFromFile("Meshes/Room.fbx"));
 
     // Let there be eyes
     ost::Actor* cameraActor = _scene->CreateActor();
@@ -38,7 +38,7 @@ void Game::Load(ost::EngineContext& context)
     // Let there be light
     ost::Actor* lightActor = _scene->CreateActor();
     auto& sceneLight = lightActor->AddComponent<ost::SceneLightComponent>();
-    sceneLight.SetSunDirection(ost::Vector3f(0.5f, -1.0f, 0.0f).GetNormalized());
+    sceneLight.SetSunDirection(ost::Vector3f(3.0f, -8.0f, 1.0f).GetNormalized());
 }
 
 void Game::Unload(ost::EngineContext& context)

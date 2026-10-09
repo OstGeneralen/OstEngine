@@ -1,24 +1,25 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "RHI/RHIMinimal.h"
 #include <string>
-
-#include <GraphicsEngine/Resources/ObjectHandles.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class IGraphicsResourceManager;
-
-    class GraphicsAssetsManager
+    struct Buffer
     {
-    public:
-        void SetResourceManager(IGraphicsResourceManager& gfxManager);
+        friend class RenderHardwareInterface;
 
-        ModelHandle LoadModel(const std::string& modelFilePath);
+        Buffer();
+        Buffer(const Buffer&);
+        ~Buffer();
+
+        void SetDebugName(const std::string& n) const;
 
     private:
-        IGraphicsResourceManager* _pGfxResourceManager;
+        SizeType _allocSize;
+        ComPtr<RHIBuffer> _buffer;
     };
 } // namespace ost
 

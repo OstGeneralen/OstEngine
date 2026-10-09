@@ -1,13 +1,10 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Application.h"
+
 #include <Engine/Game/GameInterface.h>
 #include <Utility/Timer.h>
 
 using namespace ost;
-
-// ------------------------------------------------------------
-
-LRESULT WindowProc(HWND, UINT, WPARAM, LPARAM);
 
 // ------------------------------------------------------------
 
@@ -22,13 +19,19 @@ void Application::Startup()
 
     _graphicsEngineSettings.renderer.clearColor = Colors::Black;
 
-    _graphicsEngine.Initialize(_graphicsEngineSettings);
-    _coreEngine.Initialize(CreateGameInstance(), _graphicsEngine.GetResourceManager());
+    _graphicsEngine = IGraphicsEngine::CreateNew(_graphicsEngineSettings);
+
+    OstEngineSettings coreEngineSettings;
+    coreEngineSettings.gameInstance = CreateGameInstance();
+    coreEngineSettings.pGfxResourceManager = &_graphicsEngine->GetResourceManager();
+
+    _coreEngine = IOstEngine::CreateNew(std::move(coreEngineSettings));
 }
 
 void ost::Application::Shutdown()
 {
-    _graphicsEngine.Shutdown();
+    _graphicsEngine = nullptr;
+    _coreEngine = nullptr;
     platform::CloseWindow(_window);
 }
 
@@ -43,7 +46,7 @@ void ost::Application::BeginWindowResize()
 
 void ost::Application::ExitWindowResize()
 {
-    if (!_graphicsEngine.IsInitialized())
+    if (!_graphicsEngine)
     {
         return;
     }
@@ -54,13 +57,13 @@ void ost::Application::ExitWindowResize()
     if (oldSize != newSize)
     {
         _graphicsEngineSettings.output.clientSize = newSize;
-        _graphicsEngine.UpdateSettings(_graphicsEngineSettings);
+        _graphicsEngine->UpdateSettings(_graphicsEngineSettings);
     }
 }
 
 void ost::Application::ProcessKeyEvent(EKeyboard key, bool state)
 {
-    _coreEngine.GetInputReader().ProcessKeyEvent(key, state);
+    _coreEngine->GetInputReader().ProcessKeyEvent(key, state);
 }
 
 void ost::Application::Run()
@@ -68,9 +71,9 @@ void ost::Application::Run()
     while (!_hasExitRequest)
     {
         platform::WindowUpdate(_window);
-        _coreEngine.Tick();
-        _coreEngine.RenderScene(_graphicsEngine);
-        _graphicsEngine.ClearRenderCommands();
+        _coreEngine->Tick();
+        _coreEngine->RenderSceneGraph(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
+        _graphicsEngine->ExecuteAndClearCommandQueue();
     }
 
     // gamePtr->Unload();

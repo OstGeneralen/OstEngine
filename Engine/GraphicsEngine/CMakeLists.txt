@@ -2,32 +2,38 @@ cmake_minimum_required(VERSION 4.2)
 project(${OST_GRAPHICS_ENGINE_NAME})
 
 add_library(${PROJECT_NAME} STATIC
-    RHI/RenderHardwareInterface.h
-    RHI/RenderHardwareInterface.cpp
-    RHI/RHIMinimal.h
-    Objects/Texture.h
-    Objects/Texture.cpp
-    RHI/RHIInternal.h
-    Objects/Buffer.h
-    Objects/Buffer.cpp
-    Objects/PipelineStateObject.h
-    Objects/PipelineStateObject.cpp
-    GraphicsEngine.h
-    GraphicsEngine.cpp
-    GraphicsEngineSettings.h
-    Objects/Model.h
-    Rendering/Vertex.h
-    Rendering/RenderPipelineConstants.h
-    Objects/ObjectHandles.h
-    Rendering/RenderCommand.h
-    Resources/IGraphicsResourceManager.h
-    Resources/GraphicsResourceManager.h
-    Resources/GraphicsResourceManager.cpp
-    Rendering/Buffers.h
-    Resources/ShaderCompiler.h
-    Resources/ShaderCompiler.cpp
-    Rendering/IRenderer.h
-    Rendering/Light.h
+    Include/GraphicsEngine/Rendering/Vertex.h
+    Include/GraphicsEngine/Rendering/IRenderer.h
+    Include/GraphicsEngine/Resources/ObjectHandles.h
+    Include/GraphicsEngine/Resources/TextureCPUData.h
+    Include/GraphicsEngine/Resources/ModelCPUData.h
+    Include/GraphicsEngine/Resources/IGraphicsResourceManager.h
+    Include/GraphicsEngine/Rendering/IRenderQueue.h
+    Include/GraphicsEngine/IGraphicsEngine.h
+    Source/RHI/RenderHardwareInterface.h
+    Source/RHI/RenderHardwareInterface.cpp
+    Source/RHI/RHIMinimal.h
+    Source/Objects/Texture.h
+    Source/Objects/Texture.cpp
+    Source/RHI/RHIInternal.h
+    Source/Objects/Buffer.h
+    Source/Objects/Buffer.cpp
+    Source/Objects/PipelineStateObject.h
+    Source/Objects/PipelineStateObject.cpp
+    Source/GraphicsEngine.cpp
+    Source/GraphicsEngine.h
+    Source/Objects/Model.h
+    Source/Rendering/RenderPipelineConstants.h
+    Source/Rendering/RenderCommand.h
+    Source/Resources/GraphicsResourceManager.h
+    Source/Resources/GraphicsResourceManager.cpp
+    Source/Rendering/Buffers.h
+    Source/Resources/ShaderCompiler.h
+    Source/Resources/ShaderCompiler.cpp
+    Source/Rendering/ForwardRenderer.h
+    Source/Rendering/ForwardRenderer.cpp
+    Source/Rendering/RenderQueue.h
+    Source/Rendering/RenderQueue.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -36,14 +42,15 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_include_directories(${PROJECT_NAME}
-    PUBLIC ${OSTENGINE_INCLUDE_DIR}
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Source
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC d3d11.lib
-    PUBLIC dxgi.lib
+    PRIVATE d3d11.lib
+    PRIVATE dxgi.lib
     PRIVATE d3dcompiler.lib
+    PRIVATE dxguid.lib
     PUBLIC ${OST_COMMON_NAME}
     PUBLIC ${OST_LOGGER_NAME}
 )

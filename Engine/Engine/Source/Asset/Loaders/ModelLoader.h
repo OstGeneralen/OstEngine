@@ -1,24 +1,16 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include <GraphicsEngine/Resources/ModelCPUData.h>
 #include <string>
-
-#include <GraphicsEngine/Resources/ObjectHandles.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class IGraphicsResourceManager;
-
-    class GraphicsAssetsManager
+    class ModelLoader
     {
     public:
-        void SetResourceManager(IGraphicsResourceManager& gfxManager);
-
-        ModelHandle LoadModel(const std::string& modelFilePath);
-
-    private:
-        IGraphicsResourceManager* _pGfxResourceManager;
+        void Load(const std::string& path, ModelCPUData& into);
     };
 } // namespace ost
 

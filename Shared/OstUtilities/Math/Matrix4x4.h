@@ -5,9 +5,8 @@
 #include "Math/Matrix3x3.h"
 #include "Math/Vector4.h"
 
-#include <OstTypes.h>
-
 #include <DirectXMath.h>
+#include <OstTypes.h>
 
 // ------------------------------------------------------------
 
@@ -46,6 +45,15 @@ namespace ost
             const DirectX::XMFLOAT3 scale = {1, 1, 1};
             StoreDxType(result.dxType, DirectX::XMMatrixAffineTransformation(DirectX::XMLoadFloat3(&scale), DirectX::XMVectorZero(),
                                                                              DirectX::XMLoadFloat4(&rotation.dxType), DirectX::XMLoadFloat3(&translation.dxType)));
+            return result;
+        }
+
+        inline static Matrix4x4 CreateLookToMatrix(const Vector3f& pos, const Vector3f& dir, const Vector3f& up)
+        {
+            Matrix4x4 result;
+            StoreDxType(result.dxType,
+                        DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&pos.dxType), DirectX::XMLoadFloat3(&dir.dxType), DirectX::XMLoadFloat3(&up.dxType)));
+
             return result;
         }
 

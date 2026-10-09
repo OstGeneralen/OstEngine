@@ -1,24 +1,22 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <string>
+#include "GraphicsEngine/Resources/ObjectHandles.h"
 
-#include <GraphicsEngine/Resources/ObjectHandles.h>
+#include <OstTypes.h>
+
+#include <Math/Matrix4x4.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class IGraphicsResourceManager;
+    struct Mesh;
+    class Material;
 
-    class GraphicsAssetsManager
+    struct RenderCommand
     {
-    public:
-        void SetResourceManager(IGraphicsResourceManager& gfxManager);
-
-        ModelHandle LoadModel(const std::string& modelFilePath);
-
-    private:
-        IGraphicsResourceManager* _pGfxResourceManager;
+        const Mesh* pMesh;
+        Matrix4x4 transform;
     };
 } // namespace ost
 

@@ -1,48 +1,47 @@
 cmake_minimum_required(VERSION 4.2)
 project(${OST_ENGINE_NAME})
 
-
 add_library(${PROJECT_NAME} STATIC
-    OstEngine.h
-    OstEngine.cpp
-    Asset/Asset.h
-    Asset/AssetGuid.h
-    Asset/ImageAsset.h
-    Asset/ModelAsset.h
-    Asset/Loaders/ImageLoader.h
-    Asset/Loaders/ImageLoader.cpp
-    Asset/Loaders/ModelLoader.h
-    Asset/Loaders/ModelLoader.cpp
-    Game/GameInterface.h
-    Asset/GraphicsAssetsManager.h
-    Asset/GraphicsAssetsManager.cpp
-    Game/Transform.h
-    EngineContext.h
-    System/InputReader.h
-    System/InputReader.cpp
-    World/Component.h
-    World/RenderGraph.h
-    World/ComponentInitializer.h
-    World/Component.cpp
-    Components/StaticMeshComponent.h
-    Components/StaticMeshComponent.cpp
-    World/RenderGraph.cpp
-    World/ComponentInitializer.cpp
-    World/ComponentTicker.h
-    World/IComponentTicker.h
-    World/ComponentTicker.cpp
-    World/ComponentContext.h
-    World/GameWorld.h
-    World/GameWorld.cpp
-    Components/CameraComponent.h
-    Components/CameraComponent.cpp
-    World/Actor.h
-    World/WorldContext.h
-    World/Actor.cpp
-    World/Scene.h
-    World/Scene.cpp
-    Components/SceneLightComponent.h
-    Components/SceneLightComponent.cpp
+    Include/Engine/Asset/Asset.h
+    Include/Engine/Asset/AssetGuid.h
+    Include/Engine/Asset/IAssetManager.h
+    Include/Engine/Components/CameraComponent.h
+    Include/Engine/Components/SceneLightComponent.h
+    Include/Engine/Components/StaticMeshComponent.h
+    Include/Engine/Game/GameInterface.h
+    Include/Engine/World/Actor.h
+    Include/Engine/World/Component.h
+    Include/Engine/World/ComponentContext.h
+    Include/Engine/World/IComponentInitializer.h
+    Include/Engine/World/Scene.h
+    Include/Engine/World/SceneGraph.h
+    Include/Engine/World/Transform.h
+    Include/Engine/World/WorldContext.h
+    Include/Engine/EngineContext.h
+    Include/Engine/IOstEngine.h
+    Include/Engine/System/InputReader.h
+    Source/Asset/Loaders/ImageLoader.cpp
+    Source/Asset/Loaders/ImageLoader.h
+    Source/Asset/Loaders/ModelLoader.cpp
+    Source/Asset/Loaders/ModelLoader.h
+    Source/Asset/AssetManager.h
+    Source/Asset/AssetManager.cpp
+    Source/Components/CameraComponent.cpp
+    Source/Components/SceneLightComponent.cpp
+    Source/Components/StaticMeshComponent.cpp
+    Source/World/Actor.cpp
+    Source/World/Component.cpp
+    Source/World/ComponentInitializer.cpp
+    Source/World/ComponentInitializer.h
+    Source/World/ComponentTicker.cpp
+    Source/World/ComponentTicker.h
+    Source/World/GameWorld.cpp
+    Source/World/GameWorld.h
+    Source/World/Scene.cpp
+    Source/World/SceneGraph.cpp
+    Source/System/InputReader.cpp
+    Source/OstEngine.cpp
+    Source/OstEngine.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -51,7 +50,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_include_directories(${PROJECT_NAME}
-    PUBLIC ${OSTENGINE_INCLUDE_DIR}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Source
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Inclue/Engine
 )
 
 target_link_libraries(${PROJECT_NAME}

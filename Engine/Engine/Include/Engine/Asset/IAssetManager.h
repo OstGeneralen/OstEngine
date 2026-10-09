@@ -1,6 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <string>
+#include <filesystem>
 
 #include <GraphicsEngine/Resources/ObjectHandles.h>
 
@@ -8,17 +8,14 @@
 
 namespace ost
 {
-    class IGraphicsResourceManager;
-
-    class GraphicsAssetsManager
+    class IAssetManager
     {
     public:
-        void SetResourceManager(IGraphicsResourceManager& gfxManager);
+        virtual TextureHandle LoadTextureFromFile(const std::filesystem::path& path) = 0;
+        virtual ModelHandle LoadModelFromFile(const std::filesystem::path& path) = 0;
 
-        ModelHandle LoadModel(const std::string& modelFilePath);
-
-    private:
-        IGraphicsResourceManager* _pGfxResourceManager;
+        virtual void Release( TextureHandle h ) = 0;
+        virtual void Release( ModelHandle h ) = 0;
     };
 } // namespace ost
 

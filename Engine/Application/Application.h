@@ -2,9 +2,10 @@
 #pragma once
 #include "Platform/Platform.h"
 
-#include <Engine/OstEngine.h>
+#include <Engine/IOstEngine.h>
 #include <Engine/System/InputReader.h>
-#include <GraphicsEngine/GraphicsEngine.h>
+#include <GraphicsEngine/IGraphicsEngine.h>
+#include <Memory/UniquePtr.h>
 
 // ------------------------------------------------------------
 
@@ -23,15 +24,14 @@ namespace ost
         void RequestExit();
         void BeginWindowResize();
         void ExitWindowResize();
-        void ProcessKeyEvent( EKeyboard key, bool state );
+        void ProcessKeyEvent(EKeyboard key, bool state);
 
         void Run();
 
     private:
-        OstEngine _coreEngine;
-
         GraphicsEngineSettings _graphicsEngineSettings;
-        GraphicsEngine _graphicsEngine;
+        UniquePtr<IGraphicsEngine> _graphicsEngine;
+        UniquePtr<IOstEngine> _coreEngine;
 
         platform::NativeWindow _window = nullptr;
 
