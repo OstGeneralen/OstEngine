@@ -47,8 +47,10 @@ namespace ost
 
     using TextureHandle = GfxHandle<struct HNDType_Texture>;
     using MaterialHandle = GfxHandle<struct HNDType_Material>;
+    using PSOHandle = GfxHandle<struct HNDType_PSO>;
     using ModelHandle = GfxHandle<struct HNDType_Model>;
     using MeshHandle = GfxHandle<struct HNDType_Mesh>;
+    using BufferHandle = GfxHandle<struct HNDType_Buffer>;
 } // namespace ost
 
 // ------------------------------------------------------------

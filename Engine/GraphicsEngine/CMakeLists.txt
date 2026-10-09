@@ -34,6 +34,13 @@ add_library(${PROJECT_NAME} STATIC
     Source/Rendering/ForwardRenderer.cpp
     Source/Rendering/RenderQueue.h
     Source/Rendering/RenderQueue.cpp
+    Include/GraphicsEngine/Materials/Material.h
+    Include/GraphicsEngine/Materials/MaterialInstance.h
+    Include/GraphicsEngine/Materials/MaterialPropertyCollection.h
+    Include/GraphicsEngine/Materials/MaterialPropertyTypes.h
+    Source/Materials/Material.cpp
+    Source/Materials/MaterialInstance.cpp
+    Source/Materials/MaterialPropertyCollection.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
