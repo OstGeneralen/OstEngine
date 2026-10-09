@@ -7,6 +7,8 @@ add_executable(${PROJECT_NAME}
     Application.cpp
     Platform/Platform.h
     Platform/PlatformWin32.cpp
+    CoutLogSink.h
+    CoutLogSink.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

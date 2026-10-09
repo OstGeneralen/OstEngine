@@ -1,6 +1,10 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Application.h"
 
+#include "CoutLogSink.h"
+
+#include <OstLog.h>
+
 #include <Engine/Game/GameInterface.h>
 #include <Utility/Timer.h>
 
@@ -10,6 +14,8 @@ using namespace ost;
 
 void Application::Startup()
 {
+    Log::RegisterLogSink(Ptr::NewUnique<CoutLogSink>());
+
     _window = platform::NewWindow(*this, "Ost Application", {1600, 900}, false);
 
     // Create gfx settings and init graphics engine

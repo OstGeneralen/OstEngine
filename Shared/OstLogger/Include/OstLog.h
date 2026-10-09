@@ -46,6 +46,10 @@ namespace Log
 
     // ------------------------------------------------------------
 
+    void RegisterLogSink(ost::UniquePtr<ILogSink>&& sink);
+
+    // ------------------------------------------------------------
+
     /// @brief Log a verbose message
     /// @tparam ...TArgs
     /// @param c The category to log this message under
@@ -145,7 +149,7 @@ public:
     ~Logger();
 
     void AddSink(UniquePtr<Log::ILogSink>&& sink);
-    void PostMessage(const LogCategory& category, ELogVerbosity verbosity, std::string&& msg) const;
+    void SendLogMessage(const LogCategory& category, ELogVerbosity verbosity, std::string&& msg) const;
 
 private:
     // No actual state change, mutable to allow us to forwar the message to the non-const Receive of the sink
@@ -160,34 +164,39 @@ inline constexpr Log::Category Log::NewCategory(std::string_view name, EVerbosit
     return Category{name, verbosity};
 }
 
+inline void Log::RegisterLogSink(ost::UniquePtr<ILogSink>&& sink)
+{
+    ost::log::internal::pLoggerInstance->AddSink(std::move(sink));
+}
+
 template <typename... TArgs>
 inline void Log::Verbose(const Category& c, std::string_view fmtStr, TArgs&&... fmtArgs)
 {
-    ost::log::internal::pLoggerInstance->PostMessage(c, EVerbosity::Verbose, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
+    ost::log::internal::pLoggerInstance->SendLogMessage(c, EVerbosity::Verbose, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
 }
 
 template <typename... TArgs>
 inline void Log::Log(const Category& c, std::string_view fmtStr, TArgs&&... fmtArgs)
 {
-    ost::log::internal::pLoggerInstance->PostMessage(c, EVerbosity::Message, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
+    ost::log::internal::pLoggerInstance->SendLogMessage(c, EVerbosity::Message, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
 }
 
 template <typename... TArgs>
 inline void Log::Warning(const Category& c, std::string_view fmtStr, TArgs&&... fmtArgs)
 {
-    ost::log::internal::pLoggerInstance->PostMessage(c, EVerbosity::Warning, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
+    ost::log::internal::pLoggerInstance->SendLogMessage(c, EVerbosity::Warning, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
 }
 
 template <typename... TArgs>
 inline void Log::Error(const Category& c, std::string_view fmtStr, TArgs&&... fmtArgs)
 {
-    ost::log::internal::pLoggerInstance->PostMessage(c, EVerbosity::Error, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
+    ost::log::internal::pLoggerInstance->SendLogMessage(c, EVerbosity::Error, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
 }
 
 template <typename... TArgs>
 inline void Log::Critical(const Category& c, std::string_view fmtStr, TArgs&&... fmtArgs)
 {
-    ost::log::internal::pLoggerInstance->PostMessage(c, EVerbosity::Critical, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
+    ost::log::internal::pLoggerInstance->SendLogMessage(c, EVerbosity::Critical, std::vformat(fmtStr, std::make_format_args(fmtArgs...)));
 }
 
 template <typename... TArgs>

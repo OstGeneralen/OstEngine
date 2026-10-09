@@ -8,14 +8,19 @@
 #include "Resources/GraphicsResourceManager.h"
 #include "Resources/ShaderCompiler.h"
 
+#include <d3d11_1.h>
+#include <dxgi.h>
+
+#include <OstLog.h>
 #include <algorithm>
 
 #include <Utility/Assert.h>
 
-#include <d3d11_1.h>
-#include <dxgi.h>
-
 using namespace ost;
+
+// ------------------------------------------------------------
+
+auto GraphicsEngineLog = Log::NewCategory("GraphicsEngine", Log::EVerbosity::Message);
 
 // ------------------------------------------------------------
 
@@ -33,6 +38,9 @@ UniquePtr<IGraphicsEngine> IGraphicsEngine::CreateNew(const GraphicsEngineSettin
 {
     auto ptr = Ptr::NewUnique<GraphicsEngine>();
     ptr->Initialize(settings);
+
+    Log::Log(GraphicsEngineLog, "Started Graphics Engine with Render Size: {}x{}", settings.output.renderSize.X, settings.output.renderSize.Y);
+
     return ptr;
 }
 

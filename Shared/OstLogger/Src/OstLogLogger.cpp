@@ -27,7 +27,7 @@ void Logger::AddSink(UniquePtr<Log::ILogSink>&& sink)
     _sinks.Add(std::move(sink));
 }
 
-void Logger::PostMessage(const LogCategory& category, ELogVerbosity verbosity, std::string&& msg) const
+void Logger::SendLogMessage(const LogCategory& category, ELogVerbosity verbosity, std::string&& msg) const
 {
     if (category.PassVerbosity(verbosity))
     {
