@@ -38,8 +38,8 @@ SamplerState TrilinearClamp : SAMPLER_SLOT_TRILINEAR_CLAMP;
 // Buffers
 cbuffer FrameBuffer : BUFFER_SLOT_FRAME
 {
-    row_major float4x4 FrameBuf_ViewMatrix;
-    row_major float4x4 FrameBuf_ViewMatrixInv;
+    row_major float4x4 FrameBuf_ViewProjection;
+    row_major float4x4 FrameBuf_ViewInverse;
     float4 FrameBuf_ViewLocation;
 };
 

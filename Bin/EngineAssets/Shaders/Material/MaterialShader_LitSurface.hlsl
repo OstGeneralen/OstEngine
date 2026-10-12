@@ -27,7 +27,7 @@ SurfacePixel VSMain( SurfaceVertex vertex )
     output.Normal = normalize(mul(vertex.Normal, toWorld));
     output.Bitangent = normalize(cross(output.Normal, output.Tangent));
 
-    output.Position = mul(data.vertexWorldPos, FrameBuf_ViewMatrix );
+    output.Position = mul(data.vertexWorldPos, FrameBuf_ViewProjection );
     output.WorldPosition = data.vertexWorldPos;
     output.UV = data.vertexUV;
     return output;
@@ -47,7 +47,7 @@ float4 PSMain( SurfacePixel frag ) : SV_Target
     float3 N = normalize(frag.Normal);
     float3 T = normalize(frag.Tangent);
     float3 B = normalize(frag.Bitangent);
-    row_major float3x3 TBN = float3x3(T,B,N);
+    float3x3 TBN = float3x3(T,B,N);
 
     float3 pixelNormal = mul(tangentNormal, TBN);
 

@@ -89,10 +89,9 @@ void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetR
         break;
     }
     }
-
-    const Matrix4x4 view = viewProxy.transform.GetInverse();
+    const Matrix4x4 toView = viewProxy.transform.GetInverse();
     const Matrix4x4 proj = projection;
-    toQueue.SetView(view * proj);
+    toQueue.SetView(toView * proj, viewProxy.transform);
 }
 
 InputReader& OstEngine::GetInputReader()

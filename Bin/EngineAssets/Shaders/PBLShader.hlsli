@@ -22,7 +22,8 @@ float GGXNormalDistribution( float3 normal, float3 halfDir, float roughness )
 
 float SchlickGGX(float NdotV, float roughness)
 {
-    float r = roughness + 1.0f;
+    float alpha = roughness * roughness;
+    float r = alpha + 1.0f;
     float k = (r * r) / 8.0f;
     return NdotV / (NdotV * (1.0f - k) + k);
 }

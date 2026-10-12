@@ -23,7 +23,7 @@ namespace ost
         Float32 GetAspectRatio() const override;
         const Vector2f& GetDimensions() const override;
 
-        void ExecuteCommands(const Matrix4x4& view, const IRenderQueue& queue) override;
+        void ExecuteCommands(const RenderView& view, const IRenderQueue& queue) override;
 
     private:
         RenderHardwareInterface* _rhi;

@@ -8,6 +8,7 @@
 namespace ost
 {
     class IRenderQueue;
+    struct RenderView;
 
     class IRenderer
     {
@@ -19,7 +20,7 @@ namespace ost
         virtual Float32 GetAspectRatio() const = 0;
         virtual const Vector2f& GetDimensions() const = 0;
 
-        virtual void ExecuteCommands(const Matrix4x4& view, const IRenderQueue& queue) = 0;
+        virtual void ExecuteCommands(const RenderView& view, const IRenderQueue& queue) = 0;
     };
 } // namespace ost
 

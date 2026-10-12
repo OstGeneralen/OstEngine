@@ -60,16 +60,24 @@ void Game::Load(ost::EngineContext& context)
     rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::Normal, rockNormal);
     rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::ORM, rockORM);
 
-
     // Now let's create the plane actor
+    ost::Actor* leftActor = _scene->CreateActor();
+    auto& leftMeshComponent = leftActor->AddComponent<ost::StaticMeshComponent>();
+    leftActor->transform.SetPosition({-1.5f, 0, 0});
+    leftActor->transform.Rotate(ost::Quaternion::FromRotationAxis({1, 0, 0}, -45.0f * ost::math::DegToRad));
+    leftActor->AddComponent<KeyboardRotatorComponent>();
 
-    ost::Actor* planeActor = _scene->CreateActor();
-    auto& planeMeshComponent = planeActor->AddComponent<ost::StaticMeshComponent>();
-    planeMeshComponent.SetModel(cubeModel);
-    planeMeshComponent.SetMaterial(leatherMaterial);
-    planeActor->transform.SetPosition({0, 0, 0});
-    planeActor->transform.Rotate(ost::Quaternion::FromRotationAxis({1, 0, 0}, -45.0f * ost::math::DegToRad));
-    planeActor->AddComponent<KeyboardRotatorComponent>();
+    ost::Actor* rightActor = _scene->CreateActor();
+    auto& rightMeshComponent = rightActor->AddComponent<ost::StaticMeshComponent>();
+    rightActor->transform.SetPosition({1.5f, 0, 0});
+    rightActor->transform.Rotate(ost::Quaternion::FromRotationAxis({1, 0, 0}, -45.0f * ost::math::DegToRad));
+    rightActor->AddComponent<KeyboardRotatorComponent>();
+
+    leftMeshComponent.SetModel(cubeModel);
+    leftMeshComponent.SetMaterial(leatherMaterial);
+
+    rightMeshComponent.SetModel(cubeModel);
+    rightMeshComponent.SetMaterial(rockMaterial);
 
     // Let there be eyes
     ost::Actor* cameraActor = _scene->CreateActor();
@@ -81,7 +89,7 @@ void Game::Load(ost::EngineContext& context)
     // Let there be light
     ost::Actor* lightActor = _scene->CreateActor();
     auto& sceneLight = lightActor->AddComponent<ost::SceneLightComponent>();
-    sceneLight.SetSunDirection(ost::Vector3f(1.0f, -1.0f, 1.0f).GetNormalized());
+    sceneLight.SetSunDirection(ost::Vector3f(0.0f, -1.0f, 0.0f).GetNormalized());
     sceneLight.SetSunColor({4.0f, 4.0f, 4.0f, 1.0f});
 
     sceneLight.SetAmbientColor({0.0f, 0.01f, 0.02f, 1.0f});

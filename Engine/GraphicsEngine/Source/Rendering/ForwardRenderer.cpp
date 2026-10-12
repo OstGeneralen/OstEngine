@@ -64,7 +64,7 @@ const Vector2f& ost::ForwardRenderer::GetDimensions() const
 
 // ------------------------------------------------------------
 
-void ost::ForwardRenderer::ExecuteCommands(const Matrix4x4& view, const IRenderQueue& queueInterface)
+void ost::ForwardRenderer::ExecuteCommands(const RenderView& renderView, const IRenderQueue& queueInterface)
 {
     const RenderQueue& queue = static_cast<const RenderQueue&>(queueInterface);
 
@@ -75,12 +75,11 @@ void ost::ForwardRenderer::ExecuteCommands(const Matrix4x4& view, const IRenderQ
 
     // Update and upload frame buffer
     FrameBufferStructure frameBufferData = {};
-    frameBufferData.viewMatrix = view;
-    frameBufferData.inverseViewMatrix = view;
-    frameBufferData.viewLocation = view.ExtractTranslation();
+    frameBufferData.viewProjection = renderView.viewProjection;
+    frameBufferData.inverseView = renderView.viewInverse;
+    frameBufferData.viewLocation = renderView.viewInverse.ExtractTranslation();
     _rhi->UpdateBuffer(_frameBuffer, &frameBufferData, sizeof(FrameBufferStructure));
     _rhi->SetBuffer(_frameBuffer, PipelineConstant::Get(EBufferSlot::FrameBuffer), EPipelineStage_VS | EPipelineStage_PS);
-
 
     // Update and upload light buffer
     LightsBufferStructure lightsData = {};

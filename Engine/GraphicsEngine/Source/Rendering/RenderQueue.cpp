@@ -16,9 +16,10 @@ ost::RenderQueue::RenderQueue(const GraphicsResourceManager& resourceManager)
 
 // ------------------------------------------------------------
 
-void RenderQueue::SetView(const Matrix4x4& view)
+void RenderQueue::SetView(const Matrix4x4& viewProjection, const Matrix4x4& viewInverse)
 {
-    _view = view;
+    _view.viewProjection = viewProjection;
+    _view.viewInverse = viewInverse;
 }
 
 void ost::RenderQueue::Push(ModelCommand&& cmd)
@@ -52,7 +53,7 @@ void ost::RenderQueue::Clear()
 
 // ------------------------------------------------------------
 
-const Matrix4x4& ost::RenderQueue::GetView() const
+const RenderView& ost::RenderQueue::GetView() const
 {
     return _view;
 }

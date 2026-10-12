@@ -44,12 +44,18 @@ namespace ost
         Color color;
     };
 
+    struct RenderView
+    {
+        Matrix4x4 viewProjection;
+        Matrix4x4 viewInverse;
+    };
+
     class IRenderQueue
     {
     public:
         virtual ~IRenderQueue() = default;
 
-        virtual void SetView( const Matrix4x4& view ) = 0;
+        virtual void SetView( const Matrix4x4& viewProjection, const Matrix4x4& viewInverse ) = 0;
         virtual void Push(ModelCommand&& cmd) = 0;
         virtual void Push(LightCommand&& cmd) = 0;
         virtual void Clear() = 0;

@@ -10,8 +10,8 @@ namespace ost
 {
     struct alignas(16) FrameBufferStructure
     {
-        Matrix4x4 viewMatrix;
-        Matrix4x4 inverseViewMatrix;
+        Matrix4x4 viewProjection;
+        Matrix4x4 inverseView;
         Vector4f viewLocation;
     };
 
