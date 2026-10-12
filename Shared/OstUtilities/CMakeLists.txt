@@ -28,6 +28,7 @@ add_library(${PROJECT_NAME}
     Utility/Timer.cpp
     Utility/Delegate.h
     Utility/TypedIntegerHandle.h
+    Utility/StringConversion.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
