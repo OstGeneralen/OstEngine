@@ -16,6 +16,7 @@ namespace ost
     {
     public:
         Scene(WorldContext& worldContext);
+        ~Scene();
 
         Actor* CreateActor();
 

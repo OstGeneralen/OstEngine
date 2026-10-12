@@ -22,7 +22,14 @@ UniquePtr<IOstEngine> IOstEngine::CreateNew(OstEngineSettings&& settings)
 // ------------------------------------------------------------
 
 OstEngine::OstEngine()
-    : _context{*this}
+    : _timer{}
+    , _gameWorld{}
+    , _input{}
+    , _assetManager{}
+    , _engineContext{_assetManager}
+    , _gameContext{*this}
+    , _gameInstance{}
+    , _pActiveScene{nullptr}
 {
 }
 
@@ -37,7 +44,7 @@ void OstEngine::Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceMan
     _assetManager.Initialize(gfxResourceManager, materialManager);
 
     _gameInstance = std::move(gameInstance);
-    _gameInstance->Load(_context);
+    _gameInstance->Load(_gameContext);
 }
 
 // ------------------------------------------------------------
@@ -46,7 +53,7 @@ void OstEngine::Tick()
 {
     _timer.Tick();
 
-    _gameInstance->Update(_context);
+    _gameInstance->Update(_gameContext);
 
     ComponentContext componentContext{_timer, _input};
     _gameWorld.Tick(componentContext);
@@ -100,24 +107,14 @@ InputReader& OstEngine::GetInputReader()
 }
 
 // ------------------------------------------------------------
-// Engine Context
+// Game Context
 
-OstEngineContext::OstEngineContext(OstEngine& instance)
+OstGameContext::OstGameContext(OstEngine& instance)
     : _engineInstance{instance}
 {
 }
 
-IAssetManager& OstEngineContext::Assets()
-{
-    return _engineInstance._assetManager;
-}
-
-const TimeStructure& ost::OstEngineContext::Time() const
-{
-    return _engineInstance._timeData;
-}
-
-UniquePtr<Scene> OstEngineContext::CreateScene(bool makeActive)
+UniquePtr<Scene> OstGameContext::CreateScene(bool makeActive)
 {
     UniquePtr<Scene> created = Ptr::NewUnique<Scene>(_engineInstance._gameWorld);
     if (makeActive)
@@ -127,14 +124,9 @@ UniquePtr<Scene> OstEngineContext::CreateScene(bool makeActive)
     return created;
 }
 
-void OstEngineContext::SetActiveScene(Scene& scene)
+void OstGameContext::SetActiveScene(Scene& scene)
 {
     _engineInstance._pActiveScene = &scene;
-}
-
-const InputReader& OstEngineContext::GetInput() const
-{
-    return _engineInstance._input;
 }
 
 // ------------------------------------------------------------

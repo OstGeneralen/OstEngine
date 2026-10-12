@@ -9,6 +9,7 @@
 #include <Engine/Components/SceneLightComponent.h>
 #include <Engine/Components/StaticMeshComponent.h>
 #include <Engine/EngineContext.h>
+#include <Engine/Game/GameContext.h>
 #include <Engine/World/Actor.h>
 #include <Engine/World/Scene.h>
 
@@ -21,41 +22,41 @@ ost::UniquePtr<ost::IGame> ost::CreateGameInstance()
 
 // ------------------------------------------------------------
 
-void Game::Load(ost::EngineContext& context)
+void Game::Load(ost::GameContext& context)
 {
     _scene = context.CreateScene(true);
 
-    auto& assets = context.Assets();
+    auto& assets = ost::EngineContext::Get().Assets();
 
     ost::HModel cubeModel = assets.LoadModelFromFile("Meshes/MaterialTestPlane.fbx");
     ost::HModel planeModel = assets.LoadModelFromFile("Meshes/PlaneTest.fbx");
 
     // Load our two textures
-    ost::HTexture rockAlbedo = context.Assets().LoadTextureFromFile("Materials/Rock/Rock_Albedo.dds");
-    ost::HTexture rockNormal = context.Assets().LoadTextureFromFile("Materials/Rock/Rock_Normal.dds");
-    ost::HTexture rockORM = context.Assets().LoadTextureFromFile("Materials/Rock/Rock_ORM.dds");
+    ost::HTexture rockAlbedo = assets.LoadTextureFromFile("Materials/Rock/Rock_Albedo.dds");
+    ost::HTexture rockNormal = assets.LoadTextureFromFile("Materials/Rock/Rock_Normal.dds");
+    ost::HTexture rockORM = assets.LoadTextureFromFile("Materials/Rock/Rock_ORM.dds");
 
-    ost::HTexture leatherAlbedo = context.Assets().LoadTextureFromFile("Materials/Leather/Leather_Albedo.dds");
-    ost::HTexture leatherNormal = context.Assets().LoadTextureFromFile("Materials/Leather/Leather_Normal.dds");
-    ost::HTexture leatherORM = context.Assets().LoadTextureFromFile("Materials/Leather/Leather_ORM.dds");
+    ost::HTexture leatherAlbedo = assets.LoadTextureFromFile("Materials/Leather/Leather_Albedo.dds");
+    ost::HTexture leatherNormal = assets.LoadTextureFromFile("Materials/Leather/Leather_Normal.dds");
+    ost::HTexture leatherORM = assets.LoadTextureFromFile("Materials/Leather/Leather_ORM.dds");
 
     // Let's create our material + instances :)
-    ost::HMaterial materialHandle = context.Assets().CreateMaterial(ost::EMaterialDomain::SurfaceLit, "MaterialShaders/ColoredSurfaceLit.hlsl");
-    ost::IMaterial& material = context.Assets().GetMaterial(materialHandle);
+    ost::HMaterial materialHandle = assets.CreateMaterial(ost::EMaterialDomain::SurfaceLit, "MaterialShaders/ColoredSurfaceLit.hlsl");
+    ost::IMaterial& material = assets.GetMaterial(materialHandle);
     material.GetPropertyDefaults().SetProperty("OverrideColor", ost::Colors::White.Vec4);
     material.GetPropertyDefaults().SetProperty("OverrideStrength", 0.0f);
 
     // Now create the material instance we'll use
     ost::HMaterialInstance leatherMaterial;
-    leatherMaterial = context.Assets().CreateMaterialInstance(materialHandle);
-    ost::IMaterialInstance* materialInstance = &context.Assets().GetMaterialInstance(leatherMaterial);
+    leatherMaterial = assets.CreateMaterialInstance(materialHandle);
+    ost::IMaterialInstance* materialInstance = &assets.GetMaterialInstance(leatherMaterial);
     materialInstance->Textures().SetTexture(ost::EMaterialTexture::Albedo, leatherAlbedo);
     materialInstance->Textures().SetTexture(ost::EMaterialTexture::Normal, leatherNormal);
     materialInstance->Textures().SetTexture(ost::EMaterialTexture::ORM, leatherORM);
 
     ost::HMaterialInstance rockMaterial;
-    rockMaterial = context.Assets().CreateMaterialInstance(materialHandle);
-    ost::IMaterialInstance* rockMaterialInstance = &context.Assets().GetMaterialInstance(rockMaterial);
+    rockMaterial = assets.CreateMaterialInstance(materialHandle);
+    ost::IMaterialInstance* rockMaterialInstance = &assets.GetMaterialInstance(rockMaterial);
     rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::Albedo, rockAlbedo);
     rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::Normal, rockNormal);
     rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::ORM, rockORM);
@@ -95,11 +96,11 @@ void Game::Load(ost::EngineContext& context)
     sceneLight.SetAmbientColor({0.0f, 0.01f, 0.02f, 1.0f});
 }
 
-void Game::Unload(ost::EngineContext& context)
+void Game::Unload(ost::GameContext& context)
 {
 }
 
-void Game::Update(ost::EngineContext& context)
+void Game::Update(ost::GameContext& context)
 {
 }
 

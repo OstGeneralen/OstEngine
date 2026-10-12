@@ -8,8 +8,6 @@
 
 namespace ost
 {
-    class GraphicsAssetsManager;
-    class Scene;
     class InputReader;
     class IAssetManager;
 
@@ -25,12 +23,14 @@ namespace ost
     public:
         virtual ~EngineContext() = default;
 
-        virtual const TimeStructure& Time() const = 0;
+        static EngineContext& Get();
+        static void Provide(EngineContext& context);
 
+        virtual const TimeStructure& Time() const = 0;
         virtual IAssetManager& Assets() = 0;
 
-        virtual UniquePtr<Scene> CreateScene(bool makeActive) = 0;
-        virtual void SetActiveScene(Scene& scene) = 0;
+    private:
+        static EngineContext* _pInstance;
     };
 } // namespace ost
 

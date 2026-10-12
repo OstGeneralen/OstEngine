@@ -9,7 +9,7 @@ namespace ost
 {
     class IGame;
     extern UniquePtr<IGame> CreateGameInstance();
-    class EngineContext;
+    class GameContext;
 
     class IGame
     {
@@ -18,9 +18,9 @@ namespace ost
 
         virtual ~IGame() = default;
 
-        virtual void Load(EngineContext& context) = 0;
-        virtual void Unload(EngineContext& context) = 0;
-        virtual void Update(EngineContext& context) = 0;
+        virtual void Load(GameContext& context) = 0;
+        virtual void Unload(GameContext& context) = 0;
+        virtual void Update(GameContext& context) = 0;
     };
 } // namespace ost
 

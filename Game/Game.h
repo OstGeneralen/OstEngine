@@ -12,10 +12,10 @@
 class Game : public ost::IGame
 {
 public:
-    void Load(ost::EngineContext& context) override;
-    void Unload(ost::EngineContext& context) override;
+    void Load(ost::GameContext& context) override;
+    void Unload(ost::GameContext& context) override;
 
-    void Update(ost::EngineContext& context) override;
+    void Update(ost::GameContext& context) override;
 
 private:
     ost::UniquePtr<ost::Scene> _scene;

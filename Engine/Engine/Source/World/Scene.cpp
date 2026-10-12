@@ -12,6 +12,8 @@ Scene::Scene(WorldContext& worldContext)
 {
 }
 
+Scene::~Scene() = default;
+
 // ------------------------------------------------------------
 
 Actor* Scene::CreateActor()

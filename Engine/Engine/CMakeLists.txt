@@ -42,6 +42,9 @@ add_library(${PROJECT_NAME} STATIC
     Source/System/InputReader.cpp
     Source/OstEngine.cpp
     Source/OstEngine.h
+    Include/Engine/Game/GameContext.h
+    Source/OstEngineContext.h
+    Source/OstEngineContext.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
