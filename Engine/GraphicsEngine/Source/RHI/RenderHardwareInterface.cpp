@@ -3,9 +3,15 @@
 
 #include "RHI/RHIInternal.h"
 
+#include <OstLog.h>
+
 #include <Memory/Memory.h>
 
 using namespace ost;
+
+// ------------------------------------------------------------
+
+auto RHILog = Log::NewCategory("D3D11 RHI", Log::EVerbosity::Message);
 
 // ------------------------------------------------------------
 
@@ -22,6 +28,8 @@ RenderHardwareInterface::~RenderHardwareInterface()
 bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHnd)
 {
     HWND hwnd = static_cast<HWND>(winHnd);
+
+    HRESULT result = S_OK;
 
     // 1. Create the factory and find the most appropriate device (based on VRAM)
     ComPtr<IDXGIFactory> factory;
@@ -48,9 +56,11 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
     }
 
     // 2. Create the device + immediate context
-    if (FAILED(D3D11CreateDevice(selectedAdapter.Get(), D3D_DRIVER_TYPE_UNKNOWN, NULL, D3D11_CREATE_DEVICE_DEBUG, NULL, 0, D3D11_SDK_VERSION, &_device, NULL,
-                                 &_immediateContext)))
+    result = D3D11CreateDevice(selectedAdapter.Get(), D3D_DRIVER_TYPE_UNKNOWN, NULL, D3D11_CREATE_DEVICE_DEBUG, NULL, 0, D3D11_SDK_VERSION, &_device, NULL,
+                               &_immediateContext);
+    if (FAILED(result))
     {
+        Log::Error(RHILog, "Failed to create Device. D3D11 Error: {}", result);
         return false;
     }
 
@@ -67,8 +77,10 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER | DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-    if (FAILED(factory->CreateSwapChain(_device.Get(), &swapChainDesc, &_swapChain)))
+    result = factory->CreateSwapChain(_device.Get(), &swapChainDesc, &_swapChain);
+    if (FAILED(result))
     {
+        Log::Error(RHILog, "Failed to create SwapChain. DXGI Error: {}", result);
         return false;
     }
 
@@ -79,6 +91,13 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
     viewport.Width = renderSize.X;
     viewport.Height = renderSize.Y;
     _immediateContext->RSSetViewports(1, &viewport);
+
+    // 5. Log to confirm :)
+    DXGI_ADAPTER_DESC adapterDesc = {};
+    selectedAdapter->GetDesc(&adapterDesc);
+    const std::wstring adapterNameW = adapterDesc.Description;
+    const std::string selectedAdapterName = std::string(adapterNameW.begin(), adapterNameW.end());
+    Log::Log(RHILog, "RHI Created. Adapter: '{}' Render Size: {}x{}", selectedAdapterName, renderSize.X, renderSize.Y);
 
     return true;
 }
@@ -121,6 +140,8 @@ void RenderHardwareInterface::ResizeBackbuffer(const Vector2u& newSize, Texture&
     viewport.Width = newSize.X;
     viewport.Height = newSize.Y;
     _immediateContext->RSSetViewports(1, &viewport);
+
+    Log::Log(RHILog, "Render output resized. {}x{}", newSize.X, newSize.Y);
 }
 
 // ------------------------------------------------------------

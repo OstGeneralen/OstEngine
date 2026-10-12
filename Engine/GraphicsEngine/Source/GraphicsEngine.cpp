@@ -39,8 +39,6 @@ UniquePtr<IGraphicsEngine> IGraphicsEngine::CreateNew(const GraphicsEngineSettin
     auto ptr = Ptr::NewUnique<GraphicsEngine>();
     ptr->Initialize(settings);
 
-    Log::Log(GraphicsEngineLog, "Started Graphics Engine with Render Size: {}x{}", settings.output.renderSize.X, settings.output.renderSize.Y);
-
     return ptr;
 }
 
