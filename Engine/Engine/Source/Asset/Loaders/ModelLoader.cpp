@@ -50,6 +50,7 @@ void ModelLoader::Load(const std::string& path, ModelCPUData& into)
                 vertex.position = {importVert.x, importVert.y, importVert.z, 1};
                 vertex.normal = {importNormal.x, importNormal.y, importNormal.z};
                 vertex.tangent = {importTangent.x, importTangent.y, importTangent.z};
+                vertex.color = Colors::White;
 
                 if (importMesh->HasTextureCoords(0))
                 {

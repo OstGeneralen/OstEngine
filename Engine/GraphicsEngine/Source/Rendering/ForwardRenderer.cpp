@@ -2,10 +2,11 @@
 #include "ForwardRenderer.h"
 
 #include "RHI/RenderHardwareInterface.h"
+#include "RenderContext.h"
 #include "Rendering/Buffers.h"
 #include "Rendering/RenderPipelineConstants.h"
 #include "Rendering/RenderQueue.h"
-#include "Resources/ShaderCompiler.h"
+#include "Resources/GraphicsResourceManager.h"
 
 // ------------------------------------------------------------
 
@@ -13,10 +14,11 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void ost::ForwardRenderer::Initialize(const Vector2f& renderSize, RenderHardwareInterface& rhi)
+void ost::ForwardRenderer::Initialize(const Vector2f& renderSize, RenderHardwareInterface& rhi, GraphicsResourceManager& resources)
 {
     // Apply config and members
     _rhi = &rhi;
+    _resources = &resources;
     _currentRenderSize = renderSize;
 
     // Build resources
@@ -34,28 +36,6 @@ void ost::ForwardRenderer::Initialize(const Vector2f& renderSize, RenderHardware
 
     _rhi->CreateBuffer(sizeof(LightsBufferStructure), _sceneLightBuffer);
     _sceneLightBuffer.SetDebugName("fwd_sceneLightBuffer");
-
-    // Create the PSO
-    List<Uint8> vertexShaderBytecode = CompileShaderFromFile("EngineAssets/Shaders/TestShader.hlsl", EPipelineStage_VS);
-    List<Uint8> pixelShaderBytecode = CompileShaderFromFile("EngineAssets/Shaders/TestShader.hlsl", EPipelineStage_PS);
-
-    PipelineStateObjectDesc defaultPSODesc = {};
-    defaultPSODesc.primitiveTopology = EPrimitiveTopology::TriangleList;
-
-    defaultPSODesc.vertexShader.bytecodeSize = vertexShaderBytecode.GetSize();
-    defaultPSODesc.vertexShader.pBytecode = vertexShaderBytecode.GetData();
-
-    defaultPSODesc.pixelShader.bytecodeSize = pixelShaderBytecode.GetSize();
-    defaultPSODesc.pixelShader.pBytecode = pixelShaderBytecode.GetData();
-
-    defaultPSODesc.vertexLayout.Add(VertexElement{"POSITION", EDataSize::Float4});
-    defaultPSODesc.vertexLayout.Add(VertexElement{"NORMAL", EDataSize::Float3});
-    defaultPSODesc.vertexLayout.Add(VertexElement{"TANGENT", EDataSize::Float3});
-    defaultPSODesc.vertexLayout.Add(VertexElement{"COLOR", EDataSize::Float4});
-    defaultPSODesc.vertexLayout.Add(VertexElement{"TEXCOORD", EDataSize::Float2});
-
-    _rhi->CreatePSO(defaultPSODesc, _defaultPSO);
-    _defaultPSO.SetDebugName("fwd_defaultPSO");
 }
 
 // ------------------------------------------------------------
@@ -88,8 +68,6 @@ void ost::ForwardRenderer::ExecuteCommands(const Matrix4x4& view, const IRenderQ
 {
     const RenderQueue& queue = static_cast<const RenderQueue&>(queueInterface);
 
-    _rhi->SetPSO(_defaultPSO);
-
     // Clear and set targets
     _rhi->ClearRenderTarget(_backbuffer);
     _rhi->ClearDepthStencil(_depthStencil);
@@ -121,16 +99,13 @@ void ost::ForwardRenderer::ExecuteCommands(const Matrix4x4& view, const IRenderQ
 
     // Iterate all actual draw commands and draw them
     const Mesh* currentMesh = nullptr;
+    const Material* currentMaterial = nullptr;
+    const MaterialInstance* currentMaterialInstance = nullptr;
 
+    RenderContext ctx(*_rhi, *_resources);
     for (const RenderCommand& cmd : queue.GetDrawCommands())
     {
-        ObjectBufferStructure objectBufferData = {};
-        objectBufferData.objectTransform = cmd.transform;
-        _rhi->UpdateBuffer( _objectBuffer, &objectBufferData, sizeof(ObjectBufferStructure) );
-        _rhi->SetBuffer( _objectBuffer, PipelineConstant::Get(EBufferSlot::ObjectBuffer), EPipelineStage_VS | EPipelineStage_PS );
-
-        _rhi->Draw(*cmd.pMesh, currentMesh != cmd.pMesh);
-        currentMesh = cmd.pMesh;
+        cmd.Execute(ctx, _objectBuffer);
     }
 
     _rhi->Present();

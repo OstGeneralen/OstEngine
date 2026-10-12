@@ -24,6 +24,8 @@ namespace ost
                 return DXGI_FORMAT_BC7_UNORM;
             case ETextureFormat::DDS_BC7_SRGB:
                 return DXGI_FORMAT_BC7_UNORM_SRGB;
+            case ETextureFormat::NormalMap:
+                return DXGI_FORMAT_R16G16_UNORM;
             }
 
             return DXGI_FORMAT_UNKNOWN;

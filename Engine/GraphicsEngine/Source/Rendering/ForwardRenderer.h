@@ -10,11 +10,12 @@
 namespace ost
 {
     class RenderHardwareInterface;
+    class GraphicsResourceManager;
 
     class ForwardRenderer : public IRenderer
     {
     public:
-        void Initialize(const Vector2f& renderSize, RenderHardwareInterface& rhi);
+        void Initialize(const Vector2f& renderSize, RenderHardwareInterface& rhi, GraphicsResourceManager& resources);
 
     public: // IRenderer
         void Resize(const Vector2f& newSize) override;
@@ -26,6 +27,8 @@ namespace ost
 
     private:
         RenderHardwareInterface* _rhi;
+        GraphicsResourceManager* _resources;
+
         Vector2f _currentRenderSize;
 
         Texture _backbuffer;
@@ -34,8 +37,6 @@ namespace ost
         Buffer _objectBuffer;
         Buffer _frameBuffer;
         Buffer _sceneLightBuffer;
-
-        PipelineStateObject _defaultPSO;
     };
 } // namespace ost
 

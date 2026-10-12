@@ -6,6 +6,8 @@ add_library(${PROJECT_NAME} STATIC
     Game.cpp
     KeyboardMovementComponent.h
     KeyboardMovementComponent.cpp
+    KeyboardRotatorComponent.h
+    KeyboardRotatorComponent.cpp
 )
 
 set_target_properties(${PROJECT_NAME}

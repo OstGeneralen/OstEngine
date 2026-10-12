@@ -1,10 +1,13 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/IGraphicsEngine.h"
+#include "Objects/TextureSampler.h"
 #include "RHI/RenderHardwareInterface.h"
+#include "Rendering/RenderPipelineConstants.h"
 #include "Rendering/RenderQueue.h"
 #include "Resources/GraphicsResourceManager.h"
 
+#include <Container/Map.h>
 #include <Math/Vector2.h>
 #include <Memory/UniquePtr.h>
 #include <Utility/Assert.h>
@@ -32,6 +35,7 @@ namespace ost
         virtual IRenderer& GetRenderer() override;
         virtual IRenderQueue& GetRenderQueue() override;
         virtual IGraphicsResourceManager& GetResourceManager() override;
+        virtual IMaterialManager& GetMaterialManager() override;
 
         void ExecuteAndClearCommandQueue() override;
 
@@ -40,6 +44,8 @@ namespace ost
 
         GraphicsEngineSettings _activeSettings;
         UniquePtr<IRenderer> _activeRenderer;
+
+        Map<ESamplerSlot, TextureSampler> _samplers;
 
         RenderHardwareInterface _rhi;
         GraphicsResourceManager _resourceManager;

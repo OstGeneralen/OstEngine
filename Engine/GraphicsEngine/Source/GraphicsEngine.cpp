@@ -76,15 +76,30 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
     {
     case ERendererType::Forward: {
         auto fwdRenderer = Ptr::NewUnique<ForwardRenderer>();
-        fwdRenderer->Initialize(GetRenderSize().VectorCast<Float32>(), _rhi);
+        fwdRenderer->Initialize(GetRenderSize().VectorCast<Float32>(), _rhi, _resourceManager);
         _activeRenderer = std::move(fwdRenderer);
         break;
     }
     }
+
+    TextureSampler buildSampler;
+
+    _rhi.CreateSampler(ESamplerAddressMode::Wrap, ESamplerType::Trilinear, buildSampler);
+    _samplers.Insert(ESamplerSlot::TrilinearWrap, buildSampler);
+
+    _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Trilinear, buildSampler);
+    _samplers.Insert(ESamplerSlot::TrilinearClamp, buildSampler);
+
+    _rhi.CreateSampler(ESamplerAddressMode::Wrap, ESamplerType::Point, buildSampler);
+    _samplers.Insert(ESamplerSlot::PointWrap, buildSampler);
+
+    _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Point, buildSampler);
+    _samplers.Insert(ESamplerSlot::PointClamp, buildSampler);
 }
 
 void GraphicsEngine::Shutdown()
 {
+    _samplers.Clear();
     _rhi = RenderHardwareInterface{};
 }
 
@@ -128,8 +143,20 @@ IGraphicsResourceManager& GraphicsEngine::GetResourceManager()
     return _resourceManager;
 }
 
+IMaterialManager& ost::GraphicsEngine::GetMaterialManager()
+{
+    return _resourceManager;
+}
+
 void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
 {
+    // Always bind the samplers since these are globals
+    _rhi.SetSampler(_samplers[ESamplerSlot::TrilinearWrap], PipelineConstant::Get(ESamplerSlot::TrilinearWrap));
+    _rhi.SetSampler(_samplers[ESamplerSlot::TrilinearClamp], PipelineConstant::Get(ESamplerSlot::TrilinearClamp));
+    _rhi.SetSampler(_samplers[ESamplerSlot::PointWrap], PipelineConstant::Get(ESamplerSlot::PointWrap));
+    _rhi.SetSampler(_samplers[ESamplerSlot::PointClamp], PipelineConstant::Get(ESamplerSlot::PointClamp));
+
+    // Execute commands under current renderer
     _activeRenderer->ExecuteCommands(_renderQueue.GetView(), _renderQueue);
     _renderQueue.Clear();
 }

@@ -7,6 +7,7 @@
 #include "Objects/Model.h"
 #include "Objects/PipelineStateObject.h"
 #include "Objects/Texture.h"
+#include "Objects/TextureSampler.h"
 
 // Graphics Object Creation Data
 #include "GraphicsEngine/Resources/ModelCPUData.h"
@@ -28,7 +29,7 @@ namespace ost
         ~RenderHardwareInterface();
 
         bool Initialize(const Vector2u& renderSize, void* winHnd);
-        bool CreateBackbuffer( Texture& outBackbuffer );
+        bool CreateBackbuffer(Texture& outBackbuffer);
         void ResizeBackbuffer(const Vector2u& newSize, Texture& inOutBackbuffer);
 
     public: // Resource Management
@@ -46,16 +47,20 @@ namespace ost
 
         bool CreatePSO(const PipelineStateObjectDesc& desc, PipelineStateObject& outPSO) const;
 
+        bool CreateSampler(ESamplerAddressMode addressMode, ESamplerType type, TextureSampler& outSampler) const;
+
     public: // Pipeline State Management
         void SetTexture(const Texture& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
         void SetBuffer(const Buffer& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
 
         void SetPSO(const PipelineStateObject& pso) const;
 
+        void SetSampler(const TextureSampler& sampler, Uint32 slot) const;
+
         void SetRenderTarget(const Texture& renderTarget, const Texture* pDepthTarget = nullptr) const;
         void SetRenderTargets(const Texture* pRenderTargets, SizeType numTargets, const Texture* pDepthTarget = nullptr) const;
 
-        void Draw( const Mesh& mesh, bool uploadBuffers ) const;
+        void Draw(const Mesh& mesh, bool uploadBuffers) const;
 
         void Present() const;
 

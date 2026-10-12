@@ -1,5 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GraphicsEngine/Materials/IMaterial.h"
 #include "GraphicsEngine/Rendering/Vertex.h"
 #include "GraphicsEngine/Resources/ObjectHandles.h"
 #include "Objects/Buffer.h"
@@ -31,8 +32,8 @@ namespace ost
 
     struct Model
     {
-        List<MeshHandle> meshHandles;
-        List<MaterialHandle> materials;
+        List<HMesh> meshHandles;
+        List<HMaterial> materials;
 
         Buffer vertexBuffer;
         Buffer indexBuffer;

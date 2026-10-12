@@ -12,7 +12,8 @@ namespace ost
     class StaticMeshComponent : public RenderComponent
     {
     public:
-        StaticMeshComponent( ModelHandle modelHandle );
+        void SetModel(HModel model);
+        void SetMaterial(HMaterialInstance material);
 
     public: // Render Component
         void InitializeRenderState(SceneGraph& SceneGraph) override;
@@ -20,9 +21,9 @@ namespace ost
         void UpdateDirtyTransform(SceneGraph& SceneGraph) override;
 
         void OnTransformMarkedDirty();
+
     private:
         SceneGraph* _pSceneGraph;
-        ModelHandle _modelHandle;
         ProxyHandle _proxyMeshHandle;
     };
 } // namespace ost

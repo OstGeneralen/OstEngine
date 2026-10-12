@@ -83,7 +83,7 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
     return true;
 }
 
-bool ost::RenderHardwareInterface::CreateBackbuffer(Texture& outBackbuffer)
+bool RenderHardwareInterface::CreateBackbuffer(Texture& outBackbuffer)
 {
     ComPtr<RHITexture2D> backbufferTexture;
     _swapChain->GetBuffer(0, IID_PPV_ARGS(&backbufferTexture));
@@ -134,7 +134,7 @@ bool RenderHardwareInterface::CreateTexture(const TextureCPUData& desc, Texture&
     textureDesc.Width = desc.dimensions.X;
     textureDesc.MipLevels = desc.mipCount;
     textureDesc.SampleDesc.Count = 1;
-    textureDesc.SampleDesc.Count = 0;
+    textureDesc.SampleDesc.Quality = 0;
     textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
     textureDesc.ArraySize = 1;
 
@@ -372,6 +372,49 @@ bool RenderHardwareInterface::CreatePSO(const PipelineStateObjectDesc& desc, Pip
     return true;
 }
 
+bool RenderHardwareInterface::CreateSampler(ESamplerAddressMode addressMode, ESamplerType type, TextureSampler& outSampler) const
+{
+    D3D11_SAMPLER_DESC desc = {};
+
+    D3D11_TEXTURE_ADDRESS_MODE dxAddressMode = D3D11_TEXTURE_ADDRESS_CLAMP;
+    switch (addressMode)
+    {
+    case ESamplerAddressMode::Wrap:
+        dxAddressMode = D3D11_TEXTURE_ADDRESS_WRAP;
+        break;
+    case ESamplerAddressMode::Clamp:
+        dxAddressMode = D3D11_TEXTURE_ADDRESS_CLAMP;
+        break;
+    }
+
+    D3D11_FILTER dxFilter = {};
+    switch (type)
+    {
+    case ESamplerType::Point:
+        dxFilter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+        break;
+    case ESamplerType::Bilinear:
+        dxFilter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+        break;
+    case ESamplerType::Trilinear:
+        dxFilter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+        break;
+    }
+
+    desc.AddressU = dxAddressMode;
+    desc.AddressV = dxAddressMode;
+    desc.AddressW = dxAddressMode;
+    desc.Filter = dxFilter;
+    desc.MipLODBias = 0;
+    desc.MaxAnisotropy = 1;
+    desc.MinLOD = 0;
+    desc.MaxLOD = D3D11_FLOAT32_MAX;
+    desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+
+    HRESULT result = _device->CreateSamplerState(&desc, &outSampler._samplerState);
+    return SUCCEEDED(result);
+}
+
 // ------------------------------------------------------------
 
 void RenderHardwareInterface::SetTexture(const Texture& texture, Uint32 slot, EPipelineStage_ stageFlag) const
@@ -404,6 +447,11 @@ void RenderHardwareInterface::SetPSO(const PipelineStateObject& pso) const
     _immediateContext->PSSetShader(pso._pixelShader.Get(), NULL, 0);
     _immediateContext->IASetInputLayout(pso._vertexLayout.Get());
     _immediateContext->IASetPrimitiveTopology(translate::PrimitiveTopology(pso._primitiveTopology));
+}
+
+void RenderHardwareInterface::SetSampler(const TextureSampler& sampler, Uint32 slot) const
+{
+    _immediateContext->PSSetSamplers(slot, 1, sampler._samplerState.GetAddressOf());
 }
 
 void RenderHardwareInterface::SetRenderTarget(const Texture& renderTarget, const Texture* pDepthTarget) const

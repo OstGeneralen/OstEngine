@@ -1,8 +1,29 @@
-#pragma once
 #ifndef SHADER_CORE_HLSLI
 #define SHADER_CORE_HLSLI
 
-#include "ShaderSlots.hlsli"
+// Shader Slot Definitions
+#define TEXTURE_SLOT_ALBEDO register(t0)
+#define TEXTURE_SLOT_NORMAL register(t1)
+#define TEXTURE_SLOT_ORM register(t2)
+#define MATERIAL_TEXTURE_SLOT_1 register(t3)
+#define MATERIAL_TEXTURE_SLOT_2 register(t4)
+#define MATERIAL_TEXTURE_SLOT_3 register(t5)
+#define MATERIAL_TEXTURE_SLOT_4 register(t6)
+#define MATERIAL_TEXTURE_SLOT_5 register(t7)
+
+#define SAMPLER_SLOT_POINT_WRAP register(s0)
+#define SAMPLER_SLOT_BILINEAR_WRAP register(s1)
+#define SAMPLER_SLOT_TRILINEAR_WRAP register(s2)
+#define SAMPLER_SLOT_POINT_CLAMP register(s3)
+#define SAMPLER_SLOT_BILINEAR_CLAMP register(s4)
+#define SAMPLER_SLOT_TRILINEAR_CLAMP register(s5)
+
+#define BUFFER_SLOT_MATERIAL_PROPERTIES register(b0)
+
+#define BUFFER_SLOT_FRAME register(b10)
+#define BUFFER_SLOT_OBJECT register(b11)
+#define BUFFER_SLOT_LIGHT register(b12)
+#define BUFFER_SLOT_ANIMATION register(b13)
 
 // Samplers
 SamplerState PointWrap : SAMPLER_SLOT_POINT_WRAP;
@@ -11,8 +32,8 @@ SamplerState PointClamp : SAMPLER_SLOT_POINT_CLAMP;
 SamplerState BilinearWrap : SAMPLER_SLOT_BILINEAR_WRAP;
 SamplerState BilinearClamp : SAMPLER_SLOT_BILINEAR_CLAMP;
 
-SamplerState TrilinearWrap : SAMPLER_SLOT_BILINEAR_WRAP;
-SamplerState TrilinearClamp : SAMPLER_SLOT_BILINEAR_CLAMP;
+SamplerState TrilinearWrap : SAMPLER_SLOT_TRILINEAR_WRAP;
+SamplerState TrilinearClamp : SAMPLER_SLOT_TRILINEAR_CLAMP;
 
 // Buffers
 cbuffer FrameBuffer : BUFFER_SLOT_FRAME
@@ -26,32 +47,11 @@ cbuffer ObjectBuffer : BUFFER_SLOT_OBJECT
     row_major float4x4 ObjectBuf_Transform;
 };
 
-struct PointLightData
-{
-    float4 color;
-    float3 pos;
-    float range;
-};
-
-struct SpotLightData
-{
-    float4 color;
-    float3 pos;
-    float range;
-    float angle;
-    float3 PADDING;
-};
-
 cbuffer LightBuffer : BUFFER_SLOT_LIGHT
 {
     float4 Light_SunDir;
     float4 Light_SunCol;
     float4 Light_AmbientCol;
-};
-
-cbuffer AnimBuffer : BUFFER_SLOT_ANIMATION
-{
-    row_major float4x4 AnimBuf_Bones[128];
 };
 
 // Shader Layouts
@@ -69,6 +69,7 @@ struct SurfacePixel
     float4 Position : SV_Position;
     float3 Normal : NORMAL;
     float3 Tangent : TANGENT;
+    float3 Bitangent : BINORMAL;
     float4 BaseColor : COLOR;
     float2 UV : TEXCOORD;
 };

@@ -11,17 +11,14 @@ namespace ost
 {
     enum class ETextureSlot : Uint32
     {
-        Material0,
+        Albedo = 0,
+        Normal,
+        ORM,
         Material1,
         Material2,
         Material3,
         Material4,
         Material5,
-        Material6,
-        Material7,
-        Albedo,
-        Normal,
-        ORM,
     };
 
     enum class ESamplerSlot : Uint32

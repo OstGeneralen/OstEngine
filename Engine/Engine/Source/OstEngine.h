@@ -18,6 +18,7 @@
 namespace ost
 {
     class IGraphicsResourceManager;
+    class IMaterialManager;
 
     class OstEngine;
 
@@ -46,7 +47,7 @@ namespace ost
         OstEngine();
         ~OstEngine();
 
-        void Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceManager& gfxResourceManager);
+        void Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager);
 
     public: // IOstEngine
         void Tick() override;

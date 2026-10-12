@@ -8,14 +8,15 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void ost::AssetManager::Initialize(IGraphicsResourceManager& gfxResourceManager)
+void ost::AssetManager::Initialize(IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager)
 {
     _pGfxResourceManager = &gfxResourceManager;
+    _pMaterialManager = &materialManager;
 }
 
 // ------------------------------------------------------------
 
-TextureHandle AssetManager::LoadTextureFromFile(const std::filesystem::path& path)
+HTexture AssetManager::LoadTextureFromFile(const std::filesystem::path& path)
 {
     TextureCPUData loaded;
     ImageLoader loader;
@@ -23,7 +24,7 @@ TextureHandle AssetManager::LoadTextureFromFile(const std::filesystem::path& pat
     return _pGfxResourceManager->Create(loaded);
 }
 
-ModelHandle AssetManager::LoadModelFromFile(const std::filesystem::path& path)
+HModel AssetManager::LoadModelFromFile(const std::filesystem::path& path)
 {
     ModelCPUData loaded;
     ModelLoader loader;
@@ -33,12 +34,34 @@ ModelHandle AssetManager::LoadModelFromFile(const std::filesystem::path& path)
 
 // ------------------------------------------------------------
 
-void AssetManager::Release(TextureHandle h)
+HMaterial ost::AssetManager::CreateMaterial(EMaterialDomain domain, const std::string& materialShader)
+{
+    return _pMaterialManager->CreateMaterial({domain, materialShader});
+}
+
+IMaterial& AssetManager::GetMaterial(HMaterial hnd)
+{
+    return _pMaterialManager->GetMaterial(hnd);
+}
+
+HMaterialInstance ost::AssetManager::CreateMaterialInstance(HMaterial fromMaterial)
+{
+    return _pMaterialManager->CreateInstance(fromMaterial);
+}
+
+IMaterialInstance& AssetManager::GetMaterialInstance(HMaterialInstance hnd)
+{
+    return _pMaterialManager->GetMaterialInstance(hnd);
+}
+
+// ------------------------------------------------------------
+
+void AssetManager::Release(HTexture h)
 {
     _pGfxResourceManager->Release(h);
 }
 
-void AssetManager::Release(ModelHandle h)
+void AssetManager::Release(HModel h)
 {
     _pGfxResourceManager->Release(h);
 }

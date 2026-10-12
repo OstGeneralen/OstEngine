@@ -12,11 +12,19 @@ namespace ost
 {
     struct Mesh;
     class Material;
+    class MaterialInstance;
+    struct Texture;
+    class RenderContext;
+    struct Buffer;
 
     struct RenderCommand
     {
         const Mesh* pMesh;
+        const Material* pMaterial;
+        const MaterialInstance* pMaterialInstance;
         Matrix4x4 transform;
+
+        void Execute( RenderContext& ctx, const Buffer& objectBuffer ) const;
     };
 } // namespace ost
 

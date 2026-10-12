@@ -10,6 +10,7 @@ namespace ost
     namespace FileUtility
     {
         extern Blob ReadFileToBlob( const std::string& path );
+        extern char* ReadFileToCharArray( const std::string& path, SizeType& outSize );
     }
 }
 

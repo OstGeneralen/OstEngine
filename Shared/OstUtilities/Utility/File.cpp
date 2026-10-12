@@ -9,7 +9,7 @@ using namespace ost;
 
 Blob FileUtility::ReadFileToBlob(const std::string& path)
 {
-    std::fstream readStream{path, std::ios::binary | std::ios::ate};
+    std::ifstream readStream{path, std::ios::binary | std::ios::ate};
     Blob blob{static_cast<SizeType>(readStream.tellg())};
     readStream.seekg(0);
 
@@ -18,6 +18,27 @@ Blob FileUtility::ReadFileToBlob(const std::string& path)
     readStream.close();
 
     return blob;
+}
+
+// ------------------------------------------------------------
+
+char* ost::FileUtility::ReadFileToCharArray(const std::string& path, SizeType& outSize)
+{
+    std::ifstream readStream{path, std::ios::ate | std::ios::binary};
+
+    if (!readStream)
+    {
+        outSize = 0;
+        return nullptr;
+    }
+
+    outSize = readStream.tellg();
+    char* buff = new char[outSize];
+    readStream.seekg(0);
+    readStream.read(buff, outSize);
+    readStream.close();
+
+    return buff;
 }
 
 // ------------------------------------------------------------

@@ -19,11 +19,11 @@ namespace ost
     public:
         virtual ~IGraphicsResourceManager() = default;
 
-        virtual TextureHandle Create(const TextureCPUData& cpuData) = 0;
-        virtual ModelHandle Create(const ModelCPUData& cpuData) = 0;
+        virtual HTexture Create(const TextureCPUData& cpuData) = 0;
+        virtual HModel Create(const ModelCPUData& cpuData) = 0;
 
-        virtual void Release(TextureHandle handle) = 0;
-        virtual void Release(ModelHandle handle) = 0;
+        virtual void Release(HTexture handle) = 0;
+        virtual void Release(HModel handle) = 0;
     };
 } // namespace ost
 

@@ -12,6 +12,7 @@ namespace ost
     enum class ETextureFormat
     {
         Unknown,
+        NormalMap,
         DDS_BC7,
         DDS_BC7_SRGB,
     };

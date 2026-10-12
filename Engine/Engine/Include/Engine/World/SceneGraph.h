@@ -2,6 +2,7 @@
 #pragma once
 #include <Container/List.h>
 #include <Container/SlotMap.h>
+#include <GraphicsEngine/Materials/IMaterialInstance.h>
 #include <GraphicsEngine/Resources/ObjectHandles.h>
 #include <Math/Color.h>
 #include <Math/Matrix4x4.h>
@@ -14,8 +15,9 @@ namespace ost
 
     struct StaticMeshRenderProxy
     {
-        ModelHandle hModel;
         Matrix4x4 transform;
+        HMaterialInstance hMaterial;
+        HModel hModel;
     };
 
     enum class ELightProxyType

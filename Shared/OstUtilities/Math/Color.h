@@ -3,6 +3,7 @@
 #include <OstTypes.h>
 
 #include <Math/Math.h>
+#include <Math/Vector4.h>
 
 // ------------------------------------------------------------
 
@@ -54,6 +55,7 @@ namespace ost
             {
                 Float32 R, G, B, A;
             };
+            Vector4f Vec4;
         };
 
         Color()
@@ -61,6 +63,14 @@ namespace ost
             , G{0}
             , B{0}
             , A{0}
+        {
+        }
+
+        constexpr Color(const Color& other)
+            : R{other.R}
+            , G{other.G}
+            , B{other.B}
+            , A{other.A}
         {
         }
 

@@ -11,6 +11,7 @@ namespace ost
     class IGame;
     class IRenderQueue;
     class IGraphicsResourceManager;
+    class IMaterialManager;
     class InputReader;
     class IRenderer;
 
@@ -18,6 +19,7 @@ namespace ost
     {
         UniquePtr<IGame> gameInstance;
         IGraphicsResourceManager* pGfxResourceManager;
+        IMaterialManager* pMaterialManager;
     };
 
     class IOstEngine

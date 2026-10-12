@@ -25,12 +25,15 @@ void ost::RenderQueue::Push(ModelCommand&& cmd)
 {
     const Model& model = _resourceManager.Get(cmd.hModel);
 
-    for (const MeshHandle& hSubmesh : model.meshHandles)
+    for (const HMesh& hSubmesh : model.meshHandles)
     {
-        RenderCommand cmd;
-        cmd.pMesh = &_resourceManager.Get(hSubmesh);
-        cmd.transform = cmd.transform;
-        _drawCommands.Add(cmd);
+        RenderCommand renderCmd;
+        renderCmd.pMesh = &_resourceManager.Get(hSubmesh);
+        renderCmd.transform = cmd.transform;
+        renderCmd.pMaterialInstance = &_resourceManager.Get(cmd.hMaterialInstance);
+        renderCmd.pMaterial = &_resourceManager.Get(renderCmd.pMaterialInstance->GetBaseMaterialHandle());
+
+        _drawCommands.Add(renderCmd);
     }
 }
 

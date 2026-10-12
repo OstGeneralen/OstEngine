@@ -36,6 +36,9 @@ void ImageLoader::Load(const std::string& path, TextureCPUData& into) const
     case DXGI_FORMAT_BC7_UNORM_SRGB:
         into.format = ETextureFormat::DDS_BC7_SRGB;
         break;
+    case DXGI_FORMAT_R16G16_UNORM:
+        into.format = ETextureFormat::NormalMap;
+        break;
     default:
         OST_ASSERT(false, "Must be BC7 rgba or srgb");
     }

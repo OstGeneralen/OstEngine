@@ -15,7 +15,7 @@ using namespace ost;
 UniquePtr<IOstEngine> IOstEngine::CreateNew(OstEngineSettings&& settings)
 {
     UniquePtr<OstEngine> ptr = Ptr::NewUnique<OstEngine>();
-    ptr->Initialize(std::move(settings.gameInstance), *settings.pGfxResourceManager);
+    ptr->Initialize(std::move(settings.gameInstance), *settings.pGfxResourceManager, *settings.pMaterialManager);
     return ptr;
 }
 
@@ -32,9 +32,9 @@ OstEngine::~OstEngine()
 
 // ------------------------------------------------------------
 
-void OstEngine::Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceManager& gfxResourceManager)
+void OstEngine::Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager)
 {
-    _assetManager.Initialize(gfxResourceManager);
+    _assetManager.Initialize(gfxResourceManager, materialManager);
 
     _gameInstance = std::move(gameInstance);
     _gameInstance->Load(_context);
@@ -58,7 +58,7 @@ void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetR
 {
     for (const auto& meshProxy : _gameWorld.GetSceneGraph().GetStaticMeshProxies())
     {
-        toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.transform));
+        toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.hMaterial, meshProxy.transform));
     }
 
     for (const auto& lightProxy : _gameWorld.GetSceneGraph().GetLightProxies())

@@ -1,7 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/Resources/ObjectHandles.h"
-
+#include "GraphicsEngine/Materials/IMaterialInstance.h"
 #include <Math/Color.h>
 #include <Math/Matrix4x4.h>
 #include <Math/Vector3.h>
@@ -12,13 +12,15 @@ namespace ost
 {
     struct ModelCommand
     {
-        ModelCommand(ModelHandle h, const Matrix4x4& t)
+        ModelCommand(HModel h, HMaterialInstance hMatInstance, const Matrix4x4& t)
             : hModel{h}
+            , hMaterialInstance{hMatInstance}
             , transform{t}
         {
         }
 
-        ModelHandle hModel;
+        HModel hModel;
+        HMaterialInstance hMaterialInstance;
         Matrix4x4 transform;
     };
     struct LightCommand

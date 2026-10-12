@@ -9,9 +9,20 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-StaticMeshComponent::StaticMeshComponent(ModelHandle modelHandle)
-    : _modelHandle{modelHandle}
+void StaticMeshComponent::SetModel(HModel hnd)
 {
+    if(_pSceneGraph)
+    {
+        _pSceneGraph->GetStaticMeshProxy( _proxyMeshHandle ).hModel = hnd;
+    }
+}
+
+void StaticMeshComponent::SetMaterial(HMaterialInstance hnd)
+{
+    if(_pSceneGraph)
+    {
+        _pSceneGraph->GetStaticMeshProxy( _proxyMeshHandle ).hMaterial = hnd;
+    }
 }
 
 // ------------------------------------------------------------
@@ -19,7 +30,6 @@ StaticMeshComponent::StaticMeshComponent(ModelHandle modelHandle)
 void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)
 {
     StaticMeshRenderProxy renderProxy;
-    renderProxy.hModel = _modelHandle;
     renderProxy.transform = GetOwner().transform.GetWorldTransform();
     _proxyMeshHandle = SceneGraph.AddStaticMeshProxy(renderProxy);
 

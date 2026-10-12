@@ -30,6 +30,7 @@ void Application::Startup()
     OstEngineSettings coreEngineSettings;
     coreEngineSettings.gameInstance = CreateGameInstance();
     coreEngineSettings.pGfxResourceManager = &_graphicsEngine->GetResourceManager();
+    coreEngineSettings.pMaterialManager = &_graphicsEngine->GetMaterialManager();
 
     _coreEngine = IOstEngine::CreateNew(std::move(coreEngineSettings));
 }
