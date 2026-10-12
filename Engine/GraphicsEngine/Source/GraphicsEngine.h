@@ -29,7 +29,7 @@ namespace ost
         void Initialize(const GraphicsEngineSettings& settings);
         void Shutdown();
 
-    public: // IGraphicsEngine
+        // BEGIN IGraphicsEngine
         virtual void UpdateSettings(const GraphicsEngineSettings& settings) override;
 
         virtual IRenderer& GetRenderer() override;
@@ -38,6 +38,9 @@ namespace ost
         virtual IMaterialManager& GetMaterialManager() override;
 
         void ExecuteAndClearCommandQueue() override;
+
+        const IRenderHardwareInterface& GetRenderHardwareInterface() const override;
+        // END IGraphicsEngine
 
     private:
         Vector2f GetRenderSize() const;

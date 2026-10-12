@@ -57,6 +57,7 @@ add_library(${PROJECT_NAME} STATIC
     Source/Materials/MaterialUtility.h
     Source/Rendering/RenderContext.h
     Source/Rendering/RenderCommand.cpp
+    Include/GraphicsEngine/IRenderHardwareInterface.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

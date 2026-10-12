@@ -159,6 +159,11 @@ void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
     _renderQueue.Clear();
 }
 
+const IRenderHardwareInterface& GraphicsEngine::GetRenderHardwareInterface() const
+{
+    return _rhi;
+}
+
 // ------------------------------------------------------------
 
 Vector2f GraphicsEngine::GetRenderSize() const

@@ -1,5 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GraphicsEngine/IRenderHardwareInterface.h"
 #include "GraphicsEngine/Materials/IMaterialManager.h"
 #include "GraphicsEngine/Rendering/IRenderQueue.h"
 #include "GraphicsEngine/Rendering/IRenderer.h"
@@ -54,6 +55,8 @@ namespace ost
         virtual IMaterialManager& GetMaterialManager() = 0;
 
         virtual void ExecuteAndClearCommandQueue() = 0;
+
+        virtual const IRenderHardwareInterface& GetRenderHardwareInterface() const = 0;
     };
 
 } // namespace ost

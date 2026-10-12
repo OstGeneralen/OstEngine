@@ -2,6 +2,8 @@
 #pragma once
 #include "RHI/RHIMinimal.h"
 
+#include "GraphicsEngine/IRenderHardwareInterface.h"
+
 // Render Objects & Resources
 #include "Objects/Buffer.h"
 #include "Objects/Model.h"
@@ -22,7 +24,7 @@
 
 namespace ost
 {
-    class RenderHardwareInterface
+    class RenderHardwareInterface : public IRenderHardwareInterface
     {
     public: // Lifetime
         RenderHardwareInterface();
@@ -63,6 +65,14 @@ namespace ost
         void Draw(const Mesh& mesh, bool uploadBuffers) const;
 
         void Present() const;
+
+    public:
+        // BEGIN IRenderHardwareInterface
+        ERHIPlatform GetBackendPlatform() const override;
+        
+        const void* GetNativeDevice() const override;
+        const void* GetNativeContext() const override;
+        // END IRenderHardwareInterface
 
     private:
         ComPtr<RHIDevice> _device;
