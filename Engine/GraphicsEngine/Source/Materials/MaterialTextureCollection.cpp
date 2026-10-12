@@ -52,6 +52,7 @@ HTexture MaterialTextureCollection::GetTexture(const std::string& name) const
     {
         return GetTexture(*pSlot);
     }
+    return {};
 }
 
 HTexture MaterialTextureCollection::GetTexture(EMaterialTexture textureSlot) const
