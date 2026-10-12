@@ -53,6 +53,13 @@ void Game::Load(ost::EngineContext& context)
     materialInstance->Textures().SetTexture(ost::EMaterialTexture::Normal, leatherNormal);
     materialInstance->Textures().SetTexture(ost::EMaterialTexture::ORM, leatherORM);
 
+    ost::HMaterialInstance rockMaterial;
+    rockMaterial = context.Assets().CreateMaterialInstance(materialHandle);
+    ost::IMaterialInstance* rockMaterialInstance = &context.Assets().GetMaterialInstance(rockMaterial);
+    rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::Albedo, rockAlbedo);
+    rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::Normal, rockNormal);
+    rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::ORM, rockORM);
+
 
     // Now let's create the plane actor
 

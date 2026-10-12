@@ -57,8 +57,8 @@ float4 PSMain( SurfacePixel frag ) : SV_Target
     pblData.normal = pixelNormal;
     pblData.position =  frag.WorldPosition.rgb;
     pblData.ao = ORM.r;
-    pblData.roughness = ORM.g;
-    pblData.metallic = 0;
+    pblData.roughness = max(0.001f, ORM.g);
+    pblData.metallic = max(0.001f, ORM.b);
     float4 litColor = CalculatePBLColor( pblData );
 
     MaterialPixelData materialData;
