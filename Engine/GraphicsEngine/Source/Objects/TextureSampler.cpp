@@ -15,7 +15,7 @@ TextureSampler::~TextureSampler() = default;
 
 void ost::TextureSampler::SetDebugName(const std::string& name)
 {
-    _samplerState->SetPrivateData(WKPDID_D3DDebugObjectName, name.length(), name.data());
+    _samplerState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(name.length()), name.data());
 }
 
 // ------------------------------------------------------------

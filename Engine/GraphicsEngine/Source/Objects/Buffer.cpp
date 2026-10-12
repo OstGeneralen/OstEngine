@@ -15,7 +15,7 @@ void ost::Buffer::SetDebugName(const std::string& n) const
 {
     if (_buffer)
     {
-        _buffer->SetPrivateData(WKPDID_D3DDebugObjectName, n.length(), n.data());
+        _buffer->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(n.length()), n.data());
     }
 }
 

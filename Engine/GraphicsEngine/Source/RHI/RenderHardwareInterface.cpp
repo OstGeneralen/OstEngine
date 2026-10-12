@@ -42,7 +42,7 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
         ComPtr<IDXGIAdapter> currentEvalAdapter;
         SizeType currentAdapterIndex = 0;
 
-        while (factory->EnumAdapters(currentAdapterIndex, &currentEvalAdapter) != DXGI_ERROR_NOT_FOUND)
+        while (factory->EnumAdapters(static_cast<UINT>(currentAdapterIndex), &currentEvalAdapter) != DXGI_ERROR_NOT_FOUND)
         {
             DXGI_ADAPTER_DESC adapterDesc = {};
             currentEvalAdapter->GetDesc(&adapterDesc);
@@ -89,8 +89,8 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
     D3D11_VIEWPORT viewport = {};
     viewport.MaxDepth = 1.0f;
     viewport.MinDepth = 0.0f;
-    viewport.Width = renderSize.X;
-    viewport.Height = renderSize.Y;
+    viewport.Width = static_cast<Float32>(renderSize.X);
+    viewport.Height = static_cast<Float32>(renderSize.Y);
     _immediateContext->RSSetViewports(1, &viewport);
 
     // 5. Log to confirm :)
@@ -137,8 +137,8 @@ void RenderHardwareInterface::ResizeBackbuffer(const Vector2u& newSize, Texture&
     D3D11_VIEWPORT viewport = {};
     viewport.MaxDepth = 1.0f;
     viewport.MinDepth = 0.0f;
-    viewport.Width = newSize.X;
-    viewport.Height = newSize.Y;
+    viewport.Width = static_cast<Float32>(newSize.X);
+    viewport.Height = static_cast<Float32>(newSize.Y);
     _immediateContext->RSSetViewports(1, &viewport);
 
     Log::Log(RHILog, "Render output resized. {}x{}", newSize.X, newSize.Y);
@@ -153,14 +153,14 @@ bool RenderHardwareInterface::CreateTexture(const TextureCPUData& desc, Texture&
     textureDesc.Format = translate::TextureFormat(desc.format);
     textureDesc.Height = desc.dimensions.Y;
     textureDesc.Width = desc.dimensions.X;
-    textureDesc.MipLevels = desc.mipCount;
+    textureDesc.MipLevels = static_cast<UINT>(desc.mipCount);
     textureDesc.SampleDesc.Count = 1;
     textureDesc.SampleDesc.Quality = 0;
     textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
     textureDesc.ArraySize = 1;
 
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-    srvDesc.Texture2D.MipLevels = desc.mipCount;
+    srvDesc.Texture2D.MipLevels = static_cast<UINT>(desc.mipCount);
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 
@@ -168,8 +168,8 @@ bool RenderHardwareInterface::CreateTexture(const TextureCPUData& desc, Texture&
     for (SizeType i = 0; i < imgData.GetSize(); ++i)
     {
         imgData[i].pSysMem = desc.images[i].data.GetData();
-        imgData[i].SysMemPitch = desc.images[i].rowPitch;
-        imgData[i].SysMemSlicePitch = desc.images[i].slicePitch;
+        imgData[i].SysMemPitch = static_cast<UINT>(desc.images[i].rowPitch);
+        imgData[i].SysMemSlicePitch = static_cast<UINT>(desc.images[i].slicePitch);
     }
 
     ComPtr<RHITexture2D> textureResource;
@@ -284,9 +284,9 @@ bool RenderHardwareInterface::CreateVertexBuffer(SizeType vertexSize, SizeType n
 {
     D3D11_BUFFER_DESC desc = {};
     desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    desc.ByteWidth = vertexSize * numVerts;
+    desc.ByteWidth = static_cast<UINT>(vertexSize * numVerts);
     desc.CPUAccessFlags = 0;
-    desc.StructureByteStride = vertexSize;
+    desc.StructureByteStride = static_cast<UINT>(vertexSize);
     desc.Usage = D3D11_USAGE_IMMUTABLE;
 
     D3D11_SUBRESOURCE_DATA initialData = {};
@@ -306,7 +306,7 @@ bool RenderHardwareInterface::CreateIndexBuffer(SizeType numIndices, const Uint3
 {
     D3D11_BUFFER_DESC desc = {};
     desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    desc.ByteWidth = sizeof(Uint32) * numIndices;
+    desc.ByteWidth = static_cast<UINT>(sizeof(Uint32) * numIndices);
     desc.CPUAccessFlags = 0;
     desc.StructureByteStride = sizeof(Uint32);
     desc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -327,9 +327,9 @@ bool RenderHardwareInterface::CreateBuffer(SizeType numBytes, Buffer& outBuffer,
 {
     D3D11_BUFFER_DESC desc = {};
     desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    desc.ByteWidth = numBytes;
+    desc.ByteWidth = static_cast<UINT>(numBytes);
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    desc.StructureByteStride = numBytes;
+    desc.StructureByteStride = static_cast<UINT>(numBytes);
     desc.Usage = D3D11_USAGE_DYNAMIC;
 
     D3D11_SUBRESOURCE_DATA initialData = {};
@@ -384,7 +384,7 @@ bool RenderHardwareInterface::CreatePSO(const PipelineStateObjectDesc& desc, Pip
         inputElem.SemanticName = desc.vertexLayout[i].semanticName.c_str();
     }
 
-    if (FAILED(_device->CreateInputLayout(inputElements.GetData(), inputElements.GetSize(), desc.vertexShader.pBytecode, desc.vertexShader.bytecodeSize,
+    if (FAILED(_device->CreateInputLayout(inputElements.GetData(), static_cast<UINT>(inputElements.GetSize()), desc.vertexShader.pBytecode, desc.vertexShader.bytecodeSize,
                                           &outPSO._vertexLayout)))
     {
         return false;
@@ -489,7 +489,7 @@ void RenderHardwareInterface::SetRenderTargets(const Texture* pRenderTargets, Si
         rtvs[i] = pRenderTargets[i]._rtv.Get();
     }
 
-    _immediateContext->OMSetRenderTargets(numTargets, rtvs, (pDepthTarget ? pDepthTarget->_dsv.Get() : nullptr));
+    _immediateContext->OMSetRenderTargets(static_cast<UINT>(numTargets), rtvs, (pDepthTarget ? pDepthTarget->_dsv.Get() : nullptr));
 }
 
 void RenderHardwareInterface::Draw(const Mesh& mesh, bool setBuffers) const
@@ -503,7 +503,7 @@ void RenderHardwareInterface::Draw(const Mesh& mesh, bool setBuffers) const
         _immediateContext->IASetIndexBuffer(mesh.indexBuffer._buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
     }
 
-    _immediateContext->DrawIndexed(mesh.indexCount, mesh.indexOffset, mesh.vertexOffset);
+    _immediateContext->DrawIndexed(static_cast<UINT>(mesh.indexCount), static_cast<UINT>(mesh.indexOffset), static_cast<UINT>(mesh.vertexOffset));
 }
 
 void RenderHardwareInterface::Present() const
