@@ -43,11 +43,11 @@ void KeyboardMovementComponent::Update(ost::ComponentContext& context)
         direction.Y -= 1;
     }
 
-    if (context.Input().Down(ost::EKeyboard::Right))
+    if (context.Input().Down(ost::EKeyboard::E))
     {
         rotation.Y += 1;
     }
-    if (context.Input().Down(ost::EKeyboard::Left))
+    if (context.Input().Down(ost::EKeyboard::Q))
     {
         rotation.Y -= 1;
     }

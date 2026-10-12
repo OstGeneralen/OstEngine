@@ -40,6 +40,7 @@ cbuffer FrameBuffer : BUFFER_SLOT_FRAME
 {
     row_major float4x4 FrameBuf_ViewMatrix;
     row_major float4x4 FrameBuf_ViewMatrixInv;
+    float4 FrameBuf_ViewLocation;
 };
 
 cbuffer ObjectBuffer : BUFFER_SLOT_OBJECT
@@ -67,6 +68,7 @@ struct SurfaceVertex
 struct SurfacePixel
 {
     float4 Position : SV_Position;
+    float3 WorldPosition : POSITION;
     float3 Normal : NORMAL;
     float3 Tangent : TANGENT;
     float3 Bitangent : BINORMAL;

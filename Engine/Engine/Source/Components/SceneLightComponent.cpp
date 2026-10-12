@@ -23,6 +23,15 @@ void ost::SceneLightComponent::SetAmbientColor(const Color& color)
     }
 }
 
+void ost::SceneLightComponent::SetSunColor(const Color& color)
+{
+    _sunColor = color;
+    if(_pSceneGraph)
+    {
+        _pSceneGraph->GetLightProxy(_directionalLightProxyHandle).color = _sunColor;
+    }
+}
+
 // ------------------------------------------------------------
 
 void SceneLightComponent::InitializeRenderState(SceneGraph& SceneGraph)

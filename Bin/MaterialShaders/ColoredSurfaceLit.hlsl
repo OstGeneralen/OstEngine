@@ -14,8 +14,8 @@ void Material_VS( inout MaterialVertexData vertexData )
 
 void Material_PS(inout MaterialPixelData pixelData)
 {
-    //float3 keepBase = lerp( pixelData.color.rgb, float3(0,0,0), OverrideStrength );
-    //float3 keepOverride = lerp(float3(0,0,0), OverrideColor.rgb, OverrideStrength );
-    //float3 finalColor = keepBase + keepOverride;
-    pixelData.color = pixelData.color;
+    float3 keepBase = lerp( pixelData.color.rgb, float3(0,0,0), OverrideStrength );
+    float3 keepOverride = lerp(float3(0,0,0), OverrideColor.rgb, OverrideStrength );
+    float3 finalColor = keepBase + keepOverride;
+    pixelData.color = float4(saturate(finalColor), 1);
 }

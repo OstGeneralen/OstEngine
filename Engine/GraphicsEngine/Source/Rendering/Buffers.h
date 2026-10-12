@@ -12,6 +12,7 @@ namespace ost
     {
         Matrix4x4 viewMatrix;
         Matrix4x4 inverseViewMatrix;
+        Vector4f viewLocation;
     };
 
     struct alignas(16) ObjectBufferStructure

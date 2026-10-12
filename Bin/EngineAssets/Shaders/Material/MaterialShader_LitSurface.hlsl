@@ -1,10 +1,13 @@
 #include "../ShaderSlots.hlsli"
 #include "../ShaderCore.hlsli"
+#include "../ShaderCommon.hlsli"
+#include "../PBLShader.hlsli"
 #include "MaterialCore.hlsli"
 #include "MaterialInclude"
 
 Texture2D TEX_Albedo : TEXTURE_SLOT_ALBEDO;
 Texture2D TEX_Normal : TEXTURE_SLOT_NORMAL;
+Texture2D TEX_Orm : TEXTURE_SLOT_ORM;
 
 SurfacePixel VSMain( SurfaceVertex vertex )
 {
@@ -22,9 +25,10 @@ SurfacePixel VSMain( SurfaceVertex vertex )
     row_major float3x3 toWorld = ( float3x3 )ObjectBuf_Transform;
     output.Tangent = normalize(mul(vertex.Tangent, toWorld));
     output.Normal = normalize(mul(vertex.Normal, toWorld));
-    output.Bitangent = normalize(mul(cross(output.Normal, output.Tangent), toWorld));
+    output.Bitangent = normalize(cross(output.Normal, output.Tangent));
 
     output.Position = mul(data.vertexWorldPos, FrameBuf_ViewMatrix );
+    output.WorldPosition = data.vertexWorldPos;
     output.UV = data.vertexUV;
     return output;
 }
@@ -32,31 +36,39 @@ SurfacePixel VSMain( SurfaceVertex vertex )
 
 float4 PSMain( SurfacePixel frag ) : SV_Target
 {
+    // Sample PLB textures
     float3 albedoColor = TEX_Albedo.Sample(TrilinearWrap, frag.UV).rgb;
     float2 sampleNormal = TEX_Normal.Sample(TrilinearWrap, frag.UV).rg;
+    float3 ORM = TEX_Orm.Sample(TrilinearWrap, frag.UV).rgb;
 
-    // Unpack
-    sampleNormal = (sampleNormal * 2.0f) - 1.0f;
-
-    // Reconstruct
-    float3 tangentNormal = float3(sampleNormal.x, sampleNormal.y, 0);
-    tangentNormal.z = sqrt( 1.0f - saturate( (sampleNormal.x * sampleNormal.x) + (sampleNormal.y * sampleNormal.y)));
+    // Calculate Tangent Normal
+    float3 tangentNormal = ExtractAndUnpackNormal( sampleNormal );
 
     float3 N = normalize(frag.Normal);
     float3 T = normalize(frag.Tangent);
     float3 B = normalize(frag.Bitangent);
-    float3x3 TBN = float3x3(T,B,N);
+    row_major float3x3 TBN = float3x3(T,B,N);
 
     float3 pixelNormal = mul(tangentNormal, TBN);
 
+    // Calculate the PBL lit pixel
+    PBRData pblData;
+    pblData.albedo = albedoColor;
+    pblData.normal = pixelNormal;
+    pblData.position =  frag.WorldPosition.rgb;
+    pblData.ao = ORM.r;
+    pblData.roughness = ORM.g;
+    pblData.metallic = 0;
+    float4 litColor = CalculatePBLColor( pblData );
+
     MaterialPixelData materialData;
-    materialData.color = float4(albedoColor.rgb, 1);
+    materialData.color = litColor;
     Material_PS(materialData);
 
-    float lightFactor = dot( Light_SunDir.xyz * -1, pixelNormal );
-    lightFactor = (lightFactor + 1) * 0.5f;
+    const float gamma = 1.9f;
+    float3 gammaCorrected = float3( pow(materialData.color.r, 1.0f / gamma), pow(materialData.color.g, 1.0f / gamma), pow(materialData.color.b, 1.0f / gamma) );
 
-    float4 finalColor = saturate((materialData.color * lightFactor) + Light_AmbientCol);
-
-    return finalColor;
+    return float4(gammaCorrected, 1);
+    //return float4(sampleNormal.r, sampleNormal.g, 1, 1);
+    //return float4( (frag.Normal.r + 1.0f) * 0.5f, (frag.Normal.g + 1.0f) * 0.5f, 1.0f, 1.0f );
 }

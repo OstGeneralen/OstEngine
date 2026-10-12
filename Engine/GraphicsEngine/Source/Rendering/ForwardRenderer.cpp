@@ -77,8 +77,10 @@ void ost::ForwardRenderer::ExecuteCommands(const Matrix4x4& view, const IRenderQ
     FrameBufferStructure frameBufferData = {};
     frameBufferData.viewMatrix = view;
     frameBufferData.inverseViewMatrix = view;
+    frameBufferData.viewLocation = view.ExtractTranslation();
     _rhi->UpdateBuffer(_frameBuffer, &frameBufferData, sizeof(FrameBufferStructure));
     _rhi->SetBuffer(_frameBuffer, PipelineConstant::Get(EBufferSlot::FrameBuffer), EPipelineStage_VS | EPipelineStage_PS);
+
 
     // Update and upload light buffer
     LightsBufferStructure lightsData = {};

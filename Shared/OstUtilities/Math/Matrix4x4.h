@@ -134,6 +134,11 @@ namespace ost
             return Matrix3x3{m11, m12, m13, m21, m22, m23, m31, m32, m33};
         }
 
+        inline Vector4f ExtractTranslation() const
+        {
+            return Vector4f{ m41, m42, m43, 1.0f };
+        }
+
     private:
         static inline DirectX::XMMATRIX LoadDxType(const DirectX::XMFLOAT4X4& dxt)
         {
