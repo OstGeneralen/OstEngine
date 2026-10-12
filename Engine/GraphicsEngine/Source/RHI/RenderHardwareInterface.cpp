@@ -6,6 +6,7 @@
 #include <OstLog.h>
 
 #include <Memory/Memory.h>
+#include <Utility/StringConversion.h>
 
 using namespace ost;
 
@@ -95,8 +96,7 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
     // 5. Log to confirm :)
     DXGI_ADAPTER_DESC adapterDesc = {};
     selectedAdapter->GetDesc(&adapterDesc);
-    const std::wstring adapterNameW = adapterDesc.Description;
-    const std::string selectedAdapterName = std::string(adapterNameW.begin(), adapterNameW.end());
+    const std::string selectedAdapterName = StringUtility::Utf16ToUtf8(adapterDesc.Description);
     Log::Log(RHILog, "RHI Created. Adapter: '{}' Render Size: {}x{}", selectedAdapterName, renderSize.X, renderSize.Y);
 
     return true;

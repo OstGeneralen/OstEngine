@@ -5,6 +5,7 @@
 #include <d3dcompiler.h>
 #include <dxgi.h>
 #include <filesystem>
+#include <Utility/StringConversion.h>
 
 #include <Memory/Memory.h>
 
@@ -15,7 +16,7 @@
 
 ost::List<Uint8> ost::CompileShaderFromFile(const std::string& filePath, EPipelineStage targetStage)
 {
-    std::wstring pathWstr = std::wstring(filePath.begin(), filePath.end());
+    std::wstring pathWstr = StringUtility::Utf8ToUtf16(filePath);
 
     static constexpr std::string_view psMain = "PSMain";
     static constexpr std::string_view vsMain = "VSMain";
