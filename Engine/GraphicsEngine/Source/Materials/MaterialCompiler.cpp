@@ -17,7 +17,7 @@ using namespace ost;
 
 auto MaterialCompileLog = Log::NewCategory("MaterialCompiler");
 
-const std::filesystem::path MaterialShaderRootPath = "EngineAssets/Shaders/Material";
+const std::filesystem::path MaterialShaderRootPath = "Engine/Shader/Material";
 
 // ------------------------------------------------------------
 

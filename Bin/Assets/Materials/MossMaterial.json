@@ -1,0 +1,8 @@
+{
+    "materialClass": "Engine/Mat_DefaultLit",
+    "textures":[
+        {"slot": 0, "texture": "Game/Moss_Albedo"},
+        {"slot": 1, "texture": "Game/Moss_Normal"},
+        {"slot": 2, "texture": "Game/Moss_ORM"}
+    ]
+}

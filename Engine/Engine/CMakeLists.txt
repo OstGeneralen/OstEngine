@@ -46,6 +46,8 @@ add_library(${PROJECT_NAME} STATIC
     Source/OstEngineContext.h
     Source/OstEngineContext.cpp
     Include/Engine/Asset/AssetType.h
+    Source/Asset/Loaders/MaterialLoader.h
+    Source/Asset/Loaders/MaterialLoader.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

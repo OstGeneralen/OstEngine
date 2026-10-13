@@ -39,9 +39,29 @@ OstEngine::~OstEngine()
 
 // ------------------------------------------------------------
 
+#include <nlohmann/json.hpp>
+#include <fstream>
+
 void OstEngine::Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager)
 {
-    _assetManager.Initialize(gfxResourceManager, materialManager);
+    // Parse the configuration.json
+    std::ifstream fileStream( "Configuration.json" );
+    nlohmann::json rootJson;
+    rootJson << fileStream;
+
+    auto gameAssetsConfig = rootJson["paths"]["assets"];
+    auto engineAssetsConfig = rootJson["paths"]["engine"];
+
+    AssetManagerConfig assetsCfg;
+    assetsCfg.engineAssetsPathConfig.path = engineAssetsConfig["rootDir"].get<std::string>();
+    assetsCfg.engineAssetsPathConfig.prefix = engineAssetsConfig["prefix"].get<std::string>();
+    assetsCfg.gameAssetsPathConfig.path = gameAssetsConfig["rootDir"].get<std::string>();
+    assetsCfg.gameAssetsPathConfig.prefix = gameAssetsConfig["prefix"].get<std::string>();
+
+    _assetManager.Initialize(gfxResourceManager, materialManager, assetsCfg);
+
+    // Create the engine defaults
+    _assetManager.Load<IMaterial>("Engine/Mat_DefaultLit");
 
     _gameInstance = std::move(gameInstance);
     _gameInstance->Load(_gameContext);

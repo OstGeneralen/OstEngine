@@ -10,12 +10,40 @@
 
 namespace ost
 {
+    struct AssetContext
+    {
+        AssetContext(IAssetManager& am, IGraphicsResourceManager& grm, IMaterialManager& mm)
+            : assets{am}
+            , gfxResources{grm}
+            , materials{mm}
+        {
+        }
+
+        IAssetManager& assets;
+        IGraphicsResourceManager& gfxResources;
+        IMaterialManager& materials;
+    };
+
+    struct ConstAssetContext
+    {
+        ConstAssetContext(const IAssetManager& am, const IGraphicsResourceManager& grm, const IMaterialManager& mm)
+            : assets{am}
+            , gfxResources{grm}
+            , materials{mm}
+        {
+        }
+
+        const IAssetManager& assets;
+        const IGraphicsResourceManager& gfxResources;
+        const IMaterialManager& materials;
+    };
+
     struct AssetTypeContainer
     {
-        typedef SizeType (*LoadFunc)(const std::string&, IGraphicsResourceManager&, IMaterialManager&);
-        typedef SizeType (*CreateFunc)(IGraphicsResourceManager&, IMaterialManager&, const void*);
-        typedef void (*GetFunc)(IGraphicsResourceManager&, IMaterialManager&, SizeType, void**);
-        typedef void (*CGetFunc)(IGraphicsResourceManager&, IMaterialManager&, SizeType, const void**);
+        typedef SizeType (*LoadFunc)(const std::string&, AssetContext&&);
+        typedef SizeType (*CreateFunc)(AssetContext&&, const void*);
+        typedef void (*GetFunc)(AssetContext&&, SizeType, void**);
+        typedef void (*CGetFunc)(ConstAssetContext&&, SizeType, const void**);
 
         AssetTypeContainer() = default;
         AssetTypeContainer(AssetTypeContainer&&) noexcept = default;
@@ -35,13 +63,26 @@ namespace ost
         CGetFunc cGetFunc = nullptr;
 
         Map<std::string, SizeType> nameToHandle;
-        Map<std::string, std::string> pathToName;
+    };
+
+    struct AssetManagerConfig
+    {
+        struct PathConfig
+        {
+            std::string prefix;
+            std::string path;
+        };
+
+        PathConfig engineAssetsPathConfig;
+        PathConfig gameAssetsPathConfig;
     };
 
     class AssetManager : public IAssetManager
     {
     public:
-        void Initialize(IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager);
+        void Initialize(IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager, const AssetManagerConfig& config);
+
+        void ScanAssets();
 
     protected:
         // BEGIN IAssetManager
@@ -49,11 +90,17 @@ namespace ost
         const void GetAssetByRawHandle(TypeID assetType, SizeType rawHnd, const void** ppOut) const override;
 
         SizeType CreateAsset(TypeID assetType, const std::string& name, const void* descData) override;
-        SizeType LoadFromFile(TypeID assetType, const std::string& name, const std::filesystem::path& path) override;
+        SizeType LoadFromFile(TypeID assetType, const std::string& name) override;
         SizeType GetHandleRaw(TypeID typeID, const std::string& name) const override;
         // END IAssetManager
 
     private:
+        AssetContext MakeContext();
+        ConstAssetContext MakeContext() const;
+
+        AssetManagerConfig _config;
+        Map<std::string, std::string> _assetNameToPath;
+
         IGraphicsResourceManager* _pGfxResourceManager;
         IMaterialManager* _pMaterialManager;
 

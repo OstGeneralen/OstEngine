@@ -1,0 +1,4 @@
+{
+    "domain": "surfaceLit",
+    "shader": "Engine/Shader/Material/MaterialShader_LitSurfaceDefault.hlsl"
+}

@@ -46,16 +46,16 @@ namespace ost
         }
 
         template <typename TAsset>
-        AssetTraits<TAsset>::HandleType LoadFromFile(const std::string& name, const std::filesystem::path& path)
+        AssetTraits<TAsset>::HandleType Load(const std::string& name)
         {
-            return AssetTraits<TAsset>::HandleType(LoadFromFile(TypeID::Get<TAsset>(), name, path));
+            return AssetTraits<TAsset>::HandleType(LoadFromFile(TypeID::Get<TAsset>(), name));
         }
 
     protected:
         virtual void GetAssetByRawHandle(TypeID assetType, SizeType rawHnd, void** ppOut) = 0;
         virtual const void GetAssetByRawHandle(TypeID assetType, SizeType rawHnd, const void** ppOut) const = 0;
         virtual SizeType CreateAsset(TypeID assetType, const std::string& name, const void* descData) = 0;
-        virtual SizeType LoadFromFile(TypeID assetType, const std::string& name, const std::filesystem::path& path) = 0;
+        virtual SizeType LoadFromFile(TypeID assetType, const std::string& name) = 0;
         virtual SizeType GetHandleRaw(TypeID typeID, const std::string& name) const = 0;
     };
 } // namespace ost

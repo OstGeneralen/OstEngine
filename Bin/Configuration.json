@@ -1,0 +1,13 @@
+{
+    "paths":
+    {
+        "assets":{
+            "rootDir": "Assets/",
+            "prefix": "Game"    
+        },
+        "engine":{
+            "rootDir": "Engine/",
+            "prefix": "Engine"    
+        }
+    }
+}
