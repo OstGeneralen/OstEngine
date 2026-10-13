@@ -63,6 +63,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC ${OST_COMMON_NAME}
     PUBLIC ${OST_LOGGER_NAME}
     PUBLIC ${OST_GRAPHICS_ENGINE_NAME}
+    PRIVATE nlohmann_json
     PRIVATE DirectXTex
     PRIVATE assimp
 )

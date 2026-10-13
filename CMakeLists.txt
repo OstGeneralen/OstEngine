@@ -53,10 +53,16 @@ OstForceSetOption(DIRECTXMATH_HEADER_ONLY ON)   # Required to be ON, else Direct
 OstForceSetOption(ASSIMP_BUILD_TESTS OFF)       # Kinda assume this is indeed tested so let's not bother building the tests for ourselves
 OstForceSetOption(ASSIMP_INSTALL OFF)           # Don't install, let's keep it small
 
+# Nlohmann Json
+OstForceSetOption( JSON_BuildTests OFF )        # Dont build tests for nlohmann::json
+OstForceSetOption( JSON_Install OFF )           # Dont install :)
+
+
 # ===================================================================================
 # Add Subdirectories
 
 # Dependencies
+OstAddSubdirEnsureCompliant(Dependencies/Json nlohmann_json)
 OstAddSubdirEnsureCompliant(Dependencies/DirectXMath DirectXMath)
 OstAddSubdirEnsureCompliant(Dependencies/DirectXTex DirectXTex)
 OstAddSubdirEnsureCompliant(Dependencies/Assimp assimp)

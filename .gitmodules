@@ -7,3 +7,6 @@
 [submodule "Dependencies/DirectXMath"]
 	path = Dependencies/DirectXMath
 	url = https://github.com/microsoft/DirectXMath
+[submodule "Dependencies/Json"]
+	path = Dependencies/Json
+	url = https://github.com/nlohmann/json
