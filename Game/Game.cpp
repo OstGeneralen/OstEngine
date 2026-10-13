@@ -28,38 +28,24 @@ void Game::Load(ost::GameContext& context)
 
     auto& assets = ost::EngineContext::Get().Assets();
 
-    ost::HModel cubeModel = assets.LoadModelFromFile("Meshes/MaterialTestPlane.fbx");
-    ost::HModel planeModel = assets.LoadModelFromFile("Meshes/PlaneTest.fbx");
+    ost::HModel cubeModel = assets.LoadFromFile<ost::HModel>("Models/Cube", "Meshes/MaterialTestPlane.fbx");
+    ost::HModel planeModel = assets.LoadFromFile<ost::HModel>("Models/Plane", "Meshes/PlaneTest.fbx");
 
     // Load our two textures
-    ost::HTexture rockAlbedo = assets.LoadTextureFromFile("Materials/Rock/Rock_Albedo.dds");
-    ost::HTexture rockNormal = assets.LoadTextureFromFile("Materials/Rock/Rock_Normal.dds");
-    ost::HTexture rockORM = assets.LoadTextureFromFile("Materials/Rock/Rock_ORM.dds");
-
-    ost::HTexture leatherAlbedo = assets.LoadTextureFromFile("Materials/Leather/Leather_Albedo.dds");
-    ost::HTexture leatherNormal = assets.LoadTextureFromFile("Materials/Leather/Leather_Normal.dds");
-    ost::HTexture leatherORM = assets.LoadTextureFromFile("Materials/Leather/Leather_ORM.dds");
+    ost::HTexture rockAlbedo = assets.LoadFromFile<ost::HTexture>("Textures/RockC", "Materials/Rock/Rock_Albedo.dds");
+    ost::HTexture rockNormal = assets.LoadFromFile<ost::HTexture>("Textures/RockN", "Materials/Rock/Rock_Normal.dds");
+    ost::HTexture rockORM = assets.LoadFromFile<ost::HTexture>("Textures/RockORM", "Materials/Rock/Rock_ORM.dds");
 
     // Let's create our material + instances :)
-    ost::HMaterial materialHandle = assets.CreateMaterial(ost::EMaterialDomain::SurfaceLit, "MaterialShaders/ColoredSurfaceLit.hlsl");
-    ost::IMaterial& material = assets.GetMaterial(materialHandle);
+    ost::IMaterial& material = assets.Create<ost::IMaterial>("Mat/Default", {ost::EMaterialDomain::SurfaceLit, "MaterialShaders/ColoredSurfaceLit.hlsl"});
     material.GetPropertyDefaults().SetProperty("OverrideColor", ost::Colors::White.Vec4);
     material.GetPropertyDefaults().SetProperty("OverrideStrength", 0.0f);
 
     // Now create the material instance we'll use
-    ost::HMaterialInstance leatherMaterial;
-    leatherMaterial = assets.CreateMaterialInstance(materialHandle);
-    ost::IMaterialInstance* materialInstance = &assets.GetMaterialInstance(leatherMaterial);
-    materialInstance->Textures().SetTexture(ost::EMaterialTexture::Albedo, leatherAlbedo);
-    materialInstance->Textures().SetTexture(ost::EMaterialTexture::Normal, leatherNormal);
-    materialInstance->Textures().SetTexture(ost::EMaterialTexture::ORM, leatherORM);
-
-    ost::HMaterialInstance rockMaterial;
-    rockMaterial = assets.CreateMaterialInstance(materialHandle);
-    ost::IMaterialInstance* rockMaterialInstance = &assets.GetMaterialInstance(rockMaterial);
-    rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::Albedo, rockAlbedo);
-    rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::Normal, rockNormal);
-    rockMaterialInstance->Textures().SetTexture(ost::EMaterialTexture::ORM, rockORM);
+    ost::IMaterialInstance& materialInstance = assets.Create<ost::IMaterialInstance>("Mat/Rock", assets.GetHandle<ost::IMaterial>("Mat/Default"));
+    materialInstance.Textures().SetTexture(ost::EMaterialTexture::Albedo, rockAlbedo);
+    materialInstance.Textures().SetTexture(ost::EMaterialTexture::Normal, rockNormal);
+    materialInstance.Textures().SetTexture(ost::EMaterialTexture::ORM, rockORM);
 
     // Now let's create the plane actor
     ost::Actor* leftActor = _scene->CreateActor();
@@ -75,10 +61,10 @@ void Game::Load(ost::GameContext& context)
     rightActor->AddComponent<KeyboardRotatorComponent>();
 
     leftMeshComponent.SetModel(cubeModel);
-    leftMeshComponent.SetMaterial(leatherMaterial);
+    leftMeshComponent.SetMaterial("Mat/Rock");
 
     rightMeshComponent.SetModel(cubeModel);
-    rightMeshComponent.SetMaterial(rockMaterial);
+    rightMeshComponent.SetMaterial("Mat/Rock");
 
     // Let there be eyes
     ost::Actor* cameraActor = _scene->CreateActor();

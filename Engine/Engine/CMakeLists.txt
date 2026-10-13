@@ -45,6 +45,7 @@ add_library(${PROJECT_NAME} STATIC
     Include/Engine/Game/GameContext.h
     Source/OstEngineContext.h
     Source/OstEngineContext.cpp
+    Include/Engine/Asset/AssetType.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

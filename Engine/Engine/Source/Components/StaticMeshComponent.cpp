@@ -1,6 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Engine/Components/StaticMeshComponent.h"
 
+#include "Engine/Asset/IAssetManager.h"
+#include "Engine/EngineContext.h"
 #include "Engine/World/Actor.h"
 
 // ------------------------------------------------------------
@@ -11,20 +13,29 @@ using namespace ost;
 
 void StaticMeshComponent::SetModel(HModel hnd)
 {
-    if(_pSceneGraph)
+    if (_pSceneGraph)
     {
-        _pSceneGraph->GetStaticMeshProxy( _proxyMeshHandle ).hModel = hnd;
+        _pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).hModel = hnd;
     }
+}
+
+void StaticMeshComponent::SetModel(const std::string& modelName)
+{
+    SetModel(EngineContext::Get().Assets().GetHandle<HModel>(modelName));
 }
 
 void StaticMeshComponent::SetMaterial(HMaterialInstance hnd)
 {
-    if(_pSceneGraph)
+    if (_pSceneGraph)
     {
-        _pSceneGraph->GetStaticMeshProxy( _proxyMeshHandle ).hMaterial = hnd;
+        _pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).hMaterial = hnd;
     }
 }
 
+void StaticMeshComponent::SetMaterial(const std::string& materialName)
+{
+    SetMaterial(EngineContext::Get().Assets().GetHandle<IMaterialInstance>(materialName));
+}
 // ------------------------------------------------------------
 
 void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)
