@@ -23,6 +23,13 @@ namespace ost
         // clang-format on
 
     public:
+        static Quaternion FromEulers(const Vector3f& eulers)
+        {
+            Quaternion created;
+            DxTypeStore(created.dxType, DirectX::XMQuaternionRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&eulers.dxType)));
+            return created;
+        }
+
         static Quaternion FromRotationAxis(const Vector3f& axis, Float32 rad)
         {
             Quaternion created;
