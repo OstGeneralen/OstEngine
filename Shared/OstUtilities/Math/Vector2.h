@@ -131,13 +131,18 @@ namespace ost
 
         inline Vector2 GetNormalized() const
         {
-            Vector2 norm;
-            DxTypeStore(norm.dxType, DirectX::XMVector2Normalize(DxTypeLoad(dxType)));
+            Vector2 norm = *this;
+            norm.Normalize();
             return norm;
         }
 
         inline Vector2& Normalize()
         {
+            if (MagnitudeSq() <= 0.0001f)
+            {
+                return *this;
+            }
+
             DxTypeStore(dxType, DirectX::XMVector2Normalize(DxTypeLoad(dxType)));
             return *this;
         }

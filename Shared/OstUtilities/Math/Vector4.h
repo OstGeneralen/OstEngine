@@ -3,9 +3,8 @@
 #include "Math/Math.h"
 #include "Math/Vector3.h"
 
-#include <OstTypes.h>
-
 #include <DirectXMath.h>
+#include <OstTypes.h>
 
 // ------------------------------------------------------------
 
@@ -164,12 +163,17 @@ namespace ost
 
         inline Vector4 GetNormalized() const
         {
-            Vector3 norm;
-            DxTypeStore(norm.dxType, DirectX::XMVector4Normalize(DxTypeLoad(dxType)));
+            Vector4 norm = *this;
+            norm.Normalize();
             return norm;
         }
         inline Vector4& Normalize()
         {
+            if (MagnitudeSq() <= 0.0001f)
+            {
+                return *this;
+            }
+
             DxTypeStore(dxType, DirectX::XMVector4Normalize(DxTypeLoad(dxType)));
             return *this;
         }
