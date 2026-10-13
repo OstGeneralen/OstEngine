@@ -6,6 +6,7 @@
 
 #include <Engine/Asset/IAssetManager.h>
 #include <Engine/Components/CameraComponent.h>
+#include <Engine/Components/DirectionalLightComponent.h>
 #include <Engine/Components/SceneLightComponent.h>
 #include <Engine/Components/StaticMeshComponent.h>
 #include <Engine/EngineContext.h>
@@ -19,6 +20,10 @@ ost::UniquePtr<ost::IGame> ost::CreateGameInstance()
 {
     return ost::Ptr::NewUnique<Game>();
 }
+
+// ------------------------------------------------------------
+
+ost::Actor* pLightActor = nullptr;
 
 // ------------------------------------------------------------
 
@@ -37,21 +42,20 @@ void Game::Load(ost::GameContext& context)
     assets.Load<ost::IMaterialInstance>("Game/MossMaterial");
     assets.Load<ost::IMaterialInstance>("Game/MetalMaterial");
 
-
     // Now let's create the plane actor
     ost::Actor* leftActor = _scene->CreateActor();
     auto& leftMeshComponent = leftActor->AddComponent<ost::StaticMeshComponent>();
     leftActor->transform.SetPosition({-2.5f, 0, 0});
-    leftActor->AddComponent<KeyboardRotatorComponent>();
+    //leftActor->AddComponent<KeyboardRotatorComponent>();
 
     ost::Actor* centerActor = _scene->CreateActor();
     auto& centerMeshComponent = centerActor->AddComponent<ost::StaticMeshComponent>();
-    centerActor->AddComponent<KeyboardRotatorComponent>();
+    //centerActor->AddComponent<KeyboardRotatorComponent>();
 
     ost::Actor* rightActor = _scene->CreateActor();
     auto& rightMeshComponent = rightActor->AddComponent<ost::StaticMeshComponent>();
     rightActor->transform.SetPosition({2.5f, 0, 0});
-    rightActor->AddComponent<KeyboardRotatorComponent>();
+    //rightActor->AddComponent<KeyboardRotatorComponent>();
 
     leftMeshComponent.SetModel(cubeModel);
     leftMeshComponent.SetMaterial("Game/MetalMaterial");
@@ -70,12 +74,13 @@ void Game::Load(ost::GameContext& context)
     cameraActor->AddComponent<KeyboardMovementComponent>();
 
     // Let there be light
-    ost::Actor* lightActor = _scene->CreateActor();
-    auto& sceneLight = lightActor->AddComponent<ost::SceneLightComponent>();
-    sceneLight.SetSunDirection(ost::Vector3f(1.0f, -2.0f, 0.5f).GetNormalized());
-    sceneLight.SetSunColor({1.0f, 1.0f, 1.0f, 1.0f});
-
+    pLightActor = _scene->CreateActor();
+    auto& sceneLight = pLightActor->AddComponent<ost::SceneLightComponent>();
     sceneLight.SetAmbientColor({0.0f, 0.01f, 0.02f, 1.0f});
+    auto& directionalLight = pLightActor->AddComponent<ost::DirectionalLightComponent>();
+    directionalLight.SetColor(ost::Color(1.0f, 0.9f, 0.7f, 1.0f), 2.0f);
+    pLightActor->transform.Rotate(ost::Quaternion::FromRotationAxis(pLightActor->transform.GetRight(), 90.0f * ost::math::DegToRad));
+    pLightActor->AddComponent<KeyboardRotatorComponent>();
 }
 
 void Game::Unload(ost::GameContext& context)

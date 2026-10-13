@@ -48,6 +48,8 @@ add_library(${PROJECT_NAME} STATIC
     Include/Engine/Asset/AssetType.h
     Source/Asset/Loaders/MaterialLoader.h
     Source/Asset/Loaders/MaterialLoader.cpp
+    Include/Engine/Components/DirectionalLightComponent.h
+    Source/Components/DirectionalLightComponent.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
