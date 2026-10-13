@@ -36,7 +36,14 @@ void KeyboardRotatorComponent::Update(ost::ComponentContext& context)
 
     if (rotation.MagnitudeSq() > 0)
     {
-        GetOwner().transform.Rotate(ost::Quaternion::FromRotationAxis(rotation.GetNormalized(), context.Time().deltaTime * 45.0f * ost::math::DegToRad));
+        const auto n = rotation.GetNormalized();
+        const Float32 speed = 45.0f * context.Time().deltaTime * ost::math::DegToRad;
+
+        const ost::Quaternion pitch = ost::Quaternion::FromRotationAxis({1, 0, 0}, n.X * speed);
+        const ost::Quaternion yaw = ost::Quaternion::FromRotationAxis({0, 1, 0}, n.Y * speed);
+
+        GetOwner().transform.Rotate( yaw, ost::ESpace::World );
+        GetOwner().transform.Rotate( pitch );
     }
 }
 

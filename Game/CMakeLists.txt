@@ -8,6 +8,8 @@ add_library(${PROJECT_NAME} STATIC
     KeyboardMovementComponent.cpp
     KeyboardRotatorComponent.h
     KeyboardRotatorComponent.cpp
+    DebugMaterialToggleComponent.h
+    DebugMaterialToggleComponent.cpp
 )
 
 set_target_properties(${PROJECT_NAME}

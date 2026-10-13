@@ -3,6 +3,7 @@
 
 #include "KeyboardMovementComponent.h"
 #include "KeyboardRotatorComponent.h"
+#include "DebugMaterialToggleComponent.h"
 
 #include <Engine/Asset/IAssetManager.h>
 #include <Engine/Components/CameraComponent.h>
@@ -36,35 +37,29 @@ void Game::Load(ost::GameContext& context)
     ost::HModel cubeModel = assets.Load<ost::HModel>("Game/TestCube");
     ost::HModel planeModel = assets.Load<ost::HModel>("Game/TestPlane");
 
+    assets.Load<ost::IMaterial>("Game/MaterialClass_DebugOutput");
+
     // Now create the material instance we'll use
-    assets.Load<ost::IMaterialInstance>("Game/RockMaterial");
-    assets.Load<ost::IMaterialInstance>("Game/LeatherMaterial");
-    assets.Load<ost::IMaterialInstance>("Game/MossMaterial");
-    assets.Load<ost::IMaterialInstance>("Game/MetalMaterial");
+    ost::HMaterialInstance materialInstances[4];
+    materialInstances[0] = assets.Load<ost::IMaterialInstance>("Game/RockMaterial");
+    materialInstances[1] = assets.Load<ost::IMaterialInstance>("Game/LeatherMaterial");
+    materialInstances[2] = assets.Load<ost::IMaterialInstance>("Game/MossMaterial");
+    materialInstances[3] = assets.Load<ost::IMaterialInstance>("Game/MetalMaterial");
 
-    // Now let's create the plane actor
-    ost::Actor* leftActor = _scene->CreateActor();
-    auto& leftMeshComponent = leftActor->AddComponent<ost::StaticMeshComponent>();
-    leftActor->transform.SetPosition({-2.5f, 0, 0});
-    //leftActor->AddComponent<KeyboardRotatorComponent>();
+    for(Uint32 i = 0; i < 4; ++i)
+    {
+        ost::Actor* actor = _scene->CreateActor();
+        
+        auto& meshComponent = actor->AddComponent<ost::StaticMeshComponent>();
+        meshComponent.SetModel(planeModel);
+        meshComponent.SetMaterial(materialInstances[i]);
 
-    ost::Actor* centerActor = _scene->CreateActor();
-    auto& centerMeshComponent = centerActor->AddComponent<ost::StaticMeshComponent>();
-    //centerActor->AddComponent<KeyboardRotatorComponent>();
-
-    ost::Actor* rightActor = _scene->CreateActor();
-    auto& rightMeshComponent = rightActor->AddComponent<ost::StaticMeshComponent>();
-    rightActor->transform.SetPosition({2.5f, 0, 0});
-    //rightActor->AddComponent<KeyboardRotatorComponent>();
-
-    leftMeshComponent.SetModel(cubeModel);
-    leftMeshComponent.SetMaterial("Game/MetalMaterial");
-
-    rightMeshComponent.SetModel(cubeModel);
-    rightMeshComponent.SetMaterial("Game/LeatherMaterial");
-
-    centerMeshComponent.SetModel(cubeModel);
-    centerMeshComponent.SetMaterial("Game/MossMaterial");
+        actor->AddComponent<DebugMaterialToggleComponent>();
+        
+        Float32 xOffset = (static_cast<Float32>(i) - 2.0f) * 2.0f;
+        actor->transform.SetPosition( {xOffset, 0, 0} );
+        actor->transform.Rotate(ost::Quaternion::FromRotationAxis( actor->transform.GetRight() * -1.0f, 45.0f * ost::math::DegToRad )); 
+    }
 
     // Let there be eyes
     ost::Actor* cameraActor = _scene->CreateActor();
@@ -79,7 +74,6 @@ void Game::Load(ost::GameContext& context)
     sceneLight.SetAmbientColor({0.0f, 0.01f, 0.02f, 1.0f});
     auto& directionalLight = pLightActor->AddComponent<ost::DirectionalLightComponent>();
     directionalLight.SetColor(ost::Color(1.0f, 0.9f, 0.7f, 1.0f), 2.0f);
-    pLightActor->transform.Rotate(ost::Quaternion::FromRotationAxis(pLightActor->transform.GetRight(), 90.0f * ost::math::DegToRad));
     pLightActor->AddComponent<KeyboardRotatorComponent>();
 }
 

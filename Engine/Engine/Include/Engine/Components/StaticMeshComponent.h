@@ -9,6 +9,8 @@
 
 namespace ost
 {
+    class IMaterialInstance;
+
     class StaticMeshComponent : public RenderComponent
     {
     public:
@@ -17,6 +19,8 @@ namespace ost
 
         void SetMaterial(HMaterialInstance material);
         void SetMaterial(const std::string& materialName);
+
+        IMaterialInstance* GetMaterial();
 
     public: // Render Component
         void InitializeRenderState(SceneGraph& SceneGraph) override;

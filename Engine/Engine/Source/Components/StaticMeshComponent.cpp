@@ -36,6 +36,16 @@ void StaticMeshComponent::SetMaterial(const std::string& materialName)
 {
     SetMaterial(EngineContext::Get().Assets().GetHandle<IMaterialInstance>(materialName));
 }
+
+IMaterialInstance* ost::StaticMeshComponent::GetMaterial()
+{
+    if (_pSceneGraph)
+    {
+        return &EngineContext::Get().Assets().GetAsset<IMaterialInstance>(_pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).hMaterial);
+    }
+    return nullptr;
+}
+
 // ------------------------------------------------------------
 
 void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)

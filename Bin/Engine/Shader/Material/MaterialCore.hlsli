@@ -8,6 +8,9 @@ struct MaterialVertexData
 struct MaterialPixelData
 {
     float4 color;
+    float3 albedo;
+    float3 normal;
+    float2 uv;
 };
 
 void Material_VS( inout MaterialVertexData data );

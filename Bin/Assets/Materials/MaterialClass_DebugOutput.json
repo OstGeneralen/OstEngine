@@ -1,0 +1,4 @@
+{
+    "domain": "surfaceLit",
+    "shader": "Assets/Shaders/MaterialShader_DebuggableLit.hlsl"
+}

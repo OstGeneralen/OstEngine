@@ -62,7 +62,10 @@ float4 PSMain( SurfacePixel frag ) : SV_Target
     float4 litColor = CalculatePBLColor( pblData );
 
     MaterialPixelData materialData;
+    materialData.albedo = albedoColor;
     materialData.color = litColor;
+    materialData.normal = pixelNormal;
+    materialData.uv = frag.UV;
     Material_PS(materialData);
 
     const float gamma = 1.9f;

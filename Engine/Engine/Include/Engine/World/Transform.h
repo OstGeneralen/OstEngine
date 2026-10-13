@@ -81,7 +81,7 @@ namespace ost
                 SetRotation(_rotation * rotation);
                 break;
             case ESpace::World:
-                SetWorldRotation(GetWorldRotation() * rotation);
+                SetRotation(rotation * _rotation);
                 break;
             }
         }
@@ -155,7 +155,6 @@ namespace ost
         Vector3f TransformPosition(const Vector3f& position) const
         {
             Vector4f worldPos = Vector4f{position, 1.0f} * GetWorldTransform();
-            worldPos.Normalize();
             return worldPos;
         }
 
