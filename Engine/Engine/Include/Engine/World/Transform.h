@@ -73,9 +73,35 @@ namespace ost
             }
         }
 
-        void Rotate(const Quaternion& rotation)
+        void Rotate(const Quaternion& rotation, ESpace space = ESpace::Local)
         {
-            SetRotation(_rotation * rotation);
+            switch (space)
+            {
+            case ESpace::Local:
+                SetRotation(_rotation * rotation);
+                break;
+            case ESpace::World:
+                SetWorldRotation(GetWorldRotation() * rotation);
+                break;
+            }
+        }
+
+        const Vector3f GetForward() const
+        {
+            const Matrix4x4 worldMatrix = GetWorldTransform();
+            return Vector3f{worldMatrix.m31, worldMatrix.m32, worldMatrix.m33}.GetNormalized();
+        }
+
+        const Vector3f GetUp() const
+        {
+            const Matrix4x4 worldMatrix = GetWorldTransform();
+            return Vector3f{worldMatrix.m21, worldMatrix.m22, worldMatrix.m23}.GetNormalized();
+        }
+
+        const Vector3f GetRight() const
+        {
+            const Matrix4x4 worldMatrix = GetWorldTransform();
+            return Vector3f{worldMatrix.m11, worldMatrix.m12, worldMatrix.m13}.GetNormalized();
         }
 
         const Matrix4x4& GetWorldTransform() const
