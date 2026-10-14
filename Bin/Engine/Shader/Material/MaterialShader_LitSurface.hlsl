@@ -22,10 +22,10 @@ SurfacePixel VSMain( SurfaceVertex vertex )
     output.BaseColor = data.vertexColor;
 
     // Calculate TBN
-    row_major float3x3 toWorld = ( float3x3 )ObjectBuf_Transform;
-    output.Tangent = normalize(mul(vertex.Tangent, toWorld));
-    output.Normal = normalize(mul(vertex.Normal, toWorld));
-    output.Bitangent = normalize(cross(output.Normal, output.Tangent));
+    VSTangentSpace ts = VSCalculateTangentSpace( ObjectBuf_Transform, vertex.Normal, vertex.Tangent );
+    output.Tangent = ts.tangent;
+    output.Normal = ts.normal;
+    output.Bitangent = ts.bitangent;
 
     output.Position = mul(data.vertexWorldPos, FrameBuf_ViewProjection );
     output.WorldPosition = data.vertexWorldPos;
@@ -42,14 +42,7 @@ float4 PSMain( SurfacePixel frag ) : SV_Target
     float3 ORM = TEX_Orm.Sample(TrilinearWrap, frag.UV).rgb;
 
     // Calculate Tangent Normal
-    float3 tangentNormal = ExtractAndUnpackNormal( sampleNormal );
-
-    float3 N = normalize(frag.Normal);
-    float3 T = normalize(frag.Tangent);
-    float3 B = normalize(frag.Bitangent);
-    float3x3 TBN = float3x3(T,B,N);
-
-    float3 pixelNormal = mul(tangentNormal, TBN);
+    float3 pixelNormal = CalculatePixelNormal(sampleNormal, frag.Normal, frag.Tangent, frag.Bitangent);
 
     // Calculate the PBL lit pixel
     PBRData pblData;

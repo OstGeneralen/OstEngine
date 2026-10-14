@@ -14,24 +14,18 @@ namespace ost
 
     class ForwardRenderer : public IRenderer
     {
-    public:
-        void Initialize(const Vector2f& renderSize, RenderHardwareInterface& rhi, GraphicsResourceManager& resources);
-
     public: // IRenderer
-        void Resize(const Vector2f& newSize) override;
+        void Initialize(const Vector2u& renderSize, RendererContext&& context) override;
+        void Resize(const Vector2u& newSize, RendererContext&& context) override;
 
         Float32 GetAspectRatio() const override;
         const Vector2f& GetDimensions() const override;
 
-        void ExecuteCommands(const RenderView& view, const IRenderQueue& queue) override;
+        void ExecuteCommands(const IRenderQueue& queue, RendererContext&& context) override;
 
     private:
-        RenderHardwareInterface* _rhi;
-        GraphicsResourceManager* _resources;
-
         Vector2f _currentRenderSize;
 
-        Texture _backbuffer;
         Texture _depthStencil;
 
         Buffer _objectBuffer;

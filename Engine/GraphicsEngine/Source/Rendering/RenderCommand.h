@@ -14,7 +14,7 @@ namespace ost
     class Material;
     class MaterialInstance;
     struct Texture;
-    class RenderContext;
+    class RenderCommandContext;
     struct Buffer;
 
     struct RenderCommand
@@ -24,7 +24,7 @@ namespace ost
         const MaterialInstance* pMaterialInstance;
         Matrix4x4 transform;
 
-        void Execute( RenderContext& ctx, const Buffer& objectBuffer ) const;
+        void Execute( RenderCommandContext& ctx, const Buffer& objectBuffer ) const;
     };
 } // namespace ost
 

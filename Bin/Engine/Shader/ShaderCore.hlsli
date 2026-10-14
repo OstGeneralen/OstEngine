@@ -11,6 +11,8 @@
 #define MATERIAL_TEXTURE_SLOT_4 register(t6)
 #define MATERIAL_TEXTURE_SLOT_5 register(t7)
 
+#define TEXTURE_SLOT_DEFERRED_POS register(t8)
+
 #define SAMPLER_SLOT_POINT_WRAP register(s0)
 #define SAMPLER_SLOT_BILINEAR_WRAP register(s1)
 #define SAMPLER_SLOT_TRILINEAR_WRAP register(s2)
@@ -55,7 +57,28 @@ cbuffer LightBuffer : BUFFER_SLOT_LIGHT
     float4 Light_AmbientCol;
 };
 
+// Deferred Rendering output
+struct DeferredOutput_Color
+{
+    float4 Albedo : SV_Target0; 
+    float4 Normal : SV_Target1;
+    float4 ORM : SV_Target2;
+    float3 WorldPos : SV_Target3;
+};
+
 // Shader Layouts
+struct FullscreenVertex
+{
+    float4 Position : POSITION;
+    float2 UV : TEXCOORD;
+};
+
+struct FullscreenPixel
+{
+    float4 Position : SV_Position;
+    float2 UV : TEXCOORD;
+}; 
+
 struct SurfaceVertex
 {
     float4 Position : POSITION;

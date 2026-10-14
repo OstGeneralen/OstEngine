@@ -58,6 +58,7 @@ namespace ost
         RG_Float32,
         RG_Uint8,
         RG_Unorm8,
+        RG_Unorm16,
 
         R_Float32,
         R_Uint8,

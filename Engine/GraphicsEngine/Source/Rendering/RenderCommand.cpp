@@ -8,7 +8,7 @@
 #include "Objects/Buffer.h"
 
 // Contextual
-#include "RenderContext.h"
+#include "RenderCommandContext.h"
 #include "Resources/GraphicsResourceManager.h"
 
 // RHI
@@ -21,7 +21,7 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void RenderCommand::Execute(RenderContext& ctx, const Buffer& objectBuffer) const
+void RenderCommand::Execute(RenderCommandContext& ctx, const Buffer& objectBuffer) const
 {
     const EPipelineStage_ PipelineALL = EPipelineStage_PS | EPipelineStage_VS;
 

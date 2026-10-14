@@ -1,11 +1,12 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "ForwardRenderer.h"
 
+#include "Buffers.h"
 #include "RHI/RenderHardwareInterface.h"
-#include "RenderContext.h"
-#include "Rendering/Buffers.h"
-#include "Rendering/RenderPipelineConstants.h"
-#include "Rendering/RenderQueue.h"
+#include "RenderCommandContext.h"
+#include "RenderPipelineConstants.h"
+#include "RenderQueue.h"
+#include "RendererContext.h"
 #include "Resources/GraphicsResourceManager.h"
 
 // ------------------------------------------------------------
@@ -14,39 +15,31 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void ost::ForwardRenderer::Initialize(const Vector2f& renderSize, RenderHardwareInterface& rhi, GraphicsResourceManager& resources)
+void ost::ForwardRenderer::Initialize(const Vector2u& renderSize, RendererContext&& context)
 {
     // Apply config and members
-    _rhi = &rhi;
-    _resources = &resources;
-    _currentRenderSize = renderSize;
+    _currentRenderSize = renderSize.VectorCast<Float32>();
 
     // Build resources
-    _rhi->CreateBackbuffer(_backbuffer);
-    _backbuffer.SetDebugName("fwd_backbuffer");
-
-    _rhi->CreateDepthStencilTexture(renderSize.VectorCast<Uint32>(), false, _depthStencil);
+    context.rhi.CreateDepthStencilTexture(renderSize, false, _depthStencil);
     _depthStencil.SetDebugName("fwd_depthStencil");
 
-    _rhi->CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
+    context.rhi.CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
     _objectBuffer.SetDebugName("fwd_objectBuffer");
 
-    _rhi->CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
+    context.rhi.CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
     _frameBuffer.SetDebugName("fwd_frameBuffer");
 
-    _rhi->CreateBuffer(sizeof(LightsBufferStructure), _sceneLightBuffer);
+    context.rhi.CreateBuffer(sizeof(LightsBufferStructure), _sceneLightBuffer);
     _sceneLightBuffer.SetDebugName("fwd_sceneLightBuffer");
 }
 
 // ------------------------------------------------------------
 
-void ost::ForwardRenderer::Resize(const Vector2f& newSize)
+void ost::ForwardRenderer::Resize(const Vector2u& newSize, RendererContext&& context)
 {
-    _currentRenderSize = newSize;
-    _rhi->ResizeBackbuffer(newSize.VectorCast<Uint32>(), _backbuffer);
-    _rhi->CreateDepthStencilTexture(newSize.VectorCast<Uint32>(), false, _depthStencil);
-
-    _backbuffer.SetDebugName("fwd_backBuffer");
+    _currentRenderSize = newSize.VectorCast<Float32>();
+    context.rhi.CreateDepthStencilTexture(newSize.VectorCast<Uint32>(), false, _depthStencil);
     _depthStencil.SetDebugName("fwd_depthStencil");
 }
 
@@ -64,22 +57,24 @@ const Vector2f& ost::ForwardRenderer::GetDimensions() const
 
 // ------------------------------------------------------------
 
-void ost::ForwardRenderer::ExecuteCommands(const RenderView& renderView, const IRenderQueue& queueInterface)
+void ost::ForwardRenderer::ExecuteCommands(const IRenderQueue& queueInterface, RendererContext&& context)
 {
     const RenderQueue& queue = static_cast<const RenderQueue&>(queueInterface);
 
+    const RenderHardwareInterface& rhi = context.rhi;
+    auto renderView = queue.GetView();
+
     // Clear and set targets
-    _rhi->ClearRenderTarget(_backbuffer);
-    _rhi->ClearDepthStencil(_depthStencil);
-    _rhi->SetRenderTarget(_backbuffer, &_depthStencil);
+    rhi.ClearRenderTarget(context.backbuffer);
+    rhi.ClearDepthStencil(_depthStencil);
+    rhi.SetRenderTarget(context.backbuffer, &_depthStencil);
 
     // Update and upload frame buffer
     FrameBufferStructure frameBufferData = {};
     frameBufferData.viewProjection = renderView.viewProjection;
     frameBufferData.inverseView = renderView.viewInverse;
     frameBufferData.viewLocation = renderView.viewInverse.ExtractTranslation();
-    _rhi->UpdateBuffer(_frameBuffer, &frameBufferData, sizeof(FrameBufferStructure));
-    _rhi->SetBuffer(_frameBuffer, PipelineConstant::Get(EBufferSlot::FrameBuffer), EPipelineStage_VS | EPipelineStage_PS);
+    frameBufferData.WriteAndSetBuffer(_frameBuffer, rhi);
 
     // Update and upload light buffer
     LightsBufferStructure lightsData = {};
@@ -95,21 +90,20 @@ void ost::ForwardRenderer::ExecuteCommands(const RenderView& renderView, const I
             lightsData.ambient.color = cmd.color;
         }
     }
-    _rhi->UpdateBuffer(_sceneLightBuffer, &lightsData, sizeof(LightsBufferStructure));
-    _rhi->SetBuffer(_sceneLightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), EPipelineStage_VS | EPipelineStage_PS);
+    lightsData.WriteAndSetBuffer( _sceneLightBuffer, rhi );
 
     // Iterate all actual draw commands and draw them
     const Mesh* currentMesh = nullptr;
     const Material* currentMaterial = nullptr;
     const MaterialInstance* currentMaterialInstance = nullptr;
 
-    RenderContext ctx(*_rhi, *_resources);
+    RenderCommandContext ctx(rhi, context.resources);
     for (const RenderCommand& cmd : queue.GetDrawCommands())
     {
         cmd.Execute(ctx, _objectBuffer);
     }
 
-    _rhi->Present();
+    rhi.Present();
 }
 
 // ------------------------------------------------------------

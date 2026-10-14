@@ -7,8 +7,10 @@
 	"settings": {
 		"files.exclude": {
 			".vscode/**": true,
+			"**/*.pdb": true,
 			"Artefacts/**": true,
-			"build/**": true
+			"build/**": true,
+			"Dependencies/**": true
 		}
 	}
 }

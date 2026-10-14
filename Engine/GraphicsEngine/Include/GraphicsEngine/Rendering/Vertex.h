@@ -17,6 +17,12 @@ namespace ost
         Color color;
         Vector2f uv;
     };
+
+    struct FullscreenVertex
+    {
+        Vector4f position;
+        Vector2f uv;
+    };
 }
 
 // ------------------------------------------------------------

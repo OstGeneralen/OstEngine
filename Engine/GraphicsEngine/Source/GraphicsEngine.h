@@ -1,12 +1,20 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/IGraphicsEngine.h"
+
+// Resources
+#include "Objects/Texture.h"
+#include "Resources/GraphicsResourceManager.h"
+
+// Rendering
+#include "GraphicsEngine/Rendering/IRenderer.h"
 #include "Objects/TextureSampler.h"
 #include "RHI/RenderHardwareInterface.h"
 #include "Rendering/RenderPipelineConstants.h"
 #include "Rendering/RenderQueue.h"
-#include "Resources/GraphicsResourceManager.h"
+#include "Rendering/RendererContext.h"
 
+// Shared/Common
 #include <Container/Map.h>
 #include <Math/Vector2.h>
 #include <Memory/UniquePtr.h>
@@ -43,7 +51,11 @@ namespace ost
         // END IGraphicsEngine
 
     private:
+        RendererContext BuildRendererContext();
+
         Vector2f GetRenderSize() const;
+
+        Texture _backbuffer;
 
         GraphicsEngineSettings _activeSettings;
         UniquePtr<IRenderer> _activeRenderer;

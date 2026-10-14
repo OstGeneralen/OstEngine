@@ -73,12 +73,12 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
     switch (settings.renderer.rendererType)
     {
     case ERendererType::Forward: {
-        auto fwdRenderer = Ptr::NewUnique<ForwardRenderer>();
-        fwdRenderer->Initialize(GetRenderSize().VectorCast<Float32>(), _rhi, _resourceManager);
-        _activeRenderer = std::move(fwdRenderer);
+        _activeRenderer = Ptr::NewUnique<ForwardRenderer>();
         break;
     }
     }
+
+    _activeRenderer->Initialize(GetRenderSize().VectorCast<Uint32>(), BuildRendererContext());
 
     TextureSampler buildSampler;
 
@@ -116,7 +116,7 @@ void GraphicsEngine::UpdateSettings(const GraphicsEngineSettings& newSettings)
 
     if (newRenderSize != oldRenderSize)
     {
-        _activeRenderer->Resize(newRenderSize.VectorCast<Float32>());
+        _activeRenderer->Resize(newRenderSize, BuildRendererContext());
     }
 
     _activeSettings = newSettings;
@@ -155,7 +155,7 @@ void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
     _rhi.SetSampler(_samplers[ESamplerSlot::PointClamp], PipelineConstant::Get(ESamplerSlot::PointClamp));
 
     // Execute commands under current renderer
-    _activeRenderer->ExecuteCommands(_renderQueue.GetView(), _renderQueue);
+    _activeRenderer->ExecuteCommands(_renderQueue, BuildRendererContext());
     _renderQueue.Clear();
 }
 
@@ -164,6 +164,12 @@ const IRenderHardwareInterface& GraphicsEngine::GetRenderHardwareInterface() con
     return _rhi;
 }
 
+// ------------------------------------------------------------
+
+RendererContext ost::GraphicsEngine::BuildRendererContext()
+{
+    return RendererContext(_rhi, _resourceManager, _backbuffer);
+}
 // ------------------------------------------------------------
 
 Vector2f GraphicsEngine::GetRenderSize() const

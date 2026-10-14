@@ -55,9 +55,12 @@ add_library(${PROJECT_NAME} STATIC
     Include/GraphicsEngine/Materials/MaterialTextureCollection.h
     Source/Materials/MaterialTextureCollection.cpp
     Source/Materials/MaterialUtility.h
-    Source/Rendering/RenderContext.h
+    Source/Rendering/RenderCommandContext.h
     Source/Rendering/RenderCommand.cpp
     Include/GraphicsEngine/IRenderHardwareInterface.h
+    Source/Rendering/DeferredRenderer.h
+    Source/Rendering/DeferredRenderer.cpp
+    Source/Rendering/RendererContext.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

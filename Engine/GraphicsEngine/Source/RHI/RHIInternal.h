@@ -40,7 +40,8 @@ namespace ost
             case EDataFormat::RGBA_Float32: return DXGI_FORMAT_R32G32B32A32_FLOAT;
             case EDataFormat::RGBA_Uint8: return DXGI_FORMAT_R8G8B8A8_UINT;
             case EDataFormat::RGBA_Unorm8: return DXGI_FORMAT_R8G8B8A8_UNORM;
-            
+            case EDataFormat::RG_Unorm16: return DXGI_FORMAT_R16G16_UNORM;
+
             case EDataFormat::RGB_Float32: return DXGI_FORMAT_R32G32B32_FLOAT;
             
             case EDataFormat::RG_Float32: return DXGI_FORMAT_R32G32_FLOAT;

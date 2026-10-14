@@ -11,10 +11,10 @@ namespace ost
     class Material;
     struct Mesh;
 
-    class RenderContext
+    class RenderCommandContext
     {
     public:
-        RenderContext(const RenderHardwareInterface& renderHardwareInterface, const GraphicsResourceManager& gfxResourceManager)
+        RenderCommandContext(const RenderHardwareInterface& renderHardwareInterface, const GraphicsResourceManager& gfxResourceManager)
             : RHI{renderHardwareInterface}
             , Resources{gfxResourceManager}
         {
