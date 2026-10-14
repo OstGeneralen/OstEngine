@@ -40,11 +40,22 @@ void platform::Shutdown()
 
 platform::NativeWindow platform::NewWindow(Application& hostApp, const std::string& title, const Vector2u& size, bool fullscreen)
 {
+
+    UINT windowStyle = WS_OVERLAPPEDWINDOW;
+    Vector2u useSize = size;
+
+    if (fullscreen)
+    {
+        windowStyle = WS_POPUP;
+        useSize.X = GetSystemMetrics(SM_CXSCREEN);
+        useSize.Y = GetSystemMetrics(SM_CYSCREEN);
+    }
+
     HWND window = CreateWindow("OstAppWndClass",             // Class name (as registered in initialize)
                                title.c_str(),                // Window title
-                               WS_OVERLAPPEDWINDOW,          // Window style
+                               windowStyle,                  // Window style
                                CW_USEDEFAULT, CW_USEDEFAULT, // Window start position
-                               size.X, size.Y,               // Window size
+                               useSize.X, useSize.Y,         // Window size
                                NULL,                         // Parent window
                                NULL,                         // Menu handle
                                GetModuleHandle(NULL),        // Instance handle

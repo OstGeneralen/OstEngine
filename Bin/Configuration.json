@@ -6,7 +6,7 @@
             "prefix": "Game"    
         },
         "engine":{
-            "rootDir": "../Engine/",
+            "rootDir": "Engine/",
             "prefix": "Engine"    
         }
     },
