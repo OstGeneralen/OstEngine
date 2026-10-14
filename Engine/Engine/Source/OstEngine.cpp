@@ -4,6 +4,7 @@
 #include "Engine/Game/GameInterface.h"
 #include "Engine/World/Scene.h"
 
+#include <GraphicsEngine/IGraphicsEngine.h>
 #include <GraphicsEngine/Rendering/IRenderQueue.h>
 #include <GraphicsEngine/Rendering/IRenderer.h>
 #include <Utility/Assert.h>
@@ -12,10 +13,10 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-UniquePtr<IOstEngine> IOstEngine::CreateNew(OstEngineSettings&& settings)
+UniquePtr<IOstEngine> IOstEngine::CreateNew(UniquePtr<IGame>&& gameInstance, const OstEngineSettings& settings)
 {
     UniquePtr<OstEngine> ptr = Ptr::NewUnique<OstEngine>();
-    ptr->Initialize(std::move(settings.gameInstance), *settings.pGfxResourceManager, *settings.pMaterialManager);
+    ptr->Initialize(std::move(gameInstance), settings);
     return ptr;
 }
 
@@ -39,26 +40,19 @@ OstEngine::~OstEngine()
 
 // ------------------------------------------------------------
 
-#include <nlohmann/json.hpp>
 #include <fstream>
 
-void OstEngine::Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager)
+#include <nlohmann/json.hpp>
+
+void OstEngine::Initialize(UniquePtr<IGame>&& gameInstance, const OstEngineSettings& settings)
 {
-    // Parse the configuration.json
-    std::ifstream fileStream( "Configuration.json" );
-    nlohmann::json rootJson;
-    rootJson << fileStream;
-
-    auto gameAssetsConfig = rootJson["paths"]["assets"];
-    auto engineAssetsConfig = rootJson["paths"]["engine"];
-
     AssetManagerConfig assetsCfg;
-    assetsCfg.engineAssetsPathConfig.path = engineAssetsConfig["rootDir"].get<std::string>();
-    assetsCfg.engineAssetsPathConfig.prefix = engineAssetsConfig["prefix"].get<std::string>();
-    assetsCfg.gameAssetsPathConfig.path = gameAssetsConfig["rootDir"].get<std::string>();
-    assetsCfg.gameAssetsPathConfig.prefix = gameAssetsConfig["prefix"].get<std::string>();
+    assetsCfg.engineAssetsPathConfig.path = settings.assetsCfg.engine.rootPath;
+    assetsCfg.engineAssetsPathConfig.prefix = settings.assetsCfg.engine.prefix;
+    assetsCfg.gameAssetsPathConfig.path = settings.assetsCfg.game.rootPath;
+    assetsCfg.gameAssetsPathConfig.prefix = settings.assetsCfg.game.prefix;
 
-    _assetManager.Initialize(gfxResourceManager, materialManager, assetsCfg);
+    _assetManager.Initialize(settings.pGfxEngine->GetResourceManager(), settings.pGfxEngine->GetMaterialManager(), assetsCfg);
 
     // Create the engine defaults
     _assetManager.Load<IMaterial>("Engine/Mat_DefaultLit");

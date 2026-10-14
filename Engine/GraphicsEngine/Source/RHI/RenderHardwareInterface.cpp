@@ -26,7 +26,7 @@ RenderHardwareInterface::~RenderHardwareInterface()
 
 // ------------------------------------------------------------
 
-bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHnd)
+bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHnd, bool fullscreen)
 {
     HWND hwnd = static_cast<HWND>(winHnd);
 
@@ -68,7 +68,7 @@ bool RenderHardwareInterface::Initialize(const Vector2u& renderSize, void* winHn
     // 3. Create the swapchain
     DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
     swapChainDesc.OutputWindow = hwnd;
-    swapChainDesc.Windowed = true;
+    swapChainDesc.Windowed = !fullscreen;
     swapChainDesc.BufferCount = 2;
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferDesc.Height = renderSize.Y;

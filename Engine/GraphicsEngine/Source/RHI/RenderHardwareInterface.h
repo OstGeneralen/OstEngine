@@ -30,7 +30,7 @@ namespace ost
         RenderHardwareInterface();
         ~RenderHardwareInterface();
 
-        bool Initialize(const Vector2u& renderSize, void* winHnd);
+        bool Initialize(const Vector2u& renderSize, void* winHnd, bool fullscreen = false);
         bool CreateBackbuffer(Texture& outBackbuffer);
         void ResizeBackbuffer(const Vector2u& newSize, Texture& inOutBackbuffer);
 

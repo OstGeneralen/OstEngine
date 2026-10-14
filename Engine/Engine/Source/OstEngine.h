@@ -45,7 +45,7 @@ namespace ost
         OstEngine();
         ~OstEngine();
 
-        void Initialize(UniquePtr<IGame>&& gameInstance, IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager);
+        void Initialize(UniquePtr<IGame>&& gameInstance, const OstEngineSettings& settings);
 
     public: // IOstEngine
         void Tick() override;

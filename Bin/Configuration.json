@@ -6,8 +6,19 @@
             "prefix": "Game"    
         },
         "engine":{
-            "rootDir": "Engine/",
+            "rootDir": "../Engine/",
             "prefix": "Engine"    
         }
+    },
+    "window":
+    {
+        "title": "Ost Window",
+        "fullscreen": false,
+        "resolution": [900,500]
+    },
+    "rendering":
+    {
+        "renderScale": [1.0, 1.0],
+        "renderer": "deferred"
     }
 }

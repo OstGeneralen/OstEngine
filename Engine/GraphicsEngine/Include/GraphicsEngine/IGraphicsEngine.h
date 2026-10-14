@@ -26,6 +26,7 @@ namespace ost
     {
         struct OutputSettings
         {
+            bool fullscreen = false;
             void* nativeWindowHandle = nullptr; // The handle of the window (for Win32 this is your HWND)
             Vector2u clientSize = {1600, 900};  // The resolution in pixels of the target
             Vector2f renderSize = {1, 1};       // The percentage of the client resolution to render at

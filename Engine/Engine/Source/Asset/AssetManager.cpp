@@ -83,6 +83,9 @@ void ost::AssetManager::Initialize(IGraphicsResourceManager& gfxResourceManager,
     _typeContainers.Insert(TypeID::Get<IMaterialInstance>(), AssetTypeContainer(LoadMaterialInstance, CreateMaterialInstance, GetMaterialInstance, CGetMaterialInstance));
 
     _config = config;
+    _config.engineAssetsPathConfig.path = std::filesystem::weakly_canonical(_config.engineAssetsPathConfig.path).string();
+    _config.gameAssetsPathConfig.path = std::filesystem::weakly_canonical(_config.gameAssetsPathConfig.path).string();
+
     ScanAssets();
 }
 

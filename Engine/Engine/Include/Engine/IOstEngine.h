@@ -1,5 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "Engine/Configuration/RuntimeConfig.h"
+
 #include <OstTypes.h>
 
 #include <Memory/UniquePtr.h>
@@ -10,22 +12,20 @@ namespace ost
 {
     class IGame;
     class IRenderQueue;
-    class IGraphicsResourceManager;
-    class IMaterialManager;
     class InputReader;
     class IRenderer;
+    class IGraphicsEngine;
 
     struct OstEngineSettings
     {
-        UniquePtr<IGame> gameInstance;
-        IGraphicsResourceManager* pGfxResourceManager;
-        IMaterialManager* pMaterialManager;
+        IGraphicsEngine* pGfxEngine;
+        AssetsConfig assetsCfg;
     };
 
     class IOstEngine
     {
     public:
-        static UniquePtr<IOstEngine> CreateNew(OstEngineSettings&& settings);
+        static UniquePtr<IOstEngine> CreateNew(UniquePtr<IGame>&& gameInstance, const OstEngineSettings& settings);
 
     public:
         virtual void Tick() = 0;

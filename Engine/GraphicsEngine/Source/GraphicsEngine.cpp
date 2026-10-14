@@ -68,7 +68,7 @@ bool GraphicsEngine::IsInitialized() const
 void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
 {
     _activeSettings = settings;
-    _rhi.Initialize(GetRenderSize().VectorCast<Uint32>(), settings.output.nativeWindowHandle);
+    _rhi.Initialize(GetRenderSize().VectorCast<Uint32>(), settings.output.nativeWindowHandle, settings.output.fullscreen);
     _resourceManager.Initialize(_rhi);
 
     switch (settings.renderer.rendererType)
