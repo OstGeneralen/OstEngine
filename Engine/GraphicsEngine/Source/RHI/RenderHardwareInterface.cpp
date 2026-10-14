@@ -234,7 +234,7 @@ bool RenderHardwareInterface::CreateDepthStencilTexture(const Vector2u& dimensio
     D3D11_TEXTURE2D_DESC texDesc = {};
     texDesc.ArraySize = 1;
     texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | (allowAsResource ? D3D11_BIND_SHADER_RESOURCE : 0);
-    texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
     texDesc.Width = dimensions.X;
     texDesc.Height = dimensions.Y;
     texDesc.MipLevels = 1;
@@ -384,8 +384,8 @@ bool RenderHardwareInterface::CreatePSO(const PipelineStateObjectDesc& desc, Pip
         inputElem.SemanticName = desc.vertexLayout[i].semanticName.c_str();
     }
 
-    if (FAILED(_device->CreateInputLayout(inputElements.GetData(), static_cast<UINT>(inputElements.GetSize()), desc.vertexShader.pBytecode, desc.vertexShader.bytecodeSize,
-                                          &outPSO._vertexLayout)))
+    if (FAILED(_device->CreateInputLayout(inputElements.GetData(), static_cast<UINT>(inputElements.GetSize()), desc.vertexShader.pBytecode,
+                                          desc.vertexShader.bytecodeSize, &outPSO._vertexLayout)))
     {
         return false;
     }
@@ -450,6 +450,13 @@ void RenderHardwareInterface::SetTexture(const Texture& texture, Uint32 slot, EP
     }
 }
 
+void ost::RenderHardwareInterface::UnsetTextures(EPipelineStage_ stageFlag) const
+{
+    ID3D11ShaderResourceView* nullSrvs[8] = {nullptr};
+    _immediateContext->VSSetShaderResources(0, 8, nullSrvs);
+    _immediateContext->PSSetShaderResources(0, 8, nullSrvs);
+}
+
 void RenderHardwareInterface::SetBuffer(const Buffer& buffer, Uint32 slot, EPipelineStage_ stageFlag) const
 {
     if (stageFlag & EPipelineStage_VS)
@@ -492,11 +499,17 @@ void RenderHardwareInterface::SetRenderTargets(const Texture* pRenderTargets, Si
     _immediateContext->OMSetRenderTargets(static_cast<UINT>(numTargets), rtvs, (pDepthTarget ? pDepthTarget->_dsv.Get() : nullptr));
 }
 
+void ost::RenderHardwareInterface::UnsetRenderTargets() const
+{
+    ID3D11RenderTargetView* nullRtvs[8] = {nullptr};
+    _immediateContext->OMSetRenderTargets(8, nullRtvs, nullptr);
+}
+
 void RenderHardwareInterface::Draw(const Mesh& mesh, bool setBuffers) const
 {
     if (setBuffers)
     {
-        UINT strides[] = {sizeof(SurfaceVertex)};
+        UINT strides[] = {static_cast<Uint32>(mesh.vertexBuffer._allocSize / mesh.vertexCount)};
         UINT offsets[] = {0};
 
         _immediateContext->IASetVertexBuffers(0, 1, mesh.vertexBuffer._buffer.GetAddressOf(), strides, offsets);

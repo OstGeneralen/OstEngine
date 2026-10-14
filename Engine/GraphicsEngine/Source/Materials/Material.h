@@ -4,6 +4,7 @@
 #include "GraphicsEngine/Materials/MaterialTextureCollection.h"
 #include "Materials/MaterialPropertyCollection.h"
 #include "Objects/PipelineStateObject.h"
+#include "Rendering/RenderPipelineConstants.h"
 
 #include <Container/Map.h>
 
@@ -21,7 +22,8 @@ namespace ost
 
     struct BackendMaterialDesc
     {
-        PipelineStateObject pso;
+        PipelineStateObject psoFwd;
+        PipelineStateObject psoDef;
         MaterialPropertiesDesc properties;
         List<MaterialTextureDesc> textureDescs;
     };
@@ -38,7 +40,9 @@ namespace ost
 
         void PopulateInstanceProperties(MaterialInstance& instance) const;
         const SizeType GetPropertiesBufferSize() const;
-        const PipelineStateObject& GetPSO() const;
+
+        const PipelineStateObject& GetPSOFwd() const;
+        const PipelineStateObject& GetPSODef() const;
 
         // BEGIN IMaterial
         IMaterialPropertyCollection& GetPropertyDefaults() override;
@@ -46,7 +50,9 @@ namespace ost
         // END IMaterial
 
     private:
-        PipelineStateObject _pso;
+        PipelineStateObject _psoFwd;
+        PipelineStateObject _psoDef;
+
         MaterialPropertyCollection _propertyDefaults;
         MaterialTextureCollection _textureDefaults;
     };

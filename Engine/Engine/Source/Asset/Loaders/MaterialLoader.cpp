@@ -49,7 +49,7 @@ HMaterialInstance MaterialLoader::LoadMaterialInstance(const std::string& path, 
         for (auto texData : data["textures"])
         {
             HTexture t = assets.Load<HTexture>(texData["texture"].get<std::string>());
-            createdInstance.Textures().SetTexture(static_cast<EMaterialTexture>(texData["slot"].get<SizeType>()), t);
+            createdInstance.Textures().SetTexture(texData["slot"].get<Uint32>(), t);
         }
     }
 

@@ -1,5 +1,5 @@
 {
-    "materialClass": "Game/MaterialClass_DebugOutput",
+    "materialClass": "Engine/Mat_DefaultLit",
     "textures":[
         {"slot": 0, "texture": "Game/Rock_Albedo"},
         {"slot": 1, "texture": "Game/Rock_Normal"},

@@ -4,6 +4,7 @@
 #include "Objects/Buffer.h"
 #include "Objects/Texture.h"
 #include "Objects/Model.h"
+#include "Objects/PipelineStateObject.h"
 
 // ------------------------------------------------------------
 
@@ -21,7 +22,6 @@ namespace ost
         Texture albedo;
         Texture normals;
         Texture orm;
-        Texture pos;
         Texture depth;
     };
 
@@ -50,6 +50,8 @@ namespace ost
         Buffer _lightBuffer;
 
         Mesh _fullscreenMesh;
+
+        PipelineStateObject _fullscreenPSO;
 
     };
 } // namespace ost

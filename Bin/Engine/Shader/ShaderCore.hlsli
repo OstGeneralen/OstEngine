@@ -38,49 +38,42 @@ SamplerState TrilinearWrap : SAMPLER_SLOT_TRILINEAR_WRAP;
 SamplerState TrilinearClamp : SAMPLER_SLOT_TRILINEAR_CLAMP;
 
 // Buffers
-cbuffer FrameBuffer : BUFFER_SLOT_FRAME
-{
+cbuffer FrameBuffer : BUFFER_SLOT_FRAME {
     row_major float4x4 FrameBuf_ViewProjection;
+    row_major float4x4 FrameBuf_InverseViewProjection;
     row_major float4x4 FrameBuf_ViewInverse;
     float4 FrameBuf_ViewLocation;
 };
 
-cbuffer ObjectBuffer : BUFFER_SLOT_OBJECT
-{
+cbuffer ObjectBuffer : BUFFER_SLOT_OBJECT {
     row_major float4x4 ObjectBuf_Transform;
 };
 
-cbuffer LightBuffer : BUFFER_SLOT_LIGHT
-{
+cbuffer LightBuffer : BUFFER_SLOT_LIGHT {
     float4 Light_SunDir;
     float4 Light_SunCol;
     float4 Light_AmbientCol;
 };
 
 // Deferred Rendering output
-struct DeferredOutput_Color
-{
+struct GBuffer {
     float4 Albedo : SV_Target0; 
     float4 Normal : SV_Target1;
     float4 ORM : SV_Target2;
-    float3 WorldPos : SV_Target3;
 };
 
 // Shader Layouts
-struct FullscreenVertex
-{
+struct FullscreenVertex {
     float4 Position : POSITION;
     float2 UV : TEXCOORD;
 };
 
-struct FullscreenPixel
-{
+struct FullscreenPixel {
     float4 Position : SV_Position;
     float2 UV : TEXCOORD;
 }; 
 
-struct SurfaceVertex
-{
+struct SurfaceVertex {
     float4 Position : POSITION;
     float3 Normal : NORMAL;
     float3 Tangent : TANGENT;
@@ -88,10 +81,10 @@ struct SurfaceVertex
     float2 UV : TEXCOORD;
 };
 
-struct SurfacePixel
-{
+struct SurfacePixel {
     float4 Position : SV_Position;
     float3 WorldPosition : POSITION;
+    float3 ViewPosition : POSITION1;
     float3 Normal : NORMAL;
     float3 Tangent : TANGENT;
     float3 Bitangent : BINORMAL;

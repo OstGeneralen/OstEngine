@@ -3,6 +3,7 @@
 
 #include "RHI/RenderHardwareInterface.h"
 #include "Rendering/Buffers.h"
+#include "Rendering/DeferredRenderer.h"
 #include "Rendering/ForwardRenderer.h"
 #include "Rendering/RenderPipelineConstants.h"
 #include "Resources/GraphicsResourceManager.h"
@@ -76,6 +77,10 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
         _activeRenderer = Ptr::NewUnique<ForwardRenderer>();
         break;
     }
+    case ERendererType::Deferred: {
+        _activeRenderer = Ptr::NewUnique<DeferredRenderer>();
+        break;
+    }
     }
 
     _activeRenderer->Initialize(GetRenderSize().VectorCast<Uint32>(), BuildRendererContext());
@@ -93,6 +98,8 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
 
     _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Point, buildSampler);
     _samplers.Insert(ESamplerSlot::PointClamp, buildSampler);
+
+    _rhi.CreateBackbuffer(_backbuffer);
 }
 
 void GraphicsEngine::Shutdown()
@@ -116,6 +123,7 @@ void GraphicsEngine::UpdateSettings(const GraphicsEngineSettings& newSettings)
 
     if (newRenderSize != oldRenderSize)
     {
+        _rhi.ResizeBackbuffer(newRenderSize, _backbuffer);
         _activeRenderer->Resize(newRenderSize, BuildRendererContext());
     }
 

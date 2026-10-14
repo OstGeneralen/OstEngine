@@ -72,6 +72,7 @@ void ost::ForwardRenderer::ExecuteCommands(const IRenderQueue& queueInterface, R
     // Update and upload frame buffer
     FrameBufferStructure frameBufferData = {};
     frameBufferData.viewProjection = renderView.viewProjection;
+    frameBufferData.inverseViewProjection = renderView.viewProjection.GetInverse();
     frameBufferData.inverseView = renderView.viewInverse;
     frameBufferData.viewLocation = renderView.viewInverse.ExtractTranslation();
     frameBufferData.WriteAndSetBuffer(_frameBuffer, rhi);

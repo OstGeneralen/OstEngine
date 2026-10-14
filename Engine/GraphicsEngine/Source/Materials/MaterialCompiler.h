@@ -27,7 +27,8 @@ namespace ost
     public:
         MaterialCompiler(const MaterialDesc& desc);
 
-        const PipelineStateObjectDesc& GetCompiledPSODesc() const;
+        const PipelineStateObjectDesc& GetCompiledPSODescForward() const;
+        const PipelineStateObjectDesc& GetCompiledPSODescDeferred() const;
         const MaterialPropertiesDesc& GetCompiledPropertySet() const;
         const List<MaterialTextureDesc> GetCompiledTextureDescs() const;
 
@@ -37,14 +38,20 @@ namespace ost
         void ExtractProperties(const ComPtr<ID3DBlob>& from);
 
         std::filesystem::path _materialShaderPath;
-        std::filesystem::path _domainShaderPath;
 
-        PipelineStateObjectDesc _psoDesc;
+        std::string _domainVertexMain;
+        std::string _domainPixelMainFwd;
+        std::string _domainPixelMainGeometry;
+
+        PipelineStateObjectDesc _psoDescForward;
+        PipelineStateObjectDesc _psoDescDeferred;
+
         MaterialPropertiesDesc _materialProperties;
-        Map<EMaterialTexture, MaterialTextureDesc> _textureDescs;
+        Map<Uint32, MaterialTextureDesc> _textureDescs;
 
         ComPtr<ID3DBlob> _vsBytecode;
-        ComPtr<ID3DBlob> _psBytecode;
+        ComPtr<ID3DBlob> _psBytecodeFwd;
+        ComPtr<ID3DBlob> _psBytecodeDef;
     };
 } // namespace ost
 

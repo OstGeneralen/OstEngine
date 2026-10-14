@@ -41,6 +41,24 @@ char* ost::FileUtility::ReadFileToCharArray(const std::string& path, SizeType& o
     return buff;
 }
 
+std::string ost::FileUtility::ReadFileToString(const std::string& path)
+{
+    std::ifstream readStream{path, std::ios::ate | std::ios::binary};
+
+    if (!readStream)
+    {
+        return "";
+    }
+
+    std::string str;
+    str.resize(readStream.tellg());
+    readStream.seekg(0);
+    readStream.read(str.data(), str.size());
+    readStream.close();
+
+    return str;
+}
+
 // ------------------------------------------------------------
 // ------------------------------------------------------------
 // ------------------------------------------------------------

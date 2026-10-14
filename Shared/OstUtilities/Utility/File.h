@@ -11,6 +11,7 @@ namespace ost
     {
         extern Blob ReadFileToBlob( const std::string& path );
         extern char* ReadFileToCharArray( const std::string& path, SizeType& outSize );
+        extern std::string ReadFileToString( const std::string& path );
     }
 }
 

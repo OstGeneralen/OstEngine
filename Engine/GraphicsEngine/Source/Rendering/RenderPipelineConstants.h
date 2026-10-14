@@ -41,6 +41,12 @@ namespace ost
         Animation = 13,
     };
 
+    enum class ERenderPath
+    {
+        Forward,
+        Deferred,
+    };
+
     namespace PipelineConstant
     {
         inline static Uint32 Get(ETextureSlot s) noexcept

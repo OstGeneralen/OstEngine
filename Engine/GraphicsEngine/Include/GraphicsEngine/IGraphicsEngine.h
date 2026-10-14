@@ -19,6 +19,7 @@ namespace ost
     enum class ERendererType
     {
         Forward,
+        Deferred,
     };
 
     struct GraphicsEngineSettings

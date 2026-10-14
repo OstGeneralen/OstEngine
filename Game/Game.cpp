@@ -37,7 +37,7 @@ void Game::Load(ost::GameContext& context)
     ost::HModel cubeModel = assets.Load<ost::HModel>("Game/TestCube");
     ost::HModel planeModel = assets.Load<ost::HModel>("Game/TestPlane");
 
-    assets.Load<ost::IMaterial>("Game/MaterialClass_DebugOutput");
+    assets.Load<ost::IMaterial>("Engine/Mat_DefaultLit");
 
     // Now create the material instance we'll use
     ost::HMaterialInstance materialInstances[4];

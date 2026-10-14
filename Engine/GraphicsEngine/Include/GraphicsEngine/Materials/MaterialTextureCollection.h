@@ -12,24 +12,12 @@
 
 namespace ost
 {
-    enum class EMaterialTexture
-    {
-        Albedo = 0,
-        Normal,
-        ORM,
-        Custom1,
-        Custom2,
-        Custom3,
-        Custom4,
-        Custom5,
-    };
-
     constexpr static SizeType MaterialTextureCount = 8;
 
     struct MaterialTextureDesc
     {
         std::string name;
-        EMaterialTexture textureType;
+        Uint32 textureBindPoint;
     };
 
     class MaterialTextureCollection
@@ -40,18 +28,18 @@ namespace ost
         MaterialTextureCollection(const MaterialTextureCollection&);
         ~MaterialTextureCollection();
 
-        bool HasTexture(EMaterialTexture texture) const;
+        bool HasTexture(Uint32 bindPoint) const;
 
         void SetTexture(const std::string& name, HTexture texture);
-        void SetTexture(EMaterialTexture textureSlot, HTexture texture);
+        void SetTexture(Uint32 bindPoint, HTexture texture);
         
         HTexture GetTexture(const std::string& name) const;
-        HTexture GetTexture(EMaterialTexture textureSlot) const;
+        HTexture GetTexture(Uint32 bindPoint) const;
 
     private:
         HTexture _textureHandles[8];
         Uint8 _textureSlotMask = 0;
-        Map<std::string, EMaterialTexture> _textureNameToSlot;
+        Map<std::string, Uint32> _textureNameToSlot;
     };
 } // namespace ost
 

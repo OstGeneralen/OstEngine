@@ -33,7 +33,7 @@ HRESULT ost::MaterialCompilerIncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, 
 
     std::filesystem::path includePath = _includeRootStack.top() / pFileName;
     includePath = std::filesystem::weakly_canonical(includePath); // Resolve any ../
-
+    
     if (fileName == "OstMaterial.hlsli")
     {
         // This header is the utility under your game files so we just ignore it

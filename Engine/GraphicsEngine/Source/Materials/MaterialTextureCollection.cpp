@@ -13,55 +13,55 @@ MaterialTextureCollection::MaterialTextureCollection(const List<MaterialTextureD
 {
     for (const auto& desc : descs)
     {
-        _textureSlotMask = _textureSlotMask | (1 << static_cast<Uint32>(desc.textureType));
-        _textureNameToSlot.Insert(desc.name, desc.textureType);
+        _textureSlotMask = _textureSlotMask | (1 << desc.textureBindPoint);
+        _textureNameToSlot.Insert(desc.name, desc.textureBindPoint);
     }
 }
 
 // ------------------------------------------------------------
 
-bool MaterialTextureCollection::HasTexture(EMaterialTexture textureSlot) const
+bool MaterialTextureCollection::HasTexture(Uint32 bindPoint) const
 {
-    return (_textureSlotMask & (1 << static_cast<Uint32>(textureSlot))) != 0;
+    return (_textureSlotMask & (1 << bindPoint)) != 0;
 }
 
 // ------------------------------------------------------------
 
 void MaterialTextureCollection::SetTexture(const std::string& name, HTexture texture)
 {
-    if (const EMaterialTexture* pSlot = _textureNameToSlot.TryGetValue(name))
+    if (const Uint32* pSlot = _textureNameToSlot.TryGetValue(name))
     {
         SetTexture(*pSlot, texture);
     }
 }
 
-void MaterialTextureCollection::SetTexture(EMaterialTexture textureSlot, HTexture texture)
+void MaterialTextureCollection::SetTexture(Uint32 bindPoint, HTexture texture)
 {
-    if (HasTexture(textureSlot) == false)
+    if (HasTexture(bindPoint) == false)
     {
         return;
     }
-    _textureHandles[static_cast<SizeType>(textureSlot)] = texture;
+    _textureHandles[bindPoint] = texture;
 }
 
 // ------------------------------------------------------------
 
 HTexture MaterialTextureCollection::GetTexture(const std::string& name) const
 {
-    if (const EMaterialTexture* pSlot = _textureNameToSlot.TryGetValue(name))
+    if (const Uint32* pSlot = _textureNameToSlot.TryGetValue(name))
     {
         return GetTexture(*pSlot);
     }
     return {};
 }
 
-HTexture MaterialTextureCollection::GetTexture(EMaterialTexture textureSlot) const
+HTexture MaterialTextureCollection::GetTexture(Uint32 bindPoint) const
 {
-    if (HasTexture(textureSlot) == false)
+    if (HasTexture(bindPoint) == false)
     {
         return {};
     }
-    return _textureHandles[static_cast<SizeType>(textureSlot)];
+    return _textureHandles[bindPoint];
 }
 
 // ------------------------------------------------------------

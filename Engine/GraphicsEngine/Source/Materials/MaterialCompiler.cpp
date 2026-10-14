@@ -17,8 +17,6 @@ using namespace ost;
 
 auto MaterialCompileLog = Log::NewCategory("MaterialCompiler");
 
-const std::filesystem::path MaterialShaderRootPath = "Engine/Shader/Material";
-
 // ------------------------------------------------------------
 
 EMaterialPropertyType ExtractPropertyType(ID3D11ShaderReflectionType* pDxType)
@@ -93,6 +91,13 @@ namespace MaterialVertexLayout
                 {"TEXCOORD", EDataSize::Float2}}; // UV
     }
 
+    template <>
+    List<VertexElement> GetVertexLayout<EMaterialDomain::Fullscreen>()
+    {
+        return {{"POSITION", EDataSize::Float4}, // Position
+                {"TEXCOORD", EDataSize::Float2}};      // UV
+    }
+
 } // namespace MaterialVertexLayout
 
 // ------------------------------------------------------------
@@ -104,23 +109,40 @@ MaterialCompiler::MaterialCompiler(const MaterialDesc& desc)
     switch (desc.domain)
     {
     case EMaterialDomain::SurfaceLit: {
-
-        _domainShaderPath = MaterialShaderRootPath / "MaterialShader_LitSurface.hlsl";
-        _psoDesc.vertexLayout = MaterialVertexLayout::GetVertexLayout<EMaterialDomain::SurfaceLit>();
-        _psoDesc.primitiveTopology = EPrimitiveTopology::TriangleList;
+        _domainVertexMain = "VSMain_Surface";
+        _domainPixelMainFwd = "PSMain_LitSurface_Forward";
+        _domainPixelMainGeometry = "PSMain_Surface_Geometry";
+        _psoDescForward.vertexLayout = MaterialVertexLayout::GetVertexLayout<EMaterialDomain::SurfaceLit>();
+        _psoDescForward.primitiveTopology = EPrimitiveTopology::TriangleList;
+        _psoDescDeferred.vertexLayout = MaterialVertexLayout::GetVertexLayout<EMaterialDomain::SurfaceLit>();
+        _psoDescDeferred.primitiveTopology = EPrimitiveTopology::TriangleList;
+        break;
+    }
+    case EMaterialDomain::Fullscreen: {
+        _domainVertexMain = "VSMain_Fullscreen";
+        _domainPixelMainFwd = "PSMain_Surface_Lit";
+        _domainPixelMainGeometry = "PSMain_Surface_Lit";
+        _psoDescForward.vertexLayout = MaterialVertexLayout::GetVertexLayout<EMaterialDomain::Fullscreen>();
+        _psoDescForward.primitiveTopology = EPrimitiveTopology::TriangleList;
+        _psoDescDeferred.vertexLayout = MaterialVertexLayout::GetVertexLayout<EMaterialDomain::Fullscreen>();
+        _psoDescDeferred.primitiveTopology = EPrimitiveTopology::TriangleList;
         break;
     }
     default:
-        _domainShaderPath = "";
         break;
     }
 }
 
 // ------------------------------------------------------------
 
-const PipelineStateObjectDesc& ost::MaterialCompiler::GetCompiledPSODesc() const
+const PipelineStateObjectDesc& ost::MaterialCompiler::GetCompiledPSODescForward() const
 {
-    return _psoDesc;
+    return _psoDescForward;
+}
+
+const PipelineStateObjectDesc& ost::MaterialCompiler::GetCompiledPSODescDeferred() const
+{
+    return _psoDescDeferred;
 }
 
 const MaterialPropertiesDesc& ost::MaterialCompiler::GetCompiledPropertySet() const
@@ -142,54 +164,73 @@ const List<MaterialTextureDesc> ost::MaterialCompiler::GetCompiledTextureDescs()
 
 bool ost::MaterialCompiler::Compile()
 {
-    if (_domainShaderPath.empty())
-    {
-        Log::Error(MaterialCompileLog, "Material '{}' failure. Invalid domain type.", _materialShaderPath.string());
-        return false;
-    }
+    constexpr std::string_view vsPath = "Engine/Shader/VertexShaders.hlsl";
+    constexpr std::string_view psPath = "Engine/Shader/PixelShaders.hlsl";
 
     // 1. Compile the shaders
-    MaterialCompilerIncludeHandler includeHandler(MaterialShaderRootPath, _materialShaderPath);
+    MaterialCompilerIncludeHandler vertexIncludeHandler(vsPath, _materialShaderPath);
+    MaterialCompilerIncludeHandler pixelIncludeHandler(psPath, _materialShaderPath);
 
-    Blob shaderSourceCode = FileUtility::ReadFileToBlob(_domainShaderPath.string());
+    Blob vertexShaderSourceCode = FileUtility::ReadFileToBlob(std::string(vsPath));
+    Blob pixelShaderSourceCode = FileUtility::ReadFileToBlob(std::string(psPath));
 
     ComPtr<ID3DBlob> errorBlob;
 
     HRESULT compileResult = S_OK;
 
+    const std::string materialPath = _materialShaderPath.string();
+
     { // Compile Vertex Shader
-        compileResult =
-            D3DCompile(shaderSourceCode.Data(), shaderSourceCode.Size(), NULL, NULL, &includeHandler, "VSMain", "vs_4_1", D3DCOMPILE_DEBUG, 0, &_vsBytecode, &errorBlob);
+        compileResult = D3DCompile(vertexShaderSourceCode.Data(), vertexShaderSourceCode.Size(), NULL, NULL, &vertexIncludeHandler, _domainVertexMain.c_str(), "vs_4_1",
+                                   D3DCOMPILE_DEBUG, 0, &_vsBytecode, &errorBlob);
 
         if (FAILED(compileResult))
         {
             std::string errorMsg = static_cast<const char*>(errorBlob->GetBufferPointer());
-            Log::Error(MaterialCompileLog, "Material '{}' compile failure: '{}'", _materialShaderPath.string(), errorMsg);
+            Log::Error(MaterialCompileLog, "Material '{}' compile failure: '{}'", materialPath, errorMsg);
             return false;
         }
 
-        _psoDesc.vertexShader.bytecodeSize = _vsBytecode->GetBufferSize();
-        _psoDesc.vertexShader.pBytecode = _vsBytecode->GetBufferPointer();
+        _psoDescForward.vertexShader.bytecodeSize = _vsBytecode->GetBufferSize();
+        _psoDescForward.vertexShader.pBytecode = _vsBytecode->GetBufferPointer();
+        _psoDescDeferred.vertexShader.bytecodeSize = _vsBytecode->GetBufferSize();
+        _psoDescDeferred.vertexShader.pBytecode = _vsBytecode->GetBufferPointer();
     }
 
-    { // Compile Pixel Shader
-        compileResult =
-            D3DCompile(shaderSourceCode.Data(), shaderSourceCode.Size(), NULL, NULL, &includeHandler, "PSMain", "ps_4_1", D3DCOMPILE_DEBUG, 0, &_psBytecode, &errorBlob);
+    { // Compile Pixel Shader for Forward Rendering
+        compileResult = D3DCompile(pixelShaderSourceCode.Data(), pixelShaderSourceCode.Size(), NULL, NULL, &pixelIncludeHandler, _domainPixelMainFwd.c_str(), "ps_4_1",
+                                   D3DCOMPILE_DEBUG, 0, &_psBytecodeFwd, &errorBlob);
 
         if (FAILED(compileResult))
         {
             std::string errorMsg = static_cast<const char*>(errorBlob->GetBufferPointer());
-            Log::Error(MaterialCompileLog, "Material '{}' compile failure: '{}'", errorMsg);
+            Log::Error(MaterialCompileLog, "Material '{}' compile failure: '{}'", materialPath, errorMsg);
             return false;
         }
 
-        _psoDesc.pixelShader.bytecodeSize = _psBytecode->GetBufferSize();
-        _psoDesc.pixelShader.pBytecode = _psBytecode->GetBufferPointer();
+        _psoDescForward.pixelShader.bytecodeSize = _psBytecodeFwd->GetBufferSize();
+        _psoDescForward.pixelShader.pBytecode = _psBytecodeFwd->GetBufferPointer();
+    }
+    
+    { // Compile Pixel Shader for Deferred Rendering
+        compileResult = D3DCompile(pixelShaderSourceCode.Data(), pixelShaderSourceCode.Size(), NULL, NULL, &pixelIncludeHandler, _domainPixelMainGeometry.c_str(), "ps_4_1",
+                                   D3DCOMPILE_DEBUG, 0, &_psBytecodeDef, &errorBlob);
+
+        if (FAILED(compileResult))
+        {
+            std::string errorMsg = static_cast<const char*>(errorBlob->GetBufferPointer());
+            Log::Error(MaterialCompileLog, "Material '{}' compile failure: '{}'", materialPath, errorMsg);
+            return false;
+        }
+
+        _psoDescDeferred.pixelShader.bytecodeSize = _psBytecodeDef->GetBufferSize();
+        _psoDescDeferred.pixelShader.pBytecode = _psBytecodeDef->GetBufferPointer();
     }
 
     // 2. Reflect both shaders to populate the set of properties
     ExtractProperties(_vsBytecode);
-    ExtractProperties(_psBytecode);
+    ExtractProperties(_psBytecodeFwd);
+    ExtractProperties(_psBytecodeDef);
 
     // 3. We're done. The user can now call the getters to extract the valid data :)
     return true;
@@ -220,8 +261,8 @@ void ost::MaterialCompiler::ExtractProperties(const ComPtr<ID3DBlob>& from)
         {
             MaterialTextureDesc texDesc = {};
             texDesc.name = bindDesc.Name;
-            texDesc.textureType = static_cast<EMaterialTexture>(bindDesc.BindPoint);
-            _textureDescs.InsertOrOverwrite(texDesc.textureType, texDesc);
+            texDesc.textureBindPoint = bindDesc.BindPoint;
+            _textureDescs.InsertOrOverwrite(texDesc.textureBindPoint, texDesc);
         }
     }
 

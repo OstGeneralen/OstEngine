@@ -138,7 +138,8 @@ HMaterial GraphicsResourceManager::CreateMaterial(const MaterialDesc& desc)
     BackendMaterialDesc compiledMaterialDesc;
     compiledMaterialDesc.properties = compiler.GetCompiledPropertySet();
     compiledMaterialDesc.textureDescs = compiler.GetCompiledTextureDescs();
-    _pRHI->CreatePSO(compiler.GetCompiledPSODesc(), compiledMaterialDesc.pso);
+    _pRHI->CreatePSO(compiler.GetCompiledPSODescForward(), compiledMaterialDesc.psoFwd);
+    _pRHI->CreatePSO(compiler.GetCompiledPSODescDeferred(), compiledMaterialDesc.psoDef);
 
     created.Create(compiledMaterialDesc);
 

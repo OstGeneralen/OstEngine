@@ -9,6 +9,7 @@ namespace ost
     enum class EMaterialDomain
     {
         SurfaceLit,
+        Fullscreen,
     };
 } // namespace ost
 

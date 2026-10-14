@@ -24,7 +24,8 @@ namespace ost
         const MaterialInstance* pMaterialInstance;
         Matrix4x4 transform;
 
-        void Execute( RenderCommandContext& ctx, const Buffer& objectBuffer ) const;
+        void Execute(RenderCommandContext& ctx, const Buffer& objectBuffer) const;
+        void ExecuteDeferred(RenderCommandContext& ctx, const Buffer& objectBuffer) const;
     };
 } // namespace ost
 

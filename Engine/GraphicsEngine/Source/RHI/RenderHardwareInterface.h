@@ -53,6 +53,8 @@ namespace ost
 
     public: // Pipeline State Management
         void SetTexture(const Texture& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
+        void UnsetTextures( EPipelineStage_ stageFlag ) const;
+        
         void SetBuffer(const Buffer& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
 
         void SetPSO(const PipelineStateObject& pso) const;
@@ -61,6 +63,7 @@ namespace ost
 
         void SetRenderTarget(const Texture& renderTarget, const Texture* pDepthTarget = nullptr) const;
         void SetRenderTargets(const Texture* pRenderTargets, SizeType numTargets, const Texture* pDepthTarget = nullptr) const;
+        void UnsetRenderTargets() const;
 
         void Draw(const Mesh& mesh, bool uploadBuffers) const;
 

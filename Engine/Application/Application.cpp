@@ -22,6 +22,7 @@ void Application::Startup()
     _graphicsEngineSettings.output.clientSize = platform::GetClientSize(_window);
     _graphicsEngineSettings.output.renderSize = {1.0f, 1.0f};
     _graphicsEngineSettings.output.nativeWindowHandle = _window;
+    _graphicsEngineSettings.renderer.rendererType = ERendererType::Deferred;
 
     _graphicsEngineSettings.renderer.clearColor = Colors::Black;
 

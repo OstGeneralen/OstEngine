@@ -25,7 +25,8 @@ void Material::Create(const BackendMaterialDesc& desc)
 
     _textureDefaults = MaterialTextureCollection(desc.textureDescs);
 
-    _pso = desc.pso;
+    _psoFwd = desc.psoFwd;
+    _psoDef = desc.psoDef;
 }
 
 // ------------------------------------------------------------
@@ -41,9 +42,14 @@ const SizeType ost::Material::GetPropertiesBufferSize() const
     return _propertyDefaults.GetPropertyDataByteSize();
 }
 
-const PipelineStateObject& Material::GetPSO() const
+const PipelineStateObject& Material::GetPSOFwd() const
 {
-    return _pso;
+    return _psoFwd;
+}
+
+const PipelineStateObject& Material::GetPSODef() const
+{
+    return _psoDef;
 }
 
 // ------------------------------------------------------------
