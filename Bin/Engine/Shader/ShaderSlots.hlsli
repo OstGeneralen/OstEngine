@@ -1,6 +1,0 @@
-#ifndef SHADER_SLOTS_HLSLI
-#define SHADER_SLOTS_HLSLI
-
-
-
-#endif
