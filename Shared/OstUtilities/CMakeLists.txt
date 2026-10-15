@@ -29,6 +29,7 @@ add_library(${PROJECT_NAME}
     Utility/Delegate.h
     Utility/TypedIntegerHandle.h
     Utility/StringConversion.h
+    Math/Shapes.h
 )
 
 target_compile_definitions(${PROJECT_NAME}
