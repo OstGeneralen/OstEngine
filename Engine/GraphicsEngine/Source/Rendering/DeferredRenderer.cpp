@@ -134,7 +134,8 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
 
     rhi.SetBuffer(context.lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), FullPipeline);
 
-    rhi.Draw(_fullscreenMesh, true);
+    rhi.SetBuffersForIndexed(_fullscreenMesh.vertexBuffer, sizeof(FullscreenVertex), _fullscreenMesh.indexBuffer);
+    rhi.Draw(6, 0, 0);
 
     rhi.Present();
 }

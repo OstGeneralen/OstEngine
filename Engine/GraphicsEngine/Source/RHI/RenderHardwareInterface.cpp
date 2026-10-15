@@ -505,18 +505,18 @@ void ost::RenderHardwareInterface::UnsetRenderTargets() const
     _immediateContext->OMSetRenderTargets(8, nullRtvs, nullptr);
 }
 
-void RenderHardwareInterface::Draw(const Mesh& mesh, bool setBuffers) const
+void ost::RenderHardwareInterface::SetBuffersForIndexed(const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer) const
 {
-    if (setBuffers)
-    {
-        UINT strides[] = {static_cast<Uint32>(mesh.vertexBuffer._allocSize / mesh.vertexCount)};
-        UINT offsets[] = {0};
+    UINT strides[] = {static_cast<UINT>(vertexSize)};
+    UINT offsets[] = {0};
 
-        _immediateContext->IASetVertexBuffers(0, 1, mesh.vertexBuffer._buffer.GetAddressOf(), strides, offsets);
-        _immediateContext->IASetIndexBuffer(mesh.indexBuffer._buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-    }
+    _immediateContext->IASetVertexBuffers(0, 1, vertexBuffer._buffer.GetAddressOf(), strides, offsets);
+    _immediateContext->IASetIndexBuffer(indexBuffer._buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+}
 
-    _immediateContext->DrawIndexed(static_cast<UINT>(mesh.indexCount), static_cast<UINT>(mesh.indexOffset), static_cast<UINT>(mesh.vertexOffset));
+void RenderHardwareInterface::Draw(SizeType indexCount, SizeType indexOffset, SizeType vertexOffset) const
+{
+    _immediateContext->DrawIndexed(static_cast<UINT>(indexCount), static_cast<UINT>(indexOffset), static_cast<UINT>(vertexOffset));
 }
 
 void RenderHardwareInterface::Present() const

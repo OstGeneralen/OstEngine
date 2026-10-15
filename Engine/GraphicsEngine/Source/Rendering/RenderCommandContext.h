@@ -23,7 +23,7 @@ namespace ost
         const RenderHardwareInterface& RHI;
         const GraphicsResourceManager& Resources;
 
-        const Mesh* pCurrentMesh = nullptr;
+        const Model* pCurrentModel = nullptr;
         const Material* pCurrentMaterial = nullptr;
         const MaterialInstance* pCurrentMaterianInstance = nullptr;
     };

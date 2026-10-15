@@ -30,6 +30,7 @@ HTexture GraphicsResourceManager::Create(const TextureCPUData& data)
 HModel GraphicsResourceManager::Create(const ModelCPUData& data)
 {
     Model created;
+    created.numVertices = data.vertexList.GetSize();
 
     if (data.vertexLayoutMask & EModelVertexData_StaticMesh)
     {
@@ -76,7 +77,7 @@ HModel GraphicsResourceManager::Create(const ModelCPUData& data)
         created.meshHandles.Add(_meshes.Add(createdMesh));
     }
 
-    created.materials = List<HMaterial>(data.numMaterials);
+    created.numMaterials = data.numMaterials;
 
     return HModel{_models.Add(created)};
 }

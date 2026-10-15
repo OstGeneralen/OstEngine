@@ -33,8 +33,9 @@ namespace ost
     struct Model
     {
         List<HMesh> meshHandles;
-        List<HMaterial> materials;
-
+        SizeType numMaterials;
+        SizeType numVertices;
+        
         Buffer vertexBuffer;
         Buffer indexBuffer;
     };
@@ -46,6 +47,8 @@ namespace ost
         SizeType indexCount;
         SizeType vertexCount;
         SizeType materialIndex;
+
+        HModel parentModel;
 
         Buffer vertexBuffer;
         Buffer indexBuffer;

@@ -16,7 +16,7 @@ namespace ost
     struct StaticMeshRenderProxy
     {
         Matrix4x4 transform;
-        HMaterialInstance hMaterial;
+        HMaterialInstance materialHandles[8];
         HModel hModel;
     };
 

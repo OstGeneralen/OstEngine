@@ -79,7 +79,7 @@ void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetR
 {
     for (const auto& meshProxy : _gameWorld.GetSceneGraph().GetStaticMeshProxies())
     {
-        toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.hMaterial, meshProxy.transform));
+        toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.materialHandles, meshProxy.transform));
     }
 
     for (const auto& lightProxy : _gameWorld.GetSceneGraph().GetLightProxies())

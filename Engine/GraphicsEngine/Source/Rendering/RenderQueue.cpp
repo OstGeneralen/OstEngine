@@ -28,10 +28,19 @@ void ost::RenderQueue::Push(ModelCommand&& cmd)
 
     for (const HMesh& hSubmesh : model.meshHandles)
     {
+        const Mesh* pMesh = &_resourceManager.Get(hSubmesh);
+
+        if(cmd.hMaterialInstances[pMesh->materialIndex].Valid() == false)
+        {
+            // Fallback on default material?
+        }
+
+
         RenderCommand renderCmd;
-        renderCmd.pMesh = &_resourceManager.Get(hSubmesh);
+        renderCmd.pMesh = pMesh;
+        renderCmd.pModel = &model;
         renderCmd.transform = cmd.transform;
-        renderCmd.pMaterialInstance = &_resourceManager.Get(cmd.hMaterialInstance);
+        renderCmd.pMaterialInstance = &_resourceManager.Get(cmd.hMaterialInstances[pMesh->materialIndex]);
         renderCmd.pMaterial = &_resourceManager.Get(renderCmd.pMaterialInstance->GetBaseMaterialHandle());
 
         _drawCommands.Add(renderCmd);

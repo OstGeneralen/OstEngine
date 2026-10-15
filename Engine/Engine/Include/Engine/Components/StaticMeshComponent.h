@@ -17,10 +17,10 @@ namespace ost
         void SetModel(HModel model);
         void SetModel(const std::string& modelName);
 
-        void SetMaterial(HMaterialInstance material);
-        void SetMaterial(const std::string& materialName);
+        void SetMaterial(HMaterialInstance material, Uint32 index = 0);
+        void SetMaterial(const std::string& materialName, Uint32 index = 0);
 
-        IMaterialInstance* GetMaterial();
+        IMaterialInstance* GetMaterial(Uint32 index = 0);
 
     public: // Render Component
         void InitializeRenderState(SceneGraph& SceneGraph) override;

@@ -14,12 +14,14 @@ namespace ost
     class Material;
     class MaterialInstance;
     struct Texture;
+    class Model;
     class RenderCommandContext;
     struct Buffer;
 
     struct RenderCommand
     {
         const Mesh* pMesh;
+        const Model* pModel;
         const Material* pMaterial;
         const MaterialInstance* pMaterialInstance;
         Matrix4x4 transform;

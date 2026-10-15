@@ -24,24 +24,24 @@ void StaticMeshComponent::SetModel(const std::string& modelName)
     SetModel(EngineContext::Get().Assets().GetHandle<HModel>(modelName));
 }
 
-void StaticMeshComponent::SetMaterial(HMaterialInstance hnd)
+void StaticMeshComponent::SetMaterial(HMaterialInstance hnd, Uint32 index)
 {
     if (_pSceneGraph)
     {
-        _pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).hMaterial = hnd;
+        _pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).materialHandles[index] = hnd;
     }
 }
 
-void StaticMeshComponent::SetMaterial(const std::string& materialName)
+void StaticMeshComponent::SetMaterial(const std::string& materialName, Uint32 index)
 {
-    SetMaterial(EngineContext::Get().Assets().GetHandle<IMaterialInstance>(materialName));
+    SetMaterial(EngineContext::Get().Assets().GetHandle<IMaterialInstance>(materialName), index);
 }
 
-IMaterialInstance* ost::StaticMeshComponent::GetMaterial()
+IMaterialInstance* ost::StaticMeshComponent::GetMaterial(Uint32 index)
 {
     if (_pSceneGraph)
     {
-        return &EngineContext::Get().Assets().GetAsset<IMaterialInstance>(_pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).hMaterial);
+        return &EngineContext::Get().Assets().GetAsset<IMaterialInstance>(_pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).materialHandles[index]);
     }
     return nullptr;
 }

@@ -54,9 +54,14 @@ void RenderCommand::Execute(RenderCommandContext& ctx, const Buffer& objectBuffe
     objectBufferData.objectTransform = transform;
     ctx.RHI.UpdateBuffer(objectBuffer, &objectBufferData, sizeof(ObjectBufferStructure));
     ctx.RHI.SetBuffer(objectBuffer, PipelineConstant::Get(EBufferSlot::ObjectBuffer), PipelineALL);
+    
+    if(ctx.pCurrentModel != pModel)
+    {
+        ctx.RHI.SetBuffersForIndexed( pModel->vertexBuffer, sizeof(SurfaceVertex), pModel->indexBuffer );
+        ctx.pCurrentModel = pModel;
+    }
 
-    ctx.RHI.Draw(*pMesh, pMesh != ctx.pCurrentMesh);
-    ctx.pCurrentMesh = pMesh;
+    ctx.RHI.Draw(pMesh->indexCount, pMesh->indexOffset, pMesh->vertexOffset);
 }
 
 void ost::RenderCommand::ExecuteDeferred(RenderCommandContext& ctx, const Buffer& objectBuffer) const
@@ -93,8 +98,13 @@ void ost::RenderCommand::ExecuteDeferred(RenderCommandContext& ctx, const Buffer
     ctx.RHI.UpdateBuffer(objectBuffer, &objectBufferData, sizeof(ObjectBufferStructure));
     ctx.RHI.SetBuffer(objectBuffer, PipelineConstant::Get(EBufferSlot::ObjectBuffer), PipelineALL);
 
-    ctx.RHI.Draw(*pMesh, pMesh != ctx.pCurrentMesh);
-    ctx.pCurrentMesh = pMesh;
+    if(ctx.pCurrentModel != pModel)
+    {
+        ctx.RHI.SetBuffersForIndexed( pModel->vertexBuffer, sizeof(SurfaceVertex), pModel->indexBuffer );
+        ctx.pCurrentModel = pModel;
+    }
+
+    ctx.RHI.Draw(pMesh->indexCount, pMesh->indexOffset, pMesh->vertexOffset);
 }
 
 // ------------------------------------------------------------

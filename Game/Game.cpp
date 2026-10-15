@@ -37,6 +37,7 @@ void Game::Load(ost::GameContext& context)
 
     ost::HModel cubeModel = assets.Load<ost::HModel>("Game/TestCube");
     ost::HModel planeModel = assets.Load<ost::HModel>("Game/TestPlane");
+    ost::HModel multiMaterialModel = assets.Load<ost::HModel>("Game/MultiMaterialModel");
 
     assets.Load<ost::IMaterial>("Engine/Mat_DefaultLit");
 
@@ -47,20 +48,29 @@ void Game::Load(ost::GameContext& context)
     materialInstances[2] = assets.Load<ost::IMaterialInstance>("Game/MossMaterial");
     materialInstances[3] = assets.Load<ost::IMaterialInstance>("Game/MetalMaterial");
 
-    for (Uint32 i = 0; i < 4; ++i)
-    {
-        ost::Actor* actor = _scene->CreateActor();
+    // The actor
+    ost::Actor* meshActor = _scene->CreateActor();
+    auto& meshComponent = meshActor->AddComponent<ost::StaticMeshComponent>();
+    meshComponent.SetModel(multiMaterialModel);
+    meshComponent.SetMaterial(materialInstances[0], 0);
+    meshComponent.SetMaterial(materialInstances[1], 1);
+    meshComponent.SetMaterial(materialInstances[3], 2);
+    meshActor->transform.SetPosition({0, -1, 0});
 
-        auto& meshComponent = actor->AddComponent<ost::StaticMeshComponent>();
-        meshComponent.SetModel(planeModel);
-        meshComponent.SetMaterial(materialInstances[i]);
-
-        actor->AddComponent<DebugMaterialToggleComponent>();
-
-        Float32 xOffset = (static_cast<Float32>(i) - 2.0f) * 2.0f;
-        actor->transform.SetPosition({xOffset, 0, 0});
-        actor->transform.Rotate(ost::Quaternion::FromRotationAxis(actor->transform.GetRight() * -1.0f, 45.0f * ost::math::DegToRad));
-    }
+    // for (Uint32 i = 0; i < 4; ++i)
+    //{
+    //     ost::Actor* actor = _scene->CreateActor();
+    //
+    //    auto& meshComponent = actor->AddComponent<ost::StaticMeshComponent>();
+    //    meshComponent.SetModel(planeModel);
+    //    meshComponent.SetMaterial(materialInstances[i]);
+    //
+    //    actor->AddComponent<DebugMaterialToggleComponent>();
+    //
+    //    Float32 xOffset = (static_cast<Float32>(i) - 2.0f) * 2.0f;
+    //    actor->transform.SetPosition({xOffset, 0, 0});
+    //    actor->transform.Rotate(ost::Quaternion::FromRotationAxis(actor->transform.GetRight() * -1.0f, 45.0f * ost::math::DegToRad));
+    //}
 
     // Let there be eyes
     ost::Actor* cameraActor = _scene->CreateActor();
@@ -71,18 +81,39 @@ void Game::Load(ost::GameContext& context)
 
     // Let there be light
     pLightActor = _scene->CreateActor();
-    auto& directionalLight = pLightActor->AddComponent<ost::DirectionalLightComponent>();
-    directionalLight.SetColor(ost::Color(1.0f, 0.9f, 0.7f, 1.0f));
-    directionalLight.SetIntensity(2.0f);
-    pLightActor->transform.SetRotation(ost::Quaternion::FromEulers({1, 0, 0}));
-    pLightActor->AddComponent<KeyboardRotatorComponent>();
+    //auto& directionalLight = pLightActor->AddComponent<ost::DirectionalLightComponent>();
+    //directionalLight.SetColor(ost::Color(1.0f, 0.9f, 0.7f, 1.0f));
+    //directionalLight.SetIntensity(2.0f);
+    //pLightActor->transform.SetRotation(ost::Quaternion::FromEulers({1, 0, 0}));
+    //pLightActor->AddComponent<KeyboardRotatorComponent>();
 
     ost::Actor* pointLightActor = _scene->CreateActor();
     auto& pointLight = pointLightActor->AddComponent<ost::PointLightComponent>();
-    pointLight.SetColor({1.0f, 0.0f, 0.0f, 1.0f});
-    pointLight.SetIntensity(1.0f);
+    pointLight.SetColor(ost::Colors::Yellow);
+    pointLight.SetIntensity(4.0f);
     pointLight.SetRadius(4.0f);
-    pointLightActor->transform.SetPosition({0, 1, 0});
+    pointLightActor->transform.SetPosition({2, 0, 2});
+    
+    pointLightActor = _scene->CreateActor();
+    auto& pointLight2 = pointLightActor->AddComponent<ost::PointLightComponent>();
+    pointLight2.SetColor(ost::Colors::Red);
+    pointLight2.SetIntensity(4.0f);
+    pointLight2.SetRadius(4.0f);
+    pointLightActor->transform.SetPosition({-2, 0, -2});
+
+    pointLightActor = _scene->CreateActor();
+    auto& pointLight3 = pointLightActor->AddComponent<ost::PointLightComponent>();
+    pointLight3.SetColor(ost::Colors::Green);
+    pointLight3.SetIntensity(4.0f);
+    pointLight3.SetRadius(4.0f);
+    pointLightActor->transform.SetPosition({2, 0, -2});
+    
+    pointLightActor = _scene->CreateActor();
+    auto& pointLight4 = pointLightActor->AddComponent<ost::PointLightComponent>();
+    pointLight4.SetColor(ost::Colors::Blue);
+    pointLight4.SetIntensity(4.0f);
+    pointLight4.SetRadius(4.0f);
+    pointLightActor->transform.SetPosition({-2, 0, 2});
 }
 
 void Game::Unload(ost::GameContext& context)

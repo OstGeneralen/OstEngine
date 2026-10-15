@@ -7,21 +7,24 @@
 #include <Math/Matrix4x4.h>
 #include <Math/Vector3.h>
 
+#include <Memory/Memory.h>
+
 // ------------------------------------------------------------
 
 namespace ost
 {
     struct ModelCommand
     {
-        ModelCommand(HModel h, HMaterialInstance hMatInstance, const Matrix4x4& t)
+        ModelCommand(HModel h, const HMaterialInstance pMatInstances[8], const Matrix4x4& t)
             : hModel{h}
-            , hMaterialInstance{hMatInstance}
+            , hMaterialInstances{}
             , transform{t}
         {
+            MemCopy(hMaterialInstances, pMatInstances, sizeof(HMaterialInstance) * 8);
         }
 
         HModel hModel;
-        HMaterialInstance hMaterialInstance;
+        HMaterialInstance hMaterialInstances[8];
         Matrix4x4 transform;
     };
     struct LightCommand
