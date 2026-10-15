@@ -4,6 +4,7 @@
 
 // Resources
 #include "Objects/Texture.h"
+#include "Objects/Buffer.h"
 #include "Resources/GraphicsResourceManager.h"
 
 // Rendering
@@ -55,7 +56,13 @@ namespace ost
 
         Vector2f GetRenderSize() const;
 
+        void UpdateFrameBuffer();
+        void UpdateLightBuffer();
+
         Texture _backbuffer;
+        Buffer _frameBuffer;
+        Buffer _lightBuffer;
+        Buffer _objectBuffer;
 
         GraphicsEngineSettings _activeSettings;
         UniquePtr<IRenderer> _activeRenderer;

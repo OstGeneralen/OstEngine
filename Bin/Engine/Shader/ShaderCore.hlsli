@@ -49,10 +49,22 @@ cbuffer ObjectBuffer : BUFFER_SLOT_OBJECT {
     row_major float4x4 ObjectBuf_Transform;
 };
 
+#define LIGHT_TYPE_DIRECTIONAL 0
+#define LIGHT_TYPE_POINT 2
+
+struct LightData
+{
+    float4 color;
+    float3 position;
+    uint type;
+    float3 direction;
+    float radius;
+};
+
 cbuffer LightBuffer : BUFFER_SLOT_LIGHT {
-    float4 Light_SunDir;
-    float4 Light_SunCol;
-    float4 Light_AmbientCol;
+    LightData LightBuffer_lights[10];
+    uint LightBuffer_numLights;
+    float3 LBPADDING0;
 };
 
 // Deferred Rendering output

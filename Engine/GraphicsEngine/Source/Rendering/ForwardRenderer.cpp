@@ -23,15 +23,6 @@ void ost::ForwardRenderer::Initialize(const Vector2u& renderSize, RendererContex
     // Build resources
     context.rhi.CreateDepthStencilTexture(renderSize, false, _depthStencil);
     _depthStencil.SetDebugName("fwd_depthStencil");
-
-    context.rhi.CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
-    _objectBuffer.SetDebugName("fwd_objectBuffer");
-
-    context.rhi.CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
-    _frameBuffer.SetDebugName("fwd_frameBuffer");
-
-    context.rhi.CreateBuffer(sizeof(LightsBufferStructure), _sceneLightBuffer);
-    _sceneLightBuffer.SetDebugName("fwd_sceneLightBuffer");
 }
 
 // ------------------------------------------------------------
@@ -59,39 +50,19 @@ const Vector2f& ost::ForwardRenderer::GetDimensions() const
 
 void ost::ForwardRenderer::ExecuteCommands(const IRenderQueue& queueInterface, RendererContext&& context)
 {
+    const EPipelineStage_ FullPipeline = EPipelineStage_VS | EPipelineStage_PS;
+
     const RenderQueue& queue = static_cast<const RenderQueue&>(queueInterface);
 
     const RenderHardwareInterface& rhi = context.rhi;
-    auto renderView = queue.GetView();
 
     // Clear and set targets
     rhi.ClearRenderTarget(context.backbuffer);
     rhi.ClearDepthStencil(_depthStencil);
     rhi.SetRenderTarget(context.backbuffer, &_depthStencil);
 
-    // Update and upload frame buffer
-    FrameBufferStructure frameBufferData = {};
-    frameBufferData.viewProjection = renderView.viewProjection;
-    frameBufferData.inverseViewProjection = renderView.viewProjection.GetInverse();
-    frameBufferData.inverseView = renderView.viewInverse;
-    frameBufferData.viewLocation = renderView.viewInverse.ExtractTranslation();
-    frameBufferData.WriteAndSetBuffer(_frameBuffer, rhi);
-
-    // Update and upload light buffer
-    LightsBufferStructure lightsData = {};
-    for (const LightCommand& cmd : queue.GetLightCommands())
-    {
-        if (cmd.type == LightCommand::EType::Directional)
-        {
-            lightsData.directional.color = cmd.color;
-            lightsData.directional.direction = cmd.forward;
-        }
-        if (cmd.type == LightCommand::EType::Ambient)
-        {
-            lightsData.ambient.color = cmd.color;
-        }
-    }
-    lightsData.WriteAndSetBuffer( _sceneLightBuffer, rhi );
+    rhi.SetBuffer(context.frameBuffer, PipelineConstant::Get(EBufferSlot::FrameBuffer), FullPipeline);
+    rhi.SetBuffer(context.lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), FullPipeline);
 
     // Iterate all actual draw commands and draw them
     const Mesh* currentMesh = nullptr;
@@ -101,7 +72,7 @@ void ost::ForwardRenderer::ExecuteCommands(const IRenderQueue& queueInterface, R
     RenderCommandContext ctx(rhi, context.resources);
     for (const RenderCommand& cmd : queue.GetDrawCommands())
     {
-        cmd.Execute(ctx, _objectBuffer);
+        cmd.Execute(ctx, context.objectBuffer);
     }
 
     rhi.Present();

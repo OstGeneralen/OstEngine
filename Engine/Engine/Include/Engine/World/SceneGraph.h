@@ -24,6 +24,7 @@ namespace ost
     {
         Directional,
         Ambient,
+        Point,
         // Only these two for now, extend the render proxy once we get to point and spot as well
     };
 
@@ -31,7 +32,10 @@ namespace ost
     {
         ELightProxyType type;
         Vector3f direction;
+        Vector3f position;
         Color color;
+        Float32 intensity;
+        Float32 radius;
     };
 
     struct ViewRenderProxy

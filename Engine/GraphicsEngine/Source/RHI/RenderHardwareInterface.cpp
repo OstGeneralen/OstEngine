@@ -450,7 +450,7 @@ void RenderHardwareInterface::SetTexture(const Texture& texture, Uint32 slot, EP
     }
 }
 
-void ost::RenderHardwareInterface::UnsetTextures(EPipelineStage_ stageFlag) const
+void ost::RenderHardwareInterface::UnsetTextures() const
 {
     ID3D11ShaderResourceView* nullSrvs[8] = {nullptr};
     _immediateContext->VSSetShaderResources(0, 8, nullSrvs);

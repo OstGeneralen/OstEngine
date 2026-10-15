@@ -100,6 +100,15 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
     _samplers.Insert(ESamplerSlot::PointClamp, buildSampler);
 
     _rhi.CreateBackbuffer(_backbuffer);
+
+    _rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
+    _lightBuffer.SetDebugName("Buffer_Light");
+
+    _rhi.CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
+    _objectBuffer.SetDebugName("Buffer_Object");
+
+    _rhi.CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
+    _frameBuffer.SetDebugName("Buffer_Frame");
 }
 
 void GraphicsEngine::Shutdown()
@@ -156,11 +165,20 @@ IMaterialManager& ost::GraphicsEngine::GetMaterialManager()
 
 void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
 {
+    // Start by resetting bindings
+    _rhi.UnsetRenderTargets();
+    _rhi.UnsetTextures();
+
     // Always bind the samplers since these are globals
     _rhi.SetSampler(_samplers[ESamplerSlot::TrilinearWrap], PipelineConstant::Get(ESamplerSlot::TrilinearWrap));
     _rhi.SetSampler(_samplers[ESamplerSlot::TrilinearClamp], PipelineConstant::Get(ESamplerSlot::TrilinearClamp));
     _rhi.SetSampler(_samplers[ESamplerSlot::PointWrap], PipelineConstant::Get(ESamplerSlot::PointWrap));
     _rhi.SetSampler(_samplers[ESamplerSlot::PointClamp], PipelineConstant::Get(ESamplerSlot::PointClamp));
+
+    // Update the buffers based on the command queue
+    // Not binding these at this point :)
+    UpdateFrameBuffer();
+    UpdateLightBuffer();
 
     // Execute commands under current renderer
     _activeRenderer->ExecuteCommands(_renderQueue, BuildRendererContext());
@@ -176,7 +194,7 @@ const IRenderHardwareInterface& GraphicsEngine::GetRenderHardwareInterface() con
 
 RendererContext ost::GraphicsEngine::BuildRendererContext()
 {
-    return RendererContext(_rhi, _resourceManager, _backbuffer);
+    return RendererContext(_rhi, _resourceManager, _backbuffer, _frameBuffer, _objectBuffer, _lightBuffer);
 }
 // ------------------------------------------------------------
 
@@ -185,6 +203,53 @@ Vector2f GraphicsEngine::GetRenderSize() const
     const Vector2f clientSize = _activeSettings.output.clientSize.VectorCast<Float32>();
     const Vector2f renderDimensions = {clientSize.X * _activeSettings.output.renderSize.X, clientSize.Y * _activeSettings.output.renderSize.Y};
     return renderDimensions;
+}
+
+// ------------------------------------------------------------
+
+void ost::GraphicsEngine::UpdateFrameBuffer()
+{
+    FrameBufferStructure frameBufferData;
+    frameBufferData.viewProjection = _renderQueue.GetView().viewProjection;
+    frameBufferData.inverseViewProjection = _renderQueue.GetView().viewProjection.GetInverse();
+    frameBufferData.inverseView = _renderQueue.GetView().viewInverse;
+    frameBufferData.viewLocation = _renderQueue.GetView().viewInverse.ExtractTranslation();
+    _rhi.UpdateBuffer(_frameBuffer, &frameBufferData, sizeof(FrameBufferStructure));
+}
+
+void ost::GraphicsEngine::UpdateLightBuffer()
+{
+    Uint32 lightCount = 0;
+
+    LightsBufferStructure bufferData = {};
+
+    for (const auto& cmd : _renderQueue.GetLightCommands())
+    {
+        auto& thisLight = bufferData.lights[lightCount];
+        thisLight.color = cmd.color;
+        thisLight.position = cmd.position;
+        thisLight.direction = cmd.forward;
+        thisLight.radius = cmd.radius;
+
+        switch (cmd.type)
+        {
+        case LightCommand::EType::Directional:
+            thisLight.type = 0;
+            break;
+        case LightCommand::EType::Point:
+            thisLight.type = 2;
+            break;
+        default:
+            continue;
+            break;
+        }
+
+        lightCount++;
+    }
+
+    bufferData.numLights = lightCount;
+
+    _rhi.UpdateBuffer(_lightBuffer, &bufferData, sizeof(LightsBufferStructure));
 }
 
 // ------------------------------------------------------------

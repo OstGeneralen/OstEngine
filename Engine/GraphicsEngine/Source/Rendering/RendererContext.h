@@ -4,6 +4,7 @@
 
 // Resources
 #include "Objects/Texture.h"
+#include "Objects/Buffer.h"
 #include "Resources/GraphicsResourceManager.h"
 
 // RHI
@@ -16,10 +17,13 @@ namespace ost
 {
     struct RendererContext
     {
-        RendererContext(const RenderHardwareInterface& r, GraphicsResourceManager& res, Texture bb)
+        RendererContext(const RenderHardwareInterface& r, GraphicsResourceManager& res, Texture bb, Buffer fb, Buffer ob, Buffer lb)
             : rhi{r}
             , resources{res}
             , backbuffer{bb}
+            , frameBuffer{fb}
+            , lightBuffer{lb}
+            , objectBuffer{ob}
         {
         }
 
@@ -27,6 +31,10 @@ namespace ost
         GraphicsResourceManager& resources;
 
         Texture backbuffer;
+
+        Buffer frameBuffer;
+        Buffer lightBuffer;
+        Buffer objectBuffer;
     };
 } // namespace ost
 

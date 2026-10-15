@@ -27,10 +27,6 @@ namespace ost
         Vector2f _currentRenderSize;
 
         Texture _depthStencil;
-
-        Buffer _objectBuffer;
-        Buffer _frameBuffer;
-        Buffer _sceneLightBuffer;
     };
 } // namespace ost
 

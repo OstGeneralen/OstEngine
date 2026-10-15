@@ -53,7 +53,7 @@ namespace ost
 
     public: // Pipeline State Management
         void SetTexture(const Texture& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
-        void UnsetTextures( EPipelineStage_ stageFlag ) const;
+        void UnsetTextures() const;
         
         void SetBuffer(const Buffer& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
 

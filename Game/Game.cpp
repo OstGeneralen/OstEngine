@@ -1,13 +1,14 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Game.h"
 
+#include "DebugMaterialToggleComponent.h"
 #include "KeyboardMovementComponent.h"
 #include "KeyboardRotatorComponent.h"
-#include "DebugMaterialToggleComponent.h"
 
 #include <Engine/Asset/IAssetManager.h>
 #include <Engine/Components/CameraComponent.h>
 #include <Engine/Components/DirectionalLightComponent.h>
+#include <Engine/Components/PointLightComponent.h>
 #include <Engine/Components/SceneLightComponent.h>
 #include <Engine/Components/StaticMeshComponent.h>
 #include <Engine/EngineContext.h>
@@ -46,19 +47,19 @@ void Game::Load(ost::GameContext& context)
     materialInstances[2] = assets.Load<ost::IMaterialInstance>("Game/MossMaterial");
     materialInstances[3] = assets.Load<ost::IMaterialInstance>("Game/MetalMaterial");
 
-    for(Uint32 i = 0; i < 4; ++i)
+    for (Uint32 i = 0; i < 4; ++i)
     {
         ost::Actor* actor = _scene->CreateActor();
-        
+
         auto& meshComponent = actor->AddComponent<ost::StaticMeshComponent>();
         meshComponent.SetModel(planeModel);
         meshComponent.SetMaterial(materialInstances[i]);
 
         actor->AddComponent<DebugMaterialToggleComponent>();
-        
+
         Float32 xOffset = (static_cast<Float32>(i) - 2.0f) * 2.0f;
-        actor->transform.SetPosition( {xOffset, 0, 0} );
-        actor->transform.Rotate(ost::Quaternion::FromRotationAxis( actor->transform.GetRight() * -1.0f, 45.0f * ost::math::DegToRad )); 
+        actor->transform.SetPosition({xOffset, 0, 0});
+        actor->transform.Rotate(ost::Quaternion::FromRotationAxis(actor->transform.GetRight() * -1.0f, 45.0f * ost::math::DegToRad));
     }
 
     // Let there be eyes
@@ -70,11 +71,18 @@ void Game::Load(ost::GameContext& context)
 
     // Let there be light
     pLightActor = _scene->CreateActor();
-    auto& sceneLight = pLightActor->AddComponent<ost::SceneLightComponent>();
-    sceneLight.SetAmbientColor({0.0f, 0.01f, 0.02f, 1.0f});
     auto& directionalLight = pLightActor->AddComponent<ost::DirectionalLightComponent>();
-    directionalLight.SetColor(ost::Color(1.0f, 0.9f, 0.7f, 1.0f), 2.0f);
+    directionalLight.SetColor(ost::Color(1.0f, 0.9f, 0.7f, 1.0f));
+    directionalLight.SetIntensity(2.0f);
+    pLightActor->transform.SetRotation(ost::Quaternion::FromEulers({1, 0, 0}));
     pLightActor->AddComponent<KeyboardRotatorComponent>();
+
+    ost::Actor* pointLightActor = _scene->CreateActor();
+    auto& pointLight = pointLightActor->AddComponent<ost::PointLightComponent>();
+    pointLight.SetColor({1.0f, 0.0f, 0.0f, 1.0f});
+    pointLight.SetIntensity(1.0f);
+    pointLight.SetRadius(4.0f);
+    pointLightActor->transform.SetPosition({0, 1, 0});
 }
 
 void Game::Unload(ost::GameContext& context)

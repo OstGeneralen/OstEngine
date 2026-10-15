@@ -1,7 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/Resources/ObjectHandles.h"
 #include "GraphicsEngine/Materials/IMaterialInstance.h"
+#include "GraphicsEngine/Resources/ObjectHandles.h"
+
 #include <Math/Color.h>
 #include <Math/Matrix4x4.h>
 #include <Math/Vector3.h>
@@ -25,22 +26,15 @@ namespace ost
     };
     struct LightCommand
     {
-        static inline LightCommand Directional(const Vector3f& direction, const Color& color)
-        {
-            return LightCommand{EType::Directional, Matrix4x4(), direction, color};
-        }
-        static inline LightCommand Ambient(const Color& color)
-        {
-            return LightCommand{EType::Ambient, Matrix4x4(), Vector3f(), color};
-        }
-
         enum class EType
         {
             Directional,
             Ambient,
+            Point,
         } type;
-        Matrix4x4 transform;
+        Vector3f position;
         Vector3f forward;
+        Float32 radius;
         Color color;
     };
 
@@ -55,7 +49,7 @@ namespace ost
     public:
         virtual ~IRenderQueue() = default;
 
-        virtual void SetView( const Matrix4x4& viewProjection, const Matrix4x4& viewInverse ) = 0;
+        virtual void SetView(const Matrix4x4& viewProjection, const Matrix4x4& viewInverse) = 0;
         virtual void Push(ModelCommand&& cmd) = 0;
         virtual void Push(LightCommand&& cmd) = 0;
         virtual void Clear() = 0;

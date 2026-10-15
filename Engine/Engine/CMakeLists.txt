@@ -52,6 +52,10 @@ add_library(${PROJECT_NAME} STATIC
     Source/Components/DirectionalLightComponent.cpp
     Include/Engine/Configuration/RuntimeConfig.h
     Source/Configuration/RuntimeConfig.cpp
+    Include/Engine/Components/LightComponent.h
+    Source/Components/LightComponent.cpp
+    Include/Engine/Components/PointLightComponent.h
+    Source/Components/PointLightComponent.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

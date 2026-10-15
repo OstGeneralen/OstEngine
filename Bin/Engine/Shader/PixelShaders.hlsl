@@ -7,6 +7,30 @@
 
 // ------------------------------------------------------------
 
+float3 CalculateLights(PBRData surface)
+{
+    float3 totalLight = float3(0,0,0);
+
+    for(uint i = 0; i < LightBuffer_numLights; i++)
+    {
+        float3 thisLight = float3(0,0,0);
+        switch(LightBuffer_lights[i].type)
+        {
+            case 0:
+                thisLight = CalculatePBLDirectionalLight(LightBuffer_lights[i].direction, LightBuffer_lights[i].color.rgb, surface);
+                break;
+            case 2:
+                thisLight = CalculatePBLPointLight( LightBuffer_lights[i].color.rgb, LightBuffer_lights[i].position, LightBuffer_lights[i].radius, surface );
+                break;
+        }
+        totalLight = totalLight + thisLight;
+    }
+
+    return saturate(totalLight);
+}
+
+// ------------------------------------------------------------
+
 float4 PSMain_Fullscreen(FullscreenPixel frag) : SV_Target {
     MaterialPixelInput materialInput;
     materialInput.uv = frag.UV;
@@ -38,7 +62,7 @@ float4 PSMain_LitSurface_Forward(SurfacePixel frag) : SV_Target {
     pblData.metallic = max(surfaceData.metallicness, 0.0001f);
     pblData.position = frag.WorldPosition;
 
-    float4 litColor = CalculatePBLColor(pblData);
+    float3 litColor = CalculateLights(pblData);
 
     const float gamma = 1.9f;
     return float4(GammaCorrectOutput(litColor.rgb, gamma), 1);
@@ -86,7 +110,8 @@ float4 PSMain_Surface_Lit(FullscreenPixel frag)  : SV_Target {
     pblData.roughness = max(ORM.g, 0.0001f);
     pblData.metallic = max(ORM.b, 0.0001f);
     pblData.position = worldPos;
-    float4 litColor = CalculatePBLColor(pblData);
+    
+    float3 litColor = CalculateLights(pblData);
 
     return float4(GammaCorrectOutput(litColor.rgb, 1.9f), 1);
     //return float4(litColor.rgb, 1);

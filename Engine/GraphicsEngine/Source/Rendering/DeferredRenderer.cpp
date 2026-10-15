@@ -31,15 +31,6 @@ void DeferredRenderer::Initialize(const Vector2u& renderSize, RendererContext&& 
 {
     const auto& rhi = context.rhi;
 
-    rhi.CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
-    _frameBuffer.SetDebugName("DeferredFrameBuffer");
-
-    rhi.CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
-    _objectBuffer.SetDebugName("DeferredObjectBuffer");
-
-    rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
-    _lightBuffer.SetDebugName("DeferredLightBuffer");
-
     // Treat initialization as a first "resize"
     Resize(renderSize, std::move(context));
 
@@ -102,10 +93,13 @@ const Vector2f& ost::DeferredRenderer::GetDimensions() const
 
 void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, RendererContext&& context)
 {
+    const EPipelineStage_ FullPipeline = EPipelineStage_VS | EPipelineStage_PS;
+
     const auto& rhi = context.rhi;
     const RenderQueue& queue = static_cast<const RenderQueue&>(queueInterface);
 
     // Execute the queue onto our gBuffer like normal
+    rhi.SetBuffer(context.frameBuffer, PipelineConstant::Get(EBufferSlot::FrameBuffer), FullPipeline);
 
     // 1. Clear all render targets
     rhi.ClearRenderTarget(_gBuffer.albedo);
@@ -113,28 +107,20 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     rhi.ClearRenderTarget(_gBuffer.orm);
     rhi.ClearDepthStencil(_gBuffer.depth);
 
-    // 2. Update and set the frame buffer
-    FrameBufferStructure fb = {};
-    fb.viewProjection = queue.GetView().viewProjection;
-    fb.inverseViewProjection = queue.GetView().viewProjection.GetInverse();
-    fb.inverseView = queue.GetView().viewInverse;
-    fb.viewLocation = queue.GetView().viewInverse.ExtractTranslation();
-    fb.WriteAndSetBuffer(_frameBuffer, rhi);
-
-    // 3. Bind the color pass targets
+    // 2. Bind the color pass targets
     Texture colorTargets[3] = {_gBuffer.albedo, _gBuffer.normals, _gBuffer.orm};
     rhi.SetRenderTargets(colorTargets, 3, &_gBuffer.depth);
 
-    // 4. Execute the color pass
+    // 3. Execute the color pass
     RenderCommandContext ctx(rhi, context.resources);
     for (const auto& cmd : queue.GetDrawCommands())
     {
-        cmd.ExecuteDeferred(ctx, _objectBuffer);
+        cmd.ExecuteDeferred(ctx, context.objectBuffer);
     }
 
-    // 5. Bind the fullscreen mesh
+    // 4. Light Pass
     rhi.UnsetRenderTargets();
-    rhi.UnsetTextures(EPipelineStage_PS);
+    rhi.UnsetTextures();
 
     rhi.ClearRenderTarget(context.backbuffer);
     rhi.SetRenderTarget(context.backbuffer, nullptr);
@@ -146,27 +132,9 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     rhi.SetTexture(_gBuffer.orm, 2, ost::EPipelineStage_PS);
     rhi.SetTexture(_gBuffer.depth, 3, ost::EPipelineStage_PS);
 
-    LightsBufferStructure lightsData = {};
-    for (const LightCommand& cmd : queue.GetLightCommands())
-    {
-        if (cmd.type == LightCommand::EType::Directional)
-        {
-            lightsData.directional.color = cmd.color;
-            lightsData.directional.direction = Vector4f(cmd.forward, 0);
-        }
-        if (cmd.type == LightCommand::EType::Ambient)
-        {
-            lightsData.ambient.color = cmd.color;
-        }
-    }
-    lightsData.WriteAndSetBuffer(_lightBuffer, rhi);
-
-    fb.WriteAndSetBuffer(_frameBuffer, rhi);
+    rhi.SetBuffer(context.lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), FullPipeline);
 
     rhi.Draw(_fullscreenMesh, true);
-
-    rhi.UnsetTextures(EPipelineStage_PS | EPipelineStage_VS);
-    rhi.UnsetRenderTargets();
 
     rhi.Present();
 }

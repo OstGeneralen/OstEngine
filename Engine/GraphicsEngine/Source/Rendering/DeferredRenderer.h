@@ -45,9 +45,6 @@ namespace ost
         Vector2f _currentSize;
 
         GBuffer _gBuffer;
-        Buffer _frameBuffer;
-        Buffer _objectBuffer;
-        Buffer _lightBuffer;
 
         Mesh _fullscreenMesh;
 

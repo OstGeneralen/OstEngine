@@ -10,6 +10,13 @@ struct PBRData
     float ao, roughness, metallic;
 };
 
+struct DirectionalLight
+{
+    float3 direction;
+    float3 color;
+};
+
+
 float GGXNormalDistribution( float3 normal, float3 halfDir, float roughness )
 {
     float a = roughness * roughness;
@@ -40,40 +47,82 @@ float3 FresnelSchlick( float3 f0, float cosTheta )
     return f0 + (1.0f - f0) * pow(1.0f - cosTheta, 5.0f);
 }
 
-float4 CalculatePBLColor( PBRData data )
+float3 CalculatePBLLight( float3 dirToLight, float3 color, PBRData surface )
 {
-    const float3 SunColor = Light_SunCol.rgb;
-
-    float3 viewDir = normalize( FrameBuf_ViewLocation.xyz - data.position );
-    float3 lightDir = normalize(-Light_SunDir.rgb);
+    float3 viewDir = normalize( FrameBuf_ViewLocation.xyz - surface.position );
+    float3 lightDir = normalize(dirToLight);
     float3 halfDir = normalize(viewDir + lightDir);
 
     float3 F0 = float3(0.04f, 0.04f, 0.04f);
-    F0 = lerp(F0, data.albedo, data.metallic);
+    F0 = lerp(F0, surface.albedo, surface.metallic);
 
-    float NDF = GGXNormalDistribution( data.normal, halfDir, data.roughness );
-    float G = GeometrySmith( data.normal, viewDir, lightDir, data.roughness );
+    float NDF = GGXNormalDistribution( surface.normal, halfDir, surface.roughness );
+    float G = GeometrySmith( surface.normal, viewDir, lightDir, surface.roughness );
     float3 F = FresnelSchlick( F0, max(dot(halfDir, viewDir), 0.0f) );
 
     float3 numerator = NDF * G * F;
-    float denominator = 4.0f * max(dot(data.normal, viewDir), 0.0f) * max(dot(data.normal, lightDir), 0.0f) + 0.0001f;
+    float denominator = 4.0f * max(dot(surface.normal, viewDir), 0.0f) * max(dot(surface.normal, lightDir), 0.0f) + 0.0001f;
     float3 specular = numerator / denominator;
 
     float3 kS = F;
-    float3 kD = (1.0f - kS) * (1.0f - data.metallic);
+    float3 kD = (1.0f - kS) * (1.0f - surface.metallic);
 
-    float NdotL = max(dot(data.normal, lightDir), 0.0f);
-    float3 directLight = ((kD * data.albedo / 3.14159f) + specular) * SunColor * NdotL;
+    float NdotL = max(dot(surface.normal, lightDir), 0.0f);
+    float3 directLight = ((kD * surface.albedo / 3.14159f) + specular) * color * NdotL;
 
-    float3 ambientLight = Light_AmbientCol.rgb * data.albedo * data.ao;
+    return directLight;
+}
+
+//float4 CalculatePBLColor( float3 color, float3 direction, PBRData data )
+//{
+//    float3 viewDir = normalize( FrameBuf_ViewLocation.xyz - data.position );
+//    float3 lightDir = normalize(-direction);
+//    float3 halfDir = normalize(viewDir + lightDir);
+//
+//    float3 F0 = float3(0.04f, 0.04f, 0.04f);
+//    F0 = lerp(F0, data.albedo, data.metallic);
+//
+//    float NDF = GGXNormalDistribution( data.normal, halfDir, data.roughness );
+//    float G = GeometrySmith( data.normal, viewDir, lightDir, data.roughness );
+//    float3 F = FresnelSchlick( F0, max(dot(halfDir, viewDir), 0.0f) );
+//
+//    float3 numerator = NDF * G * F;
+//    float denominator = 4.0f * max(dot(data.normal, viewDir), 0.0f) * max(dot(data.normal, lightDir), 0.0f) + 0.0001f;
+//    float3 specular = numerator / denominator;
+//
+//    float3 kS = F;
+//    float3 kD = (1.0f - kS) * (1.0f - data.metallic);
+//
+//    float NdotL = max(dot(data.normal, lightDir), 0.0f);
+//    float3 directLight = ((kD * data.albedo / 3.14159f) + specular) * color * NdotL;
+//
+//    //float3 ambientLight = Light_AmbientCol.rgb * data.albedo * data.ao;
+//    //
+//    //float3 color = directLight + ambientLight;
+//    color = color / (color + 1.0f);
+//
+//    return float4( color, 1.0f );
+//}
+
+float3 CalculatePBLDirectionalLight( float3 direction, float3 color, PBRData surface )
+{
+    float3 dirToLight = normalize(-direction);
+    return CalculatePBLLight( dirToLight, color, surface );
+}
+
+float3 CalculatePBLPointLight( float3 color, float3 position, float radius, PBRData surface )
+{
+    float3 toLight = position - surface.position;
     
-    float3 color = directLight + ambientLight;
-    color = color / (color + 1.0f);
+    float3 dirToLight = normalize(toLight);
+    float distanceToLight = length(toLight);
 
-    return float4( color, 1.0f );
-    //return float4((data.normal.r + 1.0f) * 0.5f, (data.normal.g + 1.0f) * 0.5f, 0, 1.0f);
-    //return float4(data.roughness, data.roughness, data.roughness, 1.0f);
-    //return float4(data.metallic, data.metallic, data.metallic,1.0f);
+    float3 finalColor = CalculatePBLLight(dirToLight, color, surface);
+
+    float attenuation = saturate(1.0f - (distanceToLight / radius));
+    finalColor *= (attenuation * attenuation);
+
+    return finalColor;
 }
 
 

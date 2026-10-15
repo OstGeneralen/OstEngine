@@ -38,16 +38,16 @@ namespace ost
 
     struct alignas(16) LightsBufferStructure
     {
-        struct alignas(16)
+        struct alignas(16) LightDataStruct
         {
-            Vector4f direction = {0.0f, -1.0f, 0.0f, 0.0f};
-            Color color = Colors::Black;
-        } directional;
-
-        struct alignas(16)
-        {
-            Color color = Colors::Black;
-        } ambient;
+            Color color = {0, 0, 0, 0};
+            Vector3f position = {0, 0, 0};
+            Uint32 type = 0;
+            Vector3f direction = {1, 0, 0};
+            Float32 radius = 0.0f;
+        } lights[10];
+        Uint32 numLights = 0;
+        Vector3f PADDING0 = {0, 0, 0};
 
         void WriteAndSetBuffer(const Buffer& target, const RenderHardwareInterface& rhi)
         {
