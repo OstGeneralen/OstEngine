@@ -29,6 +29,14 @@ add_library(${PROJECT_NAME}
     Utility/Delegate.h
     Utility/TypedIntegerHandle.h
     Utility/StringConversion.h
+    Math/Shapes/Shape.h
+    Math/Shapes/Line.h
+    Math/Shapes/Plane.h
+    Math/Shapes/Ray.h
+    Math/Shapes/Sphere.h
+    Math/Shapes/AABB.h
+    Math/Shapes/PlaneList.h
+    Math/Shapes/Intersections.h
     Math/Shapes.h
 )
 
