@@ -54,6 +54,8 @@ void DeferredRenderer::Initialize(const Vector2u& renderSize, RendererContext&& 
     MaterialDesc desc = {};
     desc.domain = EMaterialDomain::Fullscreen;
     desc.materialShaderPath = "Engine/Shader/Material/MaterialShader_DeferredLightFullscreen.hlsl";
+    desc.blending = EBlendState::Additive;
+
     MaterialCompiler compiler(desc);
     compiler.Compile();
     rhi.CreatePSO(compiler.GetCompiledPSODescForward(), _fullscreenPSO);
@@ -66,6 +68,9 @@ void ost::DeferredRenderer::Resize(const Vector2u& newSize, RendererContext&& co
     _currentSize = newSize.VectorCast<Float32>();
 
     const RenderHardwareInterface& rhi = context.rhi;
+
+    // Deferred uses its own light buffer since it actually allows more lights to be drawn than the fixed count of 8
+    rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
 
     // Reset the GBuffer
     _gBuffer = {};
@@ -132,10 +137,53 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     rhi.SetTexture(_gBuffer.orm, 2, ost::EPipelineStage_PS);
     rhi.SetTexture(_gBuffer.depth, 3, ost::EPipelineStage_PS);
 
-    rhi.SetBuffer(context.lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), FullPipeline);
-
     rhi.SetBuffersForIndexed(_fullscreenMesh.vertexBuffer, sizeof(FullscreenVertex), _fullscreenMesh.indexBuffer);
+
+    // Go through the lights and keep drawing :)
+    LightsBufferStructure lightData;
+    SizeType lightIndex = 0;
+    for (const auto& light : queue.GetLightCommands())
+    {
+        if (lightIndex == 8)
+        {
+            lightIndex = 0;
+            lightData.numLights = 8;
+            rhi.UpdateBuffer(_lightBuffer, &lightData, sizeof(LightsBufferStructure));
+            rhi.SetBuffer(_lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), EPipelineStage_PS);
+            rhi.Draw(6, 0, 0);
+        }
+
+        auto& renderLight = lightData.lights[lightIndex];
+        renderLight.color = light.color;
+        renderLight.direction = light.forward;
+        renderLight.position = light.position;
+        renderLight.radius = light.radius;
+
+        switch (light.type)
+        {
+        case LightCommand::EType::Directional:
+            renderLight.type = 0;
+            break;
+        case LightCommand::EType::Point:
+            renderLight.type = 2;
+            break;
+        default:
+            continue;
+            break;
+        }
+
+        lightIndex++;
+    }
+
+    if (lightIndex > 0)
+    {
+        lightData.numLights = lightIndex;
+        rhi.UpdateBuffer(_lightBuffer, &lightData, sizeof(LightsBufferStructure));
+        rhi.SetBuffer(_lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), EPipelineStage_PS);
+    }
+
     rhi.Draw(6, 0, 0);
+
 
     rhi.Present();
 }

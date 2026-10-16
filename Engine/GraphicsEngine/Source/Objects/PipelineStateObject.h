@@ -1,5 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GraphicsEngine/Rendering/RenderConstants.h"
 #include "RHI/RHIMinimal.h"
 
 // Common
@@ -30,6 +31,7 @@ namespace ost
         ShaderByteCode vertexShader;
         ShaderByteCode pixelShader;
 
+        EBlendState blendState = EBlendState::Opaque;
         List<VertexElement> vertexLayout;
 
         EPrimitiveTopology primitiveTopology;
@@ -52,6 +54,8 @@ namespace ost
 
         ComPtr<RHIVertexShader> _vertexShader;
         ComPtr<RHIPixelShader> _pixelShader;
+
+        ComPtr<RHIBlendState> _blendState;
 
         EPrimitiveTopology _primitiveTopology;
     };

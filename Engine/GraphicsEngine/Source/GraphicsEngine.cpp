@@ -225,6 +225,11 @@ void ost::GraphicsEngine::UpdateLightBuffer()
 
     for (const auto& cmd : _renderQueue.GetLightCommands())
     {
+        if(lightCount == 8)
+        {
+            break;
+        }
+
         auto& thisLight = bufferData.lights[lightCount];
         thisLight.color = cmd.color;
         thisLight.position = cmd.position;

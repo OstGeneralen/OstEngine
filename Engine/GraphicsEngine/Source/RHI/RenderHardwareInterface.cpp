@@ -390,6 +390,8 @@ bool RenderHardwareInterface::CreatePSO(const PipelineStateObjectDesc& desc, Pip
         return false;
     }
 
+    outPSO._blendState = CreateBlendState(desc.blendState);
+
     return true;
 }
 
@@ -471,6 +473,7 @@ void RenderHardwareInterface::SetBuffer(const Buffer& buffer, Uint32 slot, EPipe
 
 void RenderHardwareInterface::SetPSO(const PipelineStateObject& pso) const
 {
+    _immediateContext->OMSetBlendState(pso._blendState.Get(), nullptr, 0xFFFFFFFF);
     _immediateContext->VSSetShader(pso._vertexShader.Get(), NULL, 0);
     _immediateContext->PSSetShader(pso._pixelShader.Get(), NULL, 0);
     _immediateContext->IASetInputLayout(pso._vertexLayout.Get());
@@ -539,6 +542,57 @@ const void* RenderHardwareInterface::GetNativeDevice() const
 const void* RenderHardwareInterface::GetNativeContext() const
 {
     return _immediateContext.Get();
+}
+
+// ------------------------------------------------------------
+
+ComPtr<RHIBlendState> ost::RenderHardwareInterface::CreateBlendState(EBlendState blendState) const
+{
+    D3D11_BLEND_DESC desc = {};
+
+    auto& descTarget = desc.RenderTarget[0];
+    descTarget = {};
+
+    switch (blendState)
+    {
+    case EBlendState::Opaque: {
+        descTarget.BlendEnable = FALSE;
+        descTarget.SrcBlend = D3D11_BLEND_ZERO;
+        descTarget.DestBlend = D3D11_BLEND_ZERO;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ZERO;
+        descTarget.DestBlendAlpha = D3D11_BLEND_ZERO;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        break;
+    }
+    case EBlendState::AlphaBlend: {
+        descTarget.BlendEnable = TRUE;
+        descTarget.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+        descTarget.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALPHA;
+        break;
+    }
+    case EBlendState::Additive: {
+        descTarget.BlendEnable = TRUE;
+        descTarget.SrcBlend = D3D11_BLEND_ONE;
+        descTarget.DestBlend = D3D11_BLEND_ONE;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.DestBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        break;
+    }
+    }
+
+    ComPtr<RHIBlendState> created;
+    _device->CreateBlendState(&desc, &created);
+    return created;
 }
 
 // ------------------------------------------------------------

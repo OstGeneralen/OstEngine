@@ -2,6 +2,7 @@
 #pragma once
 #include "GraphicsEngine/Materials/IMaterialPropertyCollection.h"
 #include "GraphicsEngine/Materials/MaterialTextureCollection.h"
+#include "GraphicsEngine/Rendering/RenderConstants.h"
 
 #include <Utility/TypedIntegerHandle.h>
 
@@ -14,6 +15,7 @@ namespace ost
     struct MaterialDesc
     {
         EMaterialDomain domain;
+        EBlendState blending = EBlendState::Opaque;
         std::string materialShaderPath;
     };
 

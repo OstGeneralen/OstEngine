@@ -61,6 +61,7 @@ add_library(${PROJECT_NAME} STATIC
     Source/Rendering/DeferredRenderer.h
     Source/Rendering/DeferredRenderer.cpp
     Source/Rendering/RendererContext.h
+    Include/GraphicsEngine/Rendering/RenderConstants.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

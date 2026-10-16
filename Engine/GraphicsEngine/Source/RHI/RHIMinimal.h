@@ -16,6 +16,7 @@ typedef struct ID3D11ShaderResourceView RHIShaderResource;
 typedef struct ID3D11DepthStencilView   RHIDepthStencil;
 
 typedef struct ID3D11SamplerState       RHISampler;
+typedef struct ID3D11BlendState         RHIBlendState;
 
 typedef struct ID3D11VertexShader       RHIVertexShader;
 typedef struct ID3D11PixelShader        RHIPixelShader;

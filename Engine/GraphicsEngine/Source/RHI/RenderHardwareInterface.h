@@ -79,6 +79,8 @@ namespace ost
         // END IRenderHardwareInterface
 
     private:
+        ComPtr<RHIBlendState> CreateBlendState(EBlendState blendState) const;
+
         ComPtr<RHIDevice> _device;
         ComPtr<RHIDeviceContext> _immediateContext;
         ComPtr<RHISwapChain> _swapChain;

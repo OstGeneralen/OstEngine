@@ -48,6 +48,8 @@ namespace ost
 
         Mesh _fullscreenMesh;
 
+        Buffer _lightBuffer;
+
         PipelineStateObject _fullscreenPSO;
 
     };

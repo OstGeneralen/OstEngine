@@ -94,8 +94,8 @@ namespace MaterialVertexLayout
     template <>
     List<VertexElement> GetVertexLayout<EMaterialDomain::Fullscreen>()
     {
-        return {{"POSITION", EDataSize::Float4}, // Position
-                {"TEXCOORD", EDataSize::Float2}};      // UV
+        return {{"POSITION", EDataSize::Float4},  // Position
+                {"TEXCOORD", EDataSize::Float2}}; // UV
     }
 
 } // namespace MaterialVertexLayout
@@ -105,6 +105,8 @@ namespace MaterialVertexLayout
 MaterialCompiler::MaterialCompiler(const MaterialDesc& desc)
 {
     _materialShaderPath = desc.materialShaderPath;
+
+    _blendState = desc.blending;
 
     switch (desc.domain)
     {
@@ -167,6 +169,9 @@ bool ost::MaterialCompiler::Compile()
     constexpr std::string_view vsPath = "Engine/Shader/VertexShaders.hlsl";
     constexpr std::string_view psPath = "Engine/Shader/PixelShaders.hlsl";
 
+    _psoDescDeferred.blendState = _blendState;
+    _psoDescForward.blendState = _blendState;
+
     // 1. Compile the shaders
     MaterialCompilerIncludeHandler vertexIncludeHandler(vsPath, _materialShaderPath);
     MaterialCompilerIncludeHandler pixelIncludeHandler(psPath, _materialShaderPath);
@@ -211,10 +216,10 @@ bool ost::MaterialCompiler::Compile()
         _psoDescForward.pixelShader.bytecodeSize = _psBytecodeFwd->GetBufferSize();
         _psoDescForward.pixelShader.pBytecode = _psBytecodeFwd->GetBufferPointer();
     }
-    
+
     { // Compile Pixel Shader for Deferred Rendering
-        compileResult = D3DCompile(pixelShaderSourceCode.Data(), pixelShaderSourceCode.Size(), NULL, NULL, &pixelIncludeHandler, _domainPixelMainGeometry.c_str(), "ps_4_1",
-                                   D3DCOMPILE_DEBUG, 0, &_psBytecodeDef, &errorBlob);
+        compileResult = D3DCompile(pixelShaderSourceCode.Data(), pixelShaderSourceCode.Size(), NULL, NULL, &pixelIncludeHandler, _domainPixelMainGeometry.c_str(),
+                                   "ps_4_1", D3DCOMPILE_DEBUG, 0, &_psBytecodeDef, &errorBlob);
 
         if (FAILED(compileResult))
         {

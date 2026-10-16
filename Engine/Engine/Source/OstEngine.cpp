@@ -109,12 +109,12 @@ void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetR
     switch (viewProxy.projectionType)
     {
     case ViewRenderProxy::EProjectionType::Perspective: {
-        projection = Matrix4x4::CreatePerspectiveProjection(viewProxy.lValue, targetRenderer.GetAspectRatio(), 0.1f, 100000.0f);
+        projection = Matrix4x4::CreatePerspectiveProjection(viewProxy.lValue, targetRenderer.GetAspectRatio(), 0.1f, 30.0f);
         break;
     }
     case ViewRenderProxy::EProjectionType::Orthographic: {
         projection = Matrix4x4::CreateOrthographicsProjection(viewProxy.lValue * targetRenderer.GetDimensions().X, viewProxy.rValue * targetRenderer.GetDimensions().Y,
-                                                              0.1f, 100000.0f);
+                                                              0.1f, 30.0f);
         break;
     }
     }

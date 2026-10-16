@@ -46,6 +46,7 @@ namespace ost
         PipelineStateObjectDesc _psoDescForward;
         PipelineStateObjectDesc _psoDescDeferred;
 
+        EBlendState _blendState;
         MaterialPropertiesDesc _materialProperties;
         Map<Uint32, MaterialTextureDesc> _textureDescs;
 

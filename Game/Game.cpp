@@ -49,13 +49,13 @@ void Game::Load(ost::GameContext& context)
     materialInstances[3] = assets.Load<ost::IMaterialInstance>("Game/MetalMaterial");
 
     // The actor
-    ost::Actor* meshActor = _scene->CreateActor();
-    auto& meshComponent = meshActor->AddComponent<ost::StaticMeshComponent>();
-    meshComponent.SetModel(multiMaterialModel);
-    meshComponent.SetMaterial(materialInstances[0], 0);
-    meshComponent.SetMaterial(materialInstances[1], 1);
-    meshComponent.SetMaterial(materialInstances[3], 2);
-    meshActor->transform.SetPosition({0, -1, 0});
+    // ost::Actor* meshActor = _scene->CreateActor();
+    // auto& meshComponent = meshActor->AddComponent<ost::StaticMeshComponent>();
+    // meshComponent.SetModel(multiMaterialModel);
+    // meshComponent.SetMaterial(materialInstances[0], 0);
+    // meshComponent.SetMaterial(materialInstances[1], 1);
+    // meshComponent.SetMaterial(materialInstances[3], 2);
+    // meshActor->transform.SetPosition({0, -1, 0});
 
     // for (Uint32 i = 0; i < 4; ++i)
     //{
@@ -76,44 +76,34 @@ void Game::Load(ost::GameContext& context)
     ost::Actor* cameraActor = _scene->CreateActor();
     auto& camera = cameraActor->AddComponent<ost::CameraComponent>();
     camera.MakePerspective(75.0f * ost::math::DegToRad);
-    cameraActor->transform.Move({0.0f, 0.0f, -4.0f}, ost::ESpace::World);
+    cameraActor->transform.Move({0.0f, 1.0f, 0.0f}, ost::ESpace::World);
     cameraActor->AddComponent<KeyboardMovementComponent>();
 
     // Let there be light
     pLightActor = _scene->CreateActor();
-    //auto& directionalLight = pLightActor->AddComponent<ost::DirectionalLightComponent>();
-    //directionalLight.SetColor(ost::Color(1.0f, 0.9f, 0.7f, 1.0f));
-    //directionalLight.SetIntensity(2.0f);
-    //pLightActor->transform.SetRotation(ost::Quaternion::FromEulers({1, 0, 0}));
-    //pLightActor->AddComponent<KeyboardRotatorComponent>();
 
-    ost::Actor* pointLightActor = _scene->CreateActor();
-    auto& pointLight = pointLightActor->AddComponent<ost::PointLightComponent>();
-    pointLight.SetColor(ost::Colors::Yellow);
-    pointLight.SetIntensity(4.0f);
-    pointLight.SetRadius(4.0f);
-    pointLightActor->transform.SetPosition({2, 0, 2});
-    
-    pointLightActor = _scene->CreateActor();
-    auto& pointLight2 = pointLightActor->AddComponent<ost::PointLightComponent>();
-    pointLight2.SetColor(ost::Colors::Red);
-    pointLight2.SetIntensity(4.0f);
-    pointLight2.SetRadius(4.0f);
-    pointLightActor->transform.SetPosition({-2, 0, -2});
+    ost::Color colors[6] = {ost::Colors::Red, ost::Colors::Green, ost::Colors::Blue, ost::Colors::Yellow, ost::Colors::Magenta, ost::Colors::Cyan};
+    Float32 radiis[5] = {2.3f, 1.5f, 2.0f, 1.8f, 1.1f};
+    Float32 intensities[3] = {1.5f, 2.0f, 2.3f};
 
-    pointLightActor = _scene->CreateActor();
-    auto& pointLight3 = pointLightActor->AddComponent<ost::PointLightComponent>();
-    pointLight3.SetColor(ost::Colors::Green);
-    pointLight3.SetIntensity(4.0f);
-    pointLight3.SetRadius(4.0f);
-    pointLightActor->transform.SetPosition({2, 0, -2});
-    
-    pointLightActor = _scene->CreateActor();
-    auto& pointLight4 = pointLightActor->AddComponent<ost::PointLightComponent>();
-    pointLight4.SetColor(ost::Colors::Blue);
-    pointLight4.SetIntensity(4.0f);
-    pointLight4.SetRadius(4.0f);
-    pointLightActor->transform.SetPosition({-2, 0, 2});
+    for (SizeType i = 0; i < 34; ++i)
+    {
+        const Float32 x = static_cast<Float32>(i % 8) * 2.0f;
+        const Float32 z = static_cast<Float32>(i / 8) * 2.0f;
+
+        ost::Actor* pointLightActor = _scene->CreateActor();
+        auto& pointLight = pointLightActor->AddComponent<ost::PointLightComponent>();
+        pointLight.SetColor(colors[i % 6]);
+        pointLight.SetIntensity(intensities[i % 3]);
+        pointLight.SetRadius(radiis[i % 5]);
+        pointLightActor->transform.SetPosition({x, 1.0f, z});
+
+        ost::Actor* meshActor = _scene->CreateActor();
+        auto& meshComponent = meshActor->AddComponent<ost::StaticMeshComponent>();
+        meshComponent.SetModel(planeModel);
+        meshComponent.SetMaterial(materialInstances[0], 0);
+        meshActor->transform.SetPosition({x, 0, z});
+    }
 }
 
 void Game::Unload(ost::GameContext& context)
