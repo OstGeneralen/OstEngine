@@ -79,6 +79,14 @@ void Game::Load(ost::GameContext& context)
     staticMeshComp.SetMaterial(leatherMaterial, 1);
     meshActor->transform.SetPosition({0, 0, 0});
 
+    ost::Actor* sunActor = _scene->CreateActor();
+    auto& sunLight = sunActor->AddComponent<ost::DirectionalLightComponent>();
+    sunLight.SetColor(ost::Colors::White);
+    sunLight.SetIntensity(1.0f);
+
+    ost::Quaternion rotation = ost::Quaternion::FromEulers( 45.0f * ost::math::DegToRad, 0, 0 );
+    sunActor->transform.Rotate(rotation);
+
     // Let there be eyes
     ost::Actor* cameraActor = _scene->CreateActor();
     auto& camera = cameraActor->AddComponent<ost::CameraComponent>();
@@ -105,15 +113,15 @@ void Game::Load(ost::GameContext& context)
         pointLightActor->transform.Rotate(ost::Quaternion::FromEulers({90.0f * ost::math::DegToRad, 0, 0}));
     }
 
-    //ost::Actor* spotActor = _scene->CreateActor();
-    //auto& spotLight = spotActor->AddComponent<ost::SpotLightComponent>();
-    //spotLight.SetColor(ost::Colors::White);
-    //spotLight.SetIntensity(3.0f);
-    //spotLight.SetInnerRadius(0.05f);
-    //spotLight.SetOuterRadius(0.35f);
-    //spotLight.SetRange(8.0f);
-    //spotActor->transform.SetPosition({-3, 1, 0.9f});
-    //spotActor->transform.SetRotation(ost::Quaternion::FromEulers({0, 90.0f * ost::math::DegToRad, 0.0f}));
+    // ost::Actor* spotActor = _scene->CreateActor();
+    // auto& spotLight = spotActor->AddComponent<ost::SpotLightComponent>();
+    // spotLight.SetColor(ost::Colors::White);
+    // spotLight.SetIntensity(3.0f);
+    // spotLight.SetInnerRadius(0.05f);
+    // spotLight.SetOuterRadius(0.35f);
+    // spotLight.SetRange(8.0f);
+    // spotActor->transform.SetPosition({-3, 1, 0.9f});
+    // spotActor->transform.SetRotation(ost::Quaternion::FromEulers({0, 90.0f * ost::math::DegToRad, 0.0f}));
 }
 
 void Game::Unload(ost::GameContext& context)

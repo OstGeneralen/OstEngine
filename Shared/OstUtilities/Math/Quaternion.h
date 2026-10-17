@@ -23,6 +23,11 @@ namespace ost
         // clang-format on
 
     public:
+        static Quaternion FromEulers(Float32 x, Float32 y, Float32 z)
+        {
+            return FromEulers(Vector3f(x, y, z));
+        }
+
         static Quaternion FromEulers(const Vector3f& eulers)
         {
             Quaternion created;
