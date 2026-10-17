@@ -3,6 +3,7 @@
 #include <Container/List.h>
 #include <Container/SlotMap.h>
 #include <GraphicsEngine/Materials/IMaterialInstance.h>
+#include <GraphicsEngine/Rendering/Lights.h>
 #include <GraphicsEngine/Resources/ObjectHandles.h>
 #include <Math/Color.h>
 #include <Math/Matrix4x4.h>
@@ -20,25 +21,9 @@ namespace ost
         HModel hModel;
     };
 
-    enum class ELightProxyType
-    {
-        Directional,
-        Ambient,
-        Spot,
-        Point,
-        // Only these two for now, extend the render proxy once we get to point and spot as well
-    };
-
     struct LightRenderProxy
     {
-        ELightProxyType type;
-        Vector3f direction;
-        Vector3f position;
-        Color color;
-        Float32 intensity;
-        Float32 radius;
-        Float32 outerRadius;
-        Float32 range;
+        LightData proxyData;
     };
 
     struct ViewRenderProxy

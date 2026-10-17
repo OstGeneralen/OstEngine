@@ -1,12 +1,12 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/Materials/IMaterialInstance.h"
+#include "GraphicsEngine/Rendering/Lights.h"
 #include "GraphicsEngine/Resources/ObjectHandles.h"
 
 #include <Math/Color.h>
 #include <Math/Matrix4x4.h>
 #include <Math/Vector3.h>
-
 #include <Memory/Memory.h>
 
 // ------------------------------------------------------------
@@ -26,22 +26,6 @@ namespace ost
         HModel hModel;
         HMaterialInstance hMaterialInstances[8];
         Matrix4x4 transform;
-    };
-    struct LightCommand
-    {
-        enum class EType
-        {
-            Directional,
-            Ambient,
-            Spot,
-            Point,
-        } type;
-        Vector3f position;
-        Vector3f direction;
-        Float32 radius;
-        Float32 outerRadius;
-        Float32 range;
-        Color color;
     };
 
     struct RenderView

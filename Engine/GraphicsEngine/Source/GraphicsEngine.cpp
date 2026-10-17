@@ -229,31 +229,8 @@ void ost::GraphicsEngine::UpdateLightBuffer()
         {
             break;
         }
-
         auto& thisLight = bufferData.lights[lightCount];
-        thisLight.color = cmd.color;
-        thisLight.position = cmd.position;
-        thisLight.direction = cmd.direction;
-        thisLight.radius = cmd.radius;
-        thisLight.range = cmd.range;
-        thisLight.outerRadius = cmd.outerRadius;
-
-        switch (cmd.type)
-        {
-        case LightCommand::EType::Directional:
-            thisLight.type = 0;
-            break;
-        case LightCommand::EType::Spot:
-            thisLight.type = 1;
-            break;
-        case LightCommand::EType::Point:
-            thisLight.type = 2;
-            break;
-        default:
-            continue;
-            break;
-        }
-
+        thisLight.FromLightData(cmd.cmdData);
         lightCount++;
     }
 

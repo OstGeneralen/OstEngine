@@ -9,7 +9,6 @@
 #include <Engine/Components/CameraComponent.h>
 #include <Engine/Components/DirectionalLightComponent.h>
 #include <Engine/Components/PointLightComponent.h>
-#include <Engine/Components/SceneLightComponent.h>
 #include <Engine/Components/SpotLightComponent.h>
 #include <Engine/Components/StaticMeshComponent.h>
 #include <Engine/EngineContext.h>

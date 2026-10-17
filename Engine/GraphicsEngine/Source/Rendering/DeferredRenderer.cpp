@@ -142,7 +142,7 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     // Go through the lights and keep drawing :)
     LightsBufferStructure lightData;
     SizeType lightIndex = 0;
-    for (const auto& light : queue.GetLightCommands())
+    for (const auto& lightCommand : queue.GetLightCommands())
     {
         if (lightIndex == 8)
         {
@@ -154,28 +154,7 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
         }
 
         auto& renderLight = lightData.lights[lightIndex];
-        renderLight.color = light.color;
-        renderLight.direction = light.direction;
-        renderLight.position = light.position;
-        renderLight.radius = light.radius;
-        renderLight.outerRadius = light.outerRadius;
-        renderLight.range = light.range;
-
-        switch (light.type)
-        {
-        case LightCommand::EType::Directional:
-            renderLight.type = 0;
-            break;
-        case LightCommand::EType::Spot:
-            renderLight.type = 1;
-            break;
-        case LightCommand::EType::Point:
-            renderLight.type = 2;
-            break;
-        default:
-            continue;
-            break;
-        }
+        renderLight.FromLightData(lightCommand.cmdData);
 
         lightIndex++;
     }
@@ -188,7 +167,6 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     }
 
     rhi.Draw(6, 0, 0);
-
 
     rhi.Present();
 }

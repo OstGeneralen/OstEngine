@@ -9,22 +9,22 @@ using namespace ost;
 
 void LightComponent::SetColor(const Color& color)
 {
-    GetProxy().color = color;
+    GetProxy().proxyData.color = color;
 }
 
 const Color& ost::LightComponent::GetColor() const
 {
-    return GetProxy().color;
+    return GetProxy().proxyData.color;
 }
 
 void ost::LightComponent::SetIntensity(Float32 intensity)
 {
-    GetProxy().intensity = intensity;
+    GetProxy().proxyData.intensity = intensity;
 }
 
 Float32 ost::LightComponent::GetIntensity() const
 {
-    return GetProxy().intensity;
+    return GetProxy().proxyData.intensity;
 }
 
 // ------------------------------------------------------------
@@ -53,8 +53,8 @@ void LightComponent::DestroyRenderState(SceneGraph& sceneGraph)
 
 void LightComponent::UpdateDirtyTransform(SceneGraph& sceneGraph)
 {
-    GetProxy().position = GetOwner().transform.GetWorldPosition();
-    GetProxy().direction = GetOwner().transform.GetForward();
+    GetProxy().proxyData.position = GetOwner().transform.GetWorldPosition();
+    GetProxy().proxyData.direction = GetOwner().transform.GetForward();
 }
 
 LightRenderProxy& ost::LightComponent::GetProxy() const

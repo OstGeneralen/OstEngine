@@ -85,26 +85,7 @@ void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetR
     for (const auto& lightProxy : _gameWorld.GetSceneGraph().GetLightProxies())
     {
         LightCommand cmd;
-        cmd.color.Vec4 = lightProxy.color.Vec4 * lightProxy.intensity;
-        cmd.direction = lightProxy.direction;
-        cmd.position = lightProxy.position;
-        cmd.radius = lightProxy.radius;
-        cmd.range = lightProxy.range;
-        cmd.outerRadius = lightProxy.outerRadius;
-
-        switch (lightProxy.type)
-        {
-        case ELightProxyType::Directional:
-            cmd.type = LightCommand::EType::Directional;
-            break;
-        case ELightProxyType::Spot:
-            cmd.type = LightCommand::EType::Spot;
-            break;
-        case ELightProxyType::Point:
-            cmd.type = LightCommand::EType::Point;
-            break;
-        }
-
+        cmd.cmdData = lightProxy.proxyData;
         toQueue.Push(std::move(cmd));
     }
 

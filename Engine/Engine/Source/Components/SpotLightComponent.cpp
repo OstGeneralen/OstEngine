@@ -9,25 +9,25 @@ using namespace ost;
 
 void SpotLightComponent::SetInnerRadius(Float32 r)
 {
-    GetProxy().radius = r;
+    GetProxy().proxyData.radius = r;
 }
 
 void SpotLightComponent::SetOuterRadius(Float32 r)
 {
-    GetProxy().outerRadius = r;
+    GetProxy().proxyData.outerRadius = r;
 }
 
 void SpotLightComponent::SetRange(Float32 r)
 {
-    GetProxy().range = r;
+    GetProxy().proxyData.range = r;
 }
 
 void SpotLightComponent::InitializeLightType(LightRenderProxy& proxy)
 {
-    proxy.type = ELightProxyType::Spot;
-    proxy.radius = 0.01f;
-    proxy.outerRadius = 0.5f;
-    proxy.range = 1.0f;
+    proxy.proxyData.type = ELightType::Spot;
+    proxy.proxyData.radius = 0.01f;
+    proxy.proxyData.outerRadius = 0.5f;
+    proxy.proxyData.range = 1.0f;
 }
 
 // ------------------------------------------------------------

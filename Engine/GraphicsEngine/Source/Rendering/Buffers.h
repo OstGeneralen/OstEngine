@@ -1,5 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GraphicsEngine/Rendering/Lights.h"
 #include "RHI/RenderHardwareInterface.h"
 #include "Rendering/RenderPipelineConstants.h"
 
@@ -40,6 +41,29 @@ namespace ost
     {
         struct alignas(16) LightDataStruct
         {
+            void FromLightData(const LightData& d)
+            {
+                color.Vec4 = d.color.Vec4 * d.intensity;
+                direction = d.direction;
+                position = d.position;
+                radius = d.radius;
+                outerRadius = d.outerRadius;
+                range = d.range;
+
+                switch (d.type)
+                {
+                case ELightType::Directional:
+                    type = 0;
+                    break;
+                case ELightType::Spot:
+                    type = 1;
+                    break;
+                case ELightType::Point:
+                    type = 2;
+                    break;
+                }
+            }
+
             Color color = {0, 0, 0, 0};
             Vector3f position = {0, 0, 0};
             Uint32 type = 0;

@@ -27,7 +27,6 @@ add_library(${PROJECT_NAME} STATIC
     Source/Asset/AssetManager.h
     Source/Asset/AssetManager.cpp
     Source/Components/CameraComponent.cpp
-    Source/Components/SceneLightComponent.cpp
     Source/Components/StaticMeshComponent.cpp
     Source/World/Actor.cpp
     Source/World/Component.cpp

@@ -7,17 +7,17 @@ using namespace ost;
 
 void PointLightComponent::SetRadius(Float32 r)
 {
-    GetProxy().radius = r;
+    GetProxy().proxyData.radius = r;
 }
 
 Float32 PointLightComponent::GetRadius() const
 {
-    return GetProxy().radius;
+    return GetProxy().proxyData.radius;
 }
 
 void PointLightComponent::InitializeLightType(LightRenderProxy& proxy)
 {
-    proxy.type = ELightProxyType::Point;
+    proxy.proxyData.type = ELightType::Point;
 }
 
 // ------------------------------------------------------------

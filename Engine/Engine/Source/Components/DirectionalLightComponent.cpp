@@ -12,7 +12,7 @@ using namespace ost;
 
 void ost::DirectionalLightComponent::InitializeLightType(LightRenderProxy& proxy)
 {
-    proxy.type = ELightProxyType::Directional;
+    proxy.proxyData.type = ELightType::Directional;
 }
 
 // ------------------------------------------------------------
