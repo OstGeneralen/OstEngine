@@ -123,12 +123,8 @@ float3 CalculatePBLSpotLight(float3 color, float3 position, float3 direction, fl
     float spotFactor = saturate(dot(lightToSurface, direction));
     float spotAttenuation = smoothstep(cosOuter, cosInner, spotFactor);
 
-    float attenuation = saturate(1.0f - (max(length(surface.position - position), 0.01f)));
-    attenuation *= attenuation;
-    attenuation *= spotAttenuation;
-
-    float3 finalColor = CalculatePBLLight(-lightToSurface, color, surface);
-    finalColor *= attenuation;
+    float3 finalColor = CalculatePBLPointLight(color, position, range, surface);
+    finalColor *= (spotAttenuation * spotAttenuation);
 
     return finalColor;
 }

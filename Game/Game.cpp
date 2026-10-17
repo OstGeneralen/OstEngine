@@ -10,6 +10,7 @@
 #include <Engine/Components/DirectionalLightComponent.h>
 #include <Engine/Components/PointLightComponent.h>
 #include <Engine/Components/SceneLightComponent.h>
+#include <Engine/Components/SpotLightComponent.h>
 #include <Engine/Components/StaticMeshComponent.h>
 #include <Engine/EngineContext.h>
 #include <Engine/Game/GameContext.h>
@@ -90,17 +91,30 @@ void Game::Load(ost::GameContext& context)
     pLightActor = _scene->CreateActor();
 
     ost::Color colors[3] = {ost::Colors::Red, ost::Colors::Green, ost::Colors::Blue};
-    ost::Vector3f positions[3] = {{-2.5f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {2.5f, 1.0f, 0.0f}};
+    ost::Vector3f positions[3] = {{-2.5f, 2.0f, 1.0f}, {0.0f, 2.0f, 1.0f}, {2.5f, 2.0f, 1.0f}};
 
     for (SizeType i = 0; i < 3; ++i)
     {
         ost::Actor* pointLightActor = _scene->CreateActor();
-        auto& pointLight = pointLightActor->AddComponent<ost::PointLightComponent>();
-        pointLight.SetColor(colors[i]);
+        auto& pointLight = pointLightActor->AddComponent<ost::SpotLightComponent>();
+        pointLight.SetColor(ost::Colors::White);
         pointLight.SetIntensity(3.0f);
-        pointLight.SetRadius(2.5f);
+        pointLight.SetRange(10.0f);
+        pointLight.SetInnerRadius(0.1f);
+        pointLight.SetOuterRadius(0.6f);
         pointLightActor->transform.SetPosition(positions[i]);
+        pointLightActor->transform.Rotate(ost::Quaternion::FromEulers({90.0f * ost::math::DegToRad, 0, 0}));
     }
+
+    //ost::Actor* spotActor = _scene->CreateActor();
+    //auto& spotLight = spotActor->AddComponent<ost::SpotLightComponent>();
+    //spotLight.SetColor(ost::Colors::White);
+    //spotLight.SetIntensity(3.0f);
+    //spotLight.SetInnerRadius(0.05f);
+    //spotLight.SetOuterRadius(0.35f);
+    //spotLight.SetRange(8.0f);
+    //spotActor->transform.SetPosition({-3, 1, 0.9f});
+    //spotActor->transform.SetRotation(ost::Quaternion::FromEulers({0, 90.0f * ost::math::DegToRad, 0.0f}));
 }
 
 void Game::Unload(ost::GameContext& context)

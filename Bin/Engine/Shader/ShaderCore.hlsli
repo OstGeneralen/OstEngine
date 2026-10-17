@@ -59,10 +59,13 @@ struct LightData
     uint type;
     float3 direction;
     float radius;
+    float outerRadius;
+    float range;
+    float2 PADDING;
 };
 
 cbuffer LightBuffer : BUFFER_SLOT_LIGHT {
-    LightData LightBuffer_lights[10];
+    LightData LightBuffer_lights[8];
     uint LightBuffer_numLights;
     float3 LBPADDING0;
 };

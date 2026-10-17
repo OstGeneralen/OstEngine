@@ -155,14 +155,19 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
 
         auto& renderLight = lightData.lights[lightIndex];
         renderLight.color = light.color;
-        renderLight.direction = light.forward;
+        renderLight.direction = light.direction;
         renderLight.position = light.position;
         renderLight.radius = light.radius;
+        renderLight.outerRadius = light.outerRadius;
+        renderLight.range = light.range;
 
         switch (light.type)
         {
         case LightCommand::EType::Directional:
             renderLight.type = 0;
+            break;
+        case LightCommand::EType::Spot:
+            renderLight.type = 1;
             break;
         case LightCommand::EType::Point:
             renderLight.type = 2;

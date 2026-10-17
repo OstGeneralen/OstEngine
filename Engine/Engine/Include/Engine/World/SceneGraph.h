@@ -24,6 +24,7 @@ namespace ost
     {
         Directional,
         Ambient,
+        Spot,
         Point,
         // Only these two for now, extend the render proxy once we get to point and spot as well
     };
@@ -36,6 +37,8 @@ namespace ost
         Color color;
         Float32 intensity;
         Float32 radius;
+        Float32 outerRadius;
+        Float32 range;
     };
 
     struct ViewRenderProxy

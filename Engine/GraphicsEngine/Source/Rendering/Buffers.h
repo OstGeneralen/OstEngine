@@ -44,8 +44,11 @@ namespace ost
             Vector3f position = {0, 0, 0};
             Uint32 type = 0;
             Vector3f direction = {1, 0, 0};
-            Float32 radius = 0.0f;
-        } lights[10];
+            Float32 radius = 0.5f;
+            Float32 outerRadius = 1.0f;
+            Float32 range = 1.0f;
+            Float32 PADDING[2];
+        } lights[8];
         Uint32 numLights = 0;
         Vector3f PADDING0 = {0, 0, 0};
 

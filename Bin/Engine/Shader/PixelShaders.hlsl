@@ -1,4 +1,3 @@
-#include "ShaderSlots.hlsli"
 #include "ShaderCore.hlsli"
 #include "ShaderCommon.hlsli"
 #include "PBLShader.hlsli"
@@ -18,6 +17,9 @@ float3 CalculateLights(PBRData surface)
         {
             case 0:
                 thisLight = CalculatePBLDirectionalLight(LightBuffer_lights[i].direction, LightBuffer_lights[i].color.rgb, surface);
+                break;
+            case 1:
+                thisLight = CalculatePBLSpotLight(LightBuffer_lights[i].color.rgb, LightBuffer_lights[i].position, LightBuffer_lights[i].direction, LightBuffer_lights[i].outerRadius, LightBuffer_lights[i].radius, LightBuffer_lights[i].range, surface);
                 break;
             case 2:
                 thisLight = CalculatePBLPointLight( LightBuffer_lights[i].color.rgb, LightBuffer_lights[i].position, LightBuffer_lights[i].radius, surface );

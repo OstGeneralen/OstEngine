@@ -1,4 +1,3 @@
-#include "ShaderSlots.hlsli"
 #include "ShaderCore.hlsli"
 #include "ShaderCommon.hlsli"
 

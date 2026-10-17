@@ -33,11 +33,14 @@ namespace ost
         {
             Directional,
             Ambient,
+            Spot,
             Point,
         } type;
         Vector3f position;
-        Vector3f forward;
+        Vector3f direction;
         Float32 radius;
+        Float32 outerRadius;
+        Float32 range;
         Color color;
     };
 

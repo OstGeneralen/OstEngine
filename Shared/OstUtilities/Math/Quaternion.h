@@ -49,8 +49,10 @@ namespace ost
 
         static Quaternion FromLookDirection(const Vector3f& position, const Vector3f& forward, const Vector3f& up)
         {
+            const Vector3f normForward = forward.GetNormalized();
+
             DirectX::XMMATRIX mat =
-                DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&position.dxType), DirectX::XMLoadFloat3(&forward.dxType), DirectX::XMLoadFloat3(&up.dxType));
+                DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&position.dxType), DirectX::XMLoadFloat3(&normForward.dxType), DirectX::XMLoadFloat3(&up.dxType));
 
             Quaternion created;
             DxTypeStore(created.dxType, DirectX::XMQuaternionRotationMatrix(mat));
