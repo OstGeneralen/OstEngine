@@ -35,10 +35,7 @@ void Game::Load(ost::GameContext& context)
 
     auto& assets = ost::EngineContext::Get().Assets();
 
-    ost::HModel cubeModel = assets.Load<ost::HModel>("Game/TestCube");
-    ost::HModel planeModel = assets.Load<ost::HModel>("Game/TestPlane");
-    ost::HModel multiMaterialModel = assets.Load<ost::HModel>("Game/MultiMaterialModel");
-
+    ost::HModel roomModel = assets.Load<ost::HModel>("Game/LightRoom");
     assets.Load<ost::IMaterial>("Engine/Mat_DefaultLit");
 
     // Now create the material instance we'll use
@@ -47,6 +44,9 @@ void Game::Load(ost::GameContext& context)
     materialInstances[1] = assets.Load<ost::IMaterialInstance>("Game/LeatherMaterial");
     materialInstances[2] = assets.Load<ost::IMaterialInstance>("Game/MossMaterial");
     materialInstances[3] = assets.Load<ost::IMaterialInstance>("Game/MetalMaterial");
+
+    ost::HMaterialInstance rockMaterial = materialInstances[0];
+    ost::HMaterialInstance leatherMaterial = materialInstances[1];
 
     // The actor
     // ost::Actor* meshActor = _scene->CreateActor();
@@ -72,6 +72,13 @@ void Game::Load(ost::GameContext& context)
     //    actor->transform.Rotate(ost::Quaternion::FromRotationAxis(actor->transform.GetRight() * -1.0f, 45.0f * ost::math::DegToRad));
     //}
 
+    ost::Actor* meshActor = _scene->CreateActor();
+    auto& staticMeshComp = meshActor->AddComponent<ost::StaticMeshComponent>();
+    staticMeshComp.SetModel(roomModel);
+    staticMeshComp.SetMaterial(rockMaterial, 0);
+    staticMeshComp.SetMaterial(leatherMaterial, 1);
+    meshActor->transform.SetPosition({0, 0, 0});
+
     // Let there be eyes
     ost::Actor* cameraActor = _scene->CreateActor();
     auto& camera = cameraActor->AddComponent<ost::CameraComponent>();
@@ -82,27 +89,17 @@ void Game::Load(ost::GameContext& context)
     // Let there be light
     pLightActor = _scene->CreateActor();
 
-    ost::Color colors[6] = {ost::Colors::Red, ost::Colors::Green, ost::Colors::Blue, ost::Colors::Yellow, ost::Colors::Magenta, ost::Colors::Cyan};
-    Float32 radiis[5] = {2.3f, 1.5f, 2.0f, 1.8f, 1.1f};
-    Float32 intensities[3] = {1.5f, 2.0f, 2.3f};
+    ost::Color colors[3] = {ost::Colors::Red, ost::Colors::Green, ost::Colors::Blue};
+    ost::Vector3f positions[3] = {{-2.5f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {2.5f, 1.0f, 0.0f}};
 
-    for (SizeType i = 0; i < 34; ++i)
+    for (SizeType i = 0; i < 3; ++i)
     {
-        const Float32 x = static_cast<Float32>(i % 8) * 2.0f;
-        const Float32 z = static_cast<Float32>(i / 8) * 2.0f;
-
         ost::Actor* pointLightActor = _scene->CreateActor();
         auto& pointLight = pointLightActor->AddComponent<ost::PointLightComponent>();
-        pointLight.SetColor(colors[i % 6]);
-        pointLight.SetIntensity(intensities[i % 3]);
-        pointLight.SetRadius(radiis[i % 5]);
-        pointLightActor->transform.SetPosition({x, 1.0f, z});
-
-        ost::Actor* meshActor = _scene->CreateActor();
-        auto& meshComponent = meshActor->AddComponent<ost::StaticMeshComponent>();
-        meshComponent.SetModel(planeModel);
-        meshComponent.SetMaterial(materialInstances[0], 0);
-        meshActor->transform.SetPosition({x, 0, z});
+        pointLight.SetColor(colors[i]);
+        pointLight.SetIntensity(3.0f);
+        pointLight.SetRadius(2.5f);
+        pointLightActor->transform.SetPosition(positions[i]);
     }
 }
 

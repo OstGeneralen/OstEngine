@@ -17,10 +17,8 @@ namespace ost
         {
             const Vector3f e1 = p2 - p1;
             const Vector3f e2 = p3 - p2;
-
             return {p1, e1.Cross(e2)};
         }
-
 
         // BEGIN Shape3D
         bool IsInside(const Vector3f& p) const override

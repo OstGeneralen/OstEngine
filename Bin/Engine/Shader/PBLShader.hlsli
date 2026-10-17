@@ -2,63 +2,55 @@
 #define PBL_SHADER_HLSLI
 #include "ShaderCore.hlsli"
 
-struct PBRData
-{
+struct PBRData {
     float3 albedo;
     float3 normal;
     float3 position;
     float ao, roughness, metallic;
 };
 
-struct DirectionalLight
-{
+struct DirectionalLight {
     float3 direction;
     float3 color;
 };
 
-
-float GGXNormalDistribution( float3 normal, float3 halfDir, float roughness )
-{
+float GGXNormalDistribution(float3 normal, float3 halfDir, float roughness) {
     float a = roughness * roughness;
     float a2 = a * a;
     float NdotH = max(dot(normal, halfDir), 0.0f);
     float NdotH2 = NdotH * NdotH;
     float denom = (NdotH2 * (a2-1.0f) + 1.0f);
-    return a2 / ( 3.14159f * ( denom * denom));
+    return a2 / (3.14159f * (denom * denom));
 }
 
-float SchlickGGX(float NdotV, float roughness)
-{
+float SchlickGGX(float NdotV, float roughness) {
     float alpha = roughness * roughness;
     float r = alpha + 1.0f;
     float k = (r * r) / 8.0f;
     return NdotV / (NdotV * (1.0f - k) + k);
 }
 
-float GeometrySmith(float3 normal, float3 viewDir, float3 lightDir, float roughness)
-{
+float GeometrySmith(float3 normal, float3 viewDir, float3 lightDir, float roughness) {
     float NdotV = max(dot(normal, viewDir), 0.0f);
     float NdotL = max(dot(normal, lightDir), 0.0f);
-    return SchlickGGX( NdotV, roughness) * SchlickGGX(NdotL, roughness);
+    return SchlickGGX(NdotV, roughness) * SchlickGGX(NdotL, roughness);
 }
 
-float3 FresnelSchlick( float3 f0, float cosTheta )
-{
+float3 FresnelSchlick(float3 f0, float cosTheta) {
     return f0 + (1.0f - f0) * pow(1.0f - cosTheta, 5.0f);
 }
 
-float3 CalculatePBLLight( float3 dirToLight, float3 color, PBRData surface )
-{
-    float3 viewDir = normalize( FrameBuf_ViewLocation.xyz - surface.position );
+float3 CalculatePBLLight(float3 dirToLight, float3 color, PBRData surface) {
+    float3 viewDir = normalize(FrameBuf_ViewLocation.xyz - surface.position);
     float3 lightDir = normalize(dirToLight);
     float3 halfDir = normalize(viewDir + lightDir);
 
     float3 F0 = float3(0.04f, 0.04f, 0.04f);
     F0 = lerp(F0, surface.albedo, surface.metallic);
 
-    float NDF = GGXNormalDistribution( surface.normal, halfDir, surface.roughness );
-    float G = GeometrySmith( surface.normal, viewDir, lightDir, surface.roughness );
-    float3 F = FresnelSchlick( F0, max(dot(halfDir, viewDir), 0.0f) );
+    float NDF = GGXNormalDistribution(surface.normal, halfDir, surface.roughness);
+    float G = GeometrySmith(surface.normal, viewDir, lightDir, surface.roughness);
+    float3 F = FresnelSchlick(F0, max(dot(halfDir, viewDir), 0.0f));
 
     float3 numerator = NDF * G * F;
     float denominator = 4.0f * max(dot(surface.normal, viewDir), 0.0f) * max(dot(surface.normal, lightDir), 0.0f) + 0.0001f;
@@ -104,16 +96,14 @@ float3 CalculatePBLLight( float3 dirToLight, float3 color, PBRData surface )
 //    return float4( color, 1.0f );
 //}
 
-float3 CalculatePBLDirectionalLight( float3 direction, float3 color, PBRData surface )
-{
+float3 CalculatePBLDirectionalLight(float3 direction, float3 color, PBRData surface) {
     float3 dirToLight = normalize(-direction);
-    return CalculatePBLLight( dirToLight, color, surface );
+    return CalculatePBLLight(dirToLight, color, surface);
 }
 
-float3 CalculatePBLPointLight( float3 color, float3 position, float radius, PBRData surface )
-{
+float3 CalculatePBLPointLight(float3 color, float3 position, float radius, PBRData surface) {
     float3 toLight = position - surface.position;
-    
+
     float3 dirToLight = normalize(toLight);
     float distanceToLight = length(toLight);
 
@@ -125,5 +115,22 @@ float3 CalculatePBLPointLight( float3 color, float3 position, float radius, PBRD
     return finalColor;
 }
 
+float3 CalculatePBLSpotLight(float3 color, float3 position, float3 direction, float outerRadius, float innerRadius, float range, PBRData surface) {
+    const float cosInner = cos(innerRadius);
+    const float cosOuter = cos(outerRadius);
+
+    float3 lightToSurface = normalize(surface.position - position);
+    float spotFactor = saturate(dot(lightToSurface, direction));
+    float spotAttenuation = smoothstep(cosOuter, cosInner, spotFactor);
+
+    float attenuation = saturate(1.0f - (max(length(surface.position - position), 0.01f)));
+    attenuation *= attenuation;
+    attenuation *= spotAttenuation;
+
+    float3 finalColor = CalculatePBLLight(-lightToSurface, color, surface);
+    finalColor *= attenuation;
+
+    return finalColor;
+}
 
 #endif
