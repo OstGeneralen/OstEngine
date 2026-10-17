@@ -6,7 +6,6 @@ add_library(${PROJECT_NAME} STATIC
     Include/Engine/Asset/AssetGuid.h
     Include/Engine/Asset/IAssetManager.h
     Include/Engine/Components/CameraComponent.h
-    Include/Engine/Components/SceneLightComponent.h
     Include/Engine/Components/StaticMeshComponent.h
     Include/Engine/Game/GameInterface.h
     Include/Engine/World/Actor.h
@@ -20,6 +19,13 @@ add_library(${PROJECT_NAME} STATIC
     Include/Engine/EngineContext.h
     Include/Engine/IOstEngine.h
     Include/Engine/System/InputReader.h
+    Include/Engine/Asset/AssetType.h
+    Include/Engine/Game/GameContext.h
+    Include/Engine/Components/DirectionalLightComponent.h
+    Include/Engine/Configuration/RuntimeConfig.h
+    Include/Engine/Components/SpotLightComponent.h
+    Include/Engine/Components/LightComponent.h
+    Include/Engine/Components/PointLightComponent.h
     Source/Asset/Loaders/ImageLoader.cpp
     Source/Asset/Loaders/ImageLoader.h
     Source/Asset/Loaders/ModelLoader.cpp
@@ -41,21 +47,14 @@ add_library(${PROJECT_NAME} STATIC
     Source/System/InputReader.cpp
     Source/OstEngine.cpp
     Source/OstEngine.h
-    Include/Engine/Game/GameContext.h
     Source/OstEngineContext.h
     Source/OstEngineContext.cpp
-    Include/Engine/Asset/AssetType.h
     Source/Asset/Loaders/MaterialLoader.h
     Source/Asset/Loaders/MaterialLoader.cpp
-    Include/Engine/Components/DirectionalLightComponent.h
     Source/Components/DirectionalLightComponent.cpp
-    Include/Engine/Configuration/RuntimeConfig.h
     Source/Configuration/RuntimeConfig.cpp
-    Include/Engine/Components/LightComponent.h
     Source/Components/LightComponent.cpp
-    Include/Engine/Components/PointLightComponent.h
     Source/Components/PointLightComponent.cpp
-    Include/Engine/Components/SpotLightComponent.h
     Source/Components/SpotLightComponent.cpp
 )
 
