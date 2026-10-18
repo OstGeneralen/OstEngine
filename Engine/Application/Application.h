@@ -1,8 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Platform/Platform.h"
 
 #include <Engine/IOstEngine.h>
+#include <Engine/Platform/Window.h>
 #include <Engine/System/InputReader.h>
 #include <GraphicsEngine/IGraphicsEngine.h>
 #include <Memory/UniquePtr.h>
@@ -12,7 +12,7 @@
 namespace ost
 {
 
-    class Application
+    class Application : IWindowHost
     {
     public:
         Application() = default;
@@ -21,10 +21,9 @@ namespace ost
         void Startup();
         void Shutdown();
 
-        void RequestExit();
-        void BeginWindowResize();
-        void ExitWindowResize();
-        void ProcessKeyEvent(EKeyboard key, bool state);
+        void RequestExit() override;
+        void Resized() override;
+        void ProcessKeyEvent(EKeyboard key, bool state) override;
 
         void Run();
 
@@ -33,7 +32,7 @@ namespace ost
         UniquePtr<IGraphicsEngine> _graphicsEngine;
         UniquePtr<IOstEngine> _coreEngine;
 
-        platform::NativeWindow _window = nullptr;
+        Window _window;
 
         bool _hasExitRequest = false;
     };

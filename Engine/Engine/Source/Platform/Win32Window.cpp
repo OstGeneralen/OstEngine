@@ -1,13 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
-#if _WIN32
-#include "Application.h"
-#include "Platform.h"
+#if WIN32
+#include "Engine/Platform/Window.h"
 
-#include <Windows.h>
-
-#include <Engine/System/InputReader.h>
-
-// ------------------------------------------------------------
+#include <windows.h>
 
 using namespace ost;
 
@@ -19,27 +14,16 @@ EKeyboard TranslateVirtualKey(WPARAM wp, LPARAM lp);
 
 // ------------------------------------------------------------
 
-void platform::Initialize()
+void Window::Create(IWindowHost& host, const std::string& title, const Vector2u& size, bool fullscreen)
 {
+    _pHost = &host;
+
     WNDCLASS windowClass = {};
     windowClass.hInstance = GetModuleHandle(NULL);
     windowClass.lpszClassName = "OstAppWndClass";
     windowClass.style = CS_VREDRAW | CS_HREDRAW;
     windowClass.lpfnWndProc = &WindowProc;
     RegisterClass(&windowClass);
-}
-
-// ------------------------------------------------------------
-
-void platform::Shutdown()
-{
-    UnregisterClass("OstAppWndClass", GetModuleHandle(NULL));
-}
-
-// ------------------------------------------------------------
-
-platform::NativeWindow platform::NewWindow(Application& hostApp, const std::string& title, const Vector2u& size, bool fullscreen)
-{
 
     UINT windowStyle = WS_OVERLAPPEDWINDOW;
     Vector2u useSize = size;
@@ -51,30 +35,38 @@ platform::NativeWindow platform::NewWindow(Application& hostApp, const std::stri
         useSize.Y = GetSystemMetrics(SM_CYSCREEN);
     }
 
-    HWND window = CreateWindow("OstAppWndClass",             // Class name (as registered in initialize)
-                               title.c_str(),                // Window title
-                               windowStyle,                  // Window style
-                               CW_USEDEFAULT, CW_USEDEFAULT, // Window start position
-                               useSize.X, useSize.Y,         // Window size
-                               NULL,                         // Parent window
-                               NULL,                         // Menu handle
-                               GetModuleHandle(NULL),        // Instance handle
-                               &hostApp                      // Creation data pointer
+    HWND hwnd = CreateWindow("OstAppWndClass",             // Class name (as registered in initialize)
+                             title.c_str(),                // Window title
+                             windowStyle,                  // Window style
+                             CW_USEDEFAULT, CW_USEDEFAULT, // Window start position
+                             useSize.X, useSize.Y,         // Window size
+                             NULL,                         // Parent window
+                             NULL,                         // Menu handle
+                             GetModuleHandle(NULL),        // Instance handle
+                             this                          // Creation data pointer
     );
 
-    ShowWindow(window, SW_NORMAL);
-    UpdateWindow(window);
+    ShowWindow(hwnd, SW_NORMAL);
+    UpdateWindow(hwnd);
 
-    return window;
+    _nativeWindowHandle = hwnd;
 }
 
-// ------------------------------------------------------------
-
-void platform::WindowUpdate(NativeWindow nativeWindow)
+void Window::Close()
 {
-    HWND window = static_cast<HWND>(nativeWindow);
+    HWND hwnd = static_cast<HWND>(_nativeWindowHandle);
+    DestroyWindow(hwnd);
+    _nativeWindowHandle = nullptr;
+
+    UnregisterClass("OstAppWndClass", GetModuleHandle(NULL));
+}
+
+void Window::Update()
+{
+    HWND hwnd = static_cast<HWND>(_nativeWindowHandle);
+
     MSG msg = {};
-    while (PeekMessage(&msg, window, 0, 0, PM_REMOVE))
+    while (PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
@@ -83,17 +75,16 @@ void platform::WindowUpdate(NativeWindow nativeWindow)
 
 // ------------------------------------------------------------
 
-void platform::CloseWindow(NativeWindow& nativeWindow)
+void Window::AddNativeWindowEventCallback(NativeWindowEventCallback callback)
 {
-    HWND window = static_cast<HWND>(nativeWindow);
-    DestroyWindow(window);
-    nativeWindow = nullptr;
+    _nativeEventCallbacks.Add(callback);
 }
+
 // ------------------------------------------------------------
 
-Vector2u platform::GetWindowSize(NativeWindow nativeWindow)
+Vector2u Window::GetWindowSize() const
 {
-    HWND window = static_cast<HWND>(nativeWindow);
+    HWND window = static_cast<HWND>(_nativeWindowHandle);
     RECT wndRect = {};
     Vector2u s = {};
     if (GetWindowRect(window, &wndRect))
@@ -104,11 +95,9 @@ Vector2u platform::GetWindowSize(NativeWindow nativeWindow)
     return s;
 }
 
-// ------------------------------------------------------------
-
-Vector2u platform::GetClientSize(NativeWindow nativeWindow)
+Vector2u Window::GetClientSize() const
 {
-    HWND window = static_cast<HWND>(nativeWindow);
+    HWND window = static_cast<HWND>(_nativeWindowHandle);
     RECT wndRect = {};
     Vector2u s = {};
     if (GetClientRect(window, &wndRect))
@@ -121,70 +110,93 @@ Vector2u platform::GetClientSize(NativeWindow nativeWindow)
 
 // ------------------------------------------------------------
 
+void* Window::GetNativeWindowHandle() const
+{
+    return _nativeWindowHandle;
+}
+
+// ------------------------------------------------------------
+
+bool Window::InstanceWindowProcedure(const NativeWindowEventContext& ctx)
+{
+    for (auto& callback : _nativeEventCallbacks)
+    {
+        if (callback(ctx))
+        {
+            return true;
+        }
+    }
+
+    switch (ctx.message)
+    {
+    case WM_CLOSE:
+        _pHost->RequestExit();
+        return true;
+    case WM_EXITSIZEMOVE:
+        _pHost->Resized();
+        return true;
+    case WM_SIZE: {
+        if (ctx.wParam == SIZE_MAXIMIZED || ctx.wParam == SIZE_RESTORED)
+        {
+            _pHost->Resized();
+            return true;
+        }
+        break;
+    }
+    case WM_KEYDOWN: {
+        const EKeyboard key = TranslateVirtualKey(ctx.wParam, ctx.lParam);
+        if (key != EKeyboard::Unknown)
+        {
+            _pHost->ProcessKeyEvent(key, true);
+            return true;
+        }
+        break;
+    }
+    case WM_KEYUP: {
+        const EKeyboard key = TranslateVirtualKey(ctx.wParam, ctx.lParam);
+        if (key != EKeyboard::Unknown)
+        {
+            _pHost->ProcessKeyEvent(key, false);
+            return true;
+        }
+        break;
+    }
+    }
+
+    return false;
+}
+
+// ------------------------------------------------------------
+
 LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    Application* pApp = nullptr;
+    Window* pWin = nullptr;
 
     if (msg == WM_CREATE)
     {
         const CREATESTRUCT* createData = reinterpret_cast<CREATESTRUCT*>(lparam);
-        pApp = static_cast<Application*>(createData->lpCreateParams);
-        SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pApp));
+        pWin = static_cast<Window*>(createData->lpCreateParams);
+        SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWin));
     }
     else
     {
-        pApp = reinterpret_cast<Application*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+        pWin = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
     }
 
-    if (pApp == nullptr)
+    if (pWin == nullptr)
     {
         return DefWindowProc(hwnd, msg, wparam, lparam);
         // This is an error really :(
     }
 
-    switch (msg)
+    NativeWindowEventContext context;
+    context.nativeWindowHandle = hwnd;
+    context.message = msg;
+    context.lParam = lparam;
+    context.wParam = wparam;
+    if (pWin->InstanceWindowProcedure(context))
     {
-    case WM_CLOSE: {
-        pApp->RequestExit();
         return 0;
-        break;
-    }
-    case WM_ENTERSIZEMOVE: {
-
-        pApp->BeginWindowResize();
-        return 0;
-        break;
-    }
-    case WM_EXITSIZEMOVE: {
-
-        pApp->ExitWindowResize();
-        return 0;
-        break;
-    }
-    case WM_SIZE: {
-        if (wparam == SIZE_MAXIMIZED || wparam == SIZE_RESTORED)
-        {
-            pApp->ExitWindowResize();
-            return 0;
-        }
-        break;
-    }
-    case WM_KEYDOWN: {
-        const EKeyboard key = TranslateVirtualKey(wparam, lparam);
-        if (key != EKeyboard::Unknown)
-        {
-            pApp->ProcessKeyEvent(key, true);
-        }
-        break;
-    }
-    case WM_KEYUP: {
-        const EKeyboard key = TranslateVirtualKey(wparam, lparam);
-        if (key != EKeyboard::Unknown)
-        {
-            pApp->ProcessKeyEvent(key, false);
-        }
-        break;
-    }
     }
 
     return DefWindowProc(hwnd, msg, wparam, lparam);
@@ -258,4 +270,5 @@ EKeyboard TranslateVirtualKey(WPARAM wp, LPARAM lp)
 // ------------------------------------------------------------
 // ------------------------------------------------------------
 // ------------------------------------------------------------
+
 #endif

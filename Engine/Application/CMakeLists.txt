@@ -5,8 +5,6 @@ add_executable(${PROJECT_NAME}
     Main.cpp
     Application.h
     Application.cpp
-    Platform/Platform.h
-    Platform/PlatformWin32.cpp
     CoutLogSink.h
     CoutLogSink.cpp
 )

@@ -56,6 +56,8 @@ add_library(${PROJECT_NAME} STATIC
     Source/Components/LightComponent.cpp
     Source/Components/PointLightComponent.cpp
     Source/Components/SpotLightComponent.cpp
+    Include/Engine/Platform/Window.h
+    Source/Platform/Win32Window.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

@@ -20,12 +20,12 @@ void Application::Startup()
     RuntimeConfig config;
     config.LoadFromFile("Configuration.json");
 
-    _window = platform::NewWindow(*this, config.window.title, config.window.resolution, config.window.fullscreen);
+    _window.Create(*this, config.window.title, config.window.resolution, config.window.fullscreen);
 
     // Create gfx settings and init graphics engine
-    _graphicsEngineSettings.output.clientSize = platform::GetClientSize(_window);
+    _graphicsEngineSettings.output.clientSize = _window.GetClientSize();
     _graphicsEngineSettings.output.renderSize = config.rendering.renderScale;
-    _graphicsEngineSettings.output.nativeWindowHandle = _window;
+    _graphicsEngineSettings.output.nativeWindowHandle = _window.GetNativeWindowHandle();
     _graphicsEngineSettings.output.fullscreen = config.window.fullscreen;
 
     _graphicsEngineSettings.renderer.rendererType = config.rendering.renderer;
@@ -44,7 +44,7 @@ void ost::Application::Shutdown()
 {
     _graphicsEngine = nullptr;
     _coreEngine = nullptr;
-    platform::CloseWindow(_window);
+    _window.Close();
 }
 
 void ost::Application::RequestExit()
@@ -52,11 +52,7 @@ void ost::Application::RequestExit()
     _hasExitRequest = true;
 }
 
-void ost::Application::BeginWindowResize()
-{
-}
-
-void ost::Application::ExitWindowResize()
+void ost::Application::Resized()
 {
     if (!_graphicsEngine)
     {
@@ -64,7 +60,7 @@ void ost::Application::ExitWindowResize()
     }
 
     const Vector2u oldSize = _graphicsEngineSettings.output.clientSize;
-    const Vector2u newSize = platform::GetClientSize(_window);
+    const Vector2u newSize = _window.GetClientSize();
 
     if (oldSize != newSize)
     {
@@ -82,7 +78,7 @@ void ost::Application::Run()
 {
     while (!_hasExitRequest)
     {
-        platform::WindowUpdate(_window);
+        _window.Update();
         _coreEngine->Tick();
         _coreEngine->RenderSceneGraph(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
         _graphicsEngine->ExecuteAndClearCommandQueue();
