@@ -24,8 +24,8 @@ namespace ost
 
         virtual ERHIPlatform GetBackendPlatform() const = 0;
 
-        virtual const void* GetNativeDevice() const = 0;
-        virtual const void* GetNativeContext() const = 0;
+        virtual void* GetNativeDevice() const = 0;
+        virtual void* GetNativeContext() const = 0;
     };
 } // namespace ost
 
