@@ -57,7 +57,8 @@ namespace ost
         virtual IMaterialManager& GetMaterialManager() = 0;
 
         virtual void ExecuteAndClearCommandQueue() = 0;
-        virtual void Present( ERenderOutputTexture presentOutputTexture = ERenderOutputTexture::Output ) = 0;
+        virtual void DrawRendererOutput(ERenderOutputTexture presentOutputTexture = ERenderOutputTexture::Output) = 0;
+        virtual void Present() = 0;
 
         virtual const IRenderHardwareInterface& GetRenderHardwareInterface() const = 0;
     };
