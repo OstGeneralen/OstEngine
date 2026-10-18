@@ -17,7 +17,7 @@ void ost::RuntimeConfig::LoadFromFile(const std::string& filePath)
     json configRoot;
     {
         std::ifstream rdStream(filePath);
-        configRoot << rdStream;
+        rdStream >> configRoot;
     }
 
     // Load paths data

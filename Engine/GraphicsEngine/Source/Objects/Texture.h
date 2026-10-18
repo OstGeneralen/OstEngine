@@ -1,19 +1,19 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GraphicsEngine/Resources/ITexture.h"
 #include "RHI/RHIMinimal.h"
 
 #include <OstTypes.h>
+#include <string>
 
 #include <Container/List.h>
 #include <Math/Vector2.h>
-
-#include <string>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct Texture
+    struct Texture : public ITexture
     {
         friend class RenderHardwareInterface;
 
@@ -21,7 +21,7 @@ namespace ost
         Texture(const Texture&);
         ~Texture();
 
-        void SetDebugName( const std::string& name ) const;
+        void SetDebugName(const std::string& name) const;
 
     private:
         ComPtr<RHIRenderTarget> _rtv;

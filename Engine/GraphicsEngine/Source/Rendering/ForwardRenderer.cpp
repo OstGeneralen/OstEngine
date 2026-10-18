@@ -57,9 +57,9 @@ void ost::ForwardRenderer::ExecuteCommands(const IRenderQueue& queueInterface, R
     const RenderHardwareInterface& rhi = context.rhi;
 
     // Clear and set targets
-    rhi.ClearRenderTarget(context.backbuffer);
+    rhi.ClearRenderTarget(_color);
     rhi.ClearDepthStencil(_depthStencil);
-    rhi.SetRenderTarget(context.backbuffer, &_depthStencil);
+    rhi.SetRenderTarget(_color, &_depthStencil);
 
     rhi.SetBuffer(context.frameBuffer, PipelineConstant::Get(EBufferSlot::FrameBuffer), FullPipeline);
     rhi.SetBuffer(context.lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), FullPipeline);
@@ -76,6 +76,19 @@ void ost::ForwardRenderer::ExecuteCommands(const IRenderQueue& queueInterface, R
     }
 
     rhi.Present();
+}
+
+const ITexture* ost::ForwardRenderer::GetOutputTarget(ERenderOutputTexture outputTarget) const
+{
+    switch (outputTarget)
+    {
+    case ERenderOutputTexture::Output:
+        return &_color;
+    case ERenderOutputTexture::Depth:
+        return &_depthStencil;
+    }
+
+    return nullptr;
 }
 
 // ------------------------------------------------------------

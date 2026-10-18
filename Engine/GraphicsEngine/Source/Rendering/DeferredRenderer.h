@@ -39,14 +39,14 @@ namespace ost
         const Vector2f& GetDimensions() const override;
 
         void ExecuteCommands(const IRenderQueue& queue, RendererContext&& context) override;
+        const ITexture* GetOutputTarget(ERenderOutputTexture target) const override;
         // END IRenderer
 
     private:
         Vector2f _currentSize;
 
         GBuffer _gBuffer;
-
-        Mesh _fullscreenMesh;
+        Texture _outputTexture;
 
         Buffer _lightBuffer;
 

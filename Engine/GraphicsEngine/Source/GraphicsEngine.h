@@ -47,6 +47,7 @@ namespace ost
         virtual IMaterialManager& GetMaterialManager() override;
 
         void ExecuteAndClearCommandQueue() override;
+        void Present(ERenderOutputTexture presentOutputTexture) override;
 
         const IRenderHardwareInterface& GetRenderHardwareInterface() const override;
         // END IGraphicsEngine
@@ -63,6 +64,7 @@ namespace ost
         Buffer _frameBuffer;
         Buffer _lightBuffer;
         Buffer _objectBuffer;
+        Mesh _blitMesh;
 
         GraphicsEngineSettings _activeSettings;
         UniquePtr<IRenderer> _activeRenderer;

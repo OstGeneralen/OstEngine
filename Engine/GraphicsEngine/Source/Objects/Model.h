@@ -48,8 +48,6 @@ namespace ost
         SizeType vertexCount;
         SizeType materialIndex;
 
-        HModel parentModel;
-
         Buffer vertexBuffer;
         Buffer indexBuffer;
     };

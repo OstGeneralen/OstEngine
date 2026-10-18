@@ -17,10 +17,9 @@ namespace ost
 {
     struct RendererContext
     {
-        RendererContext(const RenderHardwareInterface& r, GraphicsResourceManager& res, Texture bb, Buffer fb, Buffer ob, Buffer lb)
+        RendererContext(const RenderHardwareInterface& r, GraphicsResourceManager& res, Buffer fb, Buffer ob, Buffer lb)
             : rhi{r}
             , resources{res}
-            , backbuffer{bb}
             , frameBuffer{fb}
             , lightBuffer{lb}
             , objectBuffer{ob}
@@ -29,8 +28,6 @@ namespace ost
 
         const RenderHardwareInterface& rhi;
         GraphicsResourceManager& resources;
-
-        Texture backbuffer;
 
         Buffer frameBuffer;
         Buffer lightBuffer;

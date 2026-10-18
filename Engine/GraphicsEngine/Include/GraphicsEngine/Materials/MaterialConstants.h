@@ -10,6 +10,7 @@ namespace ost
     {
         SurfaceLit,
         Fullscreen,
+        Blit,
     };
 } // namespace ost
 

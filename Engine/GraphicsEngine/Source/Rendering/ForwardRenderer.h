@@ -22,10 +22,12 @@ namespace ost
         const Vector2f& GetDimensions() const override;
 
         void ExecuteCommands(const IRenderQueue& queue, RendererContext&& context) override;
+        const ITexture* GetOutputTarget( ERenderOutputTexture outputTarget ) const override;
 
     private:
         Vector2f _currentRenderSize;
 
+        Texture _color;
         Texture _depthStencil;
     };
 } // namespace ost

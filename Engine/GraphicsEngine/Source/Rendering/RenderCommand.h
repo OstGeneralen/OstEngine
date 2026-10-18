@@ -14,7 +14,7 @@ namespace ost
     class Material;
     class MaterialInstance;
     struct Texture;
-    class Model;
+    struct Model;
     class RenderCommandContext;
     struct Buffer;
 

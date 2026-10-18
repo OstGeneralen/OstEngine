@@ -92,6 +92,17 @@ GBuffer PSMain_Surface_Geometry(SurfacePixel frag) {
 
 // ------------------------------------------------------------
 
+Texture2D Blit_Colour : register(t0);
+
+float4 PSMain_Blit( FullscreenPixel frag ) : SV_Target
+{
+    float4 color = Blit_Colour.Sample( PointWrap, frag.UV );
+    color.a = 1;
+    return color;
+}
+
+// ------------------------------------------------------------
+
 Texture2D GBuffer_Albedo : register(t0);
 Texture2D GBuffer_Normal : register(t1);
 Texture2D GBuffer_ORM : register(t2);

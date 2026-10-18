@@ -4,6 +4,7 @@
 #include "Buffers.h"
 #include "GraphicsEngine/Rendering/Vertex.h"
 #include "Materials/MaterialCompiler.h"
+#include "Objects/RenderDefaultsLibrary.h"
 #include "RHI/RHIInternal.h"
 #include "RHI/RenderHardwareInterface.h"
 #include "RenderCommandContext.h"
@@ -34,26 +35,10 @@ void DeferredRenderer::Initialize(const Vector2u& renderSize, RendererContext&& 
     // Treat initialization as a first "resize"
     Resize(renderSize, std::move(context));
 
-    // Create The blit mesh
-    _fullscreenMesh.indexOffset = 0;
-    _fullscreenMesh.indexCount = 6;
-    _fullscreenMesh.vertexOffset = 0;
-    _fullscreenMesh.vertexCount = 4;
-
-    FullscreenVertex tl = {{-1, 1, 1, 1}, {0, 0}};
-    FullscreenVertex tr = {{1, 1, 1, 1}, {1, 0}};
-    FullscreenVertex br = {{1, -1, 1, 1}, {1, 1}};
-    FullscreenVertex bl = {{-1, -1, 1, 1}, {0, 1}};
-
-    FullscreenVertex vertices[4] = {tl, tr, bl, br};
-    Uint32 indices[6] = {0, 1, 2, 2, 1, 3};
-    rhi.CreateVertexBuffer(sizeof(FullscreenVertex), 4, vertices, _fullscreenMesh.vertexBuffer);
-    rhi.CreateIndexBuffer(6, indices, _fullscreenMesh.indexBuffer);
-
     // Todo: Unhackify this glorious mess of a pretend material
     MaterialDesc desc = {};
     desc.domain = EMaterialDomain::Fullscreen;
-    desc.materialShaderPath = "Engine/Shader/Material/MaterialShader_DeferredLightFullscreen.hlsl";
+    desc.materialShaderPath = "Engine/Shader/Material/MaterialShader_FullscreenBlit.hlsl";
     desc.blending = EBlendState::Additive;
 
     MaterialCompiler compiler(desc);
@@ -72,8 +57,12 @@ void ost::DeferredRenderer::Resize(const Vector2u& newSize, RendererContext&& co
     // Deferred uses its own light buffer since it actually allows more lights to be drawn than the fixed count of 8
     rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
 
-    // Reset the GBuffer
+    // Reset the GBuffer + output texture
+    _outputTexture = {};
     _gBuffer = {};
+
+    // Create the output texture
+    rhi.CreateRenderTargetTexture(newSize, EDataFormat::RGBA_Unorm8, true, _outputTexture);
 
     // Create the G Buffer Textures
     rhi.CreateRenderTargetTexture(newSize, EDataFormat::RGBA_Unorm8, true, _gBuffer.albedo);
@@ -127,8 +116,8 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     rhi.UnsetRenderTargets();
     rhi.UnsetTextures();
 
-    rhi.ClearRenderTarget(context.backbuffer);
-    rhi.SetRenderTarget(context.backbuffer, nullptr);
+    rhi.ClearRenderTarget(_outputTexture);
+    rhi.SetRenderTarget(_outputTexture, nullptr);
 
     rhi.SetPSO(_fullscreenPSO);
 
@@ -137,7 +126,7 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     rhi.SetTexture(_gBuffer.orm, 2, ost::EPipelineStage_PS);
     rhi.SetTexture(_gBuffer.depth, 3, ost::EPipelineStage_PS);
 
-    rhi.SetBuffersForIndexed(_fullscreenMesh.vertexBuffer, sizeof(FullscreenVertex), _fullscreenMesh.indexBuffer);
+    rhi.SetBuffersForIndexed(RenderDefaultsLibrary::GetBlitMesh().vertexBuffer, sizeof(FullscreenVertex), RenderDefaultsLibrary::GetBlitMesh().indexBuffer);
 
     // Go through the lights and keep drawing :)
     LightsBufferStructure lightData;
@@ -161,14 +150,36 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
 
     if (lightIndex > 0)
     {
-        lightData.numLights = lightIndex;
+        lightData.numLights = static_cast<Uint32>(lightIndex);
         rhi.UpdateBuffer(_lightBuffer, &lightData, sizeof(LightsBufferStructure));
         rhi.SetBuffer(_lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), EPipelineStage_PS);
     }
 
     rhi.Draw(6, 0, 0);
+}
 
-    rhi.Present();
+const ITexture* ost::DeferredRenderer::GetOutputTarget(ERenderOutputTexture target) const
+{
+    switch (target)
+    {
+    case ERenderOutputTexture::Output:
+        return &_outputTexture;
+        break;
+    case ERenderOutputTexture::Depth:
+        return &_gBuffer.depth;
+        break;
+    case ERenderOutputTexture::GBufferAlbedo:
+        return &_gBuffer.albedo;
+        break;
+    case ERenderOutputTexture::GBufferNormal:
+        return &_gBuffer.normals;
+        break;
+    case ERenderOutputTexture::GBufferORM:
+        return &_gBuffer.orm;
+        break;
+    }
+
+    return nullptr;
 }
 
 // ------------------------------------------------------------

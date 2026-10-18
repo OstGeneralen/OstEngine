@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "GraphicsEngine.h"
 
+#include "Objects/RenderDefaultsLibrary.h"
 #include "RHI/RenderHardwareInterface.h"
 #include "Rendering/Buffers.h"
 #include "Rendering/DeferredRenderer.h"
@@ -70,6 +71,8 @@ void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
     _activeSettings = settings;
     _rhi.Initialize(GetRenderSize().VectorCast<Uint32>(), settings.output.nativeWindowHandle, settings.output.fullscreen);
     _resourceManager.Initialize(_rhi);
+
+    RenderDefaultsLibrary::Initialize(_rhi);
 
     switch (settings.renderer.rendererType)
     {
@@ -185,6 +188,21 @@ void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
     _renderQueue.Clear();
 }
 
+void ost::GraphicsEngine::Present(ERenderOutputTexture presentOutputTexture)
+{
+    // Draw the output of the current renderer onto the backbuffer and then present
+    _rhi.ClearRenderTarget(_backbuffer);
+    _rhi.SetRenderTarget(_backbuffer);
+
+    _rhi.SetTexture(*static_cast<const Texture*>(_activeRenderer->GetOutputTarget(presentOutputTexture)), 0, EPipelineStage_PS);
+
+    _rhi.SetPSO(RenderDefaultsLibrary::GetBlitPSO());
+    _rhi.SetBuffersForIndexed(RenderDefaultsLibrary::GetBlitMesh().vertexBuffer, sizeof(FullscreenVertex), RenderDefaultsLibrary::GetBlitMesh().indexBuffer);
+    _rhi.Draw(RenderDefaultsLibrary::GetBlitMesh().indexCount, RenderDefaultsLibrary::GetBlitMesh().indexOffset, RenderDefaultsLibrary::GetBlitMesh().vertexOffset);
+
+    _rhi.Present();
+}
+
 const IRenderHardwareInterface& GraphicsEngine::GetRenderHardwareInterface() const
 {
     return _rhi;
@@ -194,7 +212,7 @@ const IRenderHardwareInterface& GraphicsEngine::GetRenderHardwareInterface() con
 
 RendererContext ost::GraphicsEngine::BuildRendererContext()
 {
-    return RendererContext(_rhi, _resourceManager, _backbuffer, _frameBuffer, _objectBuffer, _lightBuffer);
+    return RendererContext(_rhi, _resourceManager, _frameBuffer, _objectBuffer, _lightBuffer);
 }
 // ------------------------------------------------------------
 

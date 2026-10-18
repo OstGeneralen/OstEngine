@@ -130,6 +130,16 @@ MaterialCompiler::MaterialCompiler(const MaterialDesc& desc)
         _psoDescDeferred.primitiveTopology = EPrimitiveTopology::TriangleList;
         break;
     }
+    case EMaterialDomain::Blit: {
+        _domainVertexMain = "VSMain_Fullscreen";
+        _domainPixelMainFwd = "PSMain_Blit";
+        _domainPixelMainGeometry = "PSMain_Blit";
+        _psoDescForward.vertexLayout = MaterialVertexLayout::GetVertexLayout<EMaterialDomain::Fullscreen>();
+        _psoDescForward.primitiveTopology = EPrimitiveTopology::TriangleList;
+        _psoDescDeferred.vertexLayout = MaterialVertexLayout::GetVertexLayout<EMaterialDomain::Fullscreen>();
+        _psoDescDeferred.primitiveTopology = EPrimitiveTopology::TriangleList;
+        break;
+    }
     default:
         break;
     }

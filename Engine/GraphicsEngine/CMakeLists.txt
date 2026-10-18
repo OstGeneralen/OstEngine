@@ -63,6 +63,9 @@ add_library(${PROJECT_NAME} STATIC
     Source/Rendering/RendererContext.h
     Include/GraphicsEngine/Rendering/RenderConstants.h
     Include/GraphicsEngine/Rendering/Lights.h
+    Source/Objects/RenderDefaultsLibrary.h
+    Source/Objects/RenderDefaultsLibrary.cpp
+    Include/GraphicsEngine/Resources/ITexture.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

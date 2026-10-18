@@ -86,6 +86,7 @@ void ost::Application::Run()
         _coreEngine->Tick();
         _coreEngine->RenderSceneGraph(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
         _graphicsEngine->ExecuteAndClearCommandQueue();
+        _graphicsEngine->Present();
     }
 
     // gamePtr->Unload();
