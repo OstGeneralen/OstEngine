@@ -1,0 +1,24 @@
+{
+    "paths":
+    {
+        "assets":{
+            "rootDir": "Assets/",
+            "prefix": "Game"    
+        },
+        "engine":{
+            "rootDir": "Engine/",
+            "prefix": "Engine"    
+        }
+    },
+    "window":
+    {
+        "title": "Ost Engine Editor",
+        "fullscreen": false,
+        "resolution": [1600,900]
+    },
+    "rendering":
+    {
+        "renderScale": [1.0, 1.0],
+        "renderer": "deferred"
+    }
+}

@@ -72,5 +72,7 @@ OstAddSubdirEnsureCompliant(Shared/OstUtilities ${OST_COMMON_NAME})
 OstAddSubdirEnsureCompliant(Shared/OstLogger ${OST_LOGGER_NAME})
 OstAddSubdirEnsureCompliant(Engine/GraphicsEngine ${OST_GRAPHICS_ENGINE_NAME})
 OstAddSubdirEnsureCompliant(Engine/Engine ${OST_ENGINE_NAME})
+#    OstAddSubdirEnsureCompliant(Engine/Editor OstEditor)
 OstAddSubdirEnsureCompliant(Engine/Application OstEngineApplication)
+
 OstAddSubdirEnsureCompliant(${GAME_PROJECT_SUBDIR} ${GAME_PROJECT_NAME})
