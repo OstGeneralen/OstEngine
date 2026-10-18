@@ -14,6 +14,10 @@ add_executable(${PROJECT_NAME}
     EditorApplication.cpp
     EditorGameInstance.h
     EditorGameInstance.cpp
+    EditorContext.h
+    EditorContext.cpp
+    Panel/AssetsPanel.h
+    Panel/EditorPanel.h
 )
 
 target_link_libraries(${PROJECT_NAME}

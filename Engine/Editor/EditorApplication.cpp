@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "EditorApplication.h"
 
+#include "EditorContext.h"
 #include "EditorGameInstance.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
@@ -69,7 +70,11 @@ void ost::EditorApplication::Start()
     ImGui_ImplDX11_Init(nativeDevice, nativeDeviceContext);
 
     _window.AddNativeWindowEventCallback(&ImGuiWindowProcListener);
+
+    EditorContext::Create(*_coreEngine, *_graphicsEngine, _window);
 }
+
+#include "Panel/AssetsPanel.h"
 
 void ost::EditorApplication::Run()
 {
@@ -84,10 +89,8 @@ void ost::EditorApplication::Run()
         _graphicsEngine->ExecuteAndClearCommandQueue();
         _graphicsEngine->DrawRendererOutput();
 
-        ImGui::Begin("Test Window");
-        ImGui::Text("This is a test window now :)");
-        ImGui::Button("Button!");
-        ImGui::End();
+        AssetsPanel panel;
+        panel.Draw();
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -102,6 +105,8 @@ void ost::EditorApplication::Shutdown()
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 
+    EditorContext::Destroy();
+
     _coreEngine = nullptr;
     _graphicsEngine = nullptr;
     _window.Close();
@@ -114,7 +119,7 @@ void ost::EditorApplication::RequestExit()
 
 void ost::EditorApplication::Resized()
 {
-    if(!_graphicsEngine)
+    if (!_graphicsEngine)
     {
         return;
     }
