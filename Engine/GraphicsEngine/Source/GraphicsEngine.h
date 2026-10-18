@@ -47,7 +47,8 @@ namespace ost
         virtual IMaterialManager& GetMaterialManager() override;
 
         void ExecuteAndClearCommandQueue() override;
-        void Present(ERenderOutputTexture presentOutputTexture) override;
+        void DrawRendererOutput(ERenderOutputTexture presentOutputTexture) override;
+        void Present() override;
 
         const IRenderHardwareInterface& GetRenderHardwareInterface() const override;
         // END IGraphicsEngine

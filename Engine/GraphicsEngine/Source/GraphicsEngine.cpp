@@ -188,7 +188,7 @@ void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
     _renderQueue.Clear();
 }
 
-void ost::GraphicsEngine::Present(ERenderOutputTexture presentOutputTexture)
+void ost::GraphicsEngine::DrawRendererOutput(ERenderOutputTexture presentOutputTexture)
 {
     // Draw the output of the current renderer onto the backbuffer and then present
     _rhi.ClearRenderTarget(_backbuffer);
@@ -199,7 +199,10 @@ void ost::GraphicsEngine::Present(ERenderOutputTexture presentOutputTexture)
     _rhi.SetPSO(RenderDefaultsLibrary::GetBlitPSO());
     _rhi.SetBuffersForIndexed(RenderDefaultsLibrary::GetBlitMesh().vertexBuffer, sizeof(FullscreenVertex), RenderDefaultsLibrary::GetBlitMesh().indexBuffer);
     _rhi.Draw(RenderDefaultsLibrary::GetBlitMesh().indexCount, RenderDefaultsLibrary::GetBlitMesh().indexOffset, RenderDefaultsLibrary::GetBlitMesh().vertexOffset);
+}
 
+void ost::GraphicsEngine::Present()
+{
     _rhi.Present();
 }
 
