@@ -86,6 +86,7 @@ void ost::EditorApplication::Run()
 
         _window.Update();
 
+        _coreEngine->Tick();
         _graphicsEngine->ExecuteAndClearCommandQueue();
         _graphicsEngine->DrawRendererOutput();
 
@@ -137,7 +138,7 @@ void ost::EditorApplication::Resized()
 
 void ost::EditorApplication::ProcessKeyEvent(EKeyboard key, bool state)
 {
-    // No op for now
+    _coreEngine->GetInputReader().ProcessKeyEvent(key, state);
 }
 
 // ------------------------------------------------------------
