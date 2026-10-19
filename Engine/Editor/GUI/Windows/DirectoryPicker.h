@@ -1,26 +1,22 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Views/View.h"
-
-#include <Engine/Platform/Window.h>
-#include <Memory/UniquePtr.h>
+#include "GUI/GUIWindow.h"
+#include <filesystem>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class MainView
+    class DirectoryPicker : public GUIWindow
     {
     public:
-        void SetRoot(UniquePtr<View>&& root);
-
-        void Present(const Window& mainWindow);
+        DirectoryPicker();
+        void Display() override;
 
     private:
-        UniquePtr<View> _rootElement;
+        std::filesystem::path _currentPath;
     };
-
-} // namespace ost
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

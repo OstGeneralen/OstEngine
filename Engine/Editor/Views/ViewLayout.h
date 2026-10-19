@@ -25,7 +25,7 @@ namespace ost
         ViewLayout& SetViewSlotContent(Uint32 viewSlotIndex, UniquePtr<View>&& content);
         void Finalize();
 
-        void Present(const ViewRect& viewRect) override;
+        void Present(const ViewRect& viewRect, PropertyEditorCollection& propertyEditor) override;
 
     private:
         struct ViewSlot

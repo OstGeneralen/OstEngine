@@ -1,23 +1,24 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Views/ViewContent.h"
+#include "Views/View.h"
 #include <imgui.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class AssetsView : public ViewContent
+    class AssetsView : public View
     {
     public:
         AssetsView()
-            : ViewContent("Assets")
         {
         }
 
-        void Present(const ViewRect& viewRect) override
+        void Present(const ViewRect& viewRect, PropertyEditorCollection& propertyEditor) override
         {
+            BeginPresent("Assets", viewRect);
             ImGui::Text("Asset list will go here");
+            EndPresent();
         }
     };
 } // namespace ost

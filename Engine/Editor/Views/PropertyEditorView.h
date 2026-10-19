@@ -1,6 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Views/ViewContent.h"
+#include "Views/View.h"
 
 #include <imgui.h>
 
@@ -8,17 +8,18 @@
 
 namespace ost
 {
-    class PropertyEditorView : public ViewContent
+    class PropertyEditorView : public View
     {
     public:
         PropertyEditorView()
-            : ViewContent("Property Editor")
         {
         }
 
-        void Present(const ViewRect& viewRect) override
+        void Present(const ViewRect& viewRect, PropertyEditorCollection& propertyEditor) override
         {
+            BeginPresent("Properties", viewRect);
             ImGui::Text("This is where you'll edit components");
+            EndPresent();
         }
     };
 } // namespace ost

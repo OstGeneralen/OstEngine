@@ -3,11 +3,14 @@
 
 #include "EditorContext.h"
 #include "EditorGameInstance.h"
+#include "GUI/EditorGUI.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 
 #include <windows.h>
+
+using namespace ost;
 
 // ------------------------------------------------------------
 
@@ -23,6 +26,17 @@ bool ImGuiWindowProcListener(const ost::NativeWindowEventContext& ctx)
 }
 
 // ------------------------------------------------------------
+
+EditorApplication::EditorApplication()
+    : _hasExitRequest{false}
+    , _window{}
+    , _coreEngine{}
+    , _graphicsEngine{}
+    , _editorGui{}
+{
+}
+
+EditorApplication::~EditorApplication() = default;
 
 void ost::EditorApplication::Start()
 {
@@ -75,27 +89,50 @@ void ost::EditorApplication::Start()
 }
 
 // Views
+#include "PropertyEditors/BasicTypeEditors.h"
+#include "PropertyEditors/PropertyEditorCollection.h"
+#include "Views/ActorEditorView.h"
 #include "Views/AssetsView.h"
-#include "Views/ContentView.h"
-#include "Views/MainView.h"
 #include "Views/PropertyEditorView.h"
 #include "Views/SceneOutlinerView.h"
 #include "Views/ViewLayout.h"
+#include "GUI/Windows/DirectoryPicker.h"
+ost::DirectoryPicker dirPicker;
 
 void ost::EditorApplication::Run()
 {
     UniquePtr<View> rootView;
+    PropertyEditorCollection properties;
+
+    // Init Property Editors
+    {
+        properties.RegisterEditor<TextPropertyEditor>();
+        properties.RegisterEditor<FloatPropertyEditor>();
+        properties.RegisterEditor<Vector2fPropertyEditor>();
+        properties.RegisterEditor<Vector3fPropertyEditor>();
+        properties.RegisterEditor<Vector4fPropertyEditor>();
+        properties.RegisterEditor<ColorPropertyEditor>();
+    }
 
     // Initialize Default View Layout
     {
+        UniquePtr<ViewLayout> actorEditorArea = Ptr::NewUnique<ViewLayout>();
+        actorEditorArea->SetViewSlotCount(2)
+            .SetDirection(ELayoutDirection::Vertical)
+            .SetViewSlotSize(0, 0.3f)
+            .SetViewSlotSize(1, 0.7f)
+            .SetViewSlotContent(0, Ptr::NewUnique<ActorEditorView>())
+            .SetViewSlotContent(1, Ptr::NewUnique<PropertyEditorView>())
+            .Finalize();
+
         UniquePtr<ViewLayout> mainArea = Ptr::NewUnique<ViewLayout>();
         mainArea->SetViewSlotCount(3)
             .SetDirection(ELayoutDirection::Horizontal)
             .SetViewSlotSize(0, 0.2f)
-            .SetViewSlotContent(0, ContentView::Make<SceneOutlinerView>())
+            .SetViewSlotContent(0, Ptr::NewUnique<SceneOutlinerView>())
             .SetViewSlotSize(1, 0.6f)
             .SetViewSlotSize(2, 0.2f)
-            .SetViewSlotContent(2, ContentView::Make<PropertyEditorView>())
+            .SetViewSlotContent(2, std::move(actorEditorArea))
             .Finalize();
 
         UniquePtr<ViewLayout> masterLayout = Ptr::NewUnique<ViewLayout>();
@@ -104,7 +141,7 @@ void ost::EditorApplication::Run()
             .SetViewSlotSize(0, 0.7f)
             .SetViewSlotContent(0, std::move(mainArea))
             .SetViewSlotSize(1, 0.3f)
-            .SetViewSlotContent(1, ContentView::Make<AssetsView>())
+            .SetViewSlotContent(1, Ptr::NewUnique<AssetsView>())
             .Finalize();
 
         rootView = std::move(masterLayout);
@@ -123,10 +160,8 @@ void ost::EditorApplication::Run()
         _graphicsEngine->ExecuteAndClearCommandQueue();
         _graphicsEngine->DrawRendererOutput();
 
-        ViewRect viewRect;
-        viewRect.position = {0, 0};
-        viewRect.size = _window.GetClientSize().VectorCast<Float32>();
-        rootView->Present(viewRect);
+        //EditorGUI::Get().Display(_window.GetClientSize().VectorCast<Float32>());
+        dirPicker.Display();
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

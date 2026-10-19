@@ -4,6 +4,7 @@
 #include <Engine/Platform/Window.h>
 #include <GraphicsEngine/IGraphicsEngine.h>
 #include "EditorGameInstance.h"
+#include "GUI/EditorGUI.h"
 
 // ------------------------------------------------------------
 
@@ -12,6 +13,9 @@ namespace ost
     class EditorApplication : IWindowHost
     {
     public:
+        EditorApplication();
+        ~EditorApplication();    
+
         void Start();
         void Run();
         void Shutdown();
@@ -26,6 +30,7 @@ namespace ost
         Window _window;
         UniquePtr<IOstEngine> _coreEngine;
         UniquePtr<IGraphicsEngine> _graphicsEngine;
+        EditorGUI _editorGui;
     };
 } // namespace ost
 

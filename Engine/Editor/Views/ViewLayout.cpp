@@ -49,7 +49,7 @@ void ost::ViewLayout::Finalize()
     }
 }
 
-void ViewLayout::Present(const ViewRect& viewRect)
+void ViewLayout::Present(const ViewRect& viewRect, PropertyEditorCollection& propertyEditor)
 {
     Float32 positionOffset = 0;
 
@@ -79,7 +79,7 @@ void ViewLayout::Present(const ViewRect& viewRect)
 
         if (slot.view)
         {
-            slot.view->Present(subRect);
+            slot.view->Present(subRect, propertyEditor);
         }
     }
 }

@@ -21,14 +21,20 @@ add_executable(${PROJECT_NAME}
     Views/ViewLayout.h
     Views/View.h
     Views/ViewLayout.cpp
-    Views/ContentView.h
-    Views/ContentView.cpp
-    Views/MainView.h
-    Views/ViewContent.h
-    Views/MainView.cpp
     Views/AssetsView.h
     Views/SceneOutlinerView.h
     Views/PropertyEditorView.h
+    PropertyEditors/PropertyEditor.h
+    PropertyEditors/BasicTypeEditors.h
+    PropertyEditors/PropertyEditorCollection.h
+    Views/ActorEditorView.h
+    GUI/GUIWindow.h
+    GUI/EditorGUI.h
+    GUI/GUIControl.h
+    GUI/EditorGUI.cpp
+    GUI/GUIControl.cpp
+    GUI/Windows/DirectoryPicker.h
+    GUI/Windows/DirectoryPicker.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

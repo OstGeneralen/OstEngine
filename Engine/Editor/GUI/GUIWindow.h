@@ -1,30 +1,33 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Views/View.h"
-
-#include <string>
+#include "GUI/GUIControl.h"
+#include <imgui.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class ViewContent
+    enum class EGUIWindowType
+    {
+        Standard, // Dockable to another host
+        Modal,
+    };
+
+    enum class EGUIWindowOpenPos
+    {
+        Center,
+        Cursor,
+    };
+
+    class GUIWindow
     {
     public:
-        ViewContent(const std::string& name)
-            : _name{name}
+        virtual EGUIWindowType GetWindowType()
         {
+            return EGUIWindowType::Standard;
         }
-        virtual ~ViewContent() = default;
-        virtual void Present(const ViewRect& viewRect) = 0;
+        virtual void Display() = 0;
 
-        const std::string& GetName() const
-        {
-            return _name;
-        }
-
-    private:
-        std::string _name;
     };
 } // namespace ost
 
