@@ -74,10 +74,42 @@ void ost::EditorApplication::Start()
     EditorContext::Create(*_coreEngine, *_graphicsEngine, _window);
 }
 
-#include "Panel/AssetsPanel.h"
+// Views
+#include "Views/AssetsView.h"
+#include "Views/ContentView.h"
+#include "Views/MainView.h"
+#include "Views/PropertyEditorView.h"
+#include "Views/SceneOutlinerView.h"
+#include "Views/ViewLayout.h"
 
 void ost::EditorApplication::Run()
 {
+    UniquePtr<View> rootView;
+
+    // Initialize Default View Layout
+    {
+        UniquePtr<ViewLayout> mainArea = Ptr::NewUnique<ViewLayout>();
+        mainArea->SetViewSlotCount(3)
+            .SetDirection(ELayoutDirection::Horizontal)
+            .SetViewSlotSize(0, 0.2f)
+            .SetViewSlotContent(0, ContentView::Make<SceneOutlinerView>())
+            .SetViewSlotSize(1, 0.6f)
+            .SetViewSlotSize(2, 0.2f)
+            .SetViewSlotContent(2, ContentView::Make<PropertyEditorView>())
+            .Finalize();
+
+        UniquePtr<ViewLayout> masterLayout = Ptr::NewUnique<ViewLayout>();
+        masterLayout->SetDirection(ELayoutDirection::Vertical)
+            .SetViewSlotCount(2)
+            .SetViewSlotSize(0, 0.7f)
+            .SetViewSlotContent(0, std::move(mainArea))
+            .SetViewSlotSize(1, 0.3f)
+            .SetViewSlotContent(1, ContentView::Make<AssetsView>())
+            .Finalize();
+
+        rootView = std::move(masterLayout);
+    }
+
     while (!_hasExitRequest)
     {
         ImGui_ImplDX11_NewFrame();
@@ -87,11 +119,14 @@ void ost::EditorApplication::Run()
         _window.Update();
 
         _coreEngine->Tick();
+
         _graphicsEngine->ExecuteAndClearCommandQueue();
         _graphicsEngine->DrawRendererOutput();
 
-        AssetsPanel panel;
-        panel.Draw();
+        ViewRect viewRect;
+        viewRect.position = {0, 0};
+        viewRect.size = _window.GetClientSize().VectorCast<Float32>();
+        rootView->Present(viewRect);
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

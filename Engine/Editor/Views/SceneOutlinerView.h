@@ -1,23 +1,23 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Panel/EditorPanel.h"
+#include "Views/ViewContent.h"
+#include <imgui.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class AssetsPanel : public EditorPanel
+    class SceneOutlinerView : public ViewContent
     {
     public:
-        AssetsPanel()
+        SceneOutlinerView()
+            : ViewContent("Scene Outliner")
         {
-            _docking = EPanelDock::Bottom;
-            _panelSize = {1.0f, 0.25f};
         }
 
-        void DrawPanel() override
+        void Present(const ViewRect& viewRect) override
         {
-            ImGui::Text("This is some test text");
+            ImGui::Text("Scene Info Here");
         }
     };
 } // namespace ost

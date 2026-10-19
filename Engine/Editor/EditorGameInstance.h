@@ -6,6 +6,8 @@
 
 namespace ost
 {
+    class Scene;
+
     class EditorGameInstance : public IGame
     {
     public:
@@ -15,6 +17,7 @@ namespace ost
 
     private:
         UniquePtr<IGame> _actualInstance;
+        UniquePtr<Scene> _editorScene;
     };
 } // namespace ost
 

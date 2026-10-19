@@ -16,8 +16,19 @@ add_executable(${PROJECT_NAME}
     EditorGameInstance.cpp
     EditorContext.h
     EditorContext.cpp
-    Panel/AssetsPanel.h
-    Panel/EditorPanel.h
+    SceneView/EditorCamera.h
+    SceneView/EditorCamera.cpp
+    Views/ViewLayout.h
+    Views/View.h
+    Views/ViewLayout.cpp
+    Views/ContentView.h
+    Views/ContentView.cpp
+    Views/MainView.h
+    Views/ViewContent.h
+    Views/MainView.cpp
+    Views/AssetsView.h
+    Views/SceneOutlinerView.h
+    Views/PropertyEditorView.h
 )
 
 target_link_libraries(${PROJECT_NAME}
