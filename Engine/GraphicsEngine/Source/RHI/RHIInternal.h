@@ -1,12 +1,12 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "RHI/RHIMinimal.h"
-
 #include "GraphicsEngine/Resources/TextureCPUData.h"
+#include "RHI/RHIMinimal.h"
 
 // DXGI + Dx11
 #include <d3d11_1.h>
 #include <dxgi.h>
+
 #include <d3dcommon.h>
 
 // ------------------------------------------------------------
@@ -20,6 +20,8 @@ namespace ost
         {
             switch (fmt)
             {
+            case ETextureFormat::RGBAUnorm:
+                return DXGI_FORMAT_R8G8B8A8_UNORM;
             case ETextureFormat::DDS_BC7:
                 return DXGI_FORMAT_BC7_UNORM;
             case ETextureFormat::DDS_BC7_SRGB:

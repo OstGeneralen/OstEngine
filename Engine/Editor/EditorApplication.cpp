@@ -10,6 +10,15 @@
 
 #include <windows.h>
 
+// Services
+#include "Content/IconProvider.h"
+
+// GUI Controls
+#include "GUI/Controls/GUIPanel.h"
+#include "GUI/Controls/GUISceneView.h"
+#include "GUI/Controls/GUIStackPanel.h"
+#include "GUI/Controls/GUIAssetsView.h"
+
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -32,7 +41,6 @@ EditorApplication::EditorApplication()
     , _window{}
     , _coreEngine{}
     , _graphicsEngine{}
-    , _editorGui{}
 {
 }
 
@@ -88,11 +96,17 @@ void ost::EditorApplication::Start()
     EditorContext::Create(*_coreEngine, *_graphicsEngine, _window);
 }
 
-#include "GUI/GUILayout.h"
-
 void ost::EditorApplication::Run()
 {
-    GUILayout layout;
+    EditorContext::Get().serviceLocator.Register<IconProvider>(Ptr::NewUnique<IconProvider>());
+
+    auto& rootElement = _editorGui.SetRoot(Ptr::NewUnique<GUIStackPanel>("RootVertical", EOrientation::Vertical));
+    auto& topVertical =
+        rootElement.AddChild<GUIStackPanel>("TopHorizontal", EOrientation::Horizontal).SetBordered(false).SetResizeFlag(EGUIResize_Y).SetInitialSize({0, 400});
+
+    topVertical.AddChild<GUIPanel>("ActorList").SetResizeFlag(EGUIResize_X).SetBordered(true).SetInitialSize({200, 0});
+    topVertical.AddChild<GUISceneView>().SetBordered(true);
+    rootElement.AddChild<GUIAssetsView>("Assets").SetBordered(true);
 
     while (!_hasExitRequest)
     {
@@ -107,7 +121,7 @@ void ost::EditorApplication::Run()
         _graphicsEngine->ExecuteAndClearCommandQueue();
         _graphicsEngine->DrawRendererOutput();
 
-        layout.Display(_window.GetClientSize().VectorCast<Float32>());
+        _editorGui.Display(_window.GetClientSize().VectorCast<Float32>());
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

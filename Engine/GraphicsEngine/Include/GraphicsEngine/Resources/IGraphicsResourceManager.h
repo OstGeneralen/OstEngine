@@ -10,6 +10,7 @@
 
 namespace ost
 {
+    struct ITexture;
     struct Texture;
     struct Model;
     struct Mesh;
@@ -21,6 +22,8 @@ namespace ost
 
         virtual HTexture Create(const TextureCPUData& cpuData) = 0;
         virtual HModel Create(const ModelCPUData& cpuData) = 0;
+
+        virtual const ITexture& GetTexture( HTexture h ) const  = 0;
 
         virtual void Release(HTexture handle) = 0;
         virtual void Release(HModel handle) = 0;

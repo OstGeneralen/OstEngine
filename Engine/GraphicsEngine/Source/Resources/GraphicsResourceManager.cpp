@@ -84,6 +84,13 @@ HModel GraphicsResourceManager::Create(const ModelCPUData& data)
 
 // ------------------------------------------------------------
 
+const ITexture& ost::GraphicsResourceManager::GetTexture(HTexture h) const
+{
+    return _textures[static_cast<Uint64>(h)];
+}
+
+// ------------------------------------------------------------
+
 void GraphicsResourceManager::Release(HTexture handle)
 {
     _textures.Remove(static_cast<Uint64>(handle));
@@ -157,12 +164,12 @@ HMaterialInstance GraphicsResourceManager::CreateInstance(HMaterial fromMaterial
     desc.baseMaterialHandle = fromMaterialHandle;
 
     SizeType bufferSize = rootMaterial.GetPropertiesBufferSize();
-    if(bufferSize == 0)
+    if (bufferSize == 0)
     {
         bufferSize = 16;
     }
-    _pRHI->CreateBuffer( bufferSize, desc.propertyBuffer);
-    desc.propertyBuffer.SetDebugName( "MaterialProperties" );
+    _pRHI->CreateBuffer(bufferSize, desc.propertyBuffer);
+    desc.propertyBuffer.SetDebugName("MaterialProperties");
 
     matInstance.Create(desc);
     rootMaterial.PopulateInstanceProperties(matInstance);

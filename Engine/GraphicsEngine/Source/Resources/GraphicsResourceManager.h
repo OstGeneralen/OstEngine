@@ -41,6 +41,8 @@ namespace ost
         HTexture Create(const TextureCPUData& data) override;
         HModel Create(const ModelCPUData& data) override;
 
+        const ITexture& GetTexture( HTexture h ) const override;
+
         virtual void Release(HTexture handle) override;
         virtual void Release(HModel handle) override;
         // END IGraphicsResourceManager

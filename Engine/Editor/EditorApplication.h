@@ -1,9 +1,11 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "EditorGameInstance.h"
+#include "GUI/EditorGUI.h"
+
 #include <Engine/IOstEngine.h>
 #include <Engine/Platform/Window.h>
 #include <GraphicsEngine/IGraphicsEngine.h>
-#include "EditorGameInstance.h"
 
 // ------------------------------------------------------------
 
@@ -13,7 +15,7 @@ namespace ost
     {
     public:
         EditorApplication();
-        ~EditorApplication();    
+        ~EditorApplication();
 
         void Start();
         void Run();

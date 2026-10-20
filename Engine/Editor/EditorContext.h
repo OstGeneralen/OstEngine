@@ -3,6 +3,7 @@
 #include <Engine/IOstEngine.h>
 #include <GraphicsEngine/IGraphicsEngine.h>
 #include <Engine/Platform/Window.h>
+#include "Services/ServiceLocator.h"
 
 // ------------------------------------------------------------
 
@@ -16,6 +17,7 @@ namespace ost
         IOstEngine& coreEngine;
         IGraphicsEngine& graphicsEngine;
         const Window& window;
+        ServiceLocator serviceLocator;
 
         static EditorContext& Get();
 

@@ -15,7 +15,7 @@ GUIStackPanel::GUIStackPanel(const std::string& uid, EOrientation orientation)
 
 void GUIStackPanel::Display()
 {
-    ImGui::BeginChild(GetUIDString().c_str(), size, ImGuiChildFlags_Borders);
+    BeginGUI();
 
     bool firstChild = true;
     for (auto pChild : GetChildren())
@@ -28,17 +28,7 @@ void GUIStackPanel::Display()
         firstChild = false;
     }
 
-    ImGui::EndChild();
-}
-
-bool GUIStackPanel::AllowResizeX() const
-{
-    return _orientation == EOrientation::Vertical;
-}
-
-bool GUIStackPanel::AllowResizeY() const
-{
-    return _orientation == EOrientation::Horizontal;
+    EndGUI();
 }
 
 // ------------------------------------------------------------

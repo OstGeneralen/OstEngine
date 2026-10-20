@@ -25,6 +25,9 @@ void ost::EditorGUI::Display(const Vector2f& displaySize)
     Float32 menuHeight;
     DisplayMainMenu(menuHeight);
 
+    ImGui::SetNextWindowSize({displaySize.X, displaySize.Y - menuHeight});
+    ImGui::SetNextWindowPos({0, menuHeight});
+
     ImGui::PushStyleColor(ImGuiCol_WindowBg, {0, 0, 0, 1});
     ImGui::Begin("##EditorGUIPrimary", 0, ImGuiWindowFlags_NoDecoration);
     ImGui::PopStyleColor();

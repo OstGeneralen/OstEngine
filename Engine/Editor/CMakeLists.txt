@@ -30,14 +30,23 @@ add_executable(${PROJECT_NAME}
     Views/ActorEditorView.h
     GUI/Windows/SceneView.h
     GUI/Windows/SceneView.cpp
-    GUI/GUILayout.h
-    GUI/GUILayout.cpp
-    GUI/EditorGUI.h
     GUI/GUIControl.h
     GUI/GUIControl.cpp
     GUI/EditorGUI.cpp
+    GUI/EditorGUI.h
     GUI/Controls/GUIStackPanel.h
     GUI/Controls/GUIStackPanel.cpp
+    GUI/Controls/GUIPanel.h
+    GUI/Controls/GUIPanel.cpp
+    GUI/Controls/GUISceneView.h
+    GUI/Controls/GUISceneView.cpp
+    Services/ServiceLocator.h
+    Services/FileSystem.h
+    GUI/Controls/GUIAssetsView.h
+    Content/stb_image.h
+    Content/IconProvider.h
+    Content/IconProvider.cpp
+    GUI/Controls/GUIAssetsView.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

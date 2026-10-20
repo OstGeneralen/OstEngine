@@ -3,6 +3,8 @@
 
 #include <imgui.h>
 
+#include <Math/Math.h>
+
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -11,6 +13,7 @@ ost::GUIControl::GUIControl(const std::string& uniqueID)
     : _uidString{uniqueID}
     , _pChildren{}
     , _pParent{nullptr}
+    , _guiFlags{0}
 {
 }
 
@@ -21,6 +24,52 @@ GUIControl::~GUIControl()
         delete pChild;
     }
     _pChildren.Clear();
+}
+
+// ------------------------------------------------------------
+
+GUIControl& ost::GUIControl::SetResizeFlag(EGUIResize resizeFlag)
+{
+    if (resizeFlag & EGUIResize_X)
+    {
+        _guiFlags |= ImGuiChildFlags_ResizeX;
+    }
+    if (resizeFlag & EGUIResize_Y)
+    {
+        _guiFlags |= ImGuiChildFlags_ResizeY;
+    }
+    return *this;
+}
+
+GUIControl& ost::GUIControl::SetBordered(bool bordered)
+{
+    if (bordered)
+    {
+        _guiFlags |= ImGuiChildFlags_Borders;
+    }
+    return *this;
+}
+
+GUIControl& ost::GUIControl::SetInitialSize(const Vector2f& size)
+{
+    _size = size;
+    return *this;
+}
+
+GUIControl& ost::GUIControl::SetPivot(const Vector2f& pivot)
+{
+    _pivot = pivot;
+    return *this;
+}
+
+bool GUIControl::AllowResizeX() const
+{
+    return _guiFlags & ImGuiChildFlags_ResizeX;
+}
+
+bool GUIControl::AllowResizeY() const
+{
+    return _guiFlags & ImGuiChildFlags_ResizeY;
 }
 
 // ------------------------------------------------------------
@@ -102,6 +151,18 @@ const List<GUIControl*>& ost::GUIControl::GetChildren() const
 const std::string& ost::GUIControl::GetUIDString() const
 {
     return _uidString;
+}
+
+// ------------------------------------------------------------
+
+void ost::GUIControl::BeginGUI()
+{
+    ImGui::BeginChild(_uidString.c_str(), _size, _guiFlags);
+}
+
+void ost::GUIControl::EndGUI()
+{
+    ImGui::EndChild();
 }
 
 // ------------------------------------------------------------

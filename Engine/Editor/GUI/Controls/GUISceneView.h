@@ -2,29 +2,20 @@
 #pragma once
 #include "GUI/GUIControl.h"
 
-#include <OstTypes.h>
-
-#include <Math/Vector2.h>
-#include <Memory/UniquePtr.h>
-
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class GUILayout
+    class GUISceneView : public GUIControl
     {
     public:
-        GUILayout();
-        
-        void Display(const Vector2f& fullSize);
-
-
+        GUISceneView();
+        void Display() override;
     private:
-        void DisplayTopMenu();
-    
-        UniquePtr<GUIControl> _rootElement;
+        Uint32 _displayTexture;
+        Vector2u _cachedSceneRenderSize;
     };
-} // namespace ost
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
