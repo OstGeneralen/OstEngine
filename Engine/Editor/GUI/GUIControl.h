@@ -1,47 +1,54 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include <OstTypes.h>
-#include <imgui.h>
+#include <string>
 
 #include <Container/List.h>
+#include <Memory/UniquePtr.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct GUIRect
-    {
-        Vector2f position;
-        Vector2f size;
-    };
-
-    enum EGUIControlFlag : Uint32
-    {
-        EGUIControlFlag_None = 0,
-        EGUIControlFlag_Dockable = 1 << 0,
-        EGUIControlFlag_AllowChildren = 1 << 1,
-    };
-    typedef Uint32 EGUIControlFlag_;
-    
-
     class GUIControl
     {
     public:
-        friend class EditorGUI;
+        GUIControl(const std::string& uniqueID);
+        virtual ~GUIControl();
 
-        // Controls must have a display function
-        virtual void Display(const GUIRect& rect) = 0;
+        virtual void Display() = 0;
+
+        virtual bool AllowResizeX() const
+        {
+            return false;
+        }
+        virtual bool AllowResizeY() const
+        {
+            return false;
+        }
+
+    public:
+        bool IsRoot() const;
+
+        void MoveToRoot();
+        void SetParent(GUIControl& parent);
+        void AddChild(GUIControl& child);
+
+        GUIControl* GetParent();
+        const GUIControl* GetParent() const;
+
+        List<GUIControl*>& GetChildren();
+        const List<GUIControl*>& GetChildren() const;
+
+        const std::string& GetUIDString() const;
 
     protected:
-        EGUIControlFlag_ controlFlags = EGUIControlFlag_None;
+        Vector2f size;
 
     private:
-        void SetParent(GUIControl* pParent);
-        void AddChild( GUIControl* pChild );
-
-        std::string _name;
-        GUIControl* _pParent = nullptr;
-        List<GUIControl*> _children;
+        std::string _uidString;
+        List<GUIControl*> _pChildren;
+        GUIControl* _pParent;
     };
 } // namespace ost
 

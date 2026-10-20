@@ -3,86 +3,59 @@
 
 #include <imgui.h>
 
-#include <Utility/Assert.h>
-
 using namespace ost;
 
-EditorGUI* EditorGUI::_pInstance = nullptr;
-
 // ------------------------------------------------------------
 
-EditorGUI& EditorGUI::Get()
+GUIControl& ost::EditorGUI::SetRoot(UniquePtr<GUIControl>&& root)
 {
-    return *_pInstance;
+    _rootControl = std::move(root);
+    return *_rootControl;
+}
+
+GUIControl& EditorGUI::GetRoot()
+{
+    return *_rootControl;
 }
 
 // ------------------------------------------------------------
 
-EditorGUI::EditorGUI()
+void ost::EditorGUI::Display(const Vector2f& displaySize)
 {
-    OST_ASSERT(_pInstance == nullptr, "Only one instace of EditorGUI allowed");
-    _pInstance = this;
-}
+    Float32 menuHeight;
+    DisplayMainMenu(menuHeight);
 
-EditorGUI::~EditorGUI()
-{
-    _pInstance = nullptr;
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, {0, 0, 0, 1});
+    ImGui::Begin("##EditorGUIPrimary", 0, ImGuiWindowFlags_NoDecoration);
+    ImGui::PopStyleColor();
+    _rootControl->Display();
+    ImGui::End();
 }
 
 // ------------------------------------------------------------
 
-void ost::EditorGUI::Display(const Vector2f& displayArea)
+void ost::EditorGUI::DisplayMainMenu(Float32& outHeight)
 {
-    if (!_modalStack.IsEmpty())
-    {
-        ImGui::BeginDisabled();
-    }
-
-    // Display Menu Bar
     ImGui::BeginMainMenuBar();
     if (ImGui::BeginMenu("File"))
     {
         ImGui::EndMenu();
     }
-    if (ImGui::BeginMenu("Project"))
+    if (ImGui::BeginMenu("Options"))
     {
-        if (ImGui::BeginMenu("Scene"))
-        {
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Assets"))
-        {
-            ImGui::EndMenu();
-        }
         ImGui::EndMenu();
     }
-    if(ImGui::BeginMenu("View"))
+    if (ImGui::BeginMenu("View"))
+    {
+        ImGui::EndMenu();
+    }
+    if (ImGui::BeginMenu("About"))
     {
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
 
-    GUIRect guiRect;
-    guiRect.position = {0, ImGui::GetItemRectSize().y};
-    guiRect.size = {displayArea.X, displayArea.Y - guiRect.position.Y};
-
-    // Display Regular Controls
-    for (auto ctrl : _rootControls)
-    {
-        if(ctrl->_pParent == nullptr)
-        {
-            ImGui::Begin( ctrl->_name.c_str());
-            ImGui::End();
-
-        }
-    }
-
-    // Display Top Modal Window (if any)
-    if (!_modalStack.IsEmpty())
-    {
-        ImGui::EndDisabled();
-        _modalStack.Top()->Display();
-    }
+    outHeight = ImGui::GetItemRectSize().y;
 }
 
 // ------------------------------------------------------------

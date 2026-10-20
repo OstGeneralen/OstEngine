@@ -120,28 +120,14 @@ void GraphicsEngine::Shutdown()
     _rhi = RenderHardwareInterface{};
 }
 
-void GraphicsEngine::UpdateSettings(const GraphicsEngineSettings& newSettings)
+void ost::GraphicsEngine::SetRenderSize(const Vector2u& size)
 {
-    OST_ASSERT(IsInitialized(), "Update Settings requires a correctly initialized RHI");
+    _activeRenderer->Resize(size, BuildRendererContext());
+}
 
-    // Cache the active window handle as this will not be allowed to be changed
-    // Changing this requires a full restart of the Graphics Engine
-    void* const windowHandle = _activeSettings.output.nativeWindowHandle;
-    // Same for renderer type
-    ERendererType rendererType = _activeSettings.renderer.rendererType;
-
-    const Vector2u newRenderSize = ::CalculateRenderSize(newSettings.output.clientSize, newSettings.output.renderSize);
-    const Vector2u oldRenderSize = ::CalculateRenderSize(_activeSettings.output.clientSize, _activeSettings.output.renderSize);
-
-    if (newRenderSize != oldRenderSize)
-    {
-        _rhi.ResizeBackbuffer(newRenderSize, _backbuffer);
-        _activeRenderer->Resize(newRenderSize, BuildRendererContext());
-    }
-
-    _activeSettings = newSettings;
-    _activeSettings.output.nativeWindowHandle = windowHandle; // Restore with cached
-    _activeSettings.renderer.rendererType = rendererType;
+void ost::GraphicsEngine::SetOutputSize(const Vector2u& size)
+{
+    _rhi.ResizeBackbuffer(size, _backbuffer);
 }
 
 // ------------------------------------------------------------

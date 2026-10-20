@@ -7,41 +7,101 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void GUIControl::SetParent(GUIControl* pParent)
+ost::GUIControl::GUIControl(const std::string& uniqueID)
+    : _uidString{uniqueID}
+    , _pChildren{}
+    , _pParent{nullptr}
 {
-    if (_pParent)
-    {
-        constexpr static SizeType NPOS = static_cast<SizeType>(-1);
-        SizeType indexOfThis = NPOS;
-        for (SizeType i = 0; i < _pParent->_children.GetSize(); ++i)
-        {
-            if (_pParent->_children[i] == this)
-            {
-                indexOfThis = i;
-                break;
-            }
-        }
+}
 
-        if (indexOfThis != NPOS)
-        {
-            _pParent->_children.Remove(indexOfThis);
-        }
+GUIControl::~GUIControl()
+{
+    for (auto pChild : _pChildren)
+    {
+        delete pChild;
     }
+    _pChildren.Clear();
+}
 
-    _pParent = pParent;
+// ------------------------------------------------------------
 
-    if (_pParent)
+bool ost::GUIControl::IsRoot() const
+{
+    return _pParent == nullptr;
+}
+
+// ------------------------------------------------------------
+
+void ost::GUIControl::MoveToRoot()
+{
+    if (_pParent != nullptr)
     {
-        _pParent->_children.Add(this);
+        ost::GUIControl* pRoot = _pParent;
+        while (pRoot->_pParent != nullptr)
+        {
+            pRoot = pRoot->_pParent;
+        }
+
+        SetParent(*pRoot);
     }
 }
 
-void ost::GUIControl::AddChild(GUIControl* pChild)
+void ost::GUIControl::SetParent(GUIControl& parent)
 {
-    if (pChild)
+    if (_pParent == &parent)
     {
-        pChild->SetParent(this);
+        // Nothing to do :)
+        return;
     }
+
+    if (_pParent != nullptr)
+    {
+        for (SizeType i = 0; i < _pParent->_pChildren.GetSize(); ++i)
+        {
+            if (this == _pParent->_pChildren[i])
+            {
+                _pParent->_pChildren.Remove(i);
+                break;
+            }
+        }
+    }
+
+    _pParent = &parent;
+    parent._pChildren.Add(this);
+}
+
+void ost::GUIControl::AddChild(GUIControl& child)
+{
+    child.SetParent(*this);
+}
+
+// ------------------------------------------------------------
+
+GUIControl* ost::GUIControl::GetParent()
+{
+    return _pParent;
+}
+
+const GUIControl* ost::GUIControl::GetParent() const
+{
+    return _pParent;
+}
+
+List<GUIControl*>& ost::GUIControl::GetChildren()
+{
+    return _pChildren;
+}
+
+const List<GUIControl*>& ost::GUIControl::GetChildren() const
+{
+    return _pChildren;
+}
+
+// ------------------------------------------------------------
+
+const std::string& ost::GUIControl::GetUIDString() const
+{
+    return _uidString;
 }
 
 // ------------------------------------------------------------

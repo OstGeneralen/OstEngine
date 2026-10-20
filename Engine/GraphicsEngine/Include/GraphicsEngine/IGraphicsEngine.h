@@ -49,7 +49,8 @@ namespace ost
     public:
         virtual ~IGraphicsEngine() = default;
 
-        virtual void UpdateSettings(const GraphicsEngineSettings& settings) = 0;
+        virtual void SetRenderSize(const Vector2u& renderSize) = 0;
+        virtual void SetOutputSize(const Vector2u& outputSize) = 0;
 
         virtual IRenderer& GetRenderer() = 0;
         virtual IRenderQueue& GetRenderQueue() = 0;

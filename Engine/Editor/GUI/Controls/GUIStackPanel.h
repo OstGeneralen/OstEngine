@@ -1,22 +1,28 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/GUIWindow.h"
-#include <filesystem>
+#include "GUI/GUIControl.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class DirectoryPicker : public GUIWindow
+    enum class EOrientation
+    {
+        Horizontal,
+        Vertical,
+    };
+
+    class GUIStackPanel : public GUIControl
     {
     public:
-        DirectoryPicker();
+        GUIStackPanel(const std::string& uid, EOrientation orientation);
+
         void Display() override;
 
     private:
-        std::filesystem::path _currentPath;
+        EOrientation _orientation;
     };
-}
+} // namespace ost
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

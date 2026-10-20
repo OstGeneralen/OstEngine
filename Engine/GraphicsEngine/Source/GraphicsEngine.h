@@ -39,7 +39,8 @@ namespace ost
         void Shutdown();
 
         // BEGIN IGraphicsEngine
-        virtual void UpdateSettings(const GraphicsEngineSettings& settings) override;
+        void SetRenderSize( const Vector2u& renderSize ) override;
+        void SetOutputSize( const Vector2u& outputSize ) override;
 
         virtual IRenderer& GetRenderer() override;
         virtual IRenderQueue& GetRenderQueue() override;

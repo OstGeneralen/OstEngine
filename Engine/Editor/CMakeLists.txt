@@ -28,13 +28,16 @@ add_executable(${PROJECT_NAME}
     PropertyEditors/BasicTypeEditors.h
     PropertyEditors/PropertyEditorCollection.h
     Views/ActorEditorView.h
-    GUI/GUIWindow.h
+    GUI/Windows/SceneView.h
+    GUI/Windows/SceneView.cpp
+    GUI/GUILayout.h
+    GUI/GUILayout.cpp
     GUI/EditorGUI.h
     GUI/GUIControl.h
-    GUI/EditorGUI.cpp
     GUI/GUIControl.cpp
-    GUI/Windows/DirectoryPicker.h
-    GUI/Windows/DirectoryPicker.cpp
+    GUI/EditorGUI.cpp
+    GUI/Controls/GUIStackPanel.h
+    GUI/Controls/GUIStackPanel.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

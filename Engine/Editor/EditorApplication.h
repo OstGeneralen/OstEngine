@@ -4,7 +4,6 @@
 #include <Engine/Platform/Window.h>
 #include <GraphicsEngine/IGraphicsEngine.h>
 #include "EditorGameInstance.h"
-#include "GUI/EditorGUI.h"
 
 // ------------------------------------------------------------
 

@@ -88,64 +88,11 @@ void ost::EditorApplication::Start()
     EditorContext::Create(*_coreEngine, *_graphicsEngine, _window);
 }
 
-// Views
-#include "PropertyEditors/BasicTypeEditors.h"
-#include "PropertyEditors/PropertyEditorCollection.h"
-#include "Views/ActorEditorView.h"
-#include "Views/AssetsView.h"
-#include "Views/PropertyEditorView.h"
-#include "Views/SceneOutlinerView.h"
-#include "Views/ViewLayout.h"
-#include "GUI/Windows/DirectoryPicker.h"
-ost::DirectoryPicker dirPicker;
+#include "GUI/GUILayout.h"
 
 void ost::EditorApplication::Run()
 {
-    UniquePtr<View> rootView;
-    PropertyEditorCollection properties;
-
-    // Init Property Editors
-    {
-        properties.RegisterEditor<TextPropertyEditor>();
-        properties.RegisterEditor<FloatPropertyEditor>();
-        properties.RegisterEditor<Vector2fPropertyEditor>();
-        properties.RegisterEditor<Vector3fPropertyEditor>();
-        properties.RegisterEditor<Vector4fPropertyEditor>();
-        properties.RegisterEditor<ColorPropertyEditor>();
-    }
-
-    // Initialize Default View Layout
-    {
-        UniquePtr<ViewLayout> actorEditorArea = Ptr::NewUnique<ViewLayout>();
-        actorEditorArea->SetViewSlotCount(2)
-            .SetDirection(ELayoutDirection::Vertical)
-            .SetViewSlotSize(0, 0.3f)
-            .SetViewSlotSize(1, 0.7f)
-            .SetViewSlotContent(0, Ptr::NewUnique<ActorEditorView>())
-            .SetViewSlotContent(1, Ptr::NewUnique<PropertyEditorView>())
-            .Finalize();
-
-        UniquePtr<ViewLayout> mainArea = Ptr::NewUnique<ViewLayout>();
-        mainArea->SetViewSlotCount(3)
-            .SetDirection(ELayoutDirection::Horizontal)
-            .SetViewSlotSize(0, 0.2f)
-            .SetViewSlotContent(0, Ptr::NewUnique<SceneOutlinerView>())
-            .SetViewSlotSize(1, 0.6f)
-            .SetViewSlotSize(2, 0.2f)
-            .SetViewSlotContent(2, std::move(actorEditorArea))
-            .Finalize();
-
-        UniquePtr<ViewLayout> masterLayout = Ptr::NewUnique<ViewLayout>();
-        masterLayout->SetDirection(ELayoutDirection::Vertical)
-            .SetViewSlotCount(2)
-            .SetViewSlotSize(0, 0.7f)
-            .SetViewSlotContent(0, std::move(mainArea))
-            .SetViewSlotSize(1, 0.3f)
-            .SetViewSlotContent(1, Ptr::NewUnique<AssetsView>())
-            .Finalize();
-
-        rootView = std::move(masterLayout);
-    }
+    GUILayout layout;
 
     while (!_hasExitRequest)
     {
@@ -160,8 +107,7 @@ void ost::EditorApplication::Run()
         _graphicsEngine->ExecuteAndClearCommandQueue();
         _graphicsEngine->DrawRendererOutput();
 
-        //EditorGUI::Get().Display(_window.GetClientSize().VectorCast<Float32>());
-        dirPicker.Display();
+        layout.Display(_window.GetClientSize().VectorCast<Float32>());
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -195,15 +141,7 @@ void ost::EditorApplication::Resized()
         return;
     }
 
-    GraphicsEngineSettings gfxEngSettings;
-    gfxEngSettings.renderer.clearColor = Colors::Black;
-    gfxEngSettings.renderer.rendererType = ERendererType::Deferred;
-    gfxEngSettings.output.clientSize = _window.GetClientSize();
-    gfxEngSettings.output.renderSize = {1.0f, 1.0f};
-    gfxEngSettings.output.nativeWindowHandle = _window.GetNativeWindowHandle();
-    gfxEngSettings.output.fullscreen = false;
-
-    _graphicsEngine->UpdateSettings(gfxEngSettings);
+    _graphicsEngine->SetOutputSize(_window.GetClientSize());
 }
 
 void ost::EditorApplication::ProcessKeyEvent(EKeyboard key, bool state)

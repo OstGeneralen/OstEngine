@@ -59,14 +59,9 @@ void ost::Application::Resized()
         return;
     }
 
-    const Vector2u oldSize = _graphicsEngineSettings.output.clientSize;
     const Vector2u newSize = _window.GetClientSize();
-
-    if (oldSize != newSize)
-    {
-        _graphicsEngineSettings.output.clientSize = newSize;
-        _graphicsEngine->UpdateSettings(_graphicsEngineSettings);
-    }
+    _graphicsEngine->SetOutputSize(newSize);
+    _graphicsEngine->SetRenderSize(newSize);
 }
 
 void ost::Application::ProcessKeyEvent(EKeyboard key, bool state)
