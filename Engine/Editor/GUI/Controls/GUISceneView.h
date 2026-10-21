@@ -11,9 +11,11 @@ namespace ost
     public:
         GUISceneView();
         void Display() override;
+        void PostDisplay() override;
     private:
         Uint32 _displayTexture;
         Vector2u _cachedSceneRenderSize;
+        Vector2u _desiredRenderSize;
     };
 }
 

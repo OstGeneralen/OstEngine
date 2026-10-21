@@ -37,6 +37,22 @@ void ost::EditorGUI::Display(const Vector2f& displaySize)
 
 // ------------------------------------------------------------
 
+void ost::EditorGUI::PostDisplay(GUIControl* pFor)
+{
+    if(pFor == nullptr)
+    {
+        pFor = _rootControl.Get();
+    }
+
+    pFor->PostDisplay();
+    for (auto& c : pFor->GetChildren())
+    {
+        PostDisplay(c);
+    }
+}
+
+// ------------------------------------------------------------
+
 void ost::EditorGUI::DisplayMainMenu(Float32& outHeight)
 {
     ImGui::BeginMainMenuBar();

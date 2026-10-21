@@ -44,19 +44,26 @@ void GUISceneView::Display()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
     ImGui::BeginChild("##SceneViewRender", {0, 0}, ImGuiChildFlags_Borders);
     ImGui::PopStyleVar();
+
     const Vector2u activeRenderSize = Vector2f(ImGui::GetContentRegionAvail()).VectorCast<Uint32>();
 
     const void* pNativeTexture = renderer.GetOutputTarget(static_cast<ERenderOutputTexture>(_displayTexture))->GetNativeResource();
-    ImGui::Image((ImTextureRef)(intptr_t)pNativeTexture, activeRenderSize.VectorCast<Float32>());
+    ImGui::Image((ImTextureRef)(intptr_t)pNativeTexture, gfxEngine.GetRenderer().GetDimensions());
 
     ImGui::EndChild();
 
     EndGUI();
 
-    if (activeRenderSize != _cachedSceneRenderSize)
+    _desiredRenderSize = activeRenderSize;
+}
+
+void ost::GUISceneView::PostDisplay()
+{
+    if (_cachedSceneRenderSize != _desiredRenderSize)
     {
-        gfxEngine.SetRenderSize(activeRenderSize);
-        _cachedSceneRenderSize = activeRenderSize;
+        IGraphicsEngine& gfxEngine = EditorContext::Get().serviceLocator.GetRequired<IGraphicsEngine>();
+        gfxEngine.SetRenderSize(_desiredRenderSize);
+        _cachedSceneRenderSize = _desiredRenderSize;
     }
 }
 

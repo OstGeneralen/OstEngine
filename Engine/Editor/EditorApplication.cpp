@@ -93,6 +93,8 @@ void ost::EditorApplication::Start()
 
 void ost::EditorApplication::Run()
 {
+    _coreEngine->SetGameInstance(&_editorGameInstance);
+
     _serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
 
     auto& rootElement = _editorGui.SetRoot(Ptr::NewUnique<GUIStackPanel>("RootVertical", EOrientation::Vertical));
@@ -112,8 +114,15 @@ void ost::EditorApplication::Run()
 
         _coreEngine->Tick();
 
+        // Populate the render queue from the core engine's scene
+        _coreEngine->RenderSceneGraph(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
+
+        // Execute the command queue onto the output surface of the active renderer
         _graphicsEngine->ExecuteAndClearCommandQueue();
-        _graphicsEngine->DrawRendererOutput();
+
+        // Intentionally left out since we actually don't want to render the output onto the backbuffer
+        // It is instead drawn onto an image in the scene view
+        _graphicsEngine->ClearAndSetBackbuffer();
 
         _editorGui.Display(_window.GetClientSize().VectorCast<Float32>());
 
@@ -121,6 +130,9 @@ void ost::EditorApplication::Run()
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
         _graphicsEngine->Present();
+
+        // Execute the post display to allow resizing etc of renderer 
+        _editorGui.PostDisplay();
     }
 }
 

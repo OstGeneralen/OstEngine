@@ -27,6 +27,7 @@ namespace ost
         virtual ~GUIControl();
 
         virtual void Display() = 0;
+        virtual void PostDisplay() {}
 
     public:
         GUIControl& SetInitialSize( const Vector2f& size );

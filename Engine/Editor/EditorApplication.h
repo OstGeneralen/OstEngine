@@ -31,8 +31,10 @@ namespace ost
         bool _hasExitRequest = false;
         Window _window;
         ServiceLocator _serviceLocator;
+        EditorGameInstance _editorGameInstance;
         UniquePtr<IOstEngine> _coreEngine;
         UniquePtr<IGraphicsEngine> _graphicsEngine;
+        
         EditorGUI _editorGui;
     };
 } // namespace ost

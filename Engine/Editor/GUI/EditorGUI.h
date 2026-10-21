@@ -15,6 +15,7 @@ namespace ost
         GUIControl& GetRoot();
 
         void Display(const Vector2f& displaySize);
+        void PostDisplay(GUIControl* pFor = nullptr);
 
     private:
         void DisplayMainMenu(Float32& outHeight);
