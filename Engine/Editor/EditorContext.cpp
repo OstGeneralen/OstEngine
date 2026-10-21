@@ -12,9 +12,9 @@ EditorContext& ost::EditorContext::Get()
     return *_pInstance;
 }
 
-void ost::EditorContext::Create(IOstEngine& engine, IGraphicsEngine& gfxEngine, const Window& win)
+void ost::EditorContext::Create(ServiceLocator& sl, const Window& win)
 {
-    _pInstance = new EditorContext(engine, gfxEngine, win);
+    _pInstance = new EditorContext(sl, win);
 }
 
 void EditorContext::Destroy()
@@ -23,9 +23,8 @@ void EditorContext::Destroy()
     _pInstance = nullptr;
 }
 
-EditorContext::EditorContext(IOstEngine& engine, IGraphicsEngine& gfxEngine, const Window& win)
-    : coreEngine{engine}
-    , graphicsEngine{gfxEngine}
+EditorContext::EditorContext(ServiceLocator& sl, const Window& win)
+    : serviceLocator{sl}
     , window{win}
 {
 }

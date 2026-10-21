@@ -1,6 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <Engine/Game/GameInterface.h>
+#include <Engine/Game/GameBase.h>
 
 // ------------------------------------------------------------
 
@@ -8,15 +8,14 @@ namespace ost
 {
     class Scene;
 
-    class EditorGameInstance : public IGame
+    class EditorGameInstance : public GameBase
     {
     public:
-        void Load(GameContext& context) override;
-        void Unload(GameContext& context) override;
-        void Update(GameContext& context) override;
+        void Load(IAssetManager& assets) override;
+        void Unload(IAssetManager& assets) override;
+        void Update(Float32 deltaTime) override;
 
     private:
-        UniquePtr<IGame> _actualInstance;
         UniquePtr<Scene> _editorScene;
     };
 } // namespace ost

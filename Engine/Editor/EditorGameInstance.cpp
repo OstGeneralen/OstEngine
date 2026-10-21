@@ -3,24 +3,21 @@
 
 #include "EditorContext.h"
 
-#include <Engine/Game/GameContext.h>
-
 // World
 #include <Engine/World/Actor.h>
 #include <Engine/World/Scene.h>
 
 // ------------------------------------------------------------
 
-void ost::EditorGameInstance::Load(GameContext& context)
-{
-    _editorScene = context.CreateScene();
-}
-
-void ost::EditorGameInstance::Unload(GameContext& context)
+void ost::EditorGameInstance::Load(IAssetManager& assets)
 {
 }
 
-void ost::EditorGameInstance::Update(GameContext& context)
+void ost::EditorGameInstance::Unload(IAssetManager& assets)
+{
+}
+
+void ost::EditorGameInstance::Update(Float32 deltaTime)
 {
 }
 

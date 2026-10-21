@@ -34,7 +34,7 @@ IconProvider::IconProvider()
 void ost::IconProvider::DrawIcon(EIcon icon, const Vector2f& size) const
 {
     const Vector2f uv = _iconUVs[static_cast<SizeType>(icon)];
-    const void* nativeIcon = EditorContext::Get().graphicsEngine.GetResourceManager().GetTexture(_iconTextureHandle).GetNativeResource();
+    const void* nativeIcon = EditorContext::Get().serviceLocator.GetRequired<IGraphicsResourceManager>().GetTexture(_iconTextureHandle).GetNativeResource();
     ImGui::Image((ImTextureRef)(intptr_t)nativeIcon, size, uv, uv + GetIconUVSize());
 }
 
@@ -67,7 +67,7 @@ void ost::IconProvider::LoadIconAtlas(const char* path)
 
     stbi_image_free(pixels);
 
-    _iconTextureHandle = EditorContext::Get().graphicsEngine.GetResourceManager().Create(loadedData);
+    _iconTextureHandle = EditorContext::Get().serviceLocator.GetRequired<IGraphicsResourceManager>().Create(loadedData);
 }
 
 void ost::IconProvider::SetIconUV(EIcon icon, const Vector2u& imageLocation)

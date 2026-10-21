@@ -6,6 +6,7 @@
 #include <Engine/IOstEngine.h>
 #include <Engine/Platform/Window.h>
 #include <GraphicsEngine/IGraphicsEngine.h>
+#include <Services/ServiceLocator.h>
 
 // ------------------------------------------------------------
 
@@ -29,6 +30,7 @@ namespace ost
     private:
         bool _hasExitRequest = false;
         Window _window;
+        ServiceLocator _serviceLocator;
         UniquePtr<IOstEngine> _coreEngine;
         UniquePtr<IGraphicsEngine> _graphicsEngine;
         EditorGUI _editorGui;

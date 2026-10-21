@@ -26,8 +26,6 @@ add_executable(${PROJECT_NAME}
     PropertyEditors/BasicTypeEditors.h
     PropertyEditors/PropertyEditorCollection.h
     Views/ActorEditorView.h
-    GUI/Windows/SceneView.h
-    GUI/Windows/SceneView.cpp
     GUI/GUIControl.h
     GUI/GUIControl.cpp
     GUI/EditorGUI.cpp

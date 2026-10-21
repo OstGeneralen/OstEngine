@@ -10,6 +10,8 @@
 
 #include <windows.h>
 
+#include <Engine/Configuration/RuntimeConfig.h>
+
 // Services
 #include "Content/IconProvider.h"
 
@@ -17,7 +19,6 @@
 #include "GUI/Controls/GUIPanel.h"
 #include "GUI/Controls/GUISceneView.h"
 #include "GUI/Controls/GUIStackPanel.h"
-#include "GUI/Controls/GUIAssetsView.h"
 
 using namespace ost;
 
@@ -52,20 +53,8 @@ void ost::EditorApplication::Start()
     config.LoadFromFile("EditorConfiguration.json");
 
     _window.Create(*this, "Ost Engine Editor", config.window.resolution, false);
-
-    GraphicsEngineSettings gfxEngineSettings;
-    gfxEngineSettings.output.clientSize = _window.GetClientSize();
-    gfxEngineSettings.output.fullscreen = false;
-    gfxEngineSettings.output.nativeWindowHandle = _window.GetNativeWindowHandle();
-    gfxEngineSettings.output.renderSize = config.rendering.renderScale;
-    gfxEngineSettings.renderer.rendererType = ERendererType::Deferred;
-    gfxEngineSettings.renderer.clearColor = Colors::Black;
-    _graphicsEngine = IGraphicsEngine::CreateNew(gfxEngineSettings);
-
-    OstEngineSettings coreEngineSettings;
-    coreEngineSettings.pGfxEngine = _graphicsEngine.Get();
-    coreEngineSettings.assetsCfg = config.assets;
-    _coreEngine = IOstEngine::CreateNew(Ptr::NewUnique<EditorGameInstance>(), coreEngineSettings);
+    _graphicsEngine = IGraphicsEngine::Create(_serviceLocator, _window.GetNativeWindowHandle(), _window.GetClientSize());
+    _coreEngine = IOstEngine::Create(_serviceLocator);
 
     // Initializ ImGui
     ImGui_ImplWin32_EnableDpiAwareness();
@@ -87,18 +76,24 @@ void ost::EditorApplication::Start()
 
     ImGui_ImplWin32_Init(_window.GetNativeWindowHandle());
 
-    ID3D11Device* nativeDevice = reinterpret_cast<ID3D11Device*>(_graphicsEngine->GetRenderHardwareInterface().GetNativeDevice());
-    ID3D11DeviceContext* nativeDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(_graphicsEngine->GetRenderHardwareInterface().GetNativeContext());
+    IRenderHardwareInterface& rhi = _serviceLocator.GetRequired<IRenderHardwareInterface>();
+
+    ID3D11Device* nativeDevice = reinterpret_cast<ID3D11Device*>(rhi.GetNativeDevice());
+    ID3D11DeviceContext* nativeDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(rhi.GetNativeContext());
     ImGui_ImplDX11_Init(nativeDevice, nativeDeviceContext);
 
     _window.AddNativeWindowEventCallback(&ImGuiWindowProcListener);
 
-    EditorContext::Create(*_coreEngine, *_graphicsEngine, _window);
+    EditorContext::Create(_serviceLocator, _window);
+
+    // The editor registers the graphics engine as accessable service
+    // This is to allow us to interact more closely with it
+    _serviceLocator.RegisterUnmanaged<IGraphicsEngine>(_graphicsEngine.Get());
 }
 
 void ost::EditorApplication::Run()
 {
-    EditorContext::Get().serviceLocator.Register<IconProvider>(Ptr::NewUnique<IconProvider>());
+    _serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
 
     auto& rootElement = _editorGui.SetRoot(Ptr::NewUnique<GUIStackPanel>("RootVertical", EOrientation::Vertical));
     auto& topVertical =
@@ -106,7 +101,6 @@ void ost::EditorApplication::Run()
 
     topVertical.AddChild<GUIPanel>("ActorList").SetResizeFlag(EGUIResize_X).SetBordered(true).SetInitialSize({200, 0});
     topVertical.AddChild<GUISceneView>().SetBordered(true);
-    rootElement.AddChild<GUIAssetsView>("Assets").SetBordered(true);
 
     while (!_hasExitRequest)
     {
