@@ -23,7 +23,7 @@ namespace ost
         template <typename T>
         void RegisterManaged(UniquePtr<T>&& ptr)
         {
-            Register(TypeID::Get<T>(), std::move(ptr));
+            RegisterManaged(TypeID::Get<T>(), std::move(ptr));
         }
 
         template <typename T>
