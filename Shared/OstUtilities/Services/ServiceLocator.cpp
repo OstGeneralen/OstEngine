@@ -5,9 +5,20 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void ServiceLocator::Register(TypeID serviceType, UniquePtr<void>&& servicePtr)
+void ServiceLocator::RegisterManaged(TypeID serviceType, UniquePtr<void>&& servicePtr)
 {
-    _registry.Insert(serviceType, std::move(servicePtr));
+    ServiceRegistration registration;
+    registration.owned = true;
+    registration.pOwned = std::move(servicePtr);
+    _registry.Insert(serviceType, std::move(registration));
+}
+
+void ServiceLocator::RegisterUnmanaged(TypeID serviceType, void* pService)
+{
+    ServiceRegistration registration;
+    registration.owned = false;
+    registration.pUnowned = pService;
+    _registry.Insert(serviceType, std::move(registration));
 }
 
 void ServiceLocator::Unregister(TypeID serviceType)
@@ -19,12 +30,14 @@ void ServiceLocator::Unregister(TypeID serviceType)
 
 void* ServiceLocator::Get(TypeID serviceType)
 {
-    return _registry[serviceType].Get();
+    auto& reg = _registry[serviceType];
+    return reg.owned ? reg.pOwned.Get() : reg.pUnowned;
 }
 
 const void* ServiceLocator::Get(TypeID serviceType) const
 {
-    return _registry[serviceType].Get();
+    const auto& reg = _registry[serviceType];
+    return reg.owned ? reg.pOwned.Get() : reg.pUnowned;
 }
 
 // ------------------------------------------------------------

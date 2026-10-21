@@ -2,6 +2,7 @@
 #pragma once
 #include "GraphicsEngine/Materials/IMaterial.h"
 #include "GraphicsEngine/Materials/IMaterialInstance.h"
+#include "GraphicsEngine/Resources/ITexture.h"
 #include "GraphicsEngine/Resources/ObjectHandles.h"
 
 // ------------------------------------------------------------
@@ -27,7 +28,7 @@ namespace ost
 
     DECLARE_ASSET_TYPE(IMaterial, HMaterial, MaterialDesc);
     DECLARE_ASSET_TYPE(IMaterialInstance, HMaterialInstance, HMaterial);
-    DECLARE_ASSET_TYPE(HTexture, HTexture, void);
+    DECLARE_ASSET_TYPE(ITexture, HTexture, void);
     DECLARE_ASSET_TYPE(HModel, HModel, void);
 } // namespace ost
 

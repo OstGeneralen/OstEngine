@@ -48,8 +48,8 @@ namespace ost
             Reset();
         }
 
-        template<typename T2>
-        UniquePtr( UniquePtr<T2>&& o ) noexcept
+        template <typename T2>
+        UniquePtr(UniquePtr<T2>&& o) noexcept
             : _raw{o._raw}
         {
             o._raw = nullptr;
@@ -137,6 +137,119 @@ namespace ost
 
     private:
         T* _raw;
+    };
+
+    // ------------------------------------------------------------
+    template <>
+    class UniquePtr<void>
+    {
+    public:
+        template <typename T2>
+        friend class UniquePtr;
+
+        // Disallow copies
+        UniquePtr(const UniquePtr&) = delete;
+        UniquePtr& operator=(const UniquePtr&) = delete;
+
+    public:
+        UniquePtr()
+            : _raw{nullptr}
+        {
+        }
+        UniquePtr(void* p)
+            : _raw{p}
+        {
+        }
+        UniquePtr(UniquePtr&& o) noexcept
+            : _raw{o._raw}
+        {
+            o._raw = nullptr;
+        }
+        ~UniquePtr()
+        {
+            Reset();
+        }
+
+        template <typename T2>
+        UniquePtr(UniquePtr<T2>&& o) noexcept
+            : _raw{o._raw}
+        {
+            o._raw = nullptr;
+        }
+
+        UniquePtr& operator=(UniquePtr&& o) noexcept
+        {
+            Reset();
+            _raw = o._raw;
+            o._raw = nullptr;
+            return *this;
+        }
+        UniquePtr& operator=(std::nullptr_t)
+        {
+            Reset();
+            return *this;
+        }
+
+        template <typename T2>
+        UniquePtr& operator=(UniquePtr<T2>&& o) noexcept
+        {
+            Reset();
+            _raw = o._raw;
+            o._raw = nullptr;
+            return *this;
+        }
+
+        void* Get()
+        {
+            return _raw;
+        }
+        const void* Get() const
+        {
+            return _raw;
+        }
+
+        template <typename T2>
+        T2* GetAs()
+        {
+            return reinterpret_cast<T2*>(_raw);
+        }
+
+        template <typename T2>
+        const T2* GetAs() const
+        {
+            return reinterpret_cast<const T2*>(_raw);
+        }
+
+        void Reset()
+        {
+            if (_raw)
+            {
+                delete _raw;
+                _raw = nullptr;
+            }
+        }
+
+        bool IsValid() const
+        {
+            return _raw != nullptr;
+        }
+
+        void* operator->()
+        {
+            return _raw;
+        }
+        const void* operator->() const
+        {
+            return _raw;
+        }
+
+        operator bool() const
+        {
+            return _raw != nullptr;
+        }
+
+    private:
+        void* _raw;
     };
 
 } // namespace ost

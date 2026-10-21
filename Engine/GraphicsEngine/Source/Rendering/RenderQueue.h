@@ -10,11 +10,6 @@
 
 namespace ost
 {
-    struct MeshCommand
-    {
-
-    };
-
     class RenderQueue : public IRenderQueue
     {
     public:

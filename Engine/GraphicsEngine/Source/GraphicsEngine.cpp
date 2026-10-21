@@ -36,27 +36,43 @@ namespace
 
 // ------------------------------------------------------------
 
-UniquePtr<IGraphicsEngine> IGraphicsEngine::CreateNew(const GraphicsEngineSettings& settings)
+UniquePtr<IGraphicsEngine> IGraphicsEngine::Create(ServiceLocator& services, void* winHandle, const Vector2u& outputSize)
 {
-    auto ptr = Ptr::NewUnique<GraphicsEngine>();
-    ptr->Initialize(settings);
-
+    auto ptr = Ptr::NewUnique<GraphicsEngine>(services, winHandle, outputSize);
     return ptr;
 }
 
 // ------------------------------------------------------------
 
-GraphicsEngine::GraphicsEngine()
-    : _activeSettings{}
+GraphicsEngine::GraphicsEngine(ServiceLocator& serviceLocator, void* windowHandle, const Vector2u& outputSize)
+    : _serviceLocator{serviceLocator}
     , _activeRenderer{}
     , _rhi{}
     , _resourceManager{}
     , _renderQueue{_resourceManager}
 {
+    // Create the RHI from the provided window information (force fullscreen false for now)
+    _rhi.Initialize(outputSize, windowHandle, false);
+    _resourceManager.Initialize(_rhi);
+
+    RenderDefaultsLibrary::Initialize(_rhi);
+
+    _activeRenderer = Ptr::NewUnique<DeferredRenderer>();
+    _activeRenderer->Initialize(outputSize, BuildRendererContext());
+
+    InitializeGlobalResources();
+
+    // Register Globally Accessible Services
+    _serviceLocator.RegisterUnmanaged<IGraphicsResourceManager>(&_resourceManager);
+    _serviceLocator.RegisterUnmanaged<IMaterialManager>(&_resourceManager);
+    _serviceLocator.RegisterUnmanaged<IRenderHardwareInterface>(&_rhi);
 }
 
 GraphicsEngine::~GraphicsEngine()
 {
+    _serviceLocator.Unregister<IGraphicsResourceManager>();
+    _serviceLocator.Unregister<IMaterialManager>();
+    _serviceLocator.Unregister<IRenderHardwareInterface>();
 }
 
 // ------------------------------------------------------------
@@ -66,82 +82,20 @@ bool GraphicsEngine::IsInitialized() const
     return _activeRenderer.IsValid();
 }
 
-void GraphicsEngine::Initialize(const GraphicsEngineSettings& settings)
-{
-    _activeSettings = settings;
-    _rhi.Initialize(GetRenderSize().VectorCast<Uint32>(), settings.output.nativeWindowHandle, settings.output.fullscreen);
-    _resourceManager.Initialize(_rhi);
-
-    RenderDefaultsLibrary::Initialize(_rhi);
-
-    switch (settings.renderer.rendererType)
-    {
-    case ERendererType::Forward: {
-        _activeRenderer = Ptr::NewUnique<ForwardRenderer>();
-        break;
-    }
-    case ERendererType::Deferred: {
-        _activeRenderer = Ptr::NewUnique<DeferredRenderer>();
-        break;
-    }
-    }
-
-    _activeRenderer->Initialize(GetRenderSize().VectorCast<Uint32>(), BuildRendererContext());
-
-    TextureSampler buildSampler;
-
-    _rhi.CreateSampler(ESamplerAddressMode::Wrap, ESamplerType::Trilinear, buildSampler);
-    _samplers.Insert(ESamplerSlot::TrilinearWrap, buildSampler);
-
-    _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Trilinear, buildSampler);
-    _samplers.Insert(ESamplerSlot::TrilinearClamp, buildSampler);
-
-    _rhi.CreateSampler(ESamplerAddressMode::Wrap, ESamplerType::Point, buildSampler);
-    _samplers.Insert(ESamplerSlot::PointWrap, buildSampler);
-
-    _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Point, buildSampler);
-    _samplers.Insert(ESamplerSlot::PointClamp, buildSampler);
-
-    _rhi.CreateBackbuffer(_backbuffer);
-
-    _rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
-    _lightBuffer.SetDebugName("Buffer_Light");
-
-    _rhi.CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
-    _objectBuffer.SetDebugName("Buffer_Object");
-
-    _rhi.CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
-    _frameBuffer.SetDebugName("Buffer_Frame");
-}
-
 void GraphicsEngine::Shutdown()
 {
     _samplers.Clear();
     _rhi = RenderHardwareInterface{};
 }
 
-void GraphicsEngine::UpdateSettings(const GraphicsEngineSettings& newSettings)
+void ost::GraphicsEngine::SetRenderSize(const Vector2u& size)
 {
-    OST_ASSERT(IsInitialized(), "Update Settings requires a correctly initialized RHI");
+    _activeRenderer->Resize(size, BuildRendererContext());
+}
 
-    // Cache the active window handle as this will not be allowed to be changed
-    // Changing this requires a full restart of the Graphics Engine
-    void* const windowHandle = _activeSettings.output.nativeWindowHandle;
-    // Same for renderer type
-    ERendererType rendererType = _activeSettings.renderer.rendererType;
-
-    const Vector2u newRenderSize = ::CalculateRenderSize(newSettings.output.clientSize, newSettings.output.renderSize);
-    const Vector2u oldRenderSize = ::CalculateRenderSize(_activeSettings.output.clientSize, _activeSettings.output.renderSize);
-
-    if (newRenderSize != oldRenderSize)
-    {
-        _rhi.ResizeBackbuffer(newRenderSize, _backbuffer);
-        _activeRenderer->Resize(newRenderSize, BuildRendererContext());
-    }
-
-    _activeSettings = newSettings;
-    _activeSettings.output.nativeWindowHandle = windowHandle; // Restore with cached
-    _activeSettings.renderer.rendererType = rendererType;
+void ost::GraphicsEngine::SetOutputSize(const Vector2u& size)
+{
+    _rhi.ResizeBackbuffer(size, _backbuffer);
 }
 
 // ------------------------------------------------------------
@@ -154,16 +108,6 @@ IRenderer& GraphicsEngine::GetRenderer()
 IRenderQueue& GraphicsEngine::GetRenderQueue()
 {
     return _renderQueue;
-}
-
-IGraphicsResourceManager& GraphicsEngine::GetResourceManager()
-{
-    return _resourceManager;
-}
-
-IMaterialManager& ost::GraphicsEngine::GetMaterialManager()
-{
-    return _resourceManager;
 }
 
 void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
@@ -179,9 +123,7 @@ void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
     _rhi.SetSampler(_samplers[ESamplerSlot::PointClamp], PipelineConstant::Get(ESamplerSlot::PointClamp));
 
     // Update the buffers based on the command queue
-    // Not binding these at this point :)
     UpdateFrameBuffer();
-    UpdateLightBuffer();
 
     // Execute commands under current renderer
     _activeRenderer->ExecuteCommands(_renderQueue, BuildRendererContext());
@@ -206,27 +148,41 @@ void ost::GraphicsEngine::Present()
     _rhi.Present();
 }
 
-const IRenderHardwareInterface& GraphicsEngine::GetRenderHardwareInterface() const
+// ------------------------------------------------------------
+
+void ost::GraphicsEngine::InitializeGlobalResources()
 {
-    return _rhi;
+    TextureSampler buildSampler;
+
+    _rhi.CreateSampler(ESamplerAddressMode::Wrap, ESamplerType::Trilinear, buildSampler);
+    _samplers.Insert(ESamplerSlot::TrilinearWrap, buildSampler);
+
+    _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Trilinear, buildSampler);
+    _samplers.Insert(ESamplerSlot::TrilinearClamp, buildSampler);
+
+    _rhi.CreateSampler(ESamplerAddressMode::Wrap, ESamplerType::Point, buildSampler);
+    _samplers.Insert(ESamplerSlot::PointWrap, buildSampler);
+
+    _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Point, buildSampler);
+    _samplers.Insert(ESamplerSlot::PointClamp, buildSampler);
+
+    _rhi.CreateBackbuffer(_backbuffer);
+
+    _rhi.CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
+    _objectBuffer.SetDebugName("Buffer_Object");
+
+    _rhi.CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
+    _frameBuffer.SetDebugName("Buffer_Frame");
 }
 
 // ------------------------------------------------------------
 
 RendererContext ost::GraphicsEngine::BuildRendererContext()
 {
-    return RendererContext(_rhi, _resourceManager, _frameBuffer, _objectBuffer, _lightBuffer);
+    return RendererContext(_rhi, _resourceManager, _frameBuffer, _objectBuffer);
 }
 // ------------------------------------------------------------
 
-Vector2f GraphicsEngine::GetRenderSize() const
-{
-    const Vector2f clientSize = _activeSettings.output.clientSize.VectorCast<Float32>();
-    const Vector2f renderDimensions = {clientSize.X * _activeSettings.output.renderSize.X, clientSize.Y * _activeSettings.output.renderSize.Y};
-    return renderDimensions;
-}
-
-// ------------------------------------------------------------
 
 void ost::GraphicsEngine::UpdateFrameBuffer()
 {
@@ -236,28 +192,6 @@ void ost::GraphicsEngine::UpdateFrameBuffer()
     frameBufferData.inverseView = _renderQueue.GetView().viewInverse;
     frameBufferData.viewLocation = _renderQueue.GetView().viewInverse.ExtractTranslation();
     _rhi.UpdateBuffer(_frameBuffer, &frameBufferData, sizeof(FrameBufferStructure));
-}
-
-void ost::GraphicsEngine::UpdateLightBuffer()
-{
-    Uint32 lightCount = 0;
-
-    LightsBufferStructure bufferData = {};
-
-    for (const auto& cmd : _renderQueue.GetLightCommands())
-    {
-        if (lightCount == 8)
-        {
-            break;
-        }
-        auto& thisLight = bufferData.lights[lightCount];
-        thisLight.FromLightData(cmd.cmdData);
-        lightCount++;
-    }
-
-    bufferData.numLights = lightCount;
-
-    _rhi.UpdateBuffer(_lightBuffer, &bufferData, sizeof(LightsBufferStructure));
 }
 
 // ------------------------------------------------------------

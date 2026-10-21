@@ -9,20 +9,20 @@
 
 namespace ost
 {
-    class WorldContext;
     class Actor;
+    class GameWorld;
 
     class Scene
     {
     public:
-        Scene(WorldContext& worldContext);
+        Scene(GameWorld& gameWorld);
         ~Scene();
 
         Actor* CreateActor();
 
     private:
         List<UniquePtr<Actor>> _actors;
-        WorldContext& _worldContext;
+        GameWorld& _gameWorld;
     };
 } // namespace ost
 

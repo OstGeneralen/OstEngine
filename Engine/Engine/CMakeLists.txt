@@ -7,20 +7,15 @@ add_library(${PROJECT_NAME} STATIC
     Include/Engine/Asset/IAssetManager.h
     Include/Engine/Components/CameraComponent.h
     Include/Engine/Components/StaticMeshComponent.h
-    Include/Engine/Game/GameInterface.h
+    Include/Engine/Game/GameBase.h
     Include/Engine/World/Actor.h
     Include/Engine/World/Component.h
-    Include/Engine/World/ComponentContext.h
     Include/Engine/World/IComponentInitializer.h
     Include/Engine/World/Scene.h
     Include/Engine/World/SceneGraph.h
     Include/Engine/World/Transform.h
-    Include/Engine/World/WorldContext.h
-    Include/Engine/EngineContext.h
     Include/Engine/IOstEngine.h
-    Include/Engine/System/InputReader.h
     Include/Engine/Asset/AssetType.h
-    Include/Engine/Game/GameContext.h
     Include/Engine/Components/DirectionalLightComponent.h
     Include/Engine/Configuration/RuntimeConfig.h
     Include/Engine/Components/SpotLightComponent.h
@@ -45,10 +40,9 @@ add_library(${PROJECT_NAME} STATIC
     Source/World/Scene.cpp
     Source/World/SceneGraph.cpp
     Source/System/InputReader.cpp
+    Include/Engine/System/InputReader.h
     Source/OstEngine.cpp
     Source/OstEngine.h
-    Source/OstEngineContext.h
-    Source/OstEngineContext.cpp
     Source/Asset/Loaders/MaterialLoader.h
     Source/Asset/Loaders/MaterialLoader.cpp
     Source/Components/DirectionalLightComponent.cpp
@@ -58,6 +52,13 @@ add_library(${PROJECT_NAME} STATIC
     Source/Components/SpotLightComponent.cpp
     Include/Engine/Platform/Window.h
     Source/Platform/Win32Window.cpp
+    Include/Engine/System/IInputReader.h
+    Include/Engine/System/ITimeProvider.h
+    Source/System/TimeProvider.h
+    Source/System/TimeProvider.cpp
+    Include/Engine/World/ISceneManager.h
+    Source/World/SceneManager.h
+    Source/World/SceneManager.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

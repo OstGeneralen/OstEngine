@@ -1,20 +1,17 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <Memory/UniquePtr.h>
+#include "Engine/World/Actor.h"
+#include "Engine/World/Scene.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class Scene;
-
-    class GameContext
+    class ISceneManager
     {
     public:
-        virtual ~GameContext() = default;
-
-        virtual UniquePtr<Scene> CreateScene(bool makeActive = true) = 0;
-        virtual void SetActiveScene(Scene& scene) = 0;
+        virtual Scene* CreateScene() = 0;
+        virtual void SetActiveScene(Scene* pScene) = 0;
     };
 } // namespace ost
 

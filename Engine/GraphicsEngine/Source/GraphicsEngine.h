@@ -3,8 +3,8 @@
 #include "GraphicsEngine/IGraphicsEngine.h"
 
 // Resources
-#include "Objects/Texture.h"
 #include "Objects/Buffer.h"
+#include "Objects/Texture.h"
 #include "Resources/GraphicsResourceManager.h"
 
 // Rendering
@@ -30,44 +30,39 @@ namespace ost
     class GraphicsEngine : public IGraphicsEngine
     {
     public:
-        GraphicsEngine();
+        GraphicsEngine(ServiceLocator& serviceLocator, void* windowHandle, const Vector2u& outputSize);
         ~GraphicsEngine();
 
         bool IsInitialized() const;
 
-        void Initialize(const GraphicsEngineSettings& settings);
         void Shutdown();
 
         // BEGIN IGraphicsEngine
-        virtual void UpdateSettings(const GraphicsEngineSettings& settings) override;
+        void SetRenderSize(const Vector2u& renderSize) override;
+        void SetOutputSize(const Vector2u& outputSize) override;
 
         virtual IRenderer& GetRenderer() override;
         virtual IRenderQueue& GetRenderQueue() override;
-        virtual IGraphicsResourceManager& GetResourceManager() override;
-        virtual IMaterialManager& GetMaterialManager() override;
 
         void ExecuteAndClearCommandQueue() override;
         void DrawRendererOutput(ERenderOutputTexture presentOutputTexture) override;
         void Present() override;
-
-        const IRenderHardwareInterface& GetRenderHardwareInterface() const override;
         // END IGraphicsEngine
 
     private:
+        void InitializeGlobalResources();
+
         RendererContext BuildRendererContext();
 
-        Vector2f GetRenderSize() const;
-
         void UpdateFrameBuffer();
-        void UpdateLightBuffer();
+
+        ServiceLocator& _serviceLocator;
 
         Texture _backbuffer;
         Buffer _frameBuffer;
-        Buffer _lightBuffer;
         Buffer _objectBuffer;
         Mesh _blitMesh;
 
-        GraphicsEngineSettings _activeSettings;
         UniquePtr<IRenderer> _activeRenderer;
 
         Map<ESamplerSlot, TextureSampler> _samplers;

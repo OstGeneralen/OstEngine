@@ -1,18 +1,22 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "Asset/AssetManager.h"
-#include "Engine/EngineContext.h"
-#include "Engine/Game/GameContext.h"
-#include "Engine/Game/GameInterface.h"
+#include "Engine/Game/GameBase.h"
 #include "Engine/IOstEngine.h"
-#include "Engine/System/InputReader.h"
-#include "OstEngineContext.h"
+
+// World
 #include "World/GameWorld.h"
+#include "World/SceneManager.h"
+
+// System
+#include "Engine/System/InputReader.h"
+#include "System/TimeProvider.h"
 
 #include <OstTypes.h>
 
 #include <GraphicsEngine/Rendering/IRenderer.h>
 #include <Memory/UniquePtr.h>
+#include <Services/ServiceLocator.h>
 #include <Utility/Timer.h>
 
 // ------------------------------------------------------------
@@ -24,46 +28,33 @@ namespace ost
 
     class OstEngine;
 
-    class OstGameContext : public GameContext
-    {
-    public:
-        OstGameContext(OstEngine& instance);
-
-        UniquePtr<Scene> CreateScene(bool makeActive) override;
-        void SetActiveScene(Scene& scene) override;
-
-    private:
-        OstEngine& _engineInstance;
-    };
-
     class OstEngine : public IOstEngine
     {
-        friend OstEngineContext;
-        friend OstGameContext;
-
     public:
-        OstEngine();
+        OstEngine(ServiceLocator& appServiceLocator);
         ~OstEngine();
 
-        void Initialize(UniquePtr<IGame>&& gameInstance, const OstEngineSettings& settings);
+        // BEGIN IOstEngine
+        void SetGameInstance(GameBase* pGameInstance) override;
 
-    public: // IOstEngine
         void Tick() override;
         void RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetRenderer) override;
 
-        InputReader& GetInputReader();
+        virtual ServiceLocator& GetServiceLocator() override;
+        InputReader& GetInputReader() override;
+        // END IOstEngine
+
 
     private:
-        Timer _timer;
-        GameWorld _gameWorld;
+        ServiceLocator& _appServiceLocator;
+
         InputReader _input;
+        TimeProvider _time;
+        
         AssetManager _assetManager;
+        SceneManager _sceneManager;
 
-        OstEngineContext _engineContext;
-        OstGameContext _gameContext;
-
-        UniquePtr<IGame> _gameInstance;
-        Scene* _pActiveScene;
+        GameBase* _pGameInstance;
     };
 } // namespace ost
 

@@ -31,6 +31,11 @@ void ost::Texture::SetDebugName(const std::string& name) const
     }
 }
 
+const void* ost::Texture::GetNativeResource() const
+{
+    return _srv.Get();
+}
+
 // ------------------------------------------------------------
 // ------------------------------------------------------------
 // ------------------------------------------------------------

@@ -1,8 +1,8 @@
 {
-    "materialClass": "Engine/Mat_DefaultLit",
+    "materialClass": "Engine/Materials/Mat_DefaultLit.json",
     "textures":[
-        {"slot": 0, "texture": "Game/Leather_Albedo"},
-        {"slot": 1, "texture": "Game/Leather_Normal"},
-        {"slot": 2, "texture": "Game/Leather_ORM"}
+        {"slot": 0, "texture": "Assets/Textures/Leather_Albedo.dds"},
+        {"slot": 1, "texture": "Assets/Textures/Leather_Normal.dds"},
+        {"slot": 2, "texture": "Assets/Textures/Leather_ORM.dds"}
     ]
 }

@@ -5,6 +5,9 @@
 #include "Loaders/MaterialLoader.h"
 #include "Loaders/ModelLoader.h"
 
+#include <GraphicsEngine/Materials/IMaterialManager.h>
+#include <GraphicsEngine/Resources/IGraphicsResourceManager.h>
+
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -72,43 +75,14 @@ namespace ost
 
 // ------------------------------------------------------------
 
-void ost::AssetManager::Initialize(IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager, const AssetManagerConfig& config)
+ost::AssetManager::AssetManager(ServiceLocator& serviceLocator)
+    : _serviceLocator{serviceLocator}
+    , _typeContainers{}
 {
-    _pGfxResourceManager = &gfxResourceManager;
-    _pMaterialManager = &materialManager;
-
     _typeContainers.Insert(TypeID::Get<HModel>(), AssetTypeContainer(LoadModel, nullptr, nullptr, nullptr));
-    _typeContainers.Insert(TypeID::Get<HTexture>(), AssetTypeContainer(LoadImage, nullptr, nullptr, nullptr));
+    _typeContainers.Insert(TypeID::Get<ITexture>(), AssetTypeContainer(LoadImage, nullptr, nullptr, nullptr));
     _typeContainers.Insert(TypeID::Get<IMaterial>(), AssetTypeContainer(LoadMaterial, CreateMaterial, GetMaterial, CGetMaterial));
     _typeContainers.Insert(TypeID::Get<IMaterialInstance>(), AssetTypeContainer(LoadMaterialInstance, CreateMaterialInstance, GetMaterialInstance, CGetMaterialInstance));
-
-    _config = config;
-    _config.engineAssetsPathConfig.path = std::filesystem::weakly_canonical(_config.engineAssetsPathConfig.path).string();
-    _config.gameAssetsPathConfig.path = std::filesystem::weakly_canonical(_config.gameAssetsPathConfig.path).string();
-
-    ScanAssets();
-}
-
-void ost::AssetManager::ScanAssets()
-{
-    _assetNameToPath.Clear();
-
-    // Build Engine Assets tree
-    auto assetTreeBuild = [this](const std::string& prefix, const std::string& root) {
-        for (const auto& directoryEntry : std::filesystem::recursive_directory_iterator{root})
-        {
-            if (directoryEntry.is_regular_file())
-            {
-                std::stringstream nameStream;
-                nameStream << prefix << '/';
-                nameStream << directoryEntry.path().stem().string();
-                _assetNameToPath.Insert(nameStream.str(), std::filesystem::weakly_canonical(directoryEntry.path()).string());
-            }
-        }
-    };
-
-    assetTreeBuild(_config.engineAssetsPathConfig.prefix, _config.engineAssetsPathConfig.path);
-    assetTreeBuild(_config.gameAssetsPathConfig.prefix, _config.gameAssetsPathConfig.path);
 }
 
 // ------------------------------------------------------------
@@ -132,27 +106,19 @@ SizeType ost::AssetManager::CreateAsset(TypeID assetType, const std::string& nam
     return rawHandle;
 }
 
-SizeType ost::AssetManager::LoadFromFile(TypeID assetType, const std::string& name)
+SizeType ost::AssetManager::LoadFromFile(TypeID assetType, const std::string& path)
 {
     auto& typeContainer = _typeContainers[assetType];
 
-    if (const SizeType* foundHandle = typeContainer.nameToHandle.TryGetValue(name))
+    if (const SizeType* foundHandle = typeContainer.nameToHandle.TryGetValue(path))
     {
         // Already loaded so just return the handle :)
         return *foundHandle;
     }
 
-    if (const std::string* path = _assetNameToPath.TryGetValue(name))
-    {
-        const SizeType rawHandle = _typeContainers[assetType].loadFunc(*path, MakeContext());
-
-        typeContainer.nameToHandle.Insert(name, rawHandle);
-
-        return rawHandle;
-    }
-
-    // Todo: Assert/Warn?
-    return 0;
+    const SizeType rawHandle = _typeContainers[assetType].loadFunc(path, MakeContext());
+    typeContainer.nameToHandle.Insert(path, rawHandle);
+    return rawHandle;
 }
 
 SizeType ost::AssetManager::GetHandleRaw(TypeID typeID, const std::string& name) const
@@ -162,12 +128,12 @@ SizeType ost::AssetManager::GetHandleRaw(TypeID typeID, const std::string& name)
 
 AssetContext ost::AssetManager::MakeContext()
 {
-    return AssetContext(*this, *_pGfxResourceManager, *_pMaterialManager);
+    return AssetContext(*this, _serviceLocator.GetRequired<IGraphicsResourceManager>(), _serviceLocator.GetRequired<IMaterialManager>());
 }
 
 ConstAssetContext ost::AssetManager::MakeContext() const
 {
-    return ConstAssetContext(*this, *_pGfxResourceManager, *_pMaterialManager);
+    return ConstAssetContext(*this, _serviceLocator.GetRequired<IGraphicsResourceManager>(), _serviceLocator.GetRequired<IMaterialManager>());
 }
 
 // ------------------------------------------------------------

@@ -1,5 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "ComponentTicker.h"
+
+#include "Engine/System/ITimeProvider.h"
 #include "Engine/World/Component.h"
 
 using namespace ost;
@@ -17,17 +19,19 @@ void ost::ComponentTicker::UnregisterTicked(Uint64 handle)
     _tickList.Remove(handle);
 }
 
-void ost::ComponentTicker::TickAll(ComponentContext& ctx)
+void ost::ComponentTicker::TickAll(ServiceLocator& services)
 {
+    const Float32 deltaTime = services.GetRequired<ITimeProvider>().GetDeltaTime();
+
     for (auto componentPtr : _startList)
     {
-        componentPtr->Start(ctx);
+        componentPtr->Start();
     }
     _startList.Clear();
-    
+
     for (auto componentPtr : _tickList.GetDenseList())
     {
-        componentPtr->Update(ctx);
+        componentPtr->Update(deltaTime);
     }
 }
 

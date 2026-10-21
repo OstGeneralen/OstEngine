@@ -6,6 +6,8 @@
 #include <Engine/System/InputReader.h>
 #include <GraphicsEngine/IGraphicsEngine.h>
 #include <Memory/UniquePtr.h>
+#include <Services/ServiceLocator.h>
+#include <Engine/Game/GameBase.h>
 
 // ------------------------------------------------------------
 
@@ -28,9 +30,11 @@ namespace ost
         void Run();
 
     private:
-        GraphicsEngineSettings _graphicsEngineSettings;
+        ServiceLocator _serviceLocator;
+
         UniquePtr<IGraphicsEngine> _graphicsEngine;
         UniquePtr<IOstEngine> _coreEngine;
+        UniquePtr<GameBase> _gameInstance;
 
         Window _window;
 

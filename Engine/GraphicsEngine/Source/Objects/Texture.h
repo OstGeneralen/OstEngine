@@ -23,6 +23,8 @@ namespace ost
 
         void SetDebugName(const std::string& name) const;
 
+        const void* GetNativeResource() const override;
+
     private:
         ComPtr<RHIRenderTarget> _rtv;
         ComPtr<RHIShaderResource> _srv;

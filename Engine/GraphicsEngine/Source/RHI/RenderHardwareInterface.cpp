@@ -534,12 +534,12 @@ ERHIPlatform RenderHardwareInterface::GetBackendPlatform() const
     return ERHIPlatform::DX11;
 }
 
-const void* RenderHardwareInterface::GetNativeDevice() const
+void* RenderHardwareInterface::GetNativeDevice() const
 {
     return _device.Get();
 }
 
-const void* RenderHardwareInterface::GetNativeContext() const
+void* RenderHardwareInterface::GetNativeContext() const
 {
     return _immediateContext.Get();
 }

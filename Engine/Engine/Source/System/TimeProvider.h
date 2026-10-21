@@ -1,26 +1,28 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "Engine/System/ITimeProvider.h"
+
 #include <OstTypes.h>
-#include <Memory/UniquePtr.h>
+
+#include <Utility/Timer.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class IGame;
-    extern UniquePtr<IGame> CreateGameInstance();
-    class GameContext;
-
-    class IGame
+    class TimeProvider : public ITimeProvider
     {
     public:
-        friend class OstEngine;
+        void Update();
 
-        virtual ~IGame() = default;
+        // BEGIN ITimeProvider
+        Float32 GetDeltaTime() const override;
+        Float32 GetClampedDeltaTime() const override;
+        Float64 GetTotalTime() const override;
+        // END ITimeProvider
 
-        virtual void Load(GameContext& context) = 0;
-        virtual void Unload(GameContext& context) = 0;
-        virtual void Update(GameContext& context) = 0;
+    private:
+        Timer _timer;
     };
 } // namespace ost
 

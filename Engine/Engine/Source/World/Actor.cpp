@@ -1,12 +1,14 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Engine/World/Actor.h"
 
+#include "World/GameWorld.h"
+
 using namespace ost;
 
 // ------------------------------------------------------------
 
-Actor::Actor(WorldContext& worldContext)
-    : _worldContext{worldContext}
+Actor::Actor(GameWorld& gameWorld)
+    : _gameWorld{gameWorld}
 {
 }
 
@@ -14,13 +16,13 @@ Actor::Actor(WorldContext& worldContext)
 
 ActorComponent& Actor::AddComponent(TypeID compType, UniquePtr<ActorComponent>&& component)
 {
-    _worldContext.RegisterComponent(*this, *component);
+    _gameWorld.RegisterComponent(*this, *component);
     return *_components.Insert(compType, std::move(component));
 }
 
 void Actor::RemoveComponent(TypeID componentType)
 {
-    _worldContext.UnregisterComponent(*this, *_components[componentType]);
+    _gameWorld.UnregisterComponent(*this, *_components[componentType]);
     _components.Remove(componentType);
 }
 

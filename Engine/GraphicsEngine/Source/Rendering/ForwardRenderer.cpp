@@ -21,6 +21,9 @@ void ost::ForwardRenderer::Initialize(const Vector2u& renderSize, RendererContex
     _currentRenderSize = renderSize.VectorCast<Float32>();
 
     // Build resources
+    context.rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
+    _lightBuffer.SetDebugName("fwd_lightBuffer");
+
     context.rhi.CreateDepthStencilTexture(renderSize, false, _depthStencil);
     _depthStencil.SetDebugName("fwd_depthStencil");
 }
@@ -62,7 +65,20 @@ void ost::ForwardRenderer::ExecuteCommands(const IRenderQueue& queueInterface, R
     rhi.SetRenderTarget(_color, &_depthStencil);
 
     rhi.SetBuffer(context.frameBuffer, PipelineConstant::Get(EBufferSlot::FrameBuffer), FullPipeline);
-    rhi.SetBuffer(context.lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), FullPipeline);
+
+    const auto& lightCmds = queue.GetLightCommands();
+    LightsBufferStructure lightBufferData = {};
+    lightBufferData.numLights = 0;
+
+    for (SizeType lightIndex = 0; lightIndex < 8; ++lightIndex)
+    {
+        const auto& lightCmd = lightCmds[lightIndex];
+        lightBufferData.lights[lightIndex].FromLightData(lightCmd.cmdData);
+        lightBufferData.numLights = lightIndex;
+    }
+
+    rhi.UpdateBuffer(_lightBuffer, &lightBufferData, sizeof(LightsBufferStructure));
+    rhi.SetBuffer(_lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), FullPipeline);
 
     // Iterate all actual draw commands and draw them
     const Mesh* currentMesh = nullptr;

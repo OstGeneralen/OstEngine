@@ -14,7 +14,7 @@
     {
         "title": "Ost Window",
         "fullscreen": false,
-        "resolution": [900,900]
+        "resolution": [800,400]
     },
     "rendering":
     {

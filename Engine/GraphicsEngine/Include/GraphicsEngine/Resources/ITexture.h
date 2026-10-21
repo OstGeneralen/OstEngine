@@ -8,6 +8,8 @@ namespace ost
     struct ITexture
     {
         virtual ~ITexture() = default;
+
+        virtual const void* GetNativeResource() const = 0;
     };
 }
 

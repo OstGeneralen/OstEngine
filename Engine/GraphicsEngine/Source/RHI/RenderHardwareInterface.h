@@ -74,8 +74,8 @@ namespace ost
         // BEGIN IRenderHardwareInterface
         ERHIPlatform GetBackendPlatform() const override;
         
-        const void* GetNativeDevice() const override;
-        const void* GetNativeContext() const override;
+        void* GetNativeDevice() const override;
+        void* GetNativeContext() const override;
         // END IRenderHardwareInterface
 
     private:

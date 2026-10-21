@@ -1,21 +1,19 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <Engine/Game/GameInterface.h>
+#include <Engine/Game/GameBase.h>
 #include <Engine/World/Scene.h>
 #include <Memory/UniquePtr.h>
 
-
 // ------------------------------------------------------------
 
 // ------------------------------------------------------------
 
-class Game : public ost::IGame
+class Game : public ost::GameBase
 {
 public:
-    void Load(ost::GameContext& context) override;
-    void Unload(ost::GameContext& context) override;
-
-    void Update(ost::GameContext& context) override;
+    void Load(ost::IAssetManager& assets) override;
+    void Unload(ost::IAssetManager& assets) override;
+    void Update(Float32 deltaTime) override;
 
 private:
     ost::UniquePtr<ost::Scene> _scene;

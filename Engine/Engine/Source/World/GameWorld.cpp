@@ -2,6 +2,8 @@
 #include "GameWorld.h"
 
 #include "ComponentInitializer.h"
+#include "Engine/World/Actor.h"
+#include "Engine/World/Component.h"
 
 // ------------------------------------------------------------
 
@@ -17,9 +19,9 @@ GameWorld::~GameWorld()
 {
 }
 
-void GameWorld::Tick(ComponentContext& context)
+void GameWorld::Tick(ServiceLocator& serviceLocator)
 {
-    _ticker.TickAll(context);
+    _ticker.TickAll(serviceLocator);
     _sceneGraph.ReconcileTransforms();
 }
 
