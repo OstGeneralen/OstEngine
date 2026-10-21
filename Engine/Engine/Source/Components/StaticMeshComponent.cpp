@@ -2,7 +2,6 @@
 #include "Engine/Components/StaticMeshComponent.h"
 
 #include "Engine/Asset/IAssetManager.h"
-#include "Engine/EngineContext.h"
 #include "Engine/World/Actor.h"
 
 // ------------------------------------------------------------
@@ -19,11 +18,6 @@ void StaticMeshComponent::SetModel(HModel hnd)
     }
 }
 
-void StaticMeshComponent::SetModel(const std::string& modelName)
-{
-    SetModel(EngineContext::Get().Assets().GetHandle<HModel>(modelName));
-}
-
 void StaticMeshComponent::SetMaterial(HMaterialInstance hnd, Uint32 index)
 {
     if (_pSceneGraph)
@@ -32,18 +26,13 @@ void StaticMeshComponent::SetMaterial(HMaterialInstance hnd, Uint32 index)
     }
 }
 
-void StaticMeshComponent::SetMaterial(const std::string& materialName, Uint32 index)
-{
-    SetMaterial(EngineContext::Get().Assets().GetHandle<IMaterialInstance>(materialName), index);
-}
-
-IMaterialInstance* ost::StaticMeshComponent::GetMaterial(Uint32 index)
+HMaterialInstance ost::StaticMeshComponent::GetMaterialHandle(Uint32 index)
 {
     if (_pSceneGraph)
     {
-        return &EngineContext::Get().Assets().GetAsset<IMaterialInstance>(_pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).materialHandles[index]);
+        return _pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).materialHandles[index];
     }
-    return nullptr;
+    return {};
 }
 
 // ------------------------------------------------------------

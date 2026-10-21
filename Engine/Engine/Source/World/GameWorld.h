@@ -1,26 +1,27 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/World/ComponentContext.h"
 #include "Engine/World/SceneGraph.h"
-#include "Engine/World/WorldContext.h"
 #include "World/ComponentTicker.h"
+
+#include <Services/ServiceLocator.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class GameWorld : public WorldContext
+    class Actor;
+
+    class GameWorld
     {
     public:
         GameWorld();
         ~GameWorld();
 
-        void Tick(ComponentContext& context);
+        void Tick(ServiceLocator& services);
         const SceneGraph& GetSceneGraph() const;
 
-    public:
-        void RegisterComponent(Actor& actor, ActorComponent& component) override;
-        void UnregisterComponent(Actor& actor, ActorComponent& component) override;
+        void RegisterComponent(Actor& actor, ActorComponent& component);
+        void UnregisterComponent(Actor& actor, ActorComponent& component);
 
     private:
         ComponentTicker _ticker;

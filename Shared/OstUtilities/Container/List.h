@@ -17,6 +17,8 @@ namespace ost
     class List
     {
     public:
+        constexpr static SizeType Npos = static_cast<SizeType>(-1);
+
         List() = default;
         List(const List&) = default;
         List(List&&) noexcept = default;

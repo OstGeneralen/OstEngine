@@ -1,8 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/World/Transform.h"
 #include "Engine/World/Component.h"
-#include "Engine/World/WorldContext.h"
+#include "Engine/World/Transform.h"
 
 #include <Container/Map.h>
 #include <Memory/UniquePtr.h>
@@ -12,13 +11,15 @@
 
 namespace ost
 {
+    class GameWorld;
+
     class Actor
     {
     public:
         Transform transform;
 
     public:
-        Actor(WorldContext& worldContext);
+        Actor(GameWorld& gameWorld);
 
         ActorComponent& AddComponent(TypeID componentType, UniquePtr<ActorComponent>&& component);
         void RemoveComponent(TypeID componentType);
@@ -50,7 +51,7 @@ namespace ost
         }
 
     private:
-        WorldContext& _worldContext;
+        GameWorld& _gameWorld;
         Map<TypeID, UniquePtr<ActorComponent>> _components;
     };
 } // namespace ost

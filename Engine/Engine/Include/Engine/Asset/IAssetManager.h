@@ -46,9 +46,9 @@ namespace ost
         }
 
         template <typename TAsset>
-        AssetTraits<TAsset>::HandleType Load(const std::string& name)
+        AssetTraits<TAsset>::HandleType Load(const std::string& path)
         {
-            return AssetTraits<TAsset>::HandleType(LoadFromFile(TypeID::Get<TAsset>(), name));
+            return AssetTraits<TAsset>::HandleType(LoadFromFile(TypeID::Get<TAsset>(), path));
         }
 
     protected:

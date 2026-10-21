@@ -10,18 +10,26 @@
 
 namespace ost
 {
+
     class ServiceLocator
     {
     public:
-        void Register(TypeID registerType, UniquePtr<void>&& servicePtr);
+        void RegisterManaged(TypeID registerType, UniquePtr<void>&& servicePtr);
+        void RegisterUnmanaged(TypeID serviceType, void* pService);
         void Unregister(TypeID serviceType);
         void* Get(TypeID registerType);
         const void* Get(TypeID registerType) const;
 
         template <typename T>
-        void Register(UniquePtr<T>&& ptr)
+        void RegisterManaged(UniquePtr<T>&& ptr)
         {
             Register(TypeID::Get<T>(), std::move(ptr));
+        }
+
+        template <typename T>
+        void RegisterUnmanaged(T* ptr)
+        {
+            RegisterUnmanaged(TypeID::Get<T>(), ptr);
         }
 
         template <typename T>
@@ -55,7 +63,18 @@ namespace ost
         }
 
     private:
-        Map<TypeID, UniquePtr<void>> _registry;
+        struct ServiceRegistration
+        {
+            ServiceRegistration() = default;
+            ServiceRegistration(ServiceRegistration&&) noexcept = default;
+            ServiceRegistration& operator=(ServiceRegistration&&) noexcept = default;
+
+            UniquePtr<void> pOwned;   // Only valid if owned == true
+            void* pUnowned = nullptr; // Only valid if owned == false
+            bool owned = false;       // true means the locator owns this service lifetime
+        };
+
+        Map<TypeID, ServiceRegistration> _registry;
     };
 } // namespace ost
 

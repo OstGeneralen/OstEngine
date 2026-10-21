@@ -27,6 +27,8 @@ namespace ost
     private:
         Vector2f _currentRenderSize;
 
+        Buffer _lightBuffer;
+
         Texture _color;
         Texture _depthStencil;
     };

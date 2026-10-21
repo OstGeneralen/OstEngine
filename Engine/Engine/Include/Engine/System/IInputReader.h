@@ -85,8 +85,13 @@ namespace ost
         virtual bool Down(EKeyboard key) const = 0;
         virtual bool Pressed(EKeyboard key) const = 0;
         virtual bool Released(EKeyboard key) const = 0;
+<<<<<<< HEAD
 
     };
+=======
+    };
+
+>>>>>>> master
 } // namespace ost
 
 // ------------------------------------------------------------

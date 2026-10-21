@@ -2,13 +2,13 @@
 #pragma once
 #include <Container/List.h>
 #include <Container/SlotMap.h>
+#include <Services/ServiceLocator.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
     class ActorComponent;
-    class ComponentContext;
 
     class ComponentTicker
     {
@@ -16,7 +16,7 @@ namespace ost
         Uint64 RegisterTicked(ActorComponent& component);
         void UnregisterTicked(Uint64 handle);
 
-        void TickAll(ComponentContext& ctx);
+        void TickAll(ServiceLocator& serviceLocator);
 
     private:
         List<ActorComponent*> _startList;

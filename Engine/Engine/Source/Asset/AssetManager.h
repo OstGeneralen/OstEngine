@@ -3,13 +3,16 @@
 #include "Engine/Asset/IAssetManager.h"
 
 #include <Container/Map.h>
-#include <GraphicsEngine/Materials/IMaterialManager.h>
-#include <GraphicsEngine/Resources/IGraphicsResourceManager.h>
+
+#include <Services/ServiceLocator.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
+    class IGraphicsResourceManager;
+    class IMaterialManager;
+
     struct AssetContext
     {
         AssetContext(IAssetManager& am, IGraphicsResourceManager& grm, IMaterialManager& mm)
@@ -65,24 +68,10 @@ namespace ost
         Map<std::string, SizeType> nameToHandle;
     };
 
-    struct AssetManagerConfig
-    {
-        struct PathConfig
-        {
-            std::string prefix;
-            std::string path;
-        };
-
-        PathConfig engineAssetsPathConfig;
-        PathConfig gameAssetsPathConfig;
-    };
-
     class AssetManager : public IAssetManager
     {
     public:
-        void Initialize(IGraphicsResourceManager& gfxResourceManager, IMaterialManager& materialManager, const AssetManagerConfig& config);
-
-        void ScanAssets();
+        AssetManager(ServiceLocator& serviceLocator);
 
     protected:
         // BEGIN IAssetManager
@@ -90,7 +79,7 @@ namespace ost
         const void GetAssetByRawHandle(TypeID assetType, SizeType rawHnd, const void** ppOut) const override;
 
         SizeType CreateAsset(TypeID assetType, const std::string& name, const void* descData) override;
-        SizeType LoadFromFile(TypeID assetType, const std::string& name) override;
+        SizeType LoadFromFile(TypeID assetType, const std::string& path) override;
         SizeType GetHandleRaw(TypeID typeID, const std::string& name) const override;
         // END IAssetManager
 
@@ -98,11 +87,7 @@ namespace ost
         AssetContext MakeContext();
         ConstAssetContext MakeContext() const;
 
-        AssetManagerConfig _config;
-        Map<std::string, std::string> _assetNameToPath;
-
-        IGraphicsResourceManager* _pGfxResourceManager;
-        IMaterialManager* _pMaterialManager;
+        ServiceLocator& _serviceLocator;
 
         Map<TypeID, AssetTypeContainer> _typeContainers;
     };

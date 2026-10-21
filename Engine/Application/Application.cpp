@@ -6,7 +6,7 @@
 #include <OstLog.h>
 
 #include <Engine/Configuration/RuntimeConfig.h>
-#include <Engine/Game/GameInterface.h>
+#include <Engine/Game/GameBase.h>
 #include <Utility/Timer.h>
 
 using namespace ost;
@@ -15,29 +15,21 @@ using namespace ost;
 
 void Application::Startup()
 {
+    // Initialize Logger Subsystem
     Log::RegisterLogSink(Ptr::NewUnique<CoutLogSink>());
 
+    // Load the config and create window from it
     RuntimeConfig config;
     config.LoadFromFile("Configuration.json");
-
     _window.Create(*this, config.window.title, config.window.resolution, config.window.fullscreen);
 
-    // Create gfx settings and init graphics engine
-    _graphicsEngineSettings.output.clientSize = _window.GetClientSize();
-    _graphicsEngineSettings.output.renderSize = config.rendering.renderScale;
-    _graphicsEngineSettings.output.nativeWindowHandle = _window.GetNativeWindowHandle();
-    _graphicsEngineSettings.output.fullscreen = config.window.fullscreen;
+    // Build Core Engine + Graphics Engine
+    _coreEngine = IOstEngine::Create(_serviceLocator);
+    _graphicsEngine = IGraphicsEngine::Create(_serviceLocator, _window.GetNativeWindowHandle(), _window.GetClientSize());
+    _gameInstance = CreateGameInstance();
 
-    _graphicsEngineSettings.renderer.rendererType = config.rendering.renderer;
-    _graphicsEngineSettings.renderer.clearColor = Colors::Black;
+    _coreEngine->SetGameInstance(_gameInstance.Get());
 
-    _graphicsEngine = IGraphicsEngine::CreateNew(_graphicsEngineSettings);
-
-    OstEngineSettings coreEngineSettings;
-    coreEngineSettings.pGfxEngine = _graphicsEngine.Get();
-    coreEngineSettings.assetsCfg = config.assets;
-
-    _coreEngine = IOstEngine::CreateNew(CreateGameInstance(), coreEngineSettings);
 }
 
 void ost::Application::Shutdown()

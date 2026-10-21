@@ -10,8 +10,8 @@
 
 namespace ost
 {
+    class ServiceLocator;
     class Actor;
-    class ComponentContext;
     class IComponentInitializer;
     class IAssetManager;
     class ComponentTicker;
@@ -41,8 +41,8 @@ namespace ost
         virtual void Unload(IAssetManager& assetManager) OPTIONAL_COMPONENT_METHOD;
 
         // Start & Update are only called if the "Ticked" flag is set
-        virtual void Start(ComponentContext& ctx) OPTIONAL_COMPONENT_METHOD;
-        virtual void Update(ComponentContext& ctx) OPTIONAL_COMPONENT_METHOD;
+        virtual void Start() OPTIONAL_COMPONENT_METHOD;
+        virtual void Update(Float32 deltaTime) OPTIONAL_COMPONENT_METHOD;
 
         Actor& GetOwner();
         const Actor& GetOwner() const;

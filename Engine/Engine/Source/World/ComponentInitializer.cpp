@@ -1,8 +1,9 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "ComponentInitializer.h"
 
-#include "Engine/World/Component.h"
 #include "ComponentTicker.h"
+#include "Engine/World/Component.h"
+#include "OstEngine.h"
 
 using namespace ost;
 
@@ -43,12 +44,14 @@ void ComponentInitializer::DestroyAsTickedComponent(ActorComponent& component)
 
 void ost::ComponentInitializer::RequestLoad(ActorComponent& component)
 {
-    component.Load(*_pAssetManager);
+    auto& services = pEngine->GetServiceLocator();
+    component.Load(services.GetRequired<IAssetManager>());
 }
 
 void ost::ComponentInitializer::RequestUnload(ActorComponent& component)
 {
-    component.Unload(*_pAssetManager);
+    auto& services = pEngine->GetServiceLocator();
+    component.Unload(services.GetRequired<IAssetManager>());
 }
 
 // ------------------------------------------------------------

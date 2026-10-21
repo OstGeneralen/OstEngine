@@ -1,33 +1,41 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/Configuration/RuntimeConfig.h"
-
 #include <OstTypes.h>
 
 #include <Memory/UniquePtr.h>
+#include <Services/ServiceLocator.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class IGame;
+    class GameBase;
     class IRenderQueue;
     class InputReader;
     class IRenderer;
     class IGraphicsEngine;
 
-    struct OstEngineSettings
+    // ------------------------------------------------------------
+    // Globally available ptr to the engine to allow global access
+    // to the service locator
+
+    class IEngineGlobal
     {
-        IGraphicsEngine* pGfxEngine;
-        AssetsConfig assetsCfg;
+        public:
+        virtual ServiceLocator& GetServiceLocator() = 0;
     };
+    extern IEngineGlobal* pEngine;
 
-    class IOstEngine
+    // ------------------------------------------------------------
+
+    class IOstEngine : public IEngineGlobal
     {
     public:
-        static UniquePtr<IOstEngine> CreateNew(UniquePtr<IGame>&& gameInstance, const OstEngineSettings& settings);
+        static UniquePtr<IOstEngine> Create(ServiceLocator& appServiceLocator);
 
     public:
+        virtual void SetGameInstance(GameBase* pGameInstance) = 0;
+
         virtual void Tick() = 0;
         virtual void RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetRenderer) = 0;
 
