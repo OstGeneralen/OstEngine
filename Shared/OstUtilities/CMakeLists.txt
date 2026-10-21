@@ -39,6 +39,8 @@ add_library(${PROJECT_NAME}
     Math/Shapes/Intersections.h
     Math/Shapes.h
     Container/Stack.h
+    Services/ServiceLocator.cpp
+    Services/ServiceLocator.h
 )
 
 target_compile_definitions(${PROJECT_NAME}

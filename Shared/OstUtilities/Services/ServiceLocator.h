@@ -1,0 +1,64 @@
+// Kasper "OstGeneralen" Esbjornsson - 2026
+#pragma once
+#include "Container/Map.h"
+#include "Memory/UniquePtr.h"
+#include "Utility/TypeID.h"
+
+#include <OstTypes.h>
+
+// ------------------------------------------------------------
+
+namespace ost
+{
+    class ServiceLocator
+    {
+    public:
+        void Register(TypeID registerType, UniquePtr<void>&& servicePtr);
+        void Unregister(TypeID serviceType);
+        void* Get(TypeID registerType);
+        const void* Get(TypeID registerType) const;
+
+        template <typename T>
+        void Register(UniquePtr<T>&& ptr)
+        {
+            Register(TypeID::Get<T>(), std::move(ptr));
+        }
+
+        template <typename T>
+        void Unregister()
+        {
+            Unregister(TypeID::Get<T>());
+        }
+
+        template <typename T>
+        T* Get()
+        {
+            return static_cast<T*>(Get(TypeID::Get<T>()));
+        }
+
+        template <typename T>
+        const T* Get() const
+        {
+            return static_cast<const T*>(Get(TypeID::Get<T>()));
+        }
+
+        template <typename T>
+        T& GetRequired()
+        {
+            return *Get<T>();
+        }
+
+        template <typename T>
+        const T& GetRequired() const
+        {
+            return *Get<T>();
+        }
+
+    private:
+        Map<TypeID, UniquePtr<void>> _registry;
+    };
+} // namespace ost
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------
