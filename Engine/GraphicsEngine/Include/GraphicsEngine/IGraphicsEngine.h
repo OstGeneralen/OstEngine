@@ -40,6 +40,7 @@ namespace ost
         virtual IRenderQueue& GetRenderQueue() = 0;
 
         virtual void ExecuteAndClearCommandQueue() = 0;
+        virtual void ClearAndSetBackbuffer() = 0;
         virtual void DrawRendererOutput(ERenderOutputTexture presentOutputTexture = ERenderOutputTexture::Output) = 0;
         virtual void Present() = 0;
     };

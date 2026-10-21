@@ -61,11 +61,13 @@ GraphicsEngine::GraphicsEngine(ServiceLocator& serviceLocator, void* windowHandl
     _activeRenderer->Initialize(outputSize, BuildRendererContext());
 
     InitializeGlobalResources();
+    _outputSize = outputSize.VectorCast<Float32>();
 
     // Register Globally Accessible Services
     _serviceLocator.RegisterUnmanaged<IGraphicsResourceManager>(&_resourceManager);
     _serviceLocator.RegisterUnmanaged<IMaterialManager>(&_resourceManager);
     _serviceLocator.RegisterUnmanaged<IRenderHardwareInterface>(&_rhi);
+
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -96,6 +98,7 @@ void ost::GraphicsEngine::SetRenderSize(const Vector2u& size)
 void ost::GraphicsEngine::SetOutputSize(const Vector2u& size)
 {
     _rhi.ResizeBackbuffer(size, _backbuffer);
+    _outputSize = size.VectorCast<Float32>();
 }
 
 // ------------------------------------------------------------
@@ -130,11 +133,15 @@ void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
     _renderQueue.Clear();
 }
 
-void ost::GraphicsEngine::DrawRendererOutput(ERenderOutputTexture presentOutputTexture)
+void ost::GraphicsEngine::ClearAndSetBackbuffer()
 {
-    // Draw the output of the current renderer onto the backbuffer and then present
     _rhi.ClearRenderTarget(_backbuffer);
     _rhi.SetRenderTarget(_backbuffer);
+}
+
+void ost::GraphicsEngine::DrawRendererOutput(ERenderOutputTexture presentOutputTexture)
+{
+    _rhi.SetViewport({0, 0}, _outputSize);
 
     _rhi.SetTexture(*static_cast<const Texture*>(_activeRenderer->GetOutputTarget(presentOutputTexture)), 0, EPipelineStage_PS);
 
@@ -182,7 +189,6 @@ RendererContext ost::GraphicsEngine::BuildRendererContext()
     return RendererContext(_rhi, _resourceManager, _frameBuffer, _objectBuffer);
 }
 // ------------------------------------------------------------
-
 
 void ost::GraphicsEngine::UpdateFrameBuffer()
 {
