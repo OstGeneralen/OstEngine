@@ -12,7 +12,14 @@ namespace ost
     {
         Folder,
         File,
-        Up,
+        ImgFile,
+        Add,
+        Actor,
+        Scene,
+        Restart,
+        Play,
+        PlayPause,
+        Settings,
         COUNT,
     };
 
@@ -21,13 +28,19 @@ namespace ost
     public:
         IconProvider();
 
-        
-        const ITexture& GetIcon( EIcon icon ) const;
-        void DrawGUIIcon( EIcon icon, const Vector2f& size ) const;
+        void DrawIcon( EIcon icon, const Vector2f& size ) const;
     private:
-        void LoadImageIcon( EIcon icon, const char* path );
+        void LoadIconAtlas(const char* path );
+        void SetIconUV( EIcon icon, const Vector2u& imageLocation );
+        
+        Vector2f GetIconUVSize() const;
+        
+        Float32 _pixelsPerIcon;
+        Vector2f _atlasSize;
 
-        HTexture _iconTextureHandles[static_cast<SizeType>(EIcon::COUNT)];
+
+        HTexture _iconTextureHandle;
+        Vector2f _iconUVs[static_cast<SizeType>( EIcon::COUNT )];
 
     };
 } // namespace ost

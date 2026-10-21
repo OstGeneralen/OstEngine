@@ -17,24 +17,33 @@ using namespace ost;
 
 IconProvider::IconProvider()
 {
-    LoadImageIcon(EIcon::Folder, "Editor/Icons/icon_folder.png");
-    LoadImageIcon(EIcon::File, "Editor/Icons/icon_file.png");
-    LoadImageIcon(EIcon::Up, "Editor/Icons/icon_up.png");
+    _pixelsPerIcon = 96.0f;
+    LoadIconAtlas("Editor/Icons/IconAtlas.png");
+    SetIconUV(EIcon::Folder, {0, 0});
+    SetIconUV(EIcon::File, {1, 0});
+    SetIconUV(EIcon::ImgFile, {2, 0});
+    SetIconUV(EIcon::Add, {3, 0});
+    SetIconUV(EIcon::Actor, {0, 1});
+    SetIconUV(EIcon::Scene, {1, 1});
+    SetIconUV(EIcon::Restart, {0, 2});
+    SetIconUV(EIcon::Play, {1, 2});
+    SetIconUV(EIcon::PlayPause, {2, 2});
+    SetIconUV(EIcon::Settings, {3, 2});
 }
 
-const ITexture& ost::IconProvider::GetIcon(EIcon icon) const
+void ost::IconProvider::DrawIcon(EIcon icon, const Vector2f& size) const
 {
-    auto hIcon = _iconTextureHandles[static_cast<SizeType>(icon)];
-    return EditorContext::Get().graphicsEngine.GetResourceManager().GetTexture(hIcon);
+    const Vector2f uv = _iconUVs[static_cast<SizeType>(icon)];
+    const void* nativeIcon = EditorContext::Get().graphicsEngine.GetResourceManager().GetTexture(_iconTextureHandle).GetNativeResource();
+    ImGui::Image((ImTextureRef)(intptr_t)nativeIcon, size, uv, uv + GetIconUVSize());
 }
 
-void ost::IconProvider::DrawGUIIcon(EIcon icon, const Vector2f& size) const
+Vector2f ost::IconProvider::GetIconUVSize() const
 {
-    const void* nativeIcon = GetIcon(icon).GetNativeResource();
-    ImGui::Image((ImTextureRef)(intptr_t)nativeIcon, size);
+    return {_pixelsPerIcon / _atlasSize.X, _pixelsPerIcon / _atlasSize.Y};
 }
 
-void ost::IconProvider::LoadImageIcon(EIcon icon, const char* path)
+void ost::IconProvider::LoadIconAtlas(const char* path)
 {
     TextureCPUData loadedData;
     loadedData.format = ETextureFormat::RGBAUnorm;
@@ -51,11 +60,21 @@ void ost::IconProvider::LoadImageIcon(EIcon icon, const char* path)
     imageData.data = List<Uint8>(w * h * 4);
     loadedData.dimensions = Vector2i{w, h}.VectorCast<Uint32>();
 
+    _atlasSize.X = static_cast<Float32>(w);
+    _atlasSize.Y = static_cast<Float32>(h);
+
     MemCopy(imageData.data.GetData(), pixels, w * h * 4);
 
     stbi_image_free(pixels);
 
-    _iconTextureHandles[static_cast<SizeType>(icon)] = EditorContext::Get().graphicsEngine.GetResourceManager().Create(loadedData);
+    _iconTextureHandle = EditorContext::Get().graphicsEngine.GetResourceManager().Create(loadedData);
+}
+
+void ost::IconProvider::SetIconUV(EIcon icon, const Vector2u& imageLocation)
+{
+    const Vector2f pixelLocation = imageLocation.VectorCast<Float32>() * _pixelsPerIcon;
+    const Vector2f uv = {pixelLocation.X / _atlasSize.X, pixelLocation.Y / _atlasSize.Y};
+    _iconUVs[static_cast<SizeType>(icon)] = uv;
 }
 
 // ------------------------------------------------------------

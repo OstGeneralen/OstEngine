@@ -16,8 +16,6 @@ add_executable(${PROJECT_NAME}
     EditorGameInstance.cpp
     EditorContext.h
     EditorContext.cpp
-    SceneView/EditorCamera.h
-    SceneView/EditorCamera.cpp
     Views/ViewLayout.h
     Views/View.h
     Views/ViewLayout.cpp
@@ -40,13 +38,9 @@ add_executable(${PROJECT_NAME}
     GUI/Controls/GUIPanel.cpp
     GUI/Controls/GUISceneView.h
     GUI/Controls/GUISceneView.cpp
-    Services/ServiceLocator.h
-    Services/FileSystem.h
-    GUI/Controls/GUIAssetsView.h
     Content/stb_image.h
     Content/IconProvider.h
     Content/IconProvider.cpp
-    GUI/Controls/GUIAssetsView.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
