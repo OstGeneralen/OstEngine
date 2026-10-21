@@ -44,6 +44,9 @@ void DeferredRenderer::Initialize(const Vector2u& renderSize, RendererContext&& 
     MaterialCompiler compiler(desc);
     compiler.Compile();
     rhi.CreatePSO(compiler.GetCompiledPSODescForward(), _fullscreenPSO);
+
+    // Deferred uses its own light buffer since it actually allows more lights to be drawn than the fixed count of 8
+    rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
 }
 
 // ------------------------------------------------------------
@@ -54,15 +57,13 @@ void ost::DeferredRenderer::Resize(const Vector2u& newSize, RendererContext&& co
 
     const RenderHardwareInterface& rhi = context.rhi;
 
-    // Deferred uses its own light buffer since it actually allows more lights to be drawn than the fixed count of 8
-    rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
-
     // Reset the GBuffer + output texture
     _outputTexture = {};
     _gBuffer = {};
 
     // Create the output texture
     rhi.CreateRenderTargetTexture(newSize, EDataFormat::RGBA_Unorm8, true, _outputTexture);
+    _outputTexture.SetDebugName("Deferred_Final");
 
     // Create the G Buffer Textures
     rhi.CreateRenderTargetTexture(newSize, EDataFormat::RGBA_Unorm8, true, _gBuffer.albedo);
@@ -92,6 +93,8 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     const auto& rhi = context.rhi;
     const RenderQueue& queue = static_cast<const RenderQueue&>(queueInterface);
 
+    rhi.SetViewport({0, 0}, _currentSize);
+
     // Execute the queue onto our gBuffer like normal
     rhi.SetBuffer(context.frameBuffer, PipelineConstant::Get(EBufferSlot::FrameBuffer), FullPipeline);
 
@@ -116,10 +119,10 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     rhi.UnsetRenderTargets();
     rhi.UnsetTextures();
 
+    rhi.SetPSO(_fullscreenPSO);
+
     rhi.ClearRenderTarget(_outputTexture);
     rhi.SetRenderTarget(_outputTexture, nullptr);
-
-    rhi.SetPSO(_fullscreenPSO);
 
     rhi.SetTexture(_gBuffer.albedo, 0, ost::EPipelineStage_PS);
     rhi.SetTexture(_gBuffer.normals, 1, ost::EPipelineStage_PS);

@@ -45,6 +45,7 @@ namespace ost
         virtual IRenderQueue& GetRenderQueue() override;
 
         void ExecuteAndClearCommandQueue() override;
+        void ClearAndSetBackbuffer() override;
         void DrawRendererOutput(ERenderOutputTexture presentOutputTexture) override;
         void Present() override;
         // END IGraphicsEngine
@@ -57,6 +58,7 @@ namespace ost
         void UpdateFrameBuffer();
 
         ServiceLocator& _serviceLocator;
+        Vector2f _outputSize;
 
         Texture _backbuffer;
         Buffer _frameBuffer;

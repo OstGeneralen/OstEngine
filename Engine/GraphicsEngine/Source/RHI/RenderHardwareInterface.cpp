@@ -508,6 +508,18 @@ void ost::RenderHardwareInterface::UnsetRenderTargets() const
     _immediateContext->OMSetRenderTargets(8, nullRtvs, nullptr);
 }
 
+void ost::RenderHardwareInterface::SetViewport(const Vector2f& pos, const Vector2f& size) const
+{
+    D3D11_VIEWPORT vp = {};
+    vp.Height = size.Y;
+    vp.Width = size.X;
+    vp.TopLeftX = pos.X;
+    vp.TopLeftY = pos.Y;
+    vp.MinDepth = 0;
+    vp.MaxDepth = 1;
+    _immediateContext->RSSetViewports(1, &vp);
+}
+
 void ost::RenderHardwareInterface::SetBuffersForIndexed(const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer) const
 {
     UINT strides[] = {static_cast<UINT>(vertexSize)};

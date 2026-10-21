@@ -65,6 +65,8 @@ namespace ost
         void SetRenderTargets(const Texture* pRenderTargets, SizeType numTargets, const Texture* pDepthTarget = nullptr) const;
         void UnsetRenderTargets() const;
 
+        void SetViewport( const Vector2f& pos, const Vector2f& size ) const;
+
         void SetBuffersForIndexed( const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer ) const;
         void Draw( SizeType indexCount, SizeType indexOffset, SizeType vertexOffset ) const;
 
