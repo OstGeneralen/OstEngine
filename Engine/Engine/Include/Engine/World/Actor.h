@@ -15,6 +15,12 @@ namespace ost
 {
     class GameWorld;
 
+    struct ComponentData
+    {
+        TypeID componentTypeID;
+        ActorComponent* pComponent;
+    };
+
     class Actor
     {
     public:
@@ -26,8 +32,7 @@ namespace ost
         const StringID& GetName() const;
         void SetName(const std::string& name);
 
-        List<ActorComponent*> GetComponents();
-        List<const ActorComponent*> GetComponents() const;
+        List<ComponentData> GetComponents();
 
         ActorComponent& AddComponent(TypeID componentType, UniquePtr<ActorComponent>&& component);
         void RemoveComponent(TypeID componentType);
