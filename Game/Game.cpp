@@ -27,6 +27,20 @@ ost::UniquePtr<ost::GameBase> ost::CreateGameInstance()
 
 // ------------------------------------------------------------
 
+void Game::Start(ost::IComponentFactory& componentFactory)
+{
+    componentFactory.RegisterComponentType("Keyboard Movement", ost::ComponentTypeRegistration::MakeForT<KeyboardMovementComponent>());
+    componentFactory.RegisterComponentType("Keyboard Rotator", ost::ComponentTypeRegistration::MakeForT<KeyboardRotatorComponent>());
+}
+
+void Game::Shutdown(ost::IComponentFactory& componentFactory)
+{
+    componentFactory.UnregisterComponentType(ost::TypeID::Get<KeyboardMovementComponent>());
+    componentFactory.UnregisterComponentType(ost::TypeID::Get<KeyboardRotatorComponent>());
+}
+
+// ------------------------------------------------------------
+
 void Game::Load(ost::IAssetManager& assets)
 {
     ost::HMaterial materialRoot = assets.Load<ost::IMaterial>("Engine/Materials/Mat_DefaultLit.json");

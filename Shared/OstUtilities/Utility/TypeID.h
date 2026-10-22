@@ -20,6 +20,11 @@ namespace ost
             return TypeID{hash::fnv1a(std::source_location::current().function_name())};
         }
 
+        TypeID()
+            : _id{0}
+        {
+        }
+
         constexpr inline TypeID(SizeType id)
             : _id{id}
         {

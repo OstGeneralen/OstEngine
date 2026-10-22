@@ -1,6 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Engine/World/Actor.h"
 
+#include "Engine/IOstEngine.h"
+#include "World/ComponentFactory.h"
 #include "World/GameWorld.h"
 
 using namespace ost;
@@ -41,8 +43,12 @@ List<ComponentData> ost::Actor::GetComponents()
 
 // ------------------------------------------------------------
 
-ActorComponent& Actor::AddComponent(TypeID compType, UniquePtr<ActorComponent>&& component)
+ActorComponent& Actor::AddComponent(TypeID compType)
 {
+    IComponentFactory& factoryInterface = pEngine->GetServiceLocator().GetRequired<IComponentFactory>();
+    ComponentFactory& factory = static_cast<ComponentFactory&>(factoryInterface);
+
+    UniquePtr<ActorComponent> component = factory.CreateComponentFromType(compType);
     _gameWorld.RegisterComponent(*this, *component);
     return *_components.Insert(compType, std::move(component));
 }
