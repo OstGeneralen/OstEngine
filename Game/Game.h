@@ -11,6 +11,9 @@
 class Game : public ost::GameBase
 {
 public:
+    void Start(ost::IComponentFactory& componentFactory) override;
+    void Shutdown(ost::IComponentFactory& componentFactory) override;
+
     void Load(ost::IAssetManager& assets) override;
     void Unload(ost::IAssetManager& assets) override;
     void Update(Float32 deltaTime) override;

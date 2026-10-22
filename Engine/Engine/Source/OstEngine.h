@@ -7,6 +7,7 @@
 // World
 #include "World/GameWorld.h"
 #include "World/SceneManager.h"
+#include "World/ComponentFactory.h"
 
 // System
 #include "Engine/System/InputReader.h"
@@ -51,6 +52,8 @@ namespace ost
         InputReader _input;
         TimeProvider _time;
         
+        ComponentFactory _componentFactory;
+
         AssetManager _assetManager;
         SceneManager _sceneManager;
 

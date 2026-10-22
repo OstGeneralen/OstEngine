@@ -34,15 +34,15 @@ namespace ost
 
         List<ComponentData> GetComponents();
 
-        ActorComponent& AddComponent(TypeID componentType, UniquePtr<ActorComponent>&& component);
+        ActorComponent& AddComponent(TypeID componentType);
         void RemoveComponent(TypeID componentType);
         ActorComponent* GetComponent(TypeID componentType);
         const ActorComponent* GetComponent(TypeID componentType) const;
 
-        template <typename T, typename... TArgs>
-        T& AddComponent(TArgs&&... args)
+        template <typename T>
+        T& AddComponent()
         {
-            return static_cast<T&>(AddComponent(TypeID::Get<T>(), Ptr::NewUnique<T>(std::forward<TArgs>(args)...)));
+            return static_cast<T&>(AddComponent(TypeID::Get<T>()));
         }
 
         template <typename T>

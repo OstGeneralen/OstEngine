@@ -59,6 +59,9 @@ add_library(${PROJECT_NAME} STATIC
     Include/Engine/World/ISceneManager.h
     Source/World/SceneManager.h
     Source/World/SceneManager.cpp
+    Include/Engine/World/IComponentFactory.h
+    Source/World/ComponentFactory.h
+    Source/World/ComponentFactory.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

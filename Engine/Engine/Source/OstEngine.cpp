@@ -8,6 +8,13 @@
 #include <GraphicsEngine/Rendering/IRenderer.h>
 #include <Utility/Assert.h>
 
+// Components
+#include "Engine/Components/CameraComponent.h"
+#include "Engine/Components/DirectionalLightComponent.h"
+#include "Engine/Components/PointLightComponent.h"
+#include "Engine/Components/SpotLightComponent.h"
+#include "Engine/Components/StaticMeshComponent.h"
+
 // ------------------------------------------------------------
 
 ost::IEngineGlobal* ost::pEngine = nullptr;
@@ -32,10 +39,19 @@ OstEngine::OstEngine(ServiceLocator& appServiceLocator)
 {
     pEngine = this;
 
+    // Register Engine Provided Component Types
+    _componentFactory.RegisterComponentType("Camera", ComponentTypeRegistration::MakeForT<CameraComponent>());
+    _componentFactory.RegisterComponentType("Static Mesh", ComponentTypeRegistration::MakeForT<StaticMeshComponent>());
+    _componentFactory.RegisterComponentType("Directional Light", ComponentTypeRegistration::MakeForT<DirectionalLightComponent>());
+    _componentFactory.RegisterComponentType("Point Light", ComponentTypeRegistration::MakeForT<PointLightComponent>());
+    _componentFactory.RegisterComponentType("Spot Light", ComponentTypeRegistration::MakeForT<SpotLightComponent>());
+
+    // Register Engine Services
     _appServiceLocator.RegisterUnmanaged<IInputReader>(&_input);
     _appServiceLocator.RegisterUnmanaged<ITimeProvider>(&_time);
     _appServiceLocator.RegisterUnmanaged<IAssetManager>(&_assetManager);
     _appServiceLocator.RegisterUnmanaged<ISceneManager>(&_sceneManager);
+    _appServiceLocator.RegisterUnmanaged<IComponentFactory>(&_componentFactory);
 }
 
 OstEngine::~OstEngine()
@@ -44,6 +60,7 @@ OstEngine::~OstEngine()
     _appServiceLocator.Unregister<ITimeProvider>();
     _appServiceLocator.Unregister<IAssetManager>();
     _appServiceLocator.Unregister<ISceneManager>();
+    _appServiceLocator.Unregister<IComponentFactory>();
 
     pEngine = nullptr;
 }
@@ -55,11 +72,13 @@ void OstEngine::SetGameInstance(GameBase* pGameInstance)
     if (_pGameInstance)
     {
         _pGameInstance->Unload(_assetManager);
+        _pGameInstance->Shutdown(_componentFactory);
     }
 
     _pGameInstance = pGameInstance;
     if (_pGameInstance)
     {
+        _pGameInstance->Start(_componentFactory);
         _pGameInstance->Load(_assetManager);
     }
 }
