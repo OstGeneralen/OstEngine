@@ -17,11 +17,11 @@ namespace ost
         Scene* CreateScene() override;
 
         void SetActiveScene(Scene* pScene) override;
+        Scene* GetActiveScene() override;
         const Scene* GetActiveScene() const override;
         // END ISceneManager
 
         GameWorld& GetGameWorld();
-        Scene* GetActiveScene();
 
     private:
         List<Scene*> _scenes;

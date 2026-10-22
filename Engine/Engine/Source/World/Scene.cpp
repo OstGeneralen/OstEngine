@@ -24,6 +24,11 @@ Actor* Scene::CreateActor()
 
 // ------------------------------------------------------------
 
+List<UniquePtr<Actor>>& ost::Scene::GetAllActors()
+{
+    return _actors;
+}
+
 const List<UniquePtr<Actor>>& ost::Scene::GetAllActors() const
 {
     return _actors;
