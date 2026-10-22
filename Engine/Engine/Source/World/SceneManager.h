@@ -9,7 +9,6 @@
 
 namespace ost
 {
-    
 
     class SceneManager : public ISceneManager
     {
@@ -18,6 +17,7 @@ namespace ost
         Scene* CreateScene() override;
 
         void SetActiveScene(Scene* pScene) override;
+        const Scene* GetActiveScene() const override;
         // END ISceneManager
 
         GameWorld& GetGameWorld();

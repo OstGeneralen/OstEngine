@@ -12,6 +12,8 @@ namespace ost
     public:
         virtual Scene* CreateScene() = 0;
         virtual void SetActiveScene(Scene* pScene) = 0;
+        virtual const Scene* GetActiveScene() const = 0;
+    
     };
 } // namespace ost
 

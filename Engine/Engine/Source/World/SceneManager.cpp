@@ -24,6 +24,15 @@ void SceneManager::SetActiveScene(Scene* pScene)
     }
 }
 
+const Scene* SceneManager::GetActiveScene() const
+{
+    if (_activeSceneIndex == _scenes.Npos)
+    {
+        return nullptr;
+    }
+    return _scenes[_activeSceneIndex];
+}
+
 // ------------------------------------------------------------
 
 GameWorld& ost::SceneManager::GetGameWorld()
