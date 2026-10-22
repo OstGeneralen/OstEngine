@@ -25,9 +25,7 @@ void SceneEditorContext::SetTargetActor(Actor* pActor)
 
     if (pPreviousTarget != _pTargetActor)
     {
-        // TODO: Fix the delegates to not ~require~ rvalue reference
-        // Not actually moving anything at all here
-        targetActorChanged.Broadcast(std::move(_pTargetActor));
+        targetActorChanged.Broadcast();
     }
 }
 

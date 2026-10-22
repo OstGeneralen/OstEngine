@@ -19,6 +19,7 @@ ost::GUIActorEditor::GUIActorEditor(SceneEditorContext& sceneEditCtx)
     : GUIControl{"OSTGUIActorEditor"}
     , _sceneEditorCtx{sceneEditCtx}
 {
+    _sceneEditorCtx.targetActorChanged.Bind<GUIActorEditor, &GUIActorEditor::NewTargetActor>(this);
 }
 
 // ------------------------------------------------------------
@@ -34,16 +35,23 @@ void ost::GUIActorEditor::Display()
     else
     {
         Vector3f position = _sceneEditorCtx.GetTargetActor()->transform.GetWorldPosition();
-        Quaternion rotation = _sceneEditorCtx.GetTargetActor()->transform.GetWorldRotation();
 
         ImGui::DragFloat3("Position", position.Arr, 0.1f);
-        ImGui::DragFloat3("Rotation", rotation.Arr, 0.1f);
+        ImGui::DragFloat3("Rotation", _cachedEulers.Arr, 0.1f);
 
         _sceneEditorCtx.GetTargetActor()->transform.SetWorldPosition(position);
-        _sceneEditorCtx.GetTargetActor()->transform.SetWorldRotation(rotation);
+        _sceneEditorCtx.GetTargetActor()->transform.SetWorldRotation(Quaternion::FromEulersDegrees(_cachedEulers));
     }
 
     EndGUI();
+}
+
+void GUIActorEditor::NewTargetActor()
+{
+    if(_sceneEditorCtx.HasTargetActor())
+    {
+        _cachedEulers = _sceneEditorCtx.GetTargetActor()->transform.GetWorldRotation().ToEulersDegrees();
+    }
 }
 
 // ------------------------------------------------------------

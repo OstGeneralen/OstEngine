@@ -12,7 +12,7 @@ namespace ost
     class SceneEditorContext
     {
     public:
-        Delegate<Actor*> targetActorChanged;
+        Delegate<> targetActorChanged;
 
         bool HasTargetActor() const;
         Actor* GetTargetActor();

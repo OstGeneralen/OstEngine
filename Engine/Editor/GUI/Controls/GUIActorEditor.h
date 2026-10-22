@@ -1,12 +1,14 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GUI/GUIControl.h"
+#include <Math/Vector3.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {   
     class SceneEditorContext;
+    class Actor;
 
     class GUIActorEditor : public GUIControl
     {
@@ -16,8 +18,10 @@ namespace ost
         void Display() override;
 
     private:
-        SceneEditorContext& _sceneEditorCtx;
+        void NewTargetActor();
 
+        SceneEditorContext& _sceneEditorCtx;
+        Vector3f _cachedEulers;
     };
 } // namespace ost
 
