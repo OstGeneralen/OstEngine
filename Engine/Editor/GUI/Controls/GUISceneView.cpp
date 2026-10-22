@@ -2,6 +2,7 @@
 #include "GUISceneView.h"
 
 #include "EditorContext.h"
+#include "SceneView/SceneViewCamera.h"
 
 #include <imgui.h>
 
@@ -23,6 +24,7 @@ void GUISceneView::Display()
 {
     IGraphicsEngine& gfxEngine = EditorContext::Get().serviceLocator.GetRequired<IGraphicsEngine>();
     const IRenderer& renderer = gfxEngine.GetRenderer();
+    SceneViewCamera& sceneViewCamera = EditorContext::Get().serviceLocator.GetRequired<SceneViewCamera>();
 
     auto showMenuItem = [](const char* l, ERenderOutputTexture t, Uint32& outSelected) {
         if (ImGui::MenuItem(l, 0, false, outSelected != static_cast<Uint32>(t)))

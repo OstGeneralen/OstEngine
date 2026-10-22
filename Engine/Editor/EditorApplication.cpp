@@ -101,6 +101,7 @@ void ost::EditorApplication::Run()
 
     _serviceLocator.RegisterManaged<PropertyEditorDrawer>(Ptr::NewUnique<PropertyEditorDrawer>());
     _serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
+    _serviceLocator.RegisterUnmanaged<SceneViewCamera>(&_sceneViewCamera);
     SceneEditorContext sceneEditContext;
 
     auto& rootElement = _editorGui.SetRoot(Ptr::NewUnique<GUIStackPanel>("RootVertical", EOrientation::Vertical));
@@ -125,7 +126,11 @@ void ost::EditorApplication::Run()
         _coreEngine->Tick();
 
         // Populate the render queue from the core engine's scene
-        _coreEngine->RenderSceneGraph(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
+
+        auto& renderQueue = _graphicsEngine->GetRenderQueue();
+        auto& renderer = _graphicsEngine->GetRenderer();
+        _coreEngine->RenderSceneGraph(renderQueue, renderer);
+        _sceneViewCamera.InjectToRenderQueue(renderQueue, renderer);
 
         // Execute the command queue onto the output surface of the active renderer
         _graphicsEngine->ExecuteAndClearCommandQueue();

@@ -50,6 +50,8 @@ add_executable(${PROJECT_NAME}
     GUI/PropertyEditor/MathTypeEditors.h
     GUI/PropertyEditor/PropertyEditorDrawer.cpp
     GUI/PropertyEditor/BasicTypeEditors.h
+    SceneView/SceneViewCamera.h
+    SceneView/SceneViewCamera.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

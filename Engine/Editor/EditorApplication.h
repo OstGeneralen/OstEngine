@@ -2,6 +2,7 @@
 #pragma once
 #include "EditorGameInstance.h"
 #include "GUI/EditorGUI.h"
+#include "SceneView/SceneViewCamera.h"
 
 #include <Engine/IOstEngine.h>
 #include <Engine/Platform/Window.h>
@@ -34,7 +35,9 @@ namespace ost
         EditorGameInstance _editorGameInstance;
         UniquePtr<IOstEngine> _coreEngine;
         UniquePtr<IGraphicsEngine> _graphicsEngine;
-        
+
+        SceneViewCamera _sceneViewCamera;
+
         EditorGUI _editorGui;
     };
 } // namespace ost
