@@ -105,10 +105,12 @@ void ost::EditorApplication::Run()
     auto& topVertical =
         rootElement.AddChild<GUIStackPanel>("TopHorizontal", EOrientation::Horizontal).SetBordered(false).SetResizeFlag(EGUIResize_Y).SetInitialSize({0, 400});
 
-    auto& actorPanel = topVertical.AddChild<GUIStackPanel>("ActorPanel", EOrientation::Vertical).SetInitialSize({200, 0}).SetResizeFlag(EGUIResize_X).SetBordered(true);
-    actorPanel.AddChild<GUIActorList>(sceneEditContext);
-    actorPanel.AddChild<GUIActorEditor>(sceneEditContext).SetInitialSize({0,100});
-    topVertical.AddChild<GUISceneView>().SetBordered(true);
+    // auto& actorPanel = topVertical.AddChild<GUIStackPanel>("ActorPanel", EOrientation::Vertical).SetInitialSize({200,
+    // 0}).SetResizeFlag(EGUIResize_X).SetBordered(true);
+
+    topVertical.AddChild<GUIActorList>(sceneEditContext).SetInitialSize({200, 0}).SetResizeFlag(EGUIResize_X).SetBordered(true);
+    topVertical.AddChild<GUISceneView>().SetBordered(true).SetResizeFlag(EGUIResize_X).SetInitialSize({200, 0});
+    topVertical.AddChild<GUIActorEditor>(sceneEditContext).SetInitialSize({0, 0}).SetBordered(true);
 
     while (!_hasExitRequest)
     {

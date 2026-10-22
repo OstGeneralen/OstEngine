@@ -36,8 +36,8 @@ void ost::GUIActorEditor::Display()
         Vector3f position = _sceneEditorCtx.GetTargetActor()->transform.GetWorldPosition();
         Quaternion rotation = _sceneEditorCtx.GetTargetActor()->transform.GetWorldRotation();
 
-        ImGui::DragFloat3("Position", position.Arr, 1.0f);
-        ImGui::DragFloat3("Rotation", rotation.Arr, 1.0f);
+        ImGui::DragFloat3("Position", position.Arr, 0.1f);
+        ImGui::DragFloat3("Rotation", rotation.Arr, 0.1f);
 
         _sceneEditorCtx.GetTargetActor()->transform.SetWorldPosition(position);
         _sceneEditorCtx.GetTargetActor()->transform.SetWorldRotation(rotation);
