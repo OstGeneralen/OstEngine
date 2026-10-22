@@ -46,6 +46,11 @@ const List<ComponentTypeInfo>& ost::ComponentFactory::GetRegisteredTypesInfo() c
     return _typeInfoList;
 }
 
+const std::string& ComponentFactory::GetTypeName(TypeID type) const
+{
+    return _componentNames[type];
+}
+
 // ------------------------------------------------------------
 
 UniquePtr<ActorComponent> ost::ComponentFactory::CreateComponentFromType(TypeID typeID)

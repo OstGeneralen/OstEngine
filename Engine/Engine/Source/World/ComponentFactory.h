@@ -19,6 +19,8 @@ namespace ost
         void UnregisterComponentType(TypeID componentType) override;
 
         const List<ComponentTypeInfo>& GetRegisteredTypesInfo() const override;
+
+        const std::string& GetTypeName( TypeID componentType ) const override;
         // END IComponentFactory
 
         UniquePtr<ActorComponent> CreateComponentFromType( TypeID typeID );

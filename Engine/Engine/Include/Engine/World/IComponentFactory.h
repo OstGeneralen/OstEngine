@@ -59,6 +59,8 @@ namespace ost
         virtual void UnregisterComponentType(TypeID componentType) = 0;
 
         virtual const List<ComponentTypeInfo>& GetRegisteredTypesInfo() const = 0;
+
+        virtual const std::string& GetTypeName( TypeID componentType ) const = 0;
     };
 } // namespace ost
 
