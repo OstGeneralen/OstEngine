@@ -90,6 +90,11 @@ namespace ost
             return _map.at(key);
         }
 
+        SizeType GetSize() const
+        {
+            return _map.size();
+        }
+
         auto begin()
         {
             return _map.begin();

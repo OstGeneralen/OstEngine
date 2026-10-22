@@ -42,6 +42,8 @@ add_library(${PROJECT_NAME}
     Services/ServiceLocator.cpp
     Services/ServiceLocator.h
     Container/Stack.h
+    Utility/StringID.h
+    Utility/Hash.h
 )
 
 target_compile_definitions(${PROJECT_NAME}

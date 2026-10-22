@@ -3,8 +3,10 @@
 #include "Engine/World/Component.h"
 #include "Engine/World/Transform.h"
 
+#include <Container/List.h>
 #include <Container/Map.h>
 #include <Memory/UniquePtr.h>
+#include <Utility/StringID.h>
 #include <Utility/TypeID.h>
 
 // ------------------------------------------------------------
@@ -20,6 +22,12 @@ namespace ost
 
     public:
         Actor(GameWorld& gameWorld);
+
+        const StringID& GetName() const;
+        void SetName(const std::string& name);
+
+        List<ActorComponent*> GetComponents();
+        List<const ActorComponent*> GetComponents() const;
 
         ActorComponent& AddComponent(TypeID componentType, UniquePtr<ActorComponent>&& component);
         void RemoveComponent(TypeID componentType);
@@ -53,6 +61,7 @@ namespace ost
     private:
         GameWorld& _gameWorld;
         Map<TypeID, UniquePtr<ActorComponent>> _components;
+        StringID _name;
     };
 } // namespace ost
 

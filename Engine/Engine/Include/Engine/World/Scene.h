@@ -20,6 +20,8 @@ namespace ost
 
         Actor* CreateActor();
 
+        const List<UniquePtr<Actor>>& GetAllActors() const;
+
     private:
         List<UniquePtr<Actor>> _actors;
         GameWorld& _gameWorld;
