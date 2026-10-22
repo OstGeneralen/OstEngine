@@ -155,9 +155,9 @@ const std::string& ost::GUIControl::GetUIDString() const
 
 // ------------------------------------------------------------
 
-void ost::GUIControl::BeginGUI()
+void ost::GUIControl::BeginGUI(Int32 windowFlags)
 {
-    ImGui::BeginChild(_uidString.c_str(), _size, _guiFlags);
+    ImGui::BeginChild(_uidString.c_str(), _size, _guiFlags, windowFlags);
 }
 
 void ost::GUIControl::EndGUI()

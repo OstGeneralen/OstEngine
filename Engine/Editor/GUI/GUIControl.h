@@ -61,7 +61,7 @@ namespace ost
         const std::string& GetUIDString() const;
 
     protected:
-        void BeginGUI();
+        void BeginGUI(Int32 windowFlags = 0);
         void EndGUI();
 
     private:
