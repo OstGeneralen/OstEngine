@@ -38,6 +38,7 @@ void ost::EditorGameInstance::Load(IAssetManager& assets)
     auto& meshComponent = cube->AddComponent<ost::StaticMeshComponent>();
     meshComponent.SetModel(cubeModel);
     meshComponent.SetMaterial(leatherMaterial);
+    cube->transform.Move({0,1,0});
     cube->transform.Rotate(ost::Quaternion::FromEulers(45.0f * ost::math::DegToRad, 45.0f * ost::math::DegToRad, 0));
 
     ost::Actor* sun = scene->CreateActor();

@@ -41,6 +41,10 @@ add_executable(${PROJECT_NAME}
     Content/IconProvider.cpp
     GUI/Controls/GUIActorList.h
     GUI/Controls/GUIActorList.cpp
+    System/SceneEditorContext.h
+    System/SceneEditorContext.cpp
+    GUI/Controls/GUIActorEditor.h
+    GUI/Controls/GUIActorEditor.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

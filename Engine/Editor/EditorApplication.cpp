@@ -14,8 +14,10 @@
 
 // Services
 #include "Content/IconProvider.h"
+#include "System/SceneEditorContext.h"
 
 // GUI Controls
+#include "GUI/Controls/GUIActorEditor.h"
 #include "GUI/Controls/GUIActorList.h"
 #include "GUI/Controls/GUIPanel.h"
 #include "GUI/Controls/GUISceneView.h"
@@ -97,12 +99,15 @@ void ost::EditorApplication::Run()
     _coreEngine->SetGameInstance(&_editorGameInstance);
 
     _serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
+    SceneEditorContext sceneEditContext;
 
     auto& rootElement = _editorGui.SetRoot(Ptr::NewUnique<GUIStackPanel>("RootVertical", EOrientation::Vertical));
     auto& topVertical =
         rootElement.AddChild<GUIStackPanel>("TopHorizontal", EOrientation::Horizontal).SetBordered(false).SetResizeFlag(EGUIResize_Y).SetInitialSize({0, 400});
 
-    topVertical.AddChild<GUIActorList>().SetResizeFlag(EGUIResize_X).SetBordered(true).SetInitialSize({200, 0});
+    auto& actorPanel = topVertical.AddChild<GUIStackPanel>("ActorPanel", EOrientation::Vertical).SetInitialSize({200, 0}).SetResizeFlag(EGUIResize_X).SetBordered(true);
+    actorPanel.AddChild<GUIActorList>(sceneEditContext);
+    actorPanel.AddChild<GUIActorEditor>(sceneEditContext).SetInitialSize({0,100});
     topVertical.AddChild<GUISceneView>().SetBordered(true);
 
     while (!_hasExitRequest)
