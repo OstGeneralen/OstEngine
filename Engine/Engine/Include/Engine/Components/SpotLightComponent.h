@@ -9,13 +9,14 @@ namespace ost
     class SpotLightComponent : public LightComponent
     {
     public:
-        void SetInnerRadius( Float32 r );
-        void SetOuterRadius( Float32 r );
-        void SetRange( Float32 r );
+        void SetInnerRadius(Float32 r);
+        void SetOuterRadius(Float32 r);
+        void SetRange(Float32 r);
+
+        List<ComponentProperty> GeneratePropertySet() override;
 
     private:
-        void InitializeLightType( LightRenderProxy& proxy ) override;
-
+        void InitializeLightType(LightRenderProxy& proxy) override;
     };
 } // namespace ost
 

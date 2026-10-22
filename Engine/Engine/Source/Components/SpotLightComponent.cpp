@@ -31,5 +31,20 @@ void SpotLightComponent::InitializeLightType(LightRenderProxy& proxy)
 }
 
 // ------------------------------------------------------------
+
+List<ComponentProperty> ost::SpotLightComponent::GeneratePropertySet()
+{
+    List<ComponentProperty> props = {};
+
+    props.Add(ComponentProperty("Color", TypeID::Get<Color>(), &GetProxy().proxyData.color));
+    props.Add(ComponentProperty("Intensity", TypeID::Get<Float32>(), &GetProxy().proxyData.intensity));
+    props.Add(ComponentProperty("Range", TypeID::Get<Float32>(), &GetProxy().proxyData.range));
+    props.Add(ComponentProperty("Inner Angle", TypeID::Get<Float32>(), &GetProxy().proxyData.radius));
+    props.Add(ComponentProperty("Outer Angle", TypeID::Get<Float32>(), &GetProxy().proxyData.outerRadius));
+
+    return props;
+}
+
+// ------------------------------------------------------------
 // ------------------------------------------------------------
 // ------------------------------------------------------------
