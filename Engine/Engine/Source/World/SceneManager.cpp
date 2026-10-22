@@ -24,6 +24,15 @@ void SceneManager::SetActiveScene(Scene* pScene)
     }
 }
 
+Scene* ost::SceneManager::GetActiveScene()
+{
+    if (_activeSceneIndex == _scenes.Npos)
+    {
+        return nullptr;
+    }
+    return _scenes[_activeSceneIndex];
+}
+
 const Scene* SceneManager::GetActiveScene() const
 {
     if (_activeSceneIndex == _scenes.Npos)
@@ -38,17 +47,6 @@ const Scene* SceneManager::GetActiveScene() const
 GameWorld& ost::SceneManager::GetGameWorld()
 {
     return _gameWorld;
-}
-
-// ------------------------------------------------------------
-
-Scene* ost::SceneManager::GetActiveScene()
-{
-    if (_activeSceneIndex == _scenes.Npos)
-    {
-        return nullptr;
-    }
-    return _scenes[_activeSceneIndex];
 }
 
 // ------------------------------------------------------------

@@ -20,6 +20,7 @@ namespace ost
 
         Actor* CreateActor();
 
+        List<UniquePtr<Actor>>& GetAllActors();
         const List<UniquePtr<Actor>>& GetAllActors() const;
 
     private:
