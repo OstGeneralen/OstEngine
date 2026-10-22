@@ -14,6 +14,7 @@ auto ComponentFactoryLog = Log::NewCategory("ComponentFactory");
 void ComponentFactory::RegisterComponentType(const std::string& name, ComponentTypeRegistration registration)
 {
     _createFunctions.Insert(registration.typeID, registration.buildFunc);
+    _componentNames.Insert(registration.typeID, name);
 
     ComponentTypeInfo typeInfo;
     typeInfo.typeId = registration.typeID;
@@ -26,6 +27,7 @@ void ComponentFactory::RegisterComponentType(const std::string& name, ComponentT
 void ost::ComponentFactory::UnregisterComponentType(TypeID componentType)
 {
     _createFunctions.Remove(componentType);
+    _componentNames.Remove(componentType);
 
     for (SizeType i = 0; i < _typeInfoList.GetSize(); ++i)
     {

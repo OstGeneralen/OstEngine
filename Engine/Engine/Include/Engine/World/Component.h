@@ -28,6 +28,22 @@ namespace ost
 
     // ------------------------------------------------------------
 
+    struct ComponentProperty
+    {
+        ComponentProperty(std::string_view n, TypeID t, void* d)
+            : name{n}
+            , type{t}
+            , pData{d}
+        {
+        }
+
+        std::string_view name;
+        TypeID type;
+        void* pData;
+    };
+
+    // ------------------------------------------------------------
+
     class ActorComponent
     {
     public:
@@ -49,6 +65,10 @@ namespace ost
 
         void InitializeTicked(ComponentTicker& ticker);
         void DestroyTicked(ComponentTicker& ticker);
+
+        // Editor Primarily! Don't use this in game code
+        virtual List<ComponentProperty> GeneratePropertySet() {}
+
 
     protected:
         void AddFlag(EComponentFlag flag);

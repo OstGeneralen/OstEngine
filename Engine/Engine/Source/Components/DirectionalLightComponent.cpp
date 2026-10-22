@@ -15,6 +15,14 @@ void ost::DirectionalLightComponent::InitializeLightType(LightRenderProxy& proxy
     proxy.proxyData.type = ELightType::Directional;
 }
 
+List<ComponentProperty> ost::DirectionalLightComponent::GeneratePropertySet()
+{
+    List<ComponentProperty> properties;
+    properties.Add({"Color", TypeID::Get<Color>(), &GetProxy().proxyData.color});
+    properties.Add({"Intensity", TypeID::Get<Float32>(), &GetProxy().proxyData.intensity});
+    return properties;
+}
+
 // ------------------------------------------------------------
 // ------------------------------------------------------------
 // ------------------------------------------------------------

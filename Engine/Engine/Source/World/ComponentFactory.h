@@ -25,6 +25,7 @@ namespace ost
 
     private:
         Map<TypeID, ComponentCreateFunc> _createFunctions;
+        Map<TypeID, std::string> _componentNames;
         List<ComponentTypeInfo> _typeInfoList;
     };
 } // namespace ost

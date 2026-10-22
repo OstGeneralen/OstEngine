@@ -10,6 +10,10 @@ namespace ost
     {
     private:
         void InitializeLightType( LightRenderProxy& proxy ) override;
+
+        // BEGIN ActorComponent
+        List<ComponentProperty> GeneratePropertySet() override;
+
     };
 } // namespace ost
 
