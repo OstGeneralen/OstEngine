@@ -19,6 +19,7 @@ namespace ost
         ~Scene();
 
         Actor* CreateActor();
+        void DestoryActor( Actor* pActor );
 
         List<UniquePtr<Actor>>& GetAllActors();
         const List<UniquePtr<Actor>>& GetAllActors() const;

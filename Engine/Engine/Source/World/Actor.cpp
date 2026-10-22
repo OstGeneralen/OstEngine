@@ -14,6 +14,15 @@ Actor::Actor(GameWorld& gameWorld)
 {
 }
 
+ost::Actor::~Actor()
+{
+    for (auto& [type, comp] : _components)
+    {
+        _gameWorld.UnregisterComponent(*this, *comp);
+    }
+    _components.Clear();
+}
+
 // ------------------------------------------------------------
 
 const StringID& ost::Actor::GetName() const

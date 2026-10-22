@@ -46,6 +46,23 @@ void ost::GUIActorList::Display()
         DisplayActor(*actor, pHovered == pActor, pSelected == pActor);
     }
 
+    ImGui::BeginChild("AddRemoveActor", {ImGui::GetContentRegionAvail().x, 0}, ImGuiChildFlags_AutoResizeY);
+
+    ImGui::BeginDisabled(_pCurrentSelectedActor == nullptr);
+    if (ImGui::Button("Delete"))
+    {
+        pEngine->GetServiceLocator().GetRequired<ISceneManager>().GetActiveScene()->DestoryActor(_pCurrentSelectedActor);
+        _pCurrentSelectedActor = nullptr;
+    }
+    ImGui::EndDisabled();
+    ImGui::SameLine();
+    if (ImGui::Button("New"))
+    {
+        pEngine->GetServiceLocator().GetRequired<ISceneManager>().GetActiveScene()->CreateActor();
+    }
+
+    ImGui::EndChild();
+
     EndGUI();
 
     _sceneEditorCtx.SetTargetActor(_pCurrentSelectedActor);
