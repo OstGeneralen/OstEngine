@@ -8,6 +8,10 @@
 
 #include <Math/Color.h>
 
+// Engine
+#include <Engine/System/IInputReader.h>
+#include <Engine/System/ITimeProvider.h>
+
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -24,7 +28,6 @@ void GUISceneView::Display()
 {
     IGraphicsEngine& gfxEngine = EditorContext::Get().serviceLocator.GetRequired<IGraphicsEngine>();
     const IRenderer& renderer = gfxEngine.GetRenderer();
-    SceneViewCamera& sceneViewCamera = EditorContext::Get().serviceLocator.GetRequired<SceneViewCamera>();
 
     auto showMenuItem = [](const char* l, ERenderOutputTexture t, Uint32& outSelected) {
         if (ImGui::MenuItem(l, 0, false, outSelected != static_cast<Uint32>(t)))
@@ -34,7 +37,19 @@ void GUISceneView::Display()
     };
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
+
+    if (_isFlyMode)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Border, {0, 1, 1, 1});
+    }
+
     BeginGUI(ImGuiWindowFlags_MenuBar);
+
+    if (_isFlyMode)
+    {
+        ImGui::PopStyleColor();
+    }
+
     ImGui::PopStyleVar();
 
     ImGui::BeginMenuBar();
@@ -60,6 +75,25 @@ void GUISceneView::Display()
     const void* pNativeTexture = renderer.GetOutputTarget(static_cast<ERenderOutputTexture>(_displayTexture))->GetNativeResource();
     ImGui::Image((ImTextureRef)(intptr_t)pNativeTexture, gfxEngine.GetRenderer().GetDimensions());
 
+    const Vector2f min = ImGui::GetItemRectMin();
+    const Vector2f max = ImGui::GetItemRectMax();
+    const Vector2f mousePos = ImGui::GetMousePos();
+    const bool mouseOutside = mousePos.X < min.X || mousePos.Y < min.Y || mousePos.X > max.X || mousePos.Y > max.Y;
+    if (!mouseOutside && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+    {
+        _isFlyMode = true;
+        _cachedMousePos = ImGui::GetMousePos();
+    }
+    else if (_isFlyMode && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+    {
+        _isFlyMode = false;
+    }
+
+    if (_isFlyMode)
+    {
+        UpdateFlyMode();
+    }
+
     EndGUI();
 
     _desiredRenderSize = activeRenderSize;
@@ -73,6 +107,52 @@ void ost::GUISceneView::PostDisplay()
         gfxEngine.SetRenderSize(_desiredRenderSize);
         _cachedSceneRenderSize = _desiredRenderSize;
     }
+}
+
+void ost::GUISceneView::UpdateFlyMode()
+{
+    const Float32 sensitivity = 0.8f;
+
+    SceneViewCamera& sceneViewCamera = EditorContext::Get().serviceLocator.GetRequired<SceneViewCamera>();
+    IInputReader& input = EditorContext::Get().serviceLocator.GetRequired<IInputReader>();
+    ITimeProvider& time = EditorContext::Get().serviceLocator.GetRequired<ITimeProvider>();
+
+    const Vector2f currentMousePos = ImGui::GetMousePos();
+    Vector2f mouseDelta = (currentMousePos - _cachedMousePos) * sensitivity;
+    _cachedMousePos = currentMousePos;
+
+    sceneViewCamera.LookLeftRight(mouseDelta.X);
+    sceneViewCamera.LookUpDown(mouseDelta.Y);
+
+    Vector3f translationDirection;
+
+    if (input.Down(EKeyboard::W))
+    {
+        translationDirection.Z += 1;
+    }
+    if (input.Down(EKeyboard::S))
+    {
+        translationDirection.Z -= 1;
+    }
+    if (input.Down(EKeyboard::D))
+    {
+        translationDirection.X += 1;
+    }
+    if (input.Down(EKeyboard::A))
+    {
+        translationDirection.X -= 1;
+    }
+    if (input.Down(EKeyboard::Space))
+    {
+        translationDirection.Y += 1;
+    }
+    if (input.Down(EKeyboard::LCtrl))
+    {
+        translationDirection.Y -= 1;
+    }
+    translationDirection.Normalize();
+
+    sceneViewCamera.Move(translationDirection * 2.0f * time.GetDeltaTime());
 }
 
 // ------------------------------------------------------------
