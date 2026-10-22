@@ -39,6 +39,8 @@ add_executable(${PROJECT_NAME}
     Content/stb_image.h
     Content/IconProvider.h
     Content/IconProvider.cpp
+    GUI/Controls/GUIActorList.h
+    GUI/Controls/GUIActorList.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

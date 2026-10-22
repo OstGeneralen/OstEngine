@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include <OstTypes.h>
+#include <string_view>
 
 // ------------------------------------------------------------
 

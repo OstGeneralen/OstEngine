@@ -28,17 +28,20 @@ void ost::EditorGameInstance::Load(IAssetManager& assets)
     ost::Scene* scene = sceneManager.CreateScene();
 
     camera = scene->CreateActor();
+    camera->SetName("Camera");
     auto& cameraComponent = camera->AddComponent<ost::CameraComponent>();
     cameraComponent.MakePerspective(90.0f * ost::math::DegToRad);
     camera->transform.Move({0, 0, -5});
 
     ost::Actor* cube = scene->CreateActor();
+    cube->SetName("Cube");
     auto& meshComponent = cube->AddComponent<ost::StaticMeshComponent>();
     meshComponent.SetModel(cubeModel);
     meshComponent.SetMaterial(leatherMaterial);
     cube->transform.Rotate(ost::Quaternion::FromEulers(45.0f * ost::math::DegToRad, 45.0f * ost::math::DegToRad, 0));
 
     ost::Actor* sun = scene->CreateActor();
+    sun->SetName("Sun");
     auto& dirLight = sun->AddComponent<ost::DirectionalLightComponent>();
     dirLight.SetColor(ost::Colors::White);
     dirLight.SetIntensity(2.0f);

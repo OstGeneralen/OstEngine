@@ -16,6 +16,7 @@
 #include "Content/IconProvider.h"
 
 // GUI Controls
+#include "GUI/Controls/GUIActorList.h"
 #include "GUI/Controls/GUIPanel.h"
 #include "GUI/Controls/GUISceneView.h"
 #include "GUI/Controls/GUIStackPanel.h"
@@ -101,7 +102,7 @@ void ost::EditorApplication::Run()
     auto& topVertical =
         rootElement.AddChild<GUIStackPanel>("TopHorizontal", EOrientation::Horizontal).SetBordered(false).SetResizeFlag(EGUIResize_Y).SetInitialSize({0, 400});
 
-    topVertical.AddChild<GUIPanel>("ActorList").SetResizeFlag(EGUIResize_X).SetBordered(true).SetInitialSize({200, 0});
+    topVertical.AddChild<GUIActorList>().SetResizeFlag(EGUIResize_X).SetBordered(true).SetInitialSize({200, 0});
     topVertical.AddChild<GUISceneView>().SetBordered(true);
 
     while (!_hasExitRequest)
@@ -131,7 +132,7 @@ void ost::EditorApplication::Run()
 
         _graphicsEngine->Present();
 
-        // Execute the post display to allow resizing etc of renderer 
+        // Execute the post display to allow resizing etc of renderer
         _editorGui.PostDisplay();
     }
 }
