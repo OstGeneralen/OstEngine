@@ -26,25 +26,14 @@ void Actor::SetName(const std::string& name)
 
 // ------------------------------------------------------------
 
-List<ActorComponent*> ost::Actor::GetComponents()
+List<ComponentData> ost::Actor::GetComponents()
 {
-    List<ActorComponent*> comps(_components.GetSize());
+    List<ComponentData> comps(_components.GetSize());
     SizeType index = 0;
     for (auto& [type, compPtr] : _components)
     {
-        comps[index] = compPtr.Get();
-        index++;
-    }
-    return comps;
-}
-
-List<const ActorComponent*> ost::Actor::GetComponents() const
-{
-    List<const ActorComponent*> comps(_components.GetSize());
-    SizeType index = 0;
-    for (auto& [type, compPtr] : _components)
-    {
-        comps[index] = compPtr.Get();
+        comps[index].componentTypeID = type;
+        comps[index].pComponent = compPtr.Get();
         index++;
     }
     return comps;
