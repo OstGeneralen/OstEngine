@@ -45,6 +45,11 @@ add_executable(${PROJECT_NAME}
     System/SceneEditorContext.cpp
     GUI/Controls/GUIActorEditor.h
     GUI/Controls/GUIActorEditor.cpp
+    GUI/PropertyEditor/PropertyEditorDrawer.h
+    GUI/PropertyEditor/PropertyEditor.h
+    GUI/PropertyEditor/MathTypeEditors.h
+    GUI/PropertyEditor/PropertyEditorDrawer.cpp
+    GUI/PropertyEditor/BasicTypeEditors.h
 )
 
 target_link_libraries(${PROJECT_NAME}

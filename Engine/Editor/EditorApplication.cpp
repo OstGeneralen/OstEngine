@@ -14,6 +14,7 @@
 
 // Services
 #include "Content/IconProvider.h"
+#include "GUI/PropertyEditor/PropertyEditorDrawer.h"
 #include "System/SceneEditorContext.h"
 
 // GUI Controls
@@ -98,6 +99,7 @@ void ost::EditorApplication::Run()
 {
     _coreEngine->SetGameInstance(&_editorGameInstance);
 
+    _serviceLocator.RegisterManaged<PropertyEditorDrawer>(Ptr::NewUnique<PropertyEditorDrawer>());
     _serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
     SceneEditorContext sceneEditContext;
 

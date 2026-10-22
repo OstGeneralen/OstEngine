@@ -1,6 +1,9 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include <OstTypes.h>
+#include <string_view>
+#include <Utility/TypeID.h>
+#include <Container/List.h>
 
 // clang-format off
 #define OPTIONAL_COMPONENT_METHOD {}
@@ -67,7 +70,7 @@ namespace ost
         void DestroyTicked(ComponentTicker& ticker);
 
         // Editor Primarily! Don't use this in game code
-        virtual List<ComponentProperty> GeneratePropertySet() {}
+        virtual List<ComponentProperty> GeneratePropertySet() { return {}; }
 
 
     protected:

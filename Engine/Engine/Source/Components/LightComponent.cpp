@@ -40,6 +40,9 @@ void LightComponent::InitializeRenderState(SceneGraph& sceneGraph)
 
     // Call through to each individual light type and init their properties
     InitializeLightType(GetProxy());
+
+    // Force the transform to mark itself as diry once
+    GetOwner().transform.GetWorldTransform();
 }
 
 void LightComponent::DestroyRenderState(SceneGraph& sceneGraph)
@@ -53,8 +56,11 @@ void LightComponent::DestroyRenderState(SceneGraph& sceneGraph)
 
 void LightComponent::UpdateDirtyTransform(SceneGraph& sceneGraph)
 {
-    GetProxy().proxyData.position = GetOwner().transform.GetWorldPosition();
+    // Force the transform to be reevaluated if dirty
+    GetOwner().transform.GetWorldTransform();
+
     GetProxy().proxyData.direction = GetOwner().transform.GetForward();
+    GetProxy().proxyData.position = GetOwner().transform.GetWorldTransform().ExtractTranslation();
 }
 
 LightRenderProxy& ost::LightComponent::GetProxy() const

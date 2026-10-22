@@ -12,6 +12,8 @@ namespace ost
         void SetRadius(Float32 radius);
         Float32 GetRadius() const;
 
+        List<ComponentProperty> GeneratePropertySet() override;
+
     private:
         void InitializeLightType(LightRenderProxy& proxy) override;
     };

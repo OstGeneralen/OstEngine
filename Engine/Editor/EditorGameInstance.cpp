@@ -40,6 +40,10 @@ void ost::EditorGameInstance::Load(IAssetManager& assets)
     meshComponent.SetMaterial(leatherMaterial);
     cube->transform.Move({0,1,0});
     cube->transform.Rotate(ost::Quaternion::FromEulers(45.0f * ost::math::DegToRad, 45.0f * ost::math::DegToRad, 0));
+    
+    ost::Actor* empty = scene->CreateActor();
+    empty->SetName("Empty");
+    empty->transform.Move({2,1,0});
 
     ost::Actor* sun = scene->CreateActor();
     sun->SetName("Sun");
@@ -57,8 +61,6 @@ void ost::EditorGameInstance::Unload(IAssetManager& assets)
 
 void ost::EditorGameInstance::Update(Float32 deltaTime)
 {
-    camera->transform.Move({0, 0, 1});
-    camera->transform.Move({0, 0, -1});
 }
 
 // ------------------------------------------------------------

@@ -11,6 +11,9 @@ namespace ost
     class EditorGameInstance : public GameBase
     {
     public:
+        void Start(IComponentFactory&) override {}
+        void Shutdown(IComponentFactory&) override {}
+
         void Load(IAssetManager& assets) override;
         void Unload(IAssetManager& assets) override;
         void Update(Float32 deltaTime) override;

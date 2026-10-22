@@ -47,6 +47,7 @@ void DeferredRenderer::Initialize(const Vector2u& renderSize, RendererContext&& 
 
     // Deferred uses its own light buffer since it actually allows more lights to be drawn than the fixed count of 8
     rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
+    _lightBuffer.SetDebugName("Deferred_LightBuffer");
 }
 
 // ------------------------------------------------------------

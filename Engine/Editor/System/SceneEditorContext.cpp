@@ -23,10 +23,23 @@ void SceneEditorContext::SetTargetActor(Actor* pActor)
     Actor* pPreviousTarget = _pTargetActor;
     _pTargetActor = pActor;
 
+    _targetActorComponentData = {};
+    if (_pTargetActor)
+    {
+        _targetActorComponentData = _pTargetActor->GetComponents();
+    }
+
     if (pPreviousTarget != _pTargetActor)
     {
         targetActorChanged.Broadcast();
     }
+}
+
+// ------------------------------------------------------------
+
+List<ComponentData>& ost::SceneEditorContext::GetTargetActorComponentsInfo()
+{
+    return _targetActorComponentData;
 }
 
 // ------------------------------------------------------------
