@@ -23,6 +23,16 @@ namespace ost
         // clang-format on
 
     public:
+        static Quaternion FromEulersDegrees(Float32 x, Float32 y, Float32 z)
+        {
+            return FromEulersDegrees(Vector3f(x, y, z));
+        }
+
+        static Quaternion FromEulersDegrees(const Vector3f& eulers)
+        {
+            return FromEulers(eulers * math::DegToRad);
+        }
+
         static Quaternion FromEulers(Float32 x, Float32 y, Float32 z)
         {
             return FromEulers(Vector3f(x, y, z));
@@ -113,6 +123,34 @@ namespace ost
             Quaternion result;
             DxTypeStore(result.dxType, DirectX::XMQuaternionInverse(DxTypeLoad(dxType)));
             return result;
+        }
+
+        inline Vector3f ToEulers() const
+        {
+            Vector3f result;
+            const Float32 sinrCosp = 2.0f * (W * Z + X * Y);
+            const Float32 cosrCosp = 1.0f - 2.0f * (Y * Y + Z * Z);
+
+            result.Z = std::atan2f(sinrCosp, cosrCosp);
+            const Float32 sinp = 2.0f * (W * X - Y * Z);
+            if (math::Abs(sinp) >= 1.0f)
+            {
+                result.X = std::copysign(DirectX::XM_PIDIV2, sinp);
+            }
+            else
+            {
+                result.X = std::asinf(sinp);
+            }
+
+            const Float32 sinyCosp = 2.0f * (W * Y + Z * X);
+            const Float32 cosyCosp = 1.0f - 2.0f * (X * X + Y * Y);
+            result.Y = std::atan2f(sinyCosp, cosyCosp);
+            return result;
+        }
+
+        inline Vector3f ToEulersDegrees() const
+        {
+            return ToEulers() * math::RadToDeg;
         }
 
     private:
