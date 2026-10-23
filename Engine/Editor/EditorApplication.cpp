@@ -11,6 +11,9 @@
 
 #include <Engine/Configuration/RuntimeConfig.h>
 
+// Windows
+#include "GUI/Window/AboutWindow.h"
+
 // Services
 #include "Content/IconProvider.h"
 #include "GUI/PropertyEditor/PropertyEditorDrawer.h"
@@ -38,6 +41,7 @@ EditorApplication::EditorApplication()
     , _window{}
     , _serviceLocator{}
     , _context{_serviceLocator}
+    , _commandQueue{}
     , _coreEngine{}
     , _graphicsEngine{}
 {
@@ -92,8 +96,13 @@ void ost::EditorApplication::Run()
     _coreEngine->SetGameInstance(&_editorGameInstance);
 
     _serviceLocator.RegisterManaged<PropertyEditorDrawer>(Ptr::NewUnique<PropertyEditorDrawer>());
-    _serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
+    //_serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
+    _serviceLocator.RegisterUnmanaged<IGUIWindowManager>(&_editorGui);
+    IGUIWindowManager& winManager = _editorGui;
+    winManager.RegisterWindowType<AboutWindow>();
+
     _serviceLocator.RegisterUnmanaged<SceneViewCamera>(&_sceneViewCamera);
+    _serviceLocator.RegisterUnmanaged<IEditorCommandQueue>(&_commandQueue);
     SceneEditorContext sceneEditContext;
 
     _editorGui.Initialize();
@@ -105,7 +114,7 @@ void ost::EditorApplication::Run()
 
     while (!_hasExitRequest)
     {
-        _context.commandQueue.Execute(_context);
+        _commandQueue.Execute(_context);
 
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();

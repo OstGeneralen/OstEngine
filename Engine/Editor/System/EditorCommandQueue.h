@@ -1,5 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "System/IEditorCommandQueue.h"
 #include "System/EditorCommand.h"
 
 #include <Container/Deque.h>
@@ -12,15 +13,10 @@ namespace ost
 {
     struct EditorContext;
 
-    class EditorCommandQueue
+    class EditorCommandQueue : public IEditorCommandQueue
     {
     public:
-        template <typename T>
-        void PushCommand(UniquePtr<T>&& cmd)
-        {
-            _pendingCommands.Push(std::move(cmd));
-        }
-
+        void PushCommand(UniquePtr<EditorCommand>&& cmd) override;
         void Execute(EditorContext& context);
 
     private:

@@ -1,5 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GUI/Layout/GUIMainMenuItem.h"
 #include "GUI/Layout/GUIPanel.h"
 
 #include <string>
@@ -25,7 +26,7 @@ namespace ost
         void DrawGUI(const Vector2f& renderSize, EditorContext& context);
 
     private:
-        void BeginGUIDraw(const Vector2f& renderSize);
+        void BeginGUIDraw(const Vector2f& renderSize, EditorContext& context);
         void EndGUIDraw();
 
         void PreWarmPanelChildrenGUI(GUIPanel* pPanel, EditorContext& context);

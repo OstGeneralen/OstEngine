@@ -3,7 +3,6 @@ project(OstEditor)
 
 add_executable(${PROJECT_NAME}
     EditorApplication.cpp
-    EditorContext.cpp
     EditorGameInstance.cpp
     EditorMain.cpp
     ImGui/imgui_demo.cpp
@@ -13,19 +12,25 @@ add_executable(${PROJECT_NAME}
     ImGui/imgui_impl_dx11.cpp
     ImGui/imgui_impl_win32.cpp
     ImGui/imgui.cpp
-    Content/stb_image.h
     Content/IconProvider.cpp
-    System/SceneEditorContext.cpp
-    GUI/PropertyEditor/PropertyEditorDrawer.cpp
-    SceneView/SceneViewCamera.h
     SceneView/SceneViewCamera.cpp
     GUI/Layout/GUILayout.cpp
     GUI/Layout/GUIStackPanel.cpp
-    GUI/EditorMasterGUI.cpp
+    GUI/EditorGUI.cpp
+    GUI/PropertyEditor/PropertyEditorDrawer.cpp
+    System/SceneEditorContext.cpp
     System/EditorCommandQueue.h
     System/EditorCommandQueue.cpp
     System/EditorCommand.h
-    GUI/Layout/GUIContentContainer.h
+    System/IEditorCommandQueue.h
+    GUI/Window/GUIWindow.h
+    GUI/Window/OpenWindowCommand.h
+    GUI/Window/IGUIWindowManager.h
+    GUI/Layout/GUIMainMenuItem.h
+    GUI/Layout/GUIMainMenu.h
+    GUI/Layout/GUIMainMenu.cpp
+    GUI/Window/AboutWindow.h
+    GUI/Window/AboutWindow.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

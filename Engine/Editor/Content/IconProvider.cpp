@@ -1,4 +1,4 @@
-// Kasper "OstGeneralen" Esbjornsson - 2026
+/* // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "IconProvider.h"
 
 #include "EditorContext.h"
@@ -79,4 +79,4 @@ void ost::IconProvider::SetIconUV(EIcon icon, const Vector2u& imageLocation)
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
-// ------------------------------------------------------------
+// ------------------------------------------------------------ */

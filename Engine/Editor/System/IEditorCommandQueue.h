@@ -1,22 +1,18 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/Layout/GUILayout.h"
-
-#include <Math/Vector2.h>
+#include <Memory/UniquePtr.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class EditorMasterGUI
+    class EditorCommand;
+
+    class IEditorCommandQueue
     {
     public:
-        void Initialize();
-        void PrewarmGUI(const Vector2f& displaySize, EditorContext& context);
-        void DisplayGUI(const Vector2f& displaySize, EditorContext& context);
-
-    private:
-        GUILayout _layout;
+        virtual ~IEditorCommandQueue() = default;
+        virtual void PushCommand(UniquePtr<EditorCommand>&& cmd) = 0;
     };
 } // namespace ost
 

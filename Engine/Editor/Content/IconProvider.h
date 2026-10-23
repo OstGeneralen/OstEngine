@@ -1,4 +1,4 @@
-// Kasper "OstGeneralen" Esbjornsson - 2026
+/* // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include <GraphicsEngine/Resources/ObjectHandles.h>
 #include <GraphicsEngine/Resources/ITexture.h>
@@ -47,4 +47,4 @@ namespace ost
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
-// ------------------------------------------------------------
+// ------------------------------------------------------------ */

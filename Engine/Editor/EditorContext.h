@@ -17,7 +17,6 @@ namespace ost
         }
 
         ServiceLocator& serviceLocator;
-        EditorCommandQueue commandQueue;
     };
 } // namespace ost
 

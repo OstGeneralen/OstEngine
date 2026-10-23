@@ -13,6 +13,7 @@ namespace ost
         {
             ImGui::Text("Asset View");
         }
+
     private:
         ImGuiChildFlags GetDrawFlags() const override
         {

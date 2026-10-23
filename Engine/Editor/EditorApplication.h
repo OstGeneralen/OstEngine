@@ -2,8 +2,9 @@
 #pragma once
 #include "EditorContext.h"
 #include "EditorGameInstance.h"
-#include "GUI/EditorMasterGUI.h"
+#include "GUI/EditorGUI.h"
 #include "SceneView/SceneViewCamera.h"
+#include "System/EditorCommandQueue.h"
 
 #include <Engine/IOstEngine.h>
 #include <Engine/Platform/Window.h>
@@ -34,13 +35,14 @@ namespace ost
         Window _window;
         ServiceLocator _serviceLocator;
         EditorContext _context;
+        EditorCommandQueue _commandQueue;
         EditorGameInstance _editorGameInstance;
         UniquePtr<IOstEngine> _coreEngine;
         UniquePtr<IGraphicsEngine> _graphicsEngine;
 
         SceneViewCamera _sceneViewCamera;
 
-        EditorMasterGUI _editorGui;
+        EditorGUI _editorGui;
     };
 } // namespace ost
 

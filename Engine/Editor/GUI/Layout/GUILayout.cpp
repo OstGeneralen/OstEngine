@@ -1,6 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "GUILayout.h"
 
+#include "GUIMainMenu.h"
+
 #include <Math/Color.h>
 
 using namespace ost;
@@ -12,7 +14,7 @@ void ost::GUILayout::PreWarmGUI(const Vector2f& renderSize, EditorContext& conte
     // This is really just a dry run of the whole layout, allowing all of the internal state to initialize its sizing
     ImGui::NewFrame();
 
-    BeginGUIDraw(renderSize);
+    BeginGUIDraw(renderSize, context);
     PreWarmPanelChildrenGUI(_pRootPanel, context);
     EndGUIDraw();
 
@@ -23,7 +25,7 @@ void ost::GUILayout::PreWarmGUI(const Vector2f& renderSize, EditorContext& conte
 
 void GUILayout::DrawGUI(const Vector2f& renderSize, EditorContext& context)
 {
-    BeginGUIDraw(renderSize);
+    BeginGUIDraw(renderSize, context);
     DrawPanelChildren(_pRootPanel, context);
     EndGUIDraw();
 }
@@ -39,8 +41,15 @@ void GUILayout::AddPanel(UniquePtr<GUIPanel>&& panel, const char* uniqueName, co
 
 // ------------------------------------------------------------
 
-void ost::GUILayout::BeginGUIDraw(const Vector2f& renderSize)
+void ost::GUILayout::BeginGUIDraw(const Vector2f& renderSize, EditorContext& context)
 {
+    // 1. Draw the top level menu
+    GUIMainMenu mainMenu;
+    mainMenu.DrawGUI(context);
+
+    const Float32 mainMenuHeight = ImGui::GetItemRectSize().y;
+    const Vector2f remainingSize = {renderSize.X, renderSize.Y - mainMenuHeight};
+
     // 1. Set up all style state
     ImGuiWindowFlags flags = 0;
     flags |= ImGuiWindowFlags_NoDecoration;
@@ -49,8 +58,8 @@ void ost::GUILayout::BeginGUIDraw(const Vector2f& renderSize)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0);         // Root window should not be rounded
     ImGui::PushStyleColor(ImGuiCol_WindowBg, Colors::Black.Vec4); // Root window has plain black background
 
-    ImGui::SetNextWindowPos({0, 0}, 0, {0, 0}); // The root window should always be drawn at 0,0
-    ImGui::SetNextWindowSize(renderSize);       // ...and fill the whole render area
+    ImGui::SetNextWindowPos({0, mainMenuHeight}, 0, {0, 0}); // The root window should always be drawn at 0,0
+    ImGui::SetNextWindowSize(remainingSize);                 // ...and fill the whole render area
 
     // 2. Begin the window
     ImGui::Begin("##GUIRoot", 0, flags);
@@ -58,8 +67,6 @@ void ost::GUILayout::BeginGUIDraw(const Vector2f& renderSize)
     // 3. Pop the style state
     ImGui::PopStyleVar(1);
     ImGui::PopStyleColor();
-
-    // 4. Draw the top level menu
 }
 
 void ost::GUILayout::EndGUIDraw()
