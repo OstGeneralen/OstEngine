@@ -1,26 +1,23 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/GUIControl.h"
+#include "GUI/Layout/GUIPanel.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    enum class EOrientation
-    {
-        Horizontal,
-        Vertical,
-    };
-
-    class GUIStackPanel : public GUIControl
+    class GUIStackPanel : public GUIPanel
     {
     public:
-        GUIStackPanel(const std::string& uid, EOrientation orientation);
+        GUIStackPanel& SetOrientation(EGuiLayoutOrientation orientation);
+        GUIStackPanel& Bordered();
 
-        void Display() override;
+        void DrawGUI(EditorContext& context) override;
+
+        ImGuiChildFlags GetDrawFlags() const override;
 
     private:
-        EOrientation _orientation;
+        bool _bordered = false;
     };
 } // namespace ost
 

@@ -7,35 +7,25 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void GUILayout::InitializeSizing(const Vector2f& renderSize)
+void ost::GUILayout::PreWarmGUI(const Vector2f& renderSize, EditorContext& context)
 {
-    InitializeChildSize(_pRootPanel, renderSize);
+    // This is really just a dry run of the whole layout, allowing all of the internal state to initialize its sizing
+    ImGui::NewFrame();
+
+    BeginGUIDraw(renderSize);
+    PreWarmPanelChildrenGUI(_pRootPanel, context);
+    EndGUIDraw();
+
+    ImGui::EndFrame();
 }
 
 // ------------------------------------------------------------
 
 void GUILayout::DrawGUI(const Vector2f& renderSize, EditorContext& context)
 {
-    GUIRect renderRect;
-    renderRect.min = {0, 0};
-    renderRect.max = renderSize;
-
-    ImGuiWindowFlags flags = 0;
-    flags |= ImGuiWindowFlags_NoDecoration;
-
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});     // Root window should not be padded
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, {0, 0});    // Root window should not be rounded
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, Colors::Black.Vec4); // Root window has plain black background
-
-    // Begin the window
-    ImGui::Begin("##GUIRoot", 0, flags);
-
-    ImGui::PopStyleVar(2);
-    ImGui::PopStyleColor();
-
+    BeginGUIDraw(renderSize);
     DrawPanelChildren(_pRootPanel, context);
-
-    ImGui::End();
+    EndGUIDraw();
 }
 
 // ------------------------------------------------------------
@@ -43,33 +33,77 @@ void GUILayout::DrawGUI(const Vector2f& renderSize, EditorContext& context)
 void GUILayout::AddPanel(UniquePtr<GUIPanel>&& panel, const char* uniqueName, const Vector2f& normSize)
 {
     GUIPanel* pPanel = _panels.Insert(uniqueName, std::move(panel)).Get();
+    pPanel->_stringID = uniqueName;
     pPanel->_size = normSize;
 }
 
 // ------------------------------------------------------------
 
-void ost::GUILayout::InitializeChildSize(GUIPanel* pChild, const Vector2f& parentSize)
+void ost::GUILayout::BeginGUIDraw(const Vector2f& renderSize)
 {
-    const Vector2f childNormSize = pChild->_size;
-    pChild->_size = {childNormSize.X * parentSize.X, childNormSize.Y * parentSize.Y};
+    // 1. Set up all style state
+    ImGuiWindowFlags flags = 0;
+    flags |= ImGuiWindowFlags_NoDecoration;
+    flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
 
-    switch (pChild->_orientation)
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0);         // Root window should not be rounded
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, Colors::Black.Vec4); // Root window has plain black background
+
+    ImGui::SetNextWindowPos({0, 0}, 0, {0, 0}); // The root window should always be drawn at 0,0
+    ImGui::SetNextWindowSize(renderSize);       // ...and fill the whole render area
+
+    // 2. Begin the window
+    ImGui::Begin("##GUIRoot", 0, flags);
+
+    // 3. Pop the style state
+    ImGui::PopStyleVar(1);
+    ImGui::PopStyleColor();
+
+    // 4. Draw the top level menu
+}
+
+void ost::GUILayout::EndGUIDraw()
+{
+    ImGui::End();
+}
+
+// ------------------------------------------------------------
+
+void ost::GUILayout::PreWarmPanelChildrenGUI(GUIPanel* pPanel, EditorContext& context)
+{
+    const Vector2f availableArea = ImGui::GetContentRegionAvail();
+    const Vector2f itemSpacing = ImGui::GetStyle().ItemSpacing;
+    const SizeType numChildren = pPanel->_children.GetSize();
+    const Float32 numChildrenFlt = static_cast<Float32>(numChildren);
+
+    const Vector2f totalSpacing = numChildren > 0 ? itemSpacing * (numChildrenFlt - 1.0f) : itemSpacing;
+    const Vector2f childrenArea = availableArea - totalSpacing;
+
+    ImGui::PushID(pPanel->_stringID.c_str());
+
+    for (SizeType i = 0; i < pPanel->_children.GetSize(); ++i)
     {
-    case EGuiLayoutOrientation::Vertical: { // Full width, percentage of height
-        pChild->_size.X = parentSize.X;
-        break;
-    }
-    case EGuiLayoutOrientation::Horizontal: { // Full height, percentage of width
-        pChild->_size.Y = parentSize.Y;
-        break;
-    }
+        const bool isLastChild = (i + 1) == pPanel->_children.GetSize();
+        GUIPanel* pChild = pPanel->_children[i];
+
+        pChild->_size = {pChild->_size.X * childrenArea.X, pChild->_size.Y * childrenArea.Y};
+
+        ImGuiChildFlags childFlags = pChild->GetDrawFlags();
+
+        ImGui::BeginChild(pChild->_stringID.c_str(), pChild->_size, childFlags);
+        pChild->DrawGUI(context);
+
+        PreWarmPanelChildrenGUI(pChild, context);
+
+        ImGui::EndChild();
+
+        if (pPanel->_orientation == EGuiLayoutOrientation::Horizontal && !isLastChild)
+        {
+            ImGui::SameLine();
+        }
     }
 
-    // Recursively iterate through the childrent and adjust their sizes according to this child's size
-    for (auto pGrandChild : pChild->_children)
-    {
-        InitializeChildSize(pGrandChild, pChild->_size);
-    }
+    ImGui::PopID();
 }
 
 // ------------------------------------------------------------
@@ -83,10 +117,39 @@ void ost::GUILayout::DrawPanelChildren(GUIPanel* pPanel, EditorContext& context)
         const bool isLastChild = (i + 1) == pPanel->_children.GetSize();
         GUIPanel* pChild = pPanel->_children[i];
 
+        ImGuiWindowFlags windowFlags = pChild->GetWindowFlags();
         ImGuiChildFlags childFlags = pChild->GetDrawFlags();
 
-        ImGui::BeginChild(pChild->_stringID.c_str(), pChild->_size, childFlags);
+        if (isLastChild)
+        {
+            if (pPanel->_orientation == EGuiLayoutOrientation::Horizontal)
+            {
+                pChild->_size.X = 0.0f;
+            }
+            else if (pPanel->_orientation == EGuiLayoutOrientation::Vertical)
+            {
+                pChild->_size.Y = 0.0f;
+            }
+        }
+
+        if (!isLastChild)
+        {
+            if (pPanel->_orientation == EGuiLayoutOrientation::Horizontal)
+            {
+                childFlags |= ImGuiChildFlags_ResizeX;
+            }
+            else if (pPanel->_orientation == EGuiLayoutOrientation::Vertical)
+            {
+                childFlags |= ImGuiChildFlags_ResizeY;
+            }
+        }
+
+        ImGui::BeginChild(pChild->_stringID.c_str(), pChild->_size, childFlags, windowFlags);
+
         pChild->DrawGUI(context);
+
+        DrawPanelChildren(pChild, context);
+
         ImGui::EndChild();
 
         if (pPanel->_orientation == EGuiLayoutOrientation::Horizontal && !isLastChild)

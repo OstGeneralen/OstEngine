@@ -1,25 +1,23 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Views/View.h"
-
-#include <imgui.h>
+#include "GUI/Layout/GUIPanel.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class PropertyEditorView : public View
+    class GUIPropertyEditor : public GUIPanel
     {
     public:
-        PropertyEditorView()
+        void DrawGUI(EditorContext& context) override
         {
+            ImGui::Text("Property Edit");
         }
 
-        void Present(const ViewRect& viewRect, PropertyEditorCollection& propertyEditor) override
+    private:
+        ImGuiChildFlags GetDrawFlags() const override
         {
-            BeginPresent("Properties", viewRect);
-            ImGui::Text("This is where you'll edit components");
-            EndPresent();
+            return ImGuiChildFlags_Borders;
         }
     };
 } // namespace ost

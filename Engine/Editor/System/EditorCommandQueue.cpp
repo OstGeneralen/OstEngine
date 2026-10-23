@@ -1,27 +1,17 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
-#include "GUIPanel.h"
-
-#include <imgui.h>
+#include "EditorCommandQueue.h"
 
 using namespace ost;
 
 // ------------------------------------------------------------
 
-GUIPanel::GUIPanel(const std::string& uidString)
-    : GUIControl{uidString}
+void EditorCommandQueue::Execute(EditorContext& context)
 {
-}
-
-void ost::GUIPanel::Display()
-{
-    BeginGUI();
-
-    for (auto pChild : GetChildren())
+    while (!_pendingCommands.IsEmpty())
     {
-        pChild->Display();
+        auto cmd = _pendingCommands.Pop();
+        cmd->Execute(context);
     }
-
-    EndGUI();
 }
 
 // ------------------------------------------------------------

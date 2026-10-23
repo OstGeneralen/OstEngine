@@ -13,16 +13,25 @@
 
 namespace ost
 {
-    class EditorContext;
+    struct EditorContext;
 
     // Layout orientation determines the order child panels are drawn
     enum class EGuiLayoutOrientation
     {
-        Horizontal, // Draw children left -> right
         Vertical,   // Draw children top -> bottom
+        Horizontal, // Draw children left -> right
+        Default = Vertical,
     };
 
     // ------------------------------------------------------------
+
+#define GUI_PANEL_OPTIONAL_OVERRIDE_VOID                                                                                                                                 \
+    {                                                                                                                                                                    \
+    }
+#define GUI_PANEL_OPTIONAL_OVERRIDE_RETURN(r)                                                                                                                            \
+    {                                                                                                                                                                    \
+        return r;                                                                                                                                                        \
+    }
 
     class GUIPanel
     {
@@ -31,34 +40,25 @@ namespace ost
 
         virtual ~GUIPanel() = default;
 
-        // Present the gui itself
+        // Present the gui itself. Each panel need this.
         virtual void DrawGUI(EditorContext& context) = 0;
 
-        // Get the child flags
-        virtual ImGuiChildFlags GetDrawFlags() const;
+    protected:
+        // Optional overrides to change flags for child and window
+        virtual ImGuiChildFlags GetDrawFlags() const GUI_PANEL_OPTIONAL_OVERRIDE_RETURN(0);
+        virtual ImGuiWindowFlags GetWindowFlags() const GUI_PANEL_OPTIONAL_OVERRIDE_RETURN(0);
 
-        // Size pointer access to pass into ImGuis sizing function
-        Vector2f& GetSizeRef();
+        void SetOrientation(EGuiLayoutOrientation orientation)
+        {
+            _orientation = orientation;
+        }
 
     private:
-        EGuiLayoutOrientation _orientation = EGuiLayoutOrientation::Vertical;
+        EGuiLayoutOrientation _orientation = EGuiLayoutOrientation::Default;
         List<GUIPanel*> _children;
         std::string _stringID;
         Vector2f _size;
     };
-
-    // ------------------------------------------------------------
-    // IMPL
-
-    inline ImGuiChildFlags GUIPanel::GetDrawFlags() const
-    {
-        return 0;
-    }
-
-    inline Vector2f& ost::GUIPanel::GetSizeRef()
-    {
-        return _size;
-    }
 } // namespace ost
 
 // ------------------------------------------------------------

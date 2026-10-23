@@ -16,18 +16,20 @@ namespace ost
     {
     public:
         template <typename T>
-        T& SetRootPanel();
+        T& SetRootPanel(const char* uniqueName);
 
         template <typename T>
         T& AddPanel(GUIPanel& parent, const char* uniqueName, const Vector2f& normalizedInitialSize);
 
-        void InitializeSizing(const Vector2f& renderSize);
-
+        void PreWarmGUI(const Vector2f& renderSize, EditorContext& context);
         void DrawGUI(const Vector2f& renderSize, EditorContext& context);
 
     private:
-        void InitializeChildSize(GUIPanel* pChild, const Vector2f& parentSize);
-        void DrawPanelChildren( GUIPanel* pPanel, EditorContext& context);
+        void BeginGUIDraw(const Vector2f& renderSize);
+        void EndGUIDraw();
+
+        void PreWarmPanelChildrenGUI(GUIPanel* pPanel, EditorContext& context);
+        void DrawPanelChildren(GUIPanel* pPanel, EditorContext& context);
 
         void AddPanel(UniquePtr<GUIPanel>&& panel, const char* uniqueName, const Vector2f& normSize);
 
@@ -39,11 +41,12 @@ namespace ost
     // Impl
 
     template <typename T>
-    inline T& GUILayout::SetRootPanel()
+    inline T& GUILayout::SetRootPanel(const char* uniqueName)
     {
         UniquePtr<T> uPtr = Ptr::NewUnique<T>();
         T* tPtr = uPtr.Get();
-        AddPanel(std::move(uPtr), "GuiRootPanel", {1, 1});
+        AddPanel(std::move(uPtr), uniqueName, {1, 1});
+        _pRootPanel = tPtr;
         return *tPtr;
     }
 
@@ -52,6 +55,7 @@ namespace ost
     {
         UniquePtr<T> uPtr = Ptr::NewUnique<T>();
         T* tPtr = uPtr.Get();
+        parent._children.Add(tPtr);
         AddPanel(std::move(uPtr), uniqueName, normalizedInitialSize);
         return *tPtr;
     }

@@ -1,7 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "EditorContext.h"
 #include "EditorGameInstance.h"
-#include "GUI/EditorGUI.h"
+#include "GUI/EditorMasterGUI.h"
 #include "SceneView/SceneViewCamera.h"
 
 #include <Engine/IOstEngine.h>
@@ -32,13 +33,14 @@ namespace ost
         bool _hasExitRequest = false;
         Window _window;
         ServiceLocator _serviceLocator;
+        EditorContext _context;
         EditorGameInstance _editorGameInstance;
         UniquePtr<IOstEngine> _coreEngine;
         UniquePtr<IGraphicsEngine> _graphicsEngine;
 
         SceneViewCamera _sceneViewCamera;
 
-        EditorGUI _editorGui;
+        EditorMasterGUI _editorGui;
     };
 } // namespace ost
 

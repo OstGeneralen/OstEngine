@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 4.2)
 project(OstEditor)
 
 add_executable(${PROJECT_NAME}
+    EditorApplication.cpp
+    EditorContext.cpp
+    EditorGameInstance.cpp
     EditorMain.cpp
     ImGui/imgui_demo.cpp
     ImGui/imgui_draw.cpp
@@ -10,52 +13,19 @@ add_executable(${PROJECT_NAME}
     ImGui/imgui_impl_dx11.cpp
     ImGui/imgui_impl_win32.cpp
     ImGui/imgui.cpp
-    EditorApplication.h
-    EditorApplication.cpp
-    EditorGameInstance.h
-    EditorGameInstance.cpp
-    EditorContext.h
-    EditorContext.cpp
-    Views/ViewLayout.h
-    Views/View.h
-    Views/ViewLayout.cpp
-    Views/AssetsView.h
-    Views/SceneOutlinerView.h
-    Views/PropertyEditorView.h
-    PropertyEditors/PropertyEditor.h
-    PropertyEditors/BasicTypeEditors.h
-    PropertyEditors/PropertyEditorCollection.h
-    Views/ActorEditorView.h
-    GUI/GUIControl.h
-    GUI/GUIControl.cpp
-    GUI/EditorGUI.cpp
-    GUI/EditorGUI.h
-    GUI/Controls/GUIStackPanel.h
-    GUI/Controls/GUIStackPanel.cpp
-    GUI/Controls/GUIPanel.h
-    GUI/Controls/GUIPanel.cpp
-    GUI/Controls/GUISceneView.h
-    GUI/Controls/GUISceneView.cpp
     Content/stb_image.h
-    Content/IconProvider.h
     Content/IconProvider.cpp
-    GUI/Controls/GUIActorList.h
-    GUI/Controls/GUIActorList.cpp
-    System/SceneEditorContext.h
     System/SceneEditorContext.cpp
-    GUI/Controls/GUIActorEditor.h
-    GUI/Controls/GUIActorEditor.cpp
-    GUI/PropertyEditor/PropertyEditorDrawer.h
-    GUI/PropertyEditor/PropertyEditor.h
-    GUI/PropertyEditor/MathTypeEditors.h
     GUI/PropertyEditor/PropertyEditorDrawer.cpp
-    GUI/PropertyEditor/BasicTypeEditors.h
     SceneView/SceneViewCamera.h
     SceneView/SceneViewCamera.cpp
-    GUI/Layout/GUIPanel.h
-    GUI/Layout/GUIRect.h
-    GUI/Layout/GUILayout.h
     GUI/Layout/GUILayout.cpp
+    GUI/Layout/GUIStackPanel.cpp
+    GUI/EditorMasterGUI.cpp
+    System/EditorCommandQueue.h
+    System/EditorCommandQueue.cpp
+    System/EditorCommand.h
+    GUI/Layout/GUIContentContainer.h
 )
 
 target_link_libraries(${PROJECT_NAME}

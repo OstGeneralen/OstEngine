@@ -70,6 +70,11 @@ namespace ost
             return _stack.empty();
         }
 
+        SizeType GetSize() const
+        {
+            return _stack.size();
+        }
+
     private:
         std::stack<T> _stack;
     };

@@ -1,9 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include <Engine/IOstEngine.h>
-#include <GraphicsEngine/IGraphicsEngine.h>
-#include <Engine/Platform/Window.h>
-#include "Services/ServiceLocator.h"
+#include "System/EditorCommandQueue.h"
+
+#include <Services/ServiceLocator.h>
 
 // ------------------------------------------------------------
 
@@ -12,20 +11,13 @@ namespace ost
     struct EditorContext
     {
     public:
-        friend class EditorApplication;
+        EditorContext(ServiceLocator& services)
+            : serviceLocator{services}
+        {
+        }
 
-        const Window& window;
         ServiceLocator& serviceLocator;
-
-        static EditorContext& Get();
-
-    private:
-        static void Create(ServiceLocator& sl, const Window& win);
-        static void Destroy();
-
-        EditorContext(ServiceLocator& sl, const Window& win);
-
-        static EditorContext* _pInstance;
+        EditorCommandQueue commandQueue;
     };
 } // namespace ost
 

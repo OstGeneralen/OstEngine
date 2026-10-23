@@ -1,26 +1,23 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/GUIControl.h"
-
-#include <Memory/UniquePtr.h>
+#include "GUI/Layout/GUIPanel.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class EditorGUI
+    class GUIAssetView : public GUIPanel
     {
     public:
-        GUIControl& SetRoot( UniquePtr<GUIControl>&& root );
-        GUIControl& GetRoot();
-
-        void Display(const Vector2f& displaySize);
-        void PostDisplay(GUIControl* pFor = nullptr);
-
+        void DrawGUI(EditorContext& context) override
+        {
+            ImGui::Text("Asset View");
+        }
     private:
-        void DisplayMainMenu(Float32& outHeight);
-
-        UniquePtr<GUIControl> _rootControl;
+        ImGuiChildFlags GetDrawFlags() const override
+        {
+            return ImGuiChildFlags_Borders;
+        }
     };
 } // namespace ost
 

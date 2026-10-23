@@ -1,17 +1,24 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/GUIControl.h"
+#include "GUI/Layout/GUIPanel.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class GUIPanel : public GUIControl
+    class GUIAssetDirectoryView : public GUIPanel
     {
     public:
-        GUIPanel(const std::string& uidString);
+        void DrawGUI(EditorContext& context) override
+        {
+            ImGui::Text("Asset Dir");
+        }
 
-        void Display() override;
+    private:
+        ImGuiChildFlags GetDrawFlags() const override
+        {
+            return ImGuiChildFlags_Borders;
+        }
     };
 } // namespace ost
 

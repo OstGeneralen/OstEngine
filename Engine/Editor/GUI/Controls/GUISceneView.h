@@ -1,28 +1,24 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/GUIControl.h"
+#include "GUI/Layout/GUIPanel.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class GUISceneView : public GUIControl
+    class GUISceneView : public GUIPanel
     {
     public:
-        GUISceneView();
-        void Display() override;
-        void PostDisplay() override;
+        void DrawGUI(EditorContext& context) override
+        {
+            ImGui::Text("Scene View");
+        }
 
     private:
-        void UpdateFlyMode();
-        
-        bool _isFlyMode = false;
-        Vector2f _cachedMousePos;
-
-
-        Uint32 _displayTexture;
-        Vector2u _cachedSceneRenderSize;
-        Vector2u _desiredRenderSize;
+        ImGuiChildFlags GetDrawFlags() const override
+        {
+            return ImGuiChildFlags_Borders;
+        }
     };
 } // namespace ost
 

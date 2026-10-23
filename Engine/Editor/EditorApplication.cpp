@@ -3,7 +3,6 @@
 
 #include "EditorContext.h"
 #include "EditorGameInstance.h"
-#include "GUI/EditorGUI.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
@@ -16,13 +15,6 @@
 #include "Content/IconProvider.h"
 #include "GUI/PropertyEditor/PropertyEditorDrawer.h"
 #include "System/SceneEditorContext.h"
-
-// GUI Controls
-#include "GUI/Controls/GUIActorEditor.h"
-#include "GUI/Controls/GUIActorList.h"
-#include "GUI/Controls/GUIPanel.h"
-#include "GUI/Controls/GUISceneView.h"
-#include "GUI/Controls/GUIStackPanel.h"
 
 using namespace ost;
 
@@ -44,6 +36,8 @@ bool ImGuiWindowProcListener(const ost::NativeWindowEventContext& ctx)
 EditorApplication::EditorApplication()
     : _hasExitRequest{false}
     , _window{}
+    , _serviceLocator{}
+    , _context{_serviceLocator}
     , _coreEngine{}
     , _graphicsEngine{}
 {
@@ -88,8 +82,6 @@ void ost::EditorApplication::Start()
 
     _window.AddNativeWindowEventCallback(&ImGuiWindowProcListener);
 
-    EditorContext::Create(_serviceLocator, _window);
-
     // The editor registers the graphics engine as accessable service
     // This is to allow us to interact more closely with it
     _serviceLocator.RegisterUnmanaged<IGraphicsEngine>(_graphicsEngine.Get());
@@ -104,19 +96,17 @@ void ost::EditorApplication::Run()
     _serviceLocator.RegisterUnmanaged<SceneViewCamera>(&_sceneViewCamera);
     SceneEditorContext sceneEditContext;
 
-    auto& rootElement = _editorGui.SetRoot(Ptr::NewUnique<GUIStackPanel>("RootVertical", EOrientation::Vertical));
-    auto& topVertical =
-        rootElement.AddChild<GUIStackPanel>("TopHorizontal", EOrientation::Horizontal).SetBordered(false).SetResizeFlag(EGUIResize_Y).SetInitialSize({0, 400});
+    _editorGui.Initialize();
 
-    // auto& actorPanel = topVertical.AddChild<GUIStackPanel>("ActorPanel", EOrientation::Vertical).SetInitialSize({200,
-    // 0}).SetResizeFlag(EGUIResize_X).SetBordered(true);
-
-    topVertical.AddChild<GUIActorList>(sceneEditContext).SetInitialSize({200, 0}).SetResizeFlag(EGUIResize_X).SetBordered(true);
-    topVertical.AddChild<GUISceneView>().SetBordered(true).SetResizeFlag(EGUIResize_X).SetInitialSize({200, 0});
-    topVertical.AddChild<GUIActorEditor>(sceneEditContext).SetInitialSize({0, 0}).SetBordered(true);
+    // Pre-warm the gui to calculate sizes from normalized to actual
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    _editorGui.PrewarmGUI(_window.GetClientSize().VectorCast<Float32>(), _context);
 
     while (!_hasExitRequest)
     {
+        _context.commandQueue.Execute(_context);
+
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
@@ -139,15 +129,13 @@ void ost::EditorApplication::Run()
         // It is instead drawn onto an image in the scene view
         _graphicsEngine->ClearAndSetBackbuffer();
 
-        //_editorGui.Display(_window.GetClientSize().VectorCast<Float32>());
+        const Vector2f windowSize = _window.GetClientSize().VectorCast<Float32>();
+        _editorGui.DisplayGUI(windowSize, _context);
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
         _graphicsEngine->Present();
-
-        // Execute the post display to allow resizing etc of renderer
-        _editorGui.PostDisplay();
     }
 }
 
@@ -156,8 +144,6 @@ void ost::EditorApplication::Shutdown()
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
-
-    EditorContext::Destroy();
 
     _coreEngine = nullptr;
     _graphicsEngine = nullptr;

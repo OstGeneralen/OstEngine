@@ -44,6 +44,7 @@ add_library(${PROJECT_NAME}
     Container/Stack.h
     Utility/StringID.h
     Utility/Hash.h
+    Container/Deque.h
 )
 
 target_compile_definitions(${PROJECT_NAME}
