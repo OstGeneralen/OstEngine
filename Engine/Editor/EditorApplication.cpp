@@ -139,7 +139,7 @@ void ost::EditorApplication::Run()
         // It is instead drawn onto an image in the scene view
         _graphicsEngine->ClearAndSetBackbuffer();
 
-        _editorGui.Display(_window.GetClientSize().VectorCast<Float32>());
+        //_editorGui.Display(_window.GetClientSize().VectorCast<Float32>());
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

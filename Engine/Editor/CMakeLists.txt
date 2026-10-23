@@ -52,6 +52,10 @@ add_executable(${PROJECT_NAME}
     GUI/PropertyEditor/BasicTypeEditors.h
     SceneView/SceneViewCamera.h
     SceneView/SceneViewCamera.cpp
+    GUI/Layout/GUIPanel.h
+    GUI/Layout/GUIRect.h
+    GUI/Layout/GUILayout.h
+    GUI/Layout/GUILayout.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
