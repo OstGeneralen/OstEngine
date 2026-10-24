@@ -13,8 +13,45 @@ namespace OstGui
 
     inline bool IsMouseHoveringWindow()
     {
-        return ImGui::IsMouseHoveringRect(ImGui::GetWindowContentRegionMin(), ImGui::GetWindowContentRegionMax());
+        return IsMouseHoveringRect(GetWindowContentRegionMin(), GetWindowContentRegionMax());
     }
+
+    inline bool IsLMBClickedInsideWindow()
+    {
+        return IsMouseHoveringWindow() && IsMouseClicked(ImGuiMouseButton_Left);
+    }
+    inline bool IsRMBClickedInsideWindow()
+    {
+        return IsMouseHoveringWindow() && IsMouseClicked(ImGuiMouseButton_Right);
+    }
+
+    inline bool IsLMBClickedOutsideWindow()
+    {
+        return !IsMouseHoveringWindow() && IsMouseClicked(ImGuiMouseButton_Left);
+    }
+    inline bool IsRMBClickedOutsideWindow()
+    {
+        return !IsMouseHoveringWindow() && IsMouseClicked(ImGuiMouseButton_Right);
+    }
+
+    inline bool IsLMBClickedInsideItem()
+    {
+        return IsItemHovered() && IsMouseClicked(ImGuiMouseButton_Left);
+    }
+    inline bool IsRMBClickedInsideItem()
+    {
+        return IsItemHovered() && IsMouseClicked(ImGuiMouseButton_Right);
+    }
+
+    inline bool IsLMBClickedOutsideItem()
+    {
+        return !IsItemHovered() && IsMouseClicked(ImGuiMouseButton_Left);
+    }
+    inline bool IsRMBClickedOutsideItem()
+    {
+        return !IsItemHovered() && IsMouseClicked(ImGuiMouseButton_Right);
+    }
+
 }; // namespace OstGui
 
 // ------------------------------------------------------------

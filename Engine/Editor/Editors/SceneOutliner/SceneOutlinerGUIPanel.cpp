@@ -2,7 +2,6 @@
 #include "SceneOutlinerGUIPanel.h"
 
 #include "EditorContext.h"
-#include "GUI/IEditorGUI.h"
 #include "GUI/Controls/PropertyEditorDrawer.h"
 
 // Engine Scene
@@ -21,72 +20,68 @@ constexpr static Color SceneOutlineCol_ActorNameSelected = Colors::Cyan;
 
 void SceneOutlinerPanel::DrawGUI(EditorContext& context)
 {
-    IEditorGUI& editorGui = context.serviceLocator.GetRequired<IEditorGUI>();
-    PropertyEditorDrawer& propertyDrawer = context.serviceLocator.GetRequired<PropertyEditorDrawer>();
-
-    const Scene* pActiveScene = context.serviceLocator.GetRequired<ISceneManager>().GetActiveScene();
-    const auto& allActors = pActiveScene->GetAllActors();
-
-    const Actor* pHoveredActor = _pCachedHoveredActor;
-    _pCachedHoveredActor = nullptr;
-
     bool mouseOnActor = false;
 
-    for (const auto& pActor : allActors)
-    {
-        if (_pCachedRenameActor == pActor.Get())
-        {
-            propertyDrawer.Draw<std::string>("##Rename", _cachedActorName);
-            ImGui::SetKeyboardFocusHere(-1);
+    const SizeType lastHoveredIndex = _hoveredActorIndex;
+    _hoveredActorIndex = SizeTypeNpos;
 
-            if (ImGui::IsKeyReleased(ImGuiKey_Enter))
+    bool mouseOverItem = false;
+
+    for (SizeType actorIndex = 0; actorIndex < context.sceneContext.GetNumActors(); ++actorIndex)
+    {
+        const bool selected = context.sceneContext.IsActorSelected(actorIndex);
+        const bool renaming = selected && context.sceneContext.IsSelectedActorRenaming();
+        const bool isHovered = lastHoveredIndex == actorIndex;
+        mouseOverItem |= isHovered;
+
+        if (renaming)
+        {
+            context.guiContext.propertyDrawer.Draw<std::string>("##Rename", context.sceneContext.GetActorRenameBuffer());
+
+            if (OstGui::IsKeyReleased(ImGuiKey_Enter))
             {
-                // Send rename actor command
-                _pCachedRenameActor = nullptr;
+                context.sceneContext.ApplyActorRename();
             }
-            else if (ImGui::IsKeyReleased(ImGuiKey_Escape) || ImGui::IsItemHovered() == false && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+            else if (OstGui::IsKeyReleased(ImGuiKey_Escape) || OstGui::IsLMBClickedOutsideItem())
             {
-                // Dont rename actor
-                _pCachedRenameActor = nullptr;
+                context.sceneContext.CancelActorRename();
+            }
+
+            if(OstGui::IsItemHovered())
+            {
+                _hoveredActorIndex = actorIndex;
             }
         }
         else
         {
             Color textCol = SceneOutlineCol_ActorNameDefault;
-            textCol = _pCachedSelectedActor == pActor.Get() ? SceneOutlineCol_ActorNameSelected : textCol;
-            if (pHoveredActor != pActor.Get())
+            textCol = selected ? SceneOutlineCol_ActorNameSelected : textCol;
+            if (!isHovered)
             {
                 textCol.A = 0.7f;
             }
 
-            OstGui::TextColored(textCol, pActor->GetName().GetString().c_str());
+            OstGui::TextColored(textCol, context.sceneContext.GetActorName(actorIndex));
 
+            if (OstGui::IsLMBClickedInsideItem() || OstGui::IsRMBClickedInsideItem())
+            {
+                context.sceneContext.SelectActor(actorIndex);
+            }
             if (OstGui::IsItemHovered())
             {
-                _pCachedHoveredActor = pActor.Get();
-                mouseOnActor = true;
+                _hoveredActorIndex = actorIndex;
 
                 if (OstGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
                 {
-                    _pCachedRenameActor = pActor.Get();
-                    _cachedActorName = pActor->GetName().GetString();
+                    context.sceneContext.StartRenameSelectedActor();
                 }
-            }
-            if (OstGui::IsItemClicked(ImGuiMouseButton_Left) || OstGui::IsItemClicked(ImGuiMouseButton_Right))
-            {
-                _pCachedSelectedActor = pActor.Get();
             }
         }
     }
 
-    if ((OstGui::IsMouseClicked(ImGuiMouseButton_Left) || OstGui::IsMouseClicked(ImGuiMouseButton_Right)) && !mouseOnActor && OstGui::IsWindowFocused())
+    if (OstGui::IsRMBClickedInsideWindow())
     {
-        _pCachedSelectedActor = nullptr;
-    }
-
-    if (OstGui::IsMouseHoveringWindow() && OstGui::IsMouseReleased(ImGuiMouseButton_Right) && OstGui::IsWindowFocused())
-    {
-        editorGui.OpenContextMenu(*this);
+        context.guiContext.OpenContextMenu(*this);
     }
 }
 
@@ -94,16 +89,16 @@ void ost::SceneOutlinerPanel::DrawContextMenuGUI(EditorContext& context)
 {
     if (ImGui::Button("Create New", {ImGui::GetContentRegionAvail().x, 0}))
     {
-        // Todo: send create actor command
-        context.serviceLocator.GetRequired<IEditorGUI>().CloseContextMenu();
+        context.sceneContext.CreateNewActor();
+        context.guiContext.CloseContextMenu();
     }
 
-    ImGui::BeginDisabled(_pCachedSelectedActor == nullptr);
+    ImGui::BeginDisabled(context.sceneContext.HasSelectedActor() == false);
 
     if (ImGui::Button("Delete", {ImGui::GetContentRegionAvail().x, 0}))
     {
-        // Todo: send delete actor commend
-        context.serviceLocator.GetRequired<IEditorGUI>().CloseContextMenu();
+        context.sceneContext.DeleteSelectedActor();
+        context.guiContext.CloseContextMenu();
     }
     ImGui::EndDisabled();
 }

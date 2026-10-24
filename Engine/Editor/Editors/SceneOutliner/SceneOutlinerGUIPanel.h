@@ -22,12 +22,7 @@ namespace ost
 
     private:
         ImGuiChildFlags GetDrawFlags() const override;
-
-        std::string _cachedActorName;
-        const Actor* _pCachedRenameActor = nullptr;
-        const Actor* _pCachedHoveredActor = nullptr;
-        const Actor* _pCachedSelectedActor = nullptr;
-        const Actor* _pContextMenuActor = nullptr;
+        SizeType _hoveredActorIndex = SizeTypeNpos;
     };
 } // namespace ost
 

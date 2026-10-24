@@ -14,7 +14,7 @@ namespace ost
     public:
         Blob()
             : _pData{nullptr}
-            , _size{SizeNone}
+            , _size{SizeTypeNpos}
         {
         }
         Blob(const Blob& other)
@@ -28,7 +28,7 @@ namespace ost
             , _size{other._size}
         {
             other._pData = nullptr;
-            other._size = SizeNone;
+            other._size = SizeTypeNpos;
         }
         Blob(const void* pData, SizeType size)
             : _pData{operator new[](size)}
@@ -81,7 +81,7 @@ namespace ost
 
         bool IsValid() const
         {
-            return _pData != nullptr && _size != SizeNone;
+            return _pData != nullptr && _size != SizeTypeNpos;
         }
 
     private:
@@ -91,7 +91,7 @@ namespace ost
             {
                 operator delete[](_pData, _size);
                 _pData = nullptr;
-                _size = SizeNone;
+                _size = SizeTypeNpos;
             }
         }
 

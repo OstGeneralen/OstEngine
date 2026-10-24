@@ -18,7 +18,7 @@ using Float64 = double;
 // ----------------------------------------------------------------------
 
 using SizeType = Uint64;
-constexpr static SizeType SizeNone = -1;
+constexpr static SizeType SizeTypeNpos = static_cast<SizeType>(-1);
 
 // ----------------------------------------------------------------------
 

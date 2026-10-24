@@ -18,6 +18,8 @@
 #include "Content/IconProvider.h"
 #include "GUI/Controls/PropertyEditorDrawer.h"
 
+#include <Engine/World/ISceneManager.h>
+
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -39,7 +41,6 @@ EditorApplication::EditorApplication()
     : _hasExitRequest{false}
     , _window{}
     , _serviceLocator{}
-    , _context{_serviceLocator}
     , _commandQueue{}
     , _coreEngine{}
     , _graphicsEngine{}
@@ -93,26 +94,21 @@ void ost::EditorApplication::Start()
 void ost::EditorApplication::Run()
 {
     _coreEngine->SetGameInstance(&_editorGameInstance);
-
-    _serviceLocator.RegisterManaged<PropertyEditorDrawer>(Ptr::NewUnique<PropertyEditorDrawer>());
-    //_serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
-    _serviceLocator.RegisterUnmanaged<IEditorGUI>(&_editorGui);
-    IEditorGUI& winManager = _editorGui;
-    winManager.RegisterWindowType<AboutWindow>();
-
     _serviceLocator.RegisterUnmanaged<SceneViewCamera>(&_sceneViewCamera);
-    _serviceLocator.RegisterUnmanaged<IEditorCommandQueue>(&_commandQueue);
 
     _editorGui.Initialize();
+
+    EditorContext context(_serviceLocator, _commandQueue, _editorGui);
+    context.sceneContext.SetActiveScene(_serviceLocator.GetRequired<ISceneManager>().GetActiveScene());
 
     // Pre-warm the gui to calculate sizes from normalized to actual
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
-    _editorGui.PrewarmGUI(_window.GetClientSize().VectorCast<Float32>(), _context);
+    _editorGui.PrewarmGUI(_window.GetClientSize().VectorCast<Float32>(), context);
 
     while (!_hasExitRequest)
     {
-        _commandQueue.Execute(_context);
+        _commandQueue.Execute(context);
 
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
@@ -137,7 +133,7 @@ void ost::EditorApplication::Run()
         _graphicsEngine->ClearAndSetBackbuffer();
 
         const Vector2f windowSize = _window.GetClientSize().VectorCast<Float32>();
-        _editorGui.DisplayGUI(windowSize, _context);
+        _editorGui.DisplayGUI(windowSize, context);
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

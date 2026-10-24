@@ -1,7 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "EditorContext.h"
-#include "GUI/IEditorGUI.h"
 #include "System/EditorCommand.h"
 
 #include <Memory/UniquePtr.h>
@@ -28,10 +27,7 @@ namespace ost
 
         void Execute(EditorContext& context) override
         {
-            if (auto gui = context.serviceLocator.Get<IEditorGUI>())
-            {
-                gui->OpenWindow(_windowType);
-            }
+            context.guiContext.OpenWindow(_windowType);
         }
 
     private:

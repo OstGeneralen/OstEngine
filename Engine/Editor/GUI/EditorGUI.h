@@ -1,34 +1,36 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/IEditorGUI.h"
 #include "GUI/Layout/GUILayout.h"
 
 #include <Container/List.h>
 #include <Container/Map.h>
 #include <Container/Queue.h>
 #include <Math/Vector2.h>
+#include <Utility/TypeID.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class EditorGUI : public IEditorGUI
+    class IGUIContextMenuOwner;
+    class GUIWindow;
+
+    class EditorGUI
     {
     public:
         void Initialize();
         void PrewarmGUI(const Vector2f& displaySize, EditorContext& context);
         void DisplayGUI(const Vector2f& displaySize, EditorContext& context);
 
-        // BEGIN IEditorGUI
-        void OpenContextMenu(IGUIContextMenuOwner& contextMenuOwner) override;
-        void CloseContextMenu() override;
+        void OpenContextMenu(IGUIContextMenuOwner& contextMenuOwner);
+        void CloseContextMenu();
 
-        void RegisterWindowType(TypeID windowType, UniquePtr<GUIWindow>&& pWindow) override;
+        void RegisterWindowType(TypeID windowType, UniquePtr<GUIWindow>&& pWindow);
 
-        void OpenWindow(TypeID windowType) override;
-        void CloseWindow(TypeID windowType) override;
+        void OpenWindow(TypeID windowType);
+        void CloseWindow(TypeID windowType);
 
-        const GUIWindow* GetWindow(TypeID windowType) const override;
+        const GUIWindow* GetWindow(TypeID windowType) const;
         // END IEditorGUI
 
     private:
