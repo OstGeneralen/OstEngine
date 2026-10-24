@@ -1,9 +1,9 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GUI/Layout/GUIRect.h"
+#include "GUI/OstGui.h"
 
 #include <OstTypes.h>
-#include <imgui.h>
 #include <string>
 
 #include <Container/List.h>

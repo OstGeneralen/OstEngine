@@ -76,7 +76,7 @@
 // #define IMGUI_USE_LEGACY_CRC32_ADLER
 
 //---- Use 32-bit for ImWchar (default is 16-bit) to support Unicode planes 1-16. (e.g. point beyond 0xFFFF like emoticons, dingbats, symbols, shapes, ancient languages,
-//etc...) #define IMGUI_USE_WCHAR32
+// etc...) #define IMGUI_USE_WCHAR32
 
 //---- Avoid multiple STB libraries implementations, or redefine path/filenames to prioritize another version.
 // This is for if you already embed a copy of those library in your code and don't want duplicate code in your binary.
@@ -114,6 +114,7 @@
 //---- Define constructor and implicit cast operators to convert back<>forth between your math types and ImVec2/ImVec4.
 // This will be inlined as part of ImVec2 and ImVec4 class declarations.
 
+#include <Math/Color.h>
 #include <Math/Vector2.h>
 #include <Math/Vector4.h>
 
@@ -139,6 +140,17 @@
     IM_NODEBUGSTEP inline operator ost::Vector4f() const                                                                                                                 \
     {                                                                                                                                                                    \
         return ost::Vector4f(x, y, z, w);                                                                                                                                \
+    }                                                                                                                                                                    \
+    IM_NODEBUGSTEP constexpr inline ImVec4(const ost::Color& c)                                                                                                          \
+        : x(c.R)                                                                                                                                                         \
+        , y(c.G)                                                                                                                                                         \
+        , z(c.B)                                                                                                                                                         \
+        , w(c.A)                                                                                                                                                         \
+    {                                                                                                                                                                    \
+    }                                                                                                                                                                    \
+    IM_NODEBUGSTEP inline operator ost::Color() const                                                                                                                    \
+    {                                                                                                                                                                    \
+        return ost::Color(x, y, z, w);                                                                                                                                   \
     }
 
 //---- ...Or use Dear ImGui's own basic math operators in every file including imgui.h:

@@ -1,24 +1,16 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/Layout/GUIPanel.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class GUISceneOutliner : public GUIPanel
+    struct EditorContext;
+
+    class IGUIContextMenuOwner
     {
     public:
-        void DrawGUI(EditorContext& context) override
-        {
-            ImGui::Text("Scene Outliner");
-        }
-
-    private:
-        ImGuiChildFlags GetDrawFlags() const override
-        {
-            return ImGuiChildFlags_Borders;
-        }
+        virtual void DrawContextMenuGUI(EditorContext& context) = 0;
     };
 } // namespace ost
 

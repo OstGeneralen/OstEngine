@@ -17,20 +17,18 @@ add_executable(${PROJECT_NAME}
     GUI/Layout/GUILayout.cpp
     GUI/Layout/GUIStackPanel.cpp
     GUI/EditorGUI.cpp
-    GUI/PropertyEditor/PropertyEditorDrawer.cpp
-    System/SceneEditorContext.cpp
+    GUI/Controls/PropertyEditorDrawer.cpp
     System/EditorCommandQueue.h
     System/EditorCommandQueue.cpp
     System/EditorCommand.h
     System/IEditorCommandQueue.h
     GUI/Window/GUIWindow.h
     GUI/Window/OpenWindowCommand.h
-    GUI/Window/IGUIWindowManager.h
-    GUI/Layout/GUIMainMenuItem.h
     GUI/Layout/GUIMainMenu.h
     GUI/Layout/GUIMainMenu.cpp
     GUI/Window/AboutWindow.h
     GUI/Window/AboutWindow.cpp
+    GUI/SceneOutliner/SceneOutlinerGUIPanel.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

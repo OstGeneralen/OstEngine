@@ -1,6 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/PropertyEditor/PropertyEditor.h"
+#include "GUI/Controls/PropertyEditors/PropertyEditor.h"
 
 #include <Container/Map.h>
 #include <Utility/TypeID.h>

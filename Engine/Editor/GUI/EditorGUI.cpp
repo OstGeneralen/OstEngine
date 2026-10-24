@@ -7,11 +7,11 @@
 #include "GUI/Window/GUIWindow.h"
 
 // Actual Windows/Panels
-#include "GUI/Controls/GUIAssetDirectoryView.h"
-#include "GUI/Controls/GUIAssetView.h"
-#include "GUI/Controls/GUIPropertyEditor.h"
-#include "GUI/Controls/GUISceneOutliner.h"
-#include "GUI/Controls/GUISceneView.h"
+#include "GUI/Panels/GUIAssetDirectoryView.h"
+#include "GUI/Panels/GUIAssetView.h"
+#include "GUI/Panels/GUIPropertyEditor.h"
+#include "GUI/SceneOutliner/SceneOutlinerGUIPanel.h"
+#include "GUI/Panels/GUISceneView.h"
 
 using namespace ost;
 
@@ -23,7 +23,7 @@ void ost::EditorGUI::Initialize()
     auto& upper = _layout.AddPanel<GUIStackPanel>(root, "GUITop", {0, 0.75f}).SetOrientation(EGuiLayoutOrientation::Horizontal);
     auto& lower = _layout.AddPanel<GUIStackPanel>(root, "GUIBottom", {0, 0.25f}).SetOrientation(EGuiLayoutOrientation::Horizontal);
 
-    _layout.AddPanel<GUISceneOutliner>(upper, "GUISceneOutliner", {0.125f, 0});
+    _layout.AddPanel<SceneOutlinerPanel>(upper, "GUISceneOutliner", {0.125f, 0});
     _layout.AddPanel<GUISceneView>(upper, "GUISceneView", {0.75f, 0});
     _layout.AddPanel<GUIPropertyEditor>(upper, "GUIPropertyEditor", {0.125f, 0});
 
@@ -52,10 +52,28 @@ void ost::EditorGUI::DisplayGUI(const Vector2f& displaySize, EditorContext& cont
         }
     }
 
-    // Display the layout GUI
+    const IGUIContextMenuOwner* previousContextMenuOwner = _pContextMenuOwner;
 
+    // Display the layout GUI
     ImGui::BeginDisabled(_pCurrentModalWindow != nullptr);
     _layout.DrawGUI(displaySize, context);
+
+    if (previousContextMenuOwner == nullptr && _pContextMenuOwner != nullptr)
+    {
+        ImGui::OpenPopup("GUIEditorContextMenu");
+    }
+
+    // Display the context menu if its open
+    if (_pContextMenuOwner && ImGui::BeginPopup("GUIEditorContextMenu"))
+    {
+        _pContextMenuOwner->DrawContextMenuGUI(context);
+        ImGui::EndPopup();
+    }
+    else
+    {
+        // If the popup isn't open any more, remove the context menu owner
+        _pContextMenuOwner = nullptr;
+    }
 
     // Display open windows
     for (auto& [type, pWin] : _openWindows)
@@ -73,6 +91,18 @@ void ost::EditorGUI::DisplayGUI(const Vector2f& displaySize, EditorContext& cont
     {
         _pCurrentModalWindow->DrawGUI(context);
     }
+}
+
+// ------------------------------------------------------------
+
+void ost::EditorGUI::OpenContextMenu(IGUIContextMenuOwner& contextMenuOwner)
+{
+    _pContextMenuOwner = &contextMenuOwner;
+}
+
+void ost::EditorGUI::CloseContextMenu()
+{
+    _pContextMenuOwner = nullptr;
 }
 
 // ------------------------------------------------------------

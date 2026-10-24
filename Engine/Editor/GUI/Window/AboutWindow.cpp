@@ -2,7 +2,7 @@
 #include "AboutWindow.h"
 
 #include "EditorContext.h"
-#include "GUI/Window/IGUIWindowManager.h"
+#include "GUI/IEditorGUI.h"
 
 #include <imgui.h>
 
@@ -32,7 +32,7 @@ void AboutWindow::DrawGUI(EditorContext& context)
 
     if (wasOpen && !_isOpen)
     {
-        context.serviceLocator.GetRequired<IGUIWindowManager>().CloseWindow<AboutWindow>();
+        context.serviceLocator.GetRequired<IEditorGUI>().CloseWindow<AboutWindow>();
     }
 }
 

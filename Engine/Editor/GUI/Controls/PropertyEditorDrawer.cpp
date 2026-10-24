@@ -1,7 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "PropertyEditorDrawer.h"
-#include "MathTypeEditors.h"
-#include "BasicTypeEditors.h"
+#include "PropertyEditors/MathTypeEditors.h"
+#include "PropertyEditors/BasicTypeEditors.h"
 
 using namespace ost;
 

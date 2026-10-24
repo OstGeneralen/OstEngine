@@ -16,8 +16,7 @@
 
 // Services
 #include "Content/IconProvider.h"
-#include "GUI/PropertyEditor/PropertyEditorDrawer.h"
-#include "System/SceneEditorContext.h"
+#include "GUI/Controls/PropertyEditorDrawer.h"
 
 using namespace ost;
 
@@ -97,13 +96,12 @@ void ost::EditorApplication::Run()
 
     _serviceLocator.RegisterManaged<PropertyEditorDrawer>(Ptr::NewUnique<PropertyEditorDrawer>());
     //_serviceLocator.RegisterManaged<IconProvider>(Ptr::NewUnique<IconProvider>());
-    _serviceLocator.RegisterUnmanaged<IGUIWindowManager>(&_editorGui);
-    IGUIWindowManager& winManager = _editorGui;
+    _serviceLocator.RegisterUnmanaged<IEditorGUI>(&_editorGui);
+    IEditorGUI& winManager = _editorGui;
     winManager.RegisterWindowType<AboutWindow>();
 
     _serviceLocator.RegisterUnmanaged<SceneViewCamera>(&_sceneViewCamera);
     _serviceLocator.RegisterUnmanaged<IEditorCommandQueue>(&_commandQueue);
-    SceneEditorContext sceneEditContext;
 
     _editorGui.Initialize();
 
