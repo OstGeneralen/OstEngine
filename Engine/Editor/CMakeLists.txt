@@ -28,7 +28,7 @@ add_executable(${PROJECT_NAME}
     GUI/Layout/GUIMainMenu.cpp
     GUI/Window/AboutWindow.h
     GUI/Window/AboutWindow.cpp
-    GUI/SceneOutliner/SceneOutlinerGUIPanel.cpp
+    Editors/SceneOutliner/SceneOutlinerGUIPanel.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

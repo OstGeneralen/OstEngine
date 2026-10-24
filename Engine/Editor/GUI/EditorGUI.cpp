@@ -10,7 +10,7 @@
 #include "GUI/Panels/GUIAssetDirectoryView.h"
 #include "GUI/Panels/GUIAssetView.h"
 #include "GUI/Panels/GUIPropertyEditor.h"
-#include "GUI/SceneOutliner/SceneOutlinerGUIPanel.h"
+#include "Editors/SceneOutliner/SceneOutlinerGUIPanel.h"
 #include "GUI/Panels/GUISceneView.h"
 
 using namespace ost;
