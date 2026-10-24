@@ -51,12 +51,15 @@ void ost::EditorSceneContext::SelectActor(SizeType index)
     // Selection means we stop whatever renaming we've got ongoing
     CancelActorRename();
     _selectedActorIndex = index;
+
+    _selectedActorComponents = GetActorPtr(index)->GetComponents();
 }
 
 void ost::EditorSceneContext::ClearActorSelection()
 {
     CancelActorRename();
     _selectedActorIndex = SizeTypeNpos;
+    _selectedActorComponents = {};
 }
 
 bool ost::EditorSceneContext::IsActorSelected(SizeType index)
@@ -127,7 +130,34 @@ void ost::EditorSceneContext::DeleteSelectedActor()
     ClearActorSelection();
 }
 
+void ost::EditorSceneContext::AddComponentToSelectedActor(TypeID componentType)
+{
+    GetSelectedActorPtr()->AddComponent(componentType);
+    _selectedActorComponents = GetSelectedActorPtr()->GetComponents();
+}
+
+void ost::EditorSceneContext::RemoveComponentFromSelectedActor(TypeID componentType)
+{
+    GetSelectedActorPtr()->RemoveComponent(componentType);
+    _selectedActorComponents = GetSelectedActorPtr()->GetComponents();
+}
+
 // ------------------------------------------------------------
+
+List<ComponentData>& ost::EditorSceneContext::GetSelectedActorComponents()
+{
+    return _selectedActorComponents;
+}
+
+Actor* ost::EditorSceneContext::GetSelectedActorPtr()
+{
+    if (_selectedActorIndex == SizeTypeNpos)
+    {
+        return nullptr;
+    }
+
+    return _pScene->GetAllActors()[_selectedActorIndex].Get();
+}
 
 Actor* ost::EditorSceneContext::GetActorPtr(SizeType index)
 {

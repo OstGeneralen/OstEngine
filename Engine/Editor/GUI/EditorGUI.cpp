@@ -1,17 +1,22 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "EditorGUI.h"
 
+#include "EditorContext.h"
 #include "GUI/Layout/GUIStackPanel.h"
 
 // Window
 #include "GUI/Window/GUIWindow.h"
 
 // Actual Windows/Panels
+#include "Editors/PropertyEditor/PropertyEditorGUIPanel.h"
+#include "Editors/SceneOutliner/SceneOutlinerGUIPanel.h"
 #include "GUI/Panels/GUIAssetDirectoryView.h"
 #include "GUI/Panels/GUIAssetView.h"
-#include "GUI/Panels/GUIPropertyEditor.h"
-#include "Editors/SceneOutliner/SceneOutlinerGUIPanel.h"
 #include "GUI/Panels/GUISceneView.h"
+
+// Windows
+#include "Editors/PropertyEditor/Windows/AddComponentPromptWindow.h"
+#include "GUI/Window/AboutWindow.h"
 
 using namespace ost;
 
@@ -19,13 +24,14 @@ using namespace ost;
 
 void ost::EditorGUI::Initialize()
 {
+    // Set up panel layout
     auto& root = _layout.SetRootPanel<GUIStackPanel>("GUIRoot").SetOrientation(EGuiLayoutOrientation::Vertical);
     auto& upper = _layout.AddPanel<GUIStackPanel>(root, "GUITop", {0, 0.75f}).SetOrientation(EGuiLayoutOrientation::Horizontal);
     auto& lower = _layout.AddPanel<GUIStackPanel>(root, "GUIBottom", {0, 0.25f}).SetOrientation(EGuiLayoutOrientation::Horizontal);
 
     _layout.AddPanel<SceneOutlinerPanel>(upper, "GUISceneOutliner", {0.125f, 0});
     _layout.AddPanel<GUISceneView>(upper, "GUISceneView", {0.75f, 0});
-    _layout.AddPanel<GUIPropertyEditor>(upper, "GUIPropertyEditor", {0.125f, 0});
+    _layout.AddPanel<PropertyEditorGUIPanel>(upper, "GUIPropertyEditor", {0.125f, 0});
 
     _layout.AddPanel<GUIAssetDirectoryView>(lower, "GUIAssetDirView", {0.3f, 0});
     _layout.AddPanel<GUIAssetView>(lower, "GUIAssetView", {0.7f, 0});
@@ -33,6 +39,11 @@ void ost::EditorGUI::Initialize()
 
 void ost::EditorGUI::PrewarmGUI(const Vector2f& displaySize, EditorContext& context)
 {
+    // Before prewarming, register all the window types
+    context.guiContext.RegisterWindowType<AboutWindow>();
+    context.guiContext.RegisterWindowType<AddComponentPromptWindow>();
+
+    // Prewarm
     _layout.PreWarmGUI(displaySize, context);
 }
 

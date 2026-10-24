@@ -3,13 +3,14 @@
 #include <OstTypes.h>
 #include <string>
 
+#include <Engine/World/Actor.h>
+
 // ------------------------------------------------------------
 
 namespace ost
 {
     struct EditorContext;
     class Scene;
-    class Actor;
 
     class EditorSceneContext
     {
@@ -40,8 +41,12 @@ namespace ost
         void ApplyActorRename();
         void CreateNewActor();
         void DeleteSelectedActor();
+        void AddComponentToSelectedActor(TypeID componentType);
+        void RemoveComponentFromSelectedActor(TypeID componentType);
 
         // Backend access
+        List<ComponentData>& GetSelectedActorComponents();
+        Actor* GetSelectedActorPtr();
         Actor* GetActorPtr(SizeType index);
         Scene* GetScenePtr();
 
@@ -49,7 +54,8 @@ namespace ost
         EditorContext& _parentContext;
 
         Scene* _pScene;
-
+        List<ComponentData> _selectedActorComponents;
+        
         SizeType _selectedActorIndex;
         bool _isRenamingSelected;
         std::string _renameBuffer;

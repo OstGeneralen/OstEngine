@@ -32,6 +32,8 @@ add_executable(${PROJECT_NAME}
     Editors/Shared/EditorSceneContext.cpp
     EditorContext.cpp
     GUI/GUIContext.cpp
+    Editors/PropertyEditor/PropertyEditorGUIPanel.cpp
+    Editors/PropertyEditor/Windows/AddComponentPromptWindow.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

@@ -42,7 +42,7 @@ void GUIMainMenu::DrawGUI(EditorContext& context)
     {
         if (ImGui::MenuItem("About Window"))
         {
-            context.serviceLocator.GetRequired<IEditorCommandQueue>().PushCommand(OpenWindowEditorCommand::ForWindowType<AboutWindow>());
+            context.commandQueue.PushCommand(OpenWindowEditorCommand::ForWindowType<AboutWindow>());
         }
         ImGui::EndMenu();
     }

@@ -1,24 +1,17 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GUI/Layout/GUIPanel.h"
+#include "GUI/Window/GUIWindow.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class GUIPropertyEditor : public GUIPanel
+    class AddComponentPromptWindow : public GUIWindow
     {
     public:
-        void DrawGUI(EditorContext& context) override
-        {
-            ImGui::Text("Property Edit");
-        }
+        void DrawGUI(EditorContext& context) override;
 
-    private:
-        ImGuiChildFlags GetDrawFlags() const override
-        {
-            return ImGuiChildFlags_Borders;
-        }
+        EGuiWindowMode GetWindowMode() const override;
     };
 } // namespace ost
 
