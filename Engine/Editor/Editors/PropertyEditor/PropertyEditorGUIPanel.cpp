@@ -34,8 +34,20 @@ void PropertyEditorGUIPanel::DrawGUI(EditorContext& context)
     // Draw Tranform Field
     OstGui::BeginChild("Transform", {0, 0}, ImGuiChildFlags_AutoResizeY);
     OstGui::Text("Transform");
+
+    Vector3f previousRotation = _rotation;
+
     context.guiContext.propertyDrawer.Draw<Vector3f>("Position", _position);
     context.guiContext.propertyDrawer.Draw<Vector3f>("Rotation", _rotation);
+
+    if ((pActor->transform.GetPosition() - _position).MagnitudeSq() > 0.01f)
+    {
+        pActor->transform.SetPosition(_position);
+    }
+    if ((_rotation - previousRotation).MagnitudeSq() > 0.01f)
+    {
+        pActor->transform.SetRotation(Quaternion::FromEulersDegrees(_rotation));
+    }
     OstGui::EndChild();
 
     OstGui::Separator();

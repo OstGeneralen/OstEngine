@@ -98,7 +98,7 @@ void ost::EditorApplication::Run()
 
     _editorGui.Initialize();
 
-    EditorContext context(_serviceLocator, _commandQueue, _editorGui);
+    EditorContext context(_serviceLocator, _commandQueue, _editorGui, *_graphicsEngine);
     context.sceneContext.SetActiveScene(_serviceLocator.GetRequired<ISceneManager>().GetActiveScene());
 
     // Pre-warm the gui to calculate sizes from normalized to actual

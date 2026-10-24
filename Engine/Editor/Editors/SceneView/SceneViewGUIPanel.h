@@ -6,21 +6,18 @@
 
 namespace ost
 {
-    class GUISceneView : public GUIPanel
+    class SceneViewGUIPanel : public GUIPanel
     {
     public:
-        void DrawGUI(EditorContext& context) override
-        {
-            ImGui::Text("Scene View");
-        }
+        void DrawGUI(EditorContext& context) override;
+
+        ImGuiChildFlags GetDrawFlags() const override;
 
     private:
-        ImGuiChildFlags GetDrawFlags() const override
-        {
-            return ImGuiChildFlags_Borders;
-        }
+        Vector2u _cachedSize;
+    
     };
-} // namespace ost
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

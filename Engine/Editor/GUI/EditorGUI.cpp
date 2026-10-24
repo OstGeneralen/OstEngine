@@ -10,9 +10,9 @@
 // Actual Windows/Panels
 #include "Editors/PropertyEditor/PropertyEditorGUIPanel.h"
 #include "Editors/SceneOutliner/SceneOutlinerGUIPanel.h"
+#include "Editors/SceneView/SceneViewGUIPanel.h"
 #include "GUI/Panels/GUIAssetDirectoryView.h"
 #include "GUI/Panels/GUIAssetView.h"
-#include "GUI/Panels/GUISceneView.h"
 
 // Windows
 #include "Editors/PropertyEditor/Windows/AddComponentPromptWindow.h"
@@ -30,7 +30,7 @@ void ost::EditorGUI::Initialize()
     auto& lower = _layout.AddPanel<GUIStackPanel>(root, "GUIBottom", {0, 0.25f}).SetOrientation(EGuiLayoutOrientation::Horizontal);
 
     _layout.AddPanel<SceneOutlinerPanel>(upper, "GUISceneOutliner", {0.125f, 0});
-    _layout.AddPanel<GUISceneView>(upper, "GUISceneView", {0.75f, 0});
+    _layout.AddPanel<SceneViewGUIPanel>(upper, "GUISceneView", {0.75f, 0});
     _layout.AddPanel<PropertyEditorGUIPanel>(upper, "GUIPropertyEditor", {0.125f, 0});
 
     _layout.AddPanel<GUIAssetDirectoryView>(lower, "GUIAssetDirView", {0.3f, 0});

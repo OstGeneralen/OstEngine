@@ -3,6 +3,8 @@
 
 #include "Engine/World/Actor.h"
 
+#include <Math/Units.h>
+
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -25,8 +27,8 @@ void SpotLightComponent::SetRange(Float32 r)
 void SpotLightComponent::InitializeLightType(LightRenderProxy& proxy)
 {
     proxy.proxyData.type = ELightType::Spot;
-    proxy.proxyData.radius = 0.01f;
-    proxy.proxyData.outerRadius = 0.5f;
+    proxy.proxyData.radius = 0.1f;
+    proxy.proxyData.outerRadius = 0.2f;
     proxy.proxyData.range = 1.0f;
 }
 
@@ -34,13 +36,14 @@ void SpotLightComponent::InitializeLightType(LightRenderProxy& proxy)
 
 List<ComponentProperty> ost::SpotLightComponent::GeneratePropertySet()
 {
+    // Validate all values
     List<ComponentProperty> props = {};
 
     props.Add(ComponentProperty("Color", TypeID::Get<Color>(), &GetProxy().proxyData.color));
     props.Add(ComponentProperty("Intensity", TypeID::Get<Float32>(), &GetProxy().proxyData.intensity));
     props.Add(ComponentProperty("Range", TypeID::Get<Float32>(), &GetProxy().proxyData.range));
-    props.Add(ComponentProperty("Inner Angle", TypeID::Get<Float32>(), &GetProxy().proxyData.radius));
-    props.Add(ComponentProperty("Outer Angle", TypeID::Get<Float32>(), &GetProxy().proxyData.outerRadius));
+    props.Add(ComponentProperty("Inner Angle", TypeID::Get<Radians>(), &GetProxy().proxyData.radius));
+    props.Add(ComponentProperty("Outer Angle", TypeID::Get<Radians>(), &GetProxy().proxyData.outerRadius));
 
     return props;
 }

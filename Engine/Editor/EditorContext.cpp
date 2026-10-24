@@ -5,9 +5,10 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-EditorContext::EditorContext(ServiceLocator& services, IEditorCommandQueue& cmdQueue, EditorGUI& gui)
+EditorContext::EditorContext(ServiceLocator& services, IEditorCommandQueue& cmdQueue, EditorGUI& gui, IGraphicsEngine& gfxEngine)
     : serviceLocator{services}
     , sceneContext{*this}
+    , sceneViewContext{*this, gfxEngine}
     , guiContext{*this, gui}
     , commandQueue{cmdQueue}
 {

@@ -5,6 +5,7 @@
 #include <imgui.h>
 
 #include <Math/Color.h>
+#include <Math/Units.h>
 #include <Math/Vector2.h>
 #include <Math/Vector3.h>
 #include <Math/Vector4.h>
@@ -17,7 +18,7 @@ namespace ost
     {
         void Display(const char* name, Float32& data) override
         {
-            ImGui::InputFloat(name, &data);
+            ImGui::DragFloat(name, &data, 0.1f);
         }
     } FLOAT32_PROPERTY_EDITOR;
 
@@ -60,6 +61,25 @@ namespace ost
             ImGui::ColorEdit4(name, data.FltArray, 0.1f);
         }
     } COLOR_PROPERTY_EDITOR;
+
+    class RadiansPropertyEditor : public PropertyEditor
+    {
+        virtual TypeID PropertyTypeID() const override
+        {
+            return TypeID::Get<Radians>();
+        }
+
+        void DisplayGeneric(const char* name, void* pGeneric) override
+        {
+            Float32* asFloat = static_cast<Float32*>(pGeneric);
+            Float32 degrees = (*asFloat) * math::RadToDeg;
+
+            ImGui::DragFloat(name, &degrees, 0.01f, 0.0f, 360.0f);
+
+            (*asFloat) = degrees * math::DegToRad;
+        }
+
+    } RADIANS_PROPERTY_EDITOR;
 
 } // namespace ost
 

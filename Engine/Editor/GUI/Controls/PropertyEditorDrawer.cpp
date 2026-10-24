@@ -1,7 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "PropertyEditorDrawer.h"
-#include "PropertyEditors/MathTypeEditors.h"
+
 #include "PropertyEditors/BasicTypeEditors.h"
+#include "PropertyEditors/MathTypeEditors.h"
 
 using namespace ost;
 
@@ -16,6 +17,7 @@ PropertyEditorDrawer::PropertyEditorDrawer()
     _editors.Insert(TypeID::Get<Vector4f>(), &VEC4F_PROPERTY_EDITOR);
     _editors.Insert(TypeID::Get<Color>(), &COLOR_PROPERTY_EDITOR);
     _editors.Insert(TypeID::Get<std::string>(), &STRING_PROPERTY_EDITOR);
+    _editors.Insert(TypeID::Get<Radians>(), &RADIANS_PROPERTY_EDITOR);
 }
 
 void ost::PropertyEditorDrawer::Draw(TypeID type, const char* name, void* pValue)

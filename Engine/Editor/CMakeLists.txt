@@ -34,6 +34,11 @@ add_executable(${PROJECT_NAME}
     GUI/GUIContext.cpp
     Editors/PropertyEditor/PropertyEditorGUIPanel.cpp
     Editors/PropertyEditor/Windows/AddComponentPromptWindow.cpp
+    Editors/SceneView/SceneViewGUIPanel.cpp
+    Editors/SceneView/SceneViewGUIPanel.h
+    Editors/SceneView/Commands/SceneViewRendererCommands.h
+    Editors/SceneView/SceneViewContext.h
+    Editors/SceneView/SceneViewContext.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
