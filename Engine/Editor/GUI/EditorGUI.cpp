@@ -16,6 +16,7 @@
 
 // Windows
 #include "Editors/PropertyEditor/Windows/AddComponentPromptWindow.h"
+#include "GUI/Prompts/DirectorySelectWindow.h"
 #include "GUI/Window/AboutWindow.h"
 
 using namespace ost;
@@ -42,6 +43,7 @@ void ost::EditorGUI::PrewarmGUI(const Vector2f& displaySize, EditorContext& cont
     // Before prewarming, register all the window types
     context.guiContext.RegisterWindowType<AboutWindow>();
     context.guiContext.RegisterWindowType<AddComponentPromptWindow>();
+    context.guiContext.RegisterWindowType<DirectorySelectWindow>();
 
     // Prewarm
     _layout.PreWarmGUI(displaySize, context);

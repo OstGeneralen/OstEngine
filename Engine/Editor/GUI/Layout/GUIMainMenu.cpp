@@ -2,6 +2,7 @@
 #include "GUIMainMenu.h"
 
 #include "EditorContext.h"
+#include "GUI/Prompts/DirectorySelectWindow.h"
 #include "GUI/Window/AboutWindow.h"
 #include "GUI/Window/OpenWindowCommand.h"
 #include "System/IEditorCommandQueue.h"
@@ -27,6 +28,7 @@ void GUIMainMenu::DrawGUI(EditorContext& context)
         }
         if (ImGui::MenuItem("Load"))
         {
+            context.commandQueue.PushCommand(OpenWindowEditorCommand::ForWindowType<DirectorySelectWindow>());
         }
         ImGui::EndMenu();
     }

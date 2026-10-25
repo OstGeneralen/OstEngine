@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include <Math/Vector2.h>
+#include "GUI/OstGui.h"
 
 // ------------------------------------------------------------
 

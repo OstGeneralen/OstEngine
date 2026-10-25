@@ -39,6 +39,8 @@ add_executable(${PROJECT_NAME}
     Editors/SceneView/Commands/SceneViewRendererCommands.h
     Editors/SceneView/SceneViewContext.h
     Editors/SceneView/SceneViewContext.cpp
+    GUI/Prompts/DirectorySelectWindow.h
+    GUI/Prompts/DirectorySelectWindow.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
