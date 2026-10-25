@@ -76,6 +76,12 @@ namespace ost
             _vector.pop_back();
         }
 
+        void RemoveMaintainOrder(SizeType index)
+        {
+            OST_ASSERT(index < GetSize(), "Must not be out of bounds");
+            _vector.erase(_vector.begin() + index);
+        }
+
         void Clear()
         {
             _vector.clear();
