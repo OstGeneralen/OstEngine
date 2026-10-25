@@ -1,7 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include <Engine/Game/GameBase.h>
-#include <Engine/World/Scene.h>
+#include <Engine/World/IScene.h>
 #include <Memory/UniquePtr.h>
 
 // ------------------------------------------------------------
@@ -19,7 +19,6 @@ public:
     void Update(Float32 deltaTime) override;
 
 private:
-    ost::UniquePtr<ost::Scene> _scene;
 };
 
 // ------------------------------------------------------------

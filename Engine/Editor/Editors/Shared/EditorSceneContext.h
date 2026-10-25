@@ -4,13 +4,13 @@
 #include <string>
 
 #include <Engine/World/Actor.h>
+#include <Engine/World/IScene.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
     struct EditorContext;
-    class Scene;
 
     class EditorSceneContext
     {
@@ -18,7 +18,7 @@ namespace ost
         EditorSceneContext(EditorContext& parentContext);
 
         // Scene Selection
-        void SetActiveScene(Scene* pScene);
+        void SetActiveScene(IScene* pScene);
 
         // Actor selection
         SizeType GetSelectedActorIndex() const;
@@ -45,17 +45,16 @@ namespace ost
         void RemoveComponentFromSelectedActor(TypeID componentType);
 
         // Backend access
-        List<ComponentData>& GetSelectedActorComponents();
+        List<ComponentData> GetSelectedActorComponents();
         Actor* GetSelectedActorPtr();
         Actor* GetActorPtr(SizeType index);
-        Scene* GetScenePtr();
+        IScene* GetScenePtr();
 
     private:
         EditorContext& _parentContext;
 
-        Scene* _pScene;
-        List<ComponentData> _selectedActorComponents;
-        
+        IScene* _pScene;
+
         SizeType _selectedActorIndex;
         bool _isRenamingSelected;
         std::string _renameBuffer;

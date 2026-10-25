@@ -13,7 +13,8 @@
 
 namespace ost
 {
-    class GameWorld;
+    class Scene;
+    class IScene;
 
     struct ComponentData
     {
@@ -27,8 +28,11 @@ namespace ost
         Transform transform;
 
     public:
-        Actor(GameWorld& gameWorld);
+        Actor(Scene& scene);
         ~Actor();
+
+        IScene& GetScene();
+        const IScene& GetScene() const;
 
         const StringID& GetName() const;
         void SetName(const std::string& name);
@@ -37,6 +41,7 @@ namespace ost
 
         ActorComponent& AddComponent(TypeID componentType);
         void RemoveComponent(TypeID componentType);
+        void RemoveComponentImmediate( TypeID componentType );
         ActorComponent* GetComponent(TypeID componentType);
         const ActorComponent* GetComponent(TypeID componentType) const;
 
@@ -65,8 +70,11 @@ namespace ost
         }
 
     private:
-        GameWorld& _gameWorld;
+        Scene& _scene;
+
         Map<TypeID, UniquePtr<ActorComponent>> _components;
+        List<TypeID> _pendingRemoveComponentTypes;
+
         StringID _name;
     };
 } // namespace ost

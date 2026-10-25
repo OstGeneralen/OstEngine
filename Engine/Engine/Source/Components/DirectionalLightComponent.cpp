@@ -3,7 +3,7 @@
 
 #include "Engine/World/Actor.h"
 #include "Engine/World/IComponentInitializer.h"
-#include "Engine/World/SceneGraph.h"
+#include "World/SceneGraph.h"
 #include "Engine/World/Transform.h"
 
 using namespace ost;

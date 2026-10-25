@@ -1,8 +1,9 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Engine/Components/CameraComponent.h"
 
-#include "Engine/World/Transform.h"
 #include "Engine/World/Actor.h"
+#include "Engine/World/Transform.h"
+#include "World/SceneGraph.h"
 
 using namespace ost;
 

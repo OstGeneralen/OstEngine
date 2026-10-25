@@ -1,5 +1,5 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
-#include "ComponentTicker.h"
+#include "World/ComponentTicker.h"
 
 #include "Engine/System/ITimeProvider.h"
 #include "Engine/World/Component.h"

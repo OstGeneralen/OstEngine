@@ -6,7 +6,7 @@
 // World
 #include <Engine/World/Actor.h>
 #include <Engine/World/ISceneManager.h>
-#include <Engine/World/Scene.h>
+#include <Engine/World/IScene.h>
 
 // Components
 #include <Engine/Components/CameraComponent.h>
@@ -25,7 +25,7 @@ void ost::EditorGameInstance::Load(IAssetManager& assets)
 
     auto& sceneManager = ost::pEngine->GetServiceLocator().GetRequired<ost::ISceneManager>();
 
-    ost::Scene* scene = sceneManager.CreateScene();
+    ost::IScene* scene = sceneManager.CreateScene();
 
     ost::Actor* cube = scene->CreateActor();
     cube->SetName("Cube");

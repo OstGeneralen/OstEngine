@@ -1,8 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "Engine/World/Component.h"
-#include "Engine/World/SceneGraph.h"
 
+#include <GraphicsEngine/Materials/IMaterialInstance.h>
 #include <GraphicsEngine/Resources/ObjectHandles.h>
 
 // ------------------------------------------------------------
@@ -10,6 +10,7 @@
 namespace ost
 {
     class IMaterialInstance;
+    class SceneGraph;
 
     class StaticMeshComponent : public RenderComponent
     {

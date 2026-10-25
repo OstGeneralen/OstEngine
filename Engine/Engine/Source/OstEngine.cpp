@@ -1,7 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "OstEngine.h"
 
-#include "Engine/World/Scene.h"
+#include "World/Scene.h"
 
 #include <GraphicsEngine/IGraphicsEngine.h>
 #include <GraphicsEngine/Rendering/IRenderQueue.h>
@@ -94,14 +94,14 @@ void OstEngine::Tick()
         _pGameInstance->Update(_time.GetDeltaTime());
     }
 
-    _sceneManager.GetGameWorld().Tick(_appServiceLocator);
+    _sceneManager.Tick(_appServiceLocator);
 
     _input.EndFrame();
 }
 
 void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetRenderer)
 {
-    auto& sceneGraph = _sceneManager.GetGameWorld().GetSceneGraph();
+    auto& sceneGraph = _sceneManager.GetActiveSceneGraph();
 
     for (const auto& meshProxy : sceneGraph.GetStaticMeshProxies())
     {
@@ -128,6 +128,10 @@ void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetR
         projection = Matrix4x4::CreateOrthographicsProjection(viewProxy.lValue * targetRenderer.GetDimensions().X, viewProxy.rValue * targetRenderer.GetDimensions().Y,
                                                               0.1f, 30.0f);
         break;
+    case ViewRenderProxy::EProjectionType::Unset: {
+        projection = Matrix4x4(); // Simple identity
+        break;
+    }
     }
     }
     const Matrix4x4 toView = viewProxy.transform.GetInverse();

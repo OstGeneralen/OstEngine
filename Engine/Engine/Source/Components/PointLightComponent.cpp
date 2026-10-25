@@ -1,6 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Engine/Components/PointLightComponent.h"
 
+#include "World/SceneGraph.h"
+
 using namespace ost;
 
 // ------------------------------------------------------------

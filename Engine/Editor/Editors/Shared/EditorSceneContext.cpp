@@ -5,7 +5,7 @@
 
 // Game World
 #include <Engine/World/Actor.h>
-#include <Engine/World/Scene.h>
+#include <Engine/World/IScene.h>
 
 // Commands
 #include "Editors/SceneOutliner/Commands/ActorListEditorCommands.h"
@@ -26,7 +26,7 @@ ost::EditorSceneContext::EditorSceneContext(EditorContext& parentContext)
 
 // ------------------------------------------------------------
 
-void ost::EditorSceneContext::SetActiveScene(Scene* pScene)
+void ost::EditorSceneContext::SetActiveScene(IScene* pScene)
 {
     _pScene = pScene;
 
@@ -51,15 +51,12 @@ void ost::EditorSceneContext::SelectActor(SizeType index)
     // Selection means we stop whatever renaming we've got ongoing
     CancelActorRename();
     _selectedActorIndex = index;
-
-    _selectedActorComponents = GetActorPtr(index)->GetComponents();
 }
 
 void ost::EditorSceneContext::ClearActorSelection()
 {
     CancelActorRename();
     _selectedActorIndex = SizeTypeNpos;
-    _selectedActorComponents = {};
 }
 
 bool ost::EditorSceneContext::IsActorSelected(SizeType index)
@@ -78,7 +75,7 @@ void ost::EditorSceneContext::StartRenameSelectedActor()
 {
     if (HasSelectedActor())
     {
-        _renameBuffer = _pScene->GetAllActors()[_selectedActorIndex]->GetName().GetString();
+        _renameBuffer = _pScene->GetActors()[_selectedActorIndex]->GetName().GetString();
         _isRenamingSelected = true;
     }
 }
@@ -102,12 +99,12 @@ SizeType ost::EditorSceneContext::GetNumActors() const
     {
         return 0;
     }
-    return _pScene->GetAllActors().GetSize();
+    return _pScene->GetActors().GetSize();
 }
 
 const char* ost::EditorSceneContext::GetActorName(SizeType index) const
 {
-    return _pScene->GetAllActors()[index]->GetName().GetString().c_str();
+    return _pScene->GetActors()[index]->GetName().GetString().c_str();
 }
 
 // ------------------------------------------------------------
@@ -133,20 +130,18 @@ void ost::EditorSceneContext::DeleteSelectedActor()
 void ost::EditorSceneContext::AddComponentToSelectedActor(TypeID componentType)
 {
     GetSelectedActorPtr()->AddComponent(componentType);
-    _selectedActorComponents = GetSelectedActorPtr()->GetComponents();
 }
 
 void ost::EditorSceneContext::RemoveComponentFromSelectedActor(TypeID componentType)
 {
     GetSelectedActorPtr()->RemoveComponent(componentType);
-    _selectedActorComponents = GetSelectedActorPtr()->GetComponents();
 }
 
 // ------------------------------------------------------------
 
-List<ComponentData>& ost::EditorSceneContext::GetSelectedActorComponents()
+List<ComponentData> ost::EditorSceneContext::GetSelectedActorComponents()
 {
-    return _selectedActorComponents;
+    return _pScene->GetActors()[_selectedActorIndex]->GetComponents();
 }
 
 Actor* ost::EditorSceneContext::GetSelectedActorPtr()
@@ -156,15 +151,15 @@ Actor* ost::EditorSceneContext::GetSelectedActorPtr()
         return nullptr;
     }
 
-    return _pScene->GetAllActors()[_selectedActorIndex].Get();
+    return _pScene->GetActors()[_selectedActorIndex].Get();
 }
 
 Actor* ost::EditorSceneContext::GetActorPtr(SizeType index)
 {
-    return _pScene->GetAllActors()[index].Get();
+    return _pScene->GetActors()[index].Get();
 }
 
-Scene* ost::EditorSceneContext::GetScenePtr()
+IScene* ost::EditorSceneContext::GetScenePtr()
 {
     return _pScene;
 }

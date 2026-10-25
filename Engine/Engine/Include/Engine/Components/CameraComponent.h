@@ -1,7 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "Engine/World/Component.h"
-#include "Engine/World/SceneGraph.h"
 
 #include <Math/Matrix4x4.h>
 
@@ -9,6 +8,8 @@
 
 namespace ost
 {
+    class SceneGraph;
+
     class CameraComponent : public RenderComponent
     {
     public:

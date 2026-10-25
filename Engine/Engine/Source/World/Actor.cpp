@@ -3,22 +3,30 @@
 
 #include "Engine/IOstEngine.h"
 #include "World/ComponentFactory.h"
-#include "World/GameWorld.h"
+#include "World/ComponentInitializer.h"
+#include "World/Scene.h"
+
+#include <OstLog.h>
 
 using namespace ost;
 
 // ------------------------------------------------------------
 
-Actor::Actor(GameWorld& gameWorld)
-    : _gameWorld{gameWorld}
+auto ActorLog = Log::NewCategory("Actor");
+
+// ------------------------------------------------------------
+
+Actor::Actor(Scene& scene)
+    : _scene{scene}
 {
 }
 
 ost::Actor::~Actor()
 {
+    ComponentInitializer initializer{*this, _scene.GetSceneGraph(), _scene.GetComponentTicker()};
     for (auto& [type, comp] : _components)
     {
-        _gameWorld.UnregisterComponent(*this, *comp);
+        comp->Destroy(initializer);
     }
     _components.Clear();
 }
@@ -58,14 +66,35 @@ ActorComponent& Actor::AddComponent(TypeID compType)
     ComponentFactory& factory = static_cast<ComponentFactory&>(factoryInterface);
 
     UniquePtr<ActorComponent> component = factory.CreateComponentFromType(compType);
-    _gameWorld.RegisterComponent(*this, *component);
+
+    // Initialize the component
+    ComponentInitializer initializer(*this, _scene.GetSceneGraph(), _scene.GetComponentTicker());
+    component->Initialize(initializer);
+
     return *_components.Insert(compType, std::move(component));
 }
 
 void Actor::RemoveComponent(TypeID componentType)
 {
-    _gameWorld.UnregisterComponent(*this, *_components[componentType]);
-    _components.Remove(componentType);
+    _scene.MarkComponentForDestroy(*this, componentType);
+}
+
+void ost::Actor::RemoveComponentImmediate(TypeID componentType)
+{
+    if (UniquePtr<ActorComponent>* pFound = _components.TryGetValue(componentType))
+    {
+        ActorComponent* pComp = pFound->Get();
+
+        ComponentInitializer initializer(*this, _scene.GetSceneGraph(), _scene.GetComponentTicker());
+        pComp->Destroy(initializer);
+        (*pFound) = nullptr;
+
+        _components.Remove(componentType);
+    }
+    else
+    {
+        Log::Warning(ActorLog, "Actor '{}' unable to remove component of type id '{}'. Not found.", _name.GetString(), static_cast<SizeType>(componentType));
+    }
 }
 
 ActorComponent* Actor::GetComponent(TypeID componentType)

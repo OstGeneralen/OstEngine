@@ -1,7 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "Engine/World/Component.h"
-#include "Engine/World/SceneGraph.h"
 
 #include <Math/Color.h>
 
@@ -34,7 +33,7 @@ namespace ost
     private:
         void NotifyTransformChanged();
 
-        SceneGraph* _pSceneGraph;
+        SceneGraph* _pSceneGraph = nullptr;
         ProxyHandle _proxyHandle;
     };
 } // namespace ost

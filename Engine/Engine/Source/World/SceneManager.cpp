@@ -1,17 +1,21 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "SceneManager.h"
 
+#include "Scene.h"
+
 using namespace ost;
 
 // ------------------------------------------------------------
 
-Scene* SceneManager::CreateScene()
+IScene* SceneManager::CreateScene()
 {
-    return _scenes.Add(new Scene(_gameWorld));
+    return _scenes.Add(new Scene());
 }
 
-void SceneManager::SetActiveScene(Scene* pScene)
+void SceneManager::SetActiveScene(IScene* pSceneInterface)
 {
+    Scene* pScene = static_cast<Scene*>(pSceneInterface);
+
     _activeSceneIndex = _scenes.Npos;
 
     for (SizeType i = 0; i < _scenes.GetSize(); ++i)
@@ -24,7 +28,7 @@ void SceneManager::SetActiveScene(Scene* pScene)
     }
 }
 
-Scene* ost::SceneManager::GetActiveScene()
+IScene* ost::SceneManager::GetActiveScene()
 {
     if (_activeSceneIndex == _scenes.Npos)
     {
@@ -33,7 +37,7 @@ Scene* ost::SceneManager::GetActiveScene()
     return _scenes[_activeSceneIndex];
 }
 
-const Scene* SceneManager::GetActiveScene() const
+const IScene* SceneManager::GetActiveScene() const
 {
     if (_activeSceneIndex == _scenes.Npos)
     {
@@ -44,9 +48,14 @@ const Scene* SceneManager::GetActiveScene() const
 
 // ------------------------------------------------------------
 
-GameWorld& ost::SceneManager::GetGameWorld()
+SceneGraph& ost::SceneManager::GetActiveSceneGraph()
 {
-    return _gameWorld;
+    return _scenes[_activeSceneIndex]->GetSceneGraph();
+}
+
+void ost::SceneManager::Tick(ServiceLocator& serviceLocator)
+{
+    _scenes[_activeSceneIndex]->Tick(serviceLocator);
 }
 
 // ------------------------------------------------------------

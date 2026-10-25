@@ -6,8 +6,6 @@
 
 // Engine Scene
 #include <Engine/World/Actor.h>
-#include <Engine/World/ISceneManager.h>
-#include <Engine/World/Scene.h>
 
 using namespace ost;
 

@@ -5,7 +5,6 @@
 #include "Engine/IOstEngine.h"
 
 // World
-#include "World/GameWorld.h"
 #include "World/SceneManager.h"
 #include "World/ComponentFactory.h"
 

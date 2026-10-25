@@ -2,6 +2,7 @@
 #include "Engine/Components/LightComponent.h"
 
 #include "Engine/World/Actor.h"
+#include "World/SceneGraph.h"
 
 using namespace ost;
 
@@ -41,8 +42,7 @@ void LightComponent::InitializeRenderState(SceneGraph& sceneGraph)
     // Call through to each individual light type and init their properties
     InitializeLightType(GetProxy());
 
-    // Force the transform to mark itself as diry once
-    GetOwner().transform.GetWorldTransform();
+    _pSceneGraph->MarkTransformDirty(*this);
 }
 
 void LightComponent::DestroyRenderState(SceneGraph& sceneGraph)

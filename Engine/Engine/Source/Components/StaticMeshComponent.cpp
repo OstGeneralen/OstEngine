@@ -3,6 +3,7 @@
 
 #include "Engine/Asset/IAssetManager.h"
 #include "Engine/World/Actor.h"
+#include "World/SceneGraph.h"
 
 // ------------------------------------------------------------
 

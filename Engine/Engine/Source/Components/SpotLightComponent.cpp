@@ -2,6 +2,7 @@
 #include "Engine/Components/SpotLightComponent.h"
 
 #include "Engine/World/Actor.h"
+#include "World/SceneGraph.h"
 
 #include <Math/Units.h>
 

@@ -152,12 +152,9 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
         lightIndex++;
     }
 
-    if (lightIndex > 0)
-    {
-        lightData.numLights = static_cast<Uint32>(lightIndex);
-        rhi.UpdateBuffer(_lightBuffer, &lightData, sizeof(LightsBufferStructure));
-        rhi.SetBuffer(_lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), EPipelineStage_PS);
-    }
+    lightData.numLights = static_cast<Uint32>(lightIndex);
+    rhi.UpdateBuffer(_lightBuffer, &lightData, sizeof(LightsBufferStructure));
+    rhi.SetBuffer(_lightBuffer, PipelineConstant::Get(EBufferSlot::LightBuffer), EPipelineStage_PS);
 
     rhi.Draw(6, 0, 0);
 }

@@ -6,7 +6,7 @@
 #include <OstTypes.h>
 
 #include <Engine/World/Actor.h>
-#include <Engine/World/Scene.h>
+#include <Engine/World/IScene.h>
 
 // ------------------------------------------------------------
 
@@ -31,7 +31,7 @@ namespace ost
 
         void Execute(EditorContext& context) override
         {
-            context.sceneContext.GetScenePtr()->DestoryActor(context.sceneContext.GetActorPtr(_index));
+            context.sceneContext.GetScenePtr()->DestroyActor(context.sceneContext.GetActorPtr(_index));
         }
 
     private:
