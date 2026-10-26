@@ -9,7 +9,6 @@ using namespace ost;
 
 GUIContext::GUIContext(EditorContext& parentCtx, EditorGUI& gui)
     : _parentContext{parentCtx}
-    , iconProvider{parentCtx.serviceLocator.GetRequired<IGraphicsResourceManager>()}
     , _gui{gui}
 {
 }

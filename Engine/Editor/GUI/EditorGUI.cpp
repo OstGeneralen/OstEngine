@@ -34,8 +34,8 @@ void ost::EditorGUI::Initialize()
     _layout.AddPanel<SceneViewGUIPanel>(upper, "GUISceneView", {0.75f, 0});
     _layout.AddPanel<PropertyEditorGUIPanel>(upper, "GUIPropertyEditor", {0.125f, 0});
 
-    _layout.AddPanel<AssetDirectoryListGUIPanel>(lower, "GUIAssetDirView", {0.3f, 0});
-    _layout.AddPanel<AssetViewGUIPanel>(lower, "GUIAssetView", {0.7f, 0});
+    _layout.AddPanel<AssetDirectoryListGUIPanel>(lower, "GUIAssetDirView", {0.125f, 0});
+    _layout.AddPanel<AssetViewGUIPanel>(lower, "GUIAssetView", {0.875f, 0});
 }
 
 void ost::EditorGUI::PrewarmGUI(const Vector2f& displaySize, EditorContext& context)

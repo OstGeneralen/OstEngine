@@ -1,7 +1,5 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Content/IconProvider.h"
-
 #include <OstTypes.h>
 #include <filesystem>
 

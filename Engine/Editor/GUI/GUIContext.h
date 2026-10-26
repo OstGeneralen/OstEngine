@@ -1,6 +1,5 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Content/IconProvider.h"
 #include "GUI/Controls/PropertyEditorDrawer.h"
 #include "GUI/EditorGUI.h"
 
@@ -30,7 +29,6 @@ namespace ost
         void CloseContextMenu();
 
         PropertyEditorDrawer propertyDrawer;
-        IconProvider iconProvider;
 
     private:
         EditorContext& _parentContext;

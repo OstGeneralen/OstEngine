@@ -15,7 +15,6 @@
 #include "GUI/Window/AboutWindow.h"
 
 // Services
-#include "Content/IconProvider.h"
 #include "GUI/Controls/PropertyEditorDrawer.h"
 
 #include <Engine/World/ISceneManager.h>
@@ -79,7 +78,7 @@ void ost::EditorApplication::Start()
     style.GrabRounding = 3.0f;
 
     style.ScaleAllSizes(mainScale);
-    style.FontScaleDpi = mainScale;
+    style.FontScaleDpi = mainScale + 0.1f;
 
     ImGui_ImplWin32_Init(_window.GetNativeWindowHandle());
 

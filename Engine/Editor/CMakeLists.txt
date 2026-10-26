@@ -12,7 +12,6 @@ add_executable(${PROJECT_NAME}
     ImGui/imgui_impl_dx11.cpp
     ImGui/imgui_impl_win32.cpp
     ImGui/imgui.cpp
-    Content/IconProvider.cpp
     SceneView/SceneViewCamera.cpp
     GUI/Layout/GUILayout.cpp
     GUI/Layout/GUIStackPanel.cpp
