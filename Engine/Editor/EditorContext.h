@@ -2,6 +2,7 @@
 #pragma once
 #include "Editors/SceneView/SceneViewContext.h"
 #include "Editors/Shared/EditorSceneContext.h"
+#include "Editors/AssetView/Context/EditorAssetContext.h"
 #include "GUI/GUIContext.h"
 #include "System/IEditorCommandQueue.h"
 
@@ -21,6 +22,7 @@ namespace ost
         GUIContext guiContext;
         SceneViewContext sceneViewContext;
         EditorSceneContext sceneContext;
+        EditorAssetContext assetContext;
         IEditorCommandQueue& commandQueue;
     };
 } // namespace ost

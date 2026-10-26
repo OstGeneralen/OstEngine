@@ -71,7 +71,7 @@ void PropertyEditorGUIPanel::DrawGUI(EditorContext& context)
 
 ImGuiChildFlags ost::PropertyEditorGUIPanel::GetDrawFlags() const
 {
-    return 0;
+    return ImGuiChildFlags_Borders;
 }
 
 void ost::PropertyEditorGUIPanel::DrawComponentGui(EditorContext& context, TypeID componentType, const char* componentName, ActorComponent* pComponent)

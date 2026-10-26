@@ -10,6 +10,7 @@ EditorContext::EditorContext(ServiceLocator& services, IEditorCommandQueue& cmdQ
     , sceneContext{*this}
     , sceneViewContext{*this, gfxEngine}
     , guiContext{*this, gui}
+    , assetContext{*this}
     , commandQueue{cmdQueue}
 {
 }

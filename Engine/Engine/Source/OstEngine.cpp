@@ -105,7 +105,11 @@ void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetR
 
     for (const auto& meshProxy : sceneGraph.GetStaticMeshProxies())
     {
-        toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.materialHandles, meshProxy.transform));
+        // Only push if the model handle is valid
+        if (meshProxy.hModel)
+        {
+            toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.materialHandles, meshProxy.transform));
+        }
     }
 
     for (const auto& lightProxy : sceneGraph.GetLightProxies())

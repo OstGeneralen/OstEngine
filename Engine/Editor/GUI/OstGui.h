@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include <imgui.h>
+#include "IconsFontAwesome6.h"
 
 // ------------------------------------------------------------
 

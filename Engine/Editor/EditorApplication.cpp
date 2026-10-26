@@ -54,7 +54,7 @@ void ost::EditorApplication::Start()
     RuntimeConfig config;
     config.LoadFromFile("EditorConfiguration.json");
 
-    _window.Create(*this, "Ost Engine Editor", config.window.resolution, false);
+    _window.Create(*this, "Ost Engine Editor", {0,0}, false);
     _graphicsEngine = IGraphicsEngine::Create(_serviceLocator, _window.GetNativeWindowHandle(), _window.GetClientSize());
     _coreEngine = IOstEngine::Create(_serviceLocator);
 
@@ -65,6 +65,11 @@ void ost::EditorApplication::Start()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontDefaultVector();
+    ImFontConfig fontConfig;
+    fontConfig.MergeMode = true;
+    io.Fonts->AddFontFromFileTTF("Editor/Icons/fa-solid-900.ttf", 0, &fontConfig);
+
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.IniFilename = nullptr;
 

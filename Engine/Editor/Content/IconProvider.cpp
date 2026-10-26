@@ -1,10 +1,11 @@
-/* // Kasper "OstGeneralen" Esbjornsson - 2026
+// Kasper "OstGeneralen" Esbjornsson - 2026
 #include "IconProvider.h"
 
 #include "EditorContext.h"
 
 #include <imgui.h>
 
+#include <GraphicsEngine/Resources/IGraphicsResourceManager.h>
 #include <Memory/Memory.h>
 
 // STB IMAGE
@@ -15,27 +16,25 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-IconProvider::IconProvider()
+IconProvider::IconProvider(IGraphicsResourceManager& gfxResourceManager)
 {
-    _pixelsPerIcon = 96.0f;
-    LoadIconAtlas("Editor/Icons/IconAtlas.png");
+    LoadIconAtlas("Editor/Icons/IconAtlas.png", gfxResourceManager);
+
     SetIconUV(EIcon::Folder, {0, 0});
     SetIconUV(EIcon::File, {1, 0});
-    SetIconUV(EIcon::ImgFile, {2, 0});
-    SetIconUV(EIcon::Add, {3, 0});
+    SetIconUV(EIcon::Image, {2, 0});
+    SetIconUV(EIcon::Shader, {3, 0});
+    SetIconUV(EIcon::Audio, {4, 0});
+    SetIconUV(EIcon::Material, {5, 0});
     SetIconUV(EIcon::Actor, {0, 1});
-    SetIconUV(EIcon::Scene, {1, 1});
-    SetIconUV(EIcon::Restart, {0, 2});
-    SetIconUV(EIcon::Play, {1, 2});
-    SetIconUV(EIcon::PlayPause, {2, 2});
-    SetIconUV(EIcon::Settings, {3, 2});
+    SetIconUV(EIcon::Model, {1, 1});
+    SetIconUV(EIcon::Settings, {2, 1});
 }
 
 void ost::IconProvider::DrawIcon(EIcon icon, const Vector2f& size) const
 {
     const Vector2f uv = _iconUVs[static_cast<SizeType>(icon)];
-    const void* nativeIcon = EditorContext::Get().serviceLocator.GetRequired<IGraphicsResourceManager>().GetTexture(_iconTextureHandle).GetNativeResource();
-    ImGui::Image((ImTextureRef)(intptr_t)nativeIcon, size, uv, uv + GetIconUVSize());
+    ImGui::Image((ImTextureRef)(intptr_t)_pNativeAtlasTexture, size, uv, uv + GetIconUVSize());
 }
 
 Vector2f ost::IconProvider::GetIconUVSize() const
@@ -43,7 +42,7 @@ Vector2f ost::IconProvider::GetIconUVSize() const
     return {_pixelsPerIcon / _atlasSize.X, _pixelsPerIcon / _atlasSize.Y};
 }
 
-void ost::IconProvider::LoadIconAtlas(const char* path)
+void ost::IconProvider::LoadIconAtlas(const char* path, IGraphicsResourceManager& resourceManager)
 {
     TextureCPUData loadedData;
     loadedData.format = ETextureFormat::RGBAUnorm;
@@ -67,7 +66,8 @@ void ost::IconProvider::LoadIconAtlas(const char* path)
 
     stbi_image_free(pixels);
 
-    _iconTextureHandle = EditorContext::Get().serviceLocator.GetRequired<IGraphicsResourceManager>().Create(loadedData);
+    auto hTexture = resourceManager.Create(loadedData);
+    _pNativeAtlasTexture = resourceManager.GetTexture(hTexture).GetNativeResource();
 }
 
 void ost::IconProvider::SetIconUV(EIcon icon, const Vector2u& imageLocation)
@@ -79,4 +79,4 @@ void ost::IconProvider::SetIconUV(EIcon icon, const Vector2u& imageLocation)
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
-// ------------------------------------------------------------ */
+// ------------------------------------------------------------

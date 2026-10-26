@@ -27,12 +27,15 @@ void Window::Create(IWindowHost& host, const std::string& title, const Vector2u&
 
     UINT windowStyle = WS_OVERLAPPEDWINDOW;
     Vector2u useSize = size;
-
     if (fullscreen)
     {
-        windowStyle = WS_POPUP;
         useSize.X = GetSystemMetrics(SM_CXSCREEN);
         useSize.Y = GetSystemMetrics(SM_CYSCREEN);
+        windowStyle = WS_POPUP;
+    }
+    if(useSize.X ==0 && useSize.Y == 0)
+    {
+        windowStyle |= WS_MAXIMIZE;
     }
 
     HWND hwnd = CreateWindow("OstAppWndClass",             // Class name (as registered in initialize)

@@ -21,6 +21,8 @@ namespace ost
 
         HMaterialInstance GetMaterialHandle(Uint32 index = 0);
 
+        List<ComponentProperty> GeneratePropertySet() override;
+
     public: // Render Component
         void InitializeRenderState(SceneGraph& SceneGraph) override;
         void DestroyRenderState(SceneGraph& SceneGraph) override;
@@ -31,6 +33,7 @@ namespace ost
     private:
         SceneGraph* _pSceneGraph;
         ProxyHandle _proxyMeshHandle;
+        SizeType dummyHandle = 0;
     };
 } // namespace ost
 

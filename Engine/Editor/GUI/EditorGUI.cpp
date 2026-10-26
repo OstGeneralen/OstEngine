@@ -8,11 +8,11 @@
 #include "GUI/Window/GUIWindow.h"
 
 // Actual Windows/Panels
+#include "Editors/AssetView/AssetDirectoryListGUIPanel.h"
+#include "Editors/AssetView/AssetViewGUIPanel.h"
 #include "Editors/PropertyEditor/PropertyEditorGUIPanel.h"
 #include "Editors/SceneOutliner/SceneOutlinerGUIPanel.h"
 #include "Editors/SceneView/SceneViewGUIPanel.h"
-#include "GUI/Panels/GUIAssetDirectoryView.h"
-#include "GUI/Panels/GUIAssetView.h"
 
 // Windows
 #include "Editors/PropertyEditor/Windows/AddComponentPromptWindow.h"
@@ -34,8 +34,8 @@ void ost::EditorGUI::Initialize()
     _layout.AddPanel<SceneViewGUIPanel>(upper, "GUISceneView", {0.75f, 0});
     _layout.AddPanel<PropertyEditorGUIPanel>(upper, "GUIPropertyEditor", {0.125f, 0});
 
-    _layout.AddPanel<GUIAssetDirectoryView>(lower, "GUIAssetDirView", {0.3f, 0});
-    _layout.AddPanel<GUIAssetView>(lower, "GUIAssetView", {0.7f, 0});
+    _layout.AddPanel<AssetDirectoryListGUIPanel>(lower, "GUIAssetDirView", {0.3f, 0});
+    _layout.AddPanel<AssetViewGUIPanel>(lower, "GUIAssetView", {0.7f, 0});
 }
 
 void ost::EditorGUI::PrewarmGUI(const Vector2f& displaySize, EditorContext& context)

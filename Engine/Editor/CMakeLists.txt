@@ -41,18 +41,24 @@ add_executable(${PROJECT_NAME}
     Editors/SceneView/SceneViewContext.cpp
     GUI/Prompts/DirectorySelectWindow.h
     GUI/Prompts/DirectorySelectWindow.cpp
+    Editors/AssetView/AssetViewGUIPanel.cpp
+    Editors/AssetView/AssetTypes.h
+    Editors/AssetView/AssetTypes.cpp
+    Editors/AssetView/AssetDirectoryListGUIPanel.h
+    Editors/AssetView/Context/EditorAssetContext.cpp
+    Editors/AssetView/AssetDirectoryListGUIPanel.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
-        OstGameProject
-        OstEngine
-        OstGraphicsEngine
-        nlohmann_json
+    OstGameProject
+    OstEngine
+    OstGraphicsEngine
+    nlohmann_json
 )
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/ImGui
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/ImGui
 )

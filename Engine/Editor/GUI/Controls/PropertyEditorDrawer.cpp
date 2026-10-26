@@ -2,6 +2,7 @@
 #include "PropertyEditorDrawer.h"
 
 #include "PropertyEditors/BasicTypeEditors.h"
+#include "PropertyEditors/GraphicsResourceTypeEditors.h"
 #include "PropertyEditors/MathTypeEditors.h"
 
 using namespace ost;
@@ -18,6 +19,7 @@ PropertyEditorDrawer::PropertyEditorDrawer()
     _editors.Insert(TypeID::Get<Color>(), &COLOR_PROPERTY_EDITOR);
     _editors.Insert(TypeID::Get<std::string>(), &STRING_PROPERTY_EDITOR);
     _editors.Insert(TypeID::Get<Radians>(), &RADIANS_PROPERTY_EDITOR);
+    _editors.Insert(TypeID::Get<HModel>(), &MODEL_HANDLE_PROPERTY_EDITOR);
 }
 
 void ost::PropertyEditorDrawer::Draw(TypeID type, const char* name, void* pValue)

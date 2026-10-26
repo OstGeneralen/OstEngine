@@ -1,24 +1,23 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "Editors/AssetView/Context/EditorAssetContext.h"
 #include "GUI/Layout/GUIPanel.h"
+
+#include <filesystem>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class GUIAssetView : public GUIPanel
+    class AssetDirectoryListGUIPanel : public GUIPanel
     {
     public:
-        void DrawGUI(EditorContext& context) override
-        {
-            ImGui::Text("Asset View");
-        }
+        void DrawGUI(EditorContext& context) override;
+
+        ImGuiChildFlags GetDrawFlags() const override;
 
     private:
-        ImGuiChildFlags GetDrawFlags() const override
-        {
-            return ImGuiChildFlags_Borders;
-        }
+        void DrawDirectoryTreeRecursive(EditorContext& context, AssetDirectoryEntry& forDirectoryEntry);
     };
 } // namespace ost
 

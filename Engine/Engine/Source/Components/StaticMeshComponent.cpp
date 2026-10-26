@@ -38,6 +38,15 @@ HMaterialInstance ost::StaticMeshComponent::GetMaterialHandle(Uint32 index)
 
 // ------------------------------------------------------------
 
+List<ComponentProperty> ost::StaticMeshComponent::GeneratePropertySet()
+{
+    List<ComponentProperty> props;
+    props.Add(ComponentProperty("ModelHandle", TypeID::Get<HModel>(), &dummyHandle));
+    return props;
+}
+
+// ------------------------------------------------------------
+
 void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)
 {
     StaticMeshRenderProxy renderProxy;
