@@ -52,6 +52,8 @@ void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)
 {
     StaticMeshRenderProxy renderProxy;
     renderProxy.transform = GetOwner().transform.GetWorldTransform();
+    
+    // TODO: This is a bit ugly perhaps?
     renderProxy.materialHandles[0] = DefaultAssetHandle_LitMaterial;
     renderProxy.materialHandles[1] = DefaultAssetHandle_LitMaterial;
     renderProxy.materialHandles[2] = DefaultAssetHandle_LitMaterial;

@@ -19,8 +19,6 @@ ost::Actor* camera;
 
 void ost::EditorGameInstance::Load(IAssetManager& assets)
 {
-    ost::HMaterial materialRoot = assets.Load<ost::IMaterial>("Engine/Materials/Mat_DefaultLit.json");
-    ost::HMaterialInstance leatherMaterial = assets.Load<ost::IMaterialInstance>("Assets/Materials/LeatherMaterial.json");
     ost::HModel cubeModel = assets.Load<ost::HModel>("Assets/Models/TestCube.fbx");
 
     auto& sceneManager = ost::pEngine->GetServiceLocator().GetRequired<ost::ISceneManager>();
@@ -31,7 +29,6 @@ void ost::EditorGameInstance::Load(IAssetManager& assets)
     cube->SetName("Cube");
     auto& meshComponent = cube->AddComponent<ost::StaticMeshComponent>();
     meshComponent.SetModel(cubeModel);
-    meshComponent.SetMaterial(leatherMaterial);
     cube->transform.Move({0,0,5});
     cube->transform.Rotate(ost::Quaternion::FromEulers(45.0f * ost::math::DegToRad, 45.0f * ost::math::DegToRad, 0));
     

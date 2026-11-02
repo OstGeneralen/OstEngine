@@ -19,7 +19,7 @@ namespace ost
 
     constexpr static std::string_view DefaultAssetName_LitMaterial = "OstEngineDefault/Mat/Lit";
 
-    static HMaterialInstance DefaultAssetHandle_LitMaterial;
+    extern HMaterialInstance DefaultAssetHandle_LitMaterial;
 
     extern TextureCPUData GenerateDefaultAssetData_AlbedoTexture();
     extern TextureCPUData GenerateDefaultAssetData_NormalTexture();
