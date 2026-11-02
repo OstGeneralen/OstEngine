@@ -97,6 +97,26 @@ namespace ost
             return _denseList;
         }
 
+        auto begin()
+        {
+            return _denseList.begin();
+        }
+
+        auto end()
+        {
+            return _denseList.end();
+        }
+
+        const auto begin() const
+        {
+            return _denseList.begin();
+        }
+
+        const auto end() const
+        {
+            return _denseList.end();
+        }
+
     private:
         struct Slot
         {
