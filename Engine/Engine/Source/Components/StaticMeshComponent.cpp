@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Engine/Components/StaticMeshComponent.h"
 
+#include "Engine/Asset/DefaultAssets.h"
 #include "Engine/Asset/IAssetManager.h"
 #include "Engine/World/Actor.h"
 #include "World/SceneGraph.h"
@@ -51,6 +52,15 @@ void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)
 {
     StaticMeshRenderProxy renderProxy;
     renderProxy.transform = GetOwner().transform.GetWorldTransform();
+    renderProxy.materialHandles[0] = DefaultAssetHandle_LitMaterial;
+    renderProxy.materialHandles[1] = DefaultAssetHandle_LitMaterial;
+    renderProxy.materialHandles[2] = DefaultAssetHandle_LitMaterial;
+    renderProxy.materialHandles[3] = DefaultAssetHandle_LitMaterial;
+    renderProxy.materialHandles[4] = DefaultAssetHandle_LitMaterial;
+    renderProxy.materialHandles[5] = DefaultAssetHandle_LitMaterial;
+    renderProxy.materialHandles[6] = DefaultAssetHandle_LitMaterial;
+    renderProxy.materialHandles[7] = DefaultAssetHandle_LitMaterial;
+
     _proxyMeshHandle = SceneGraph.AddStaticMeshProxy(renderProxy);
 
     _pSceneGraph = &SceneGraph;

@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "Engine/Asset/AssetType.h"
+#include "Engine/Asset/DefaultAssets.h"
 
 #include <filesystem>
 
@@ -28,6 +29,12 @@ namespace ost
             void* ptr = nullptr;
             GetAssetByRawHandle(TypeID::Get<TAsset>(), static_cast<SizeType>(handle), &ptr);
             return *static_cast<TAsset*>(ptr);
+        }
+
+        template <typename TAsset>
+        TAsset& GetAsset(const std::string& assetName)
+        {
+            return GetAsset<TAsset>(GetHandle<TAsset>(assetName));
         }
 
         template <typename TAsset>

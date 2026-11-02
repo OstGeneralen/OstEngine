@@ -32,6 +32,7 @@ namespace ost
 
     private:
         SceneGraph* _pSceneGraph;
+        IAssetManager* _pAssetManager;
         ProxyHandle _proxyMeshHandle;
         SizeType dummyHandle = 0;
     };

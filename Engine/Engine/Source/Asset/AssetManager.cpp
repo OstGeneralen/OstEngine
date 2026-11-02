@@ -7,6 +7,7 @@
 
 #include <GraphicsEngine/Materials/IMaterialManager.h>
 #include <GraphicsEngine/Resources/IGraphicsResourceManager.h>
+#include <Memory/Memory.h>
 
 using namespace ost;
 
@@ -41,6 +42,11 @@ namespace ost
         MaterialLoader loader;
         return static_cast<SizeType>(loader.LoadMaterialInstance(p, ctx.assets, ctx.materials));
     }
+
+    SizeType CreateImage(AssetContext&& ctx, const void* pDesc)
+    {
+        return static_cast<SizeType>(ctx.gfxResources.Create(*static_cast<const TextureCPUData*>(pDesc)));
+    };
 
     SizeType CreateMaterial(AssetContext&& ctx, const void* pDesc)
     {
@@ -80,9 +86,28 @@ ost::AssetManager::AssetManager(ServiceLocator& serviceLocator)
     , _typeContainers{}
 {
     _typeContainers.Insert(TypeID::Get<HModel>(), AssetTypeContainer(LoadModel, nullptr, nullptr, nullptr));
-    _typeContainers.Insert(TypeID::Get<ITexture>(), AssetTypeContainer(LoadImage, nullptr, nullptr, nullptr));
+    _typeContainers.Insert(TypeID::Get<ITexture>(), AssetTypeContainer(LoadImage, CreateImage, nullptr, nullptr));
     _typeContainers.Insert(TypeID::Get<IMaterial>(), AssetTypeContainer(LoadMaterial, CreateMaterial, GetMaterial, CGetMaterial));
     _typeContainers.Insert(TypeID::Get<IMaterialInstance>(), AssetTypeContainer(LoadMaterialInstance, CreateMaterialInstance, GetMaterialInstance, CGetMaterialInstance));
+
+    // Generate Default Assets
+    TextureCPUData defaultDataAlbedo = GenerateDefaultAssetData_AlbedoTexture();
+    CreateAsset(TypeID::Get<ITexture>(), std::string(DefaultAssetName_AlbedoTexture), &defaultDataAlbedo);
+
+    TextureCPUData defaultDataNormal = GenerateDefaultAssetData_NormalTexture();
+    CreateAsset(TypeID::Get<ITexture>(), std::string(DefaultAssetName_NormalTexture), &defaultDataNormal);
+
+    TextureCPUData defaultDataORM = GenerateDefaultAssetData_ORMTexture();
+    CreateAsset(TypeID::Get<ITexture>(), std::string(DefaultAssetName_ORMTexture), &defaultDataORM);
+
+    IAssetManager* thisInterface = this;
+    HMaterial defaultLit = thisInterface->Load<IMaterial>("Engine/Materials/Mat_DefaultLit.json");
+    auto& defaultLitInstance = Create<IMaterialInstance>(std::string(DefaultAssetName_LitMaterial), defaultLit);
+    defaultLitInstance.Textures().SetTexture(0, thisInterface->GetHandle<ITexture>(std::string(DefaultAssetName_AlbedoTexture)));
+    defaultLitInstance.Textures().SetTexture(1, thisInterface->GetHandle<ITexture>(std::string(DefaultAssetName_NormalTexture)));
+    defaultLitInstance.Textures().SetTexture(2, thisInterface->GetHandle<ITexture>(std::string(DefaultAssetName_ORMTexture)));
+
+    DefaultAssetHandle_LitMaterial = thisInterface->GetHandle<IMaterialInstance>(std::string(DefaultAssetName_LitMaterial));
 }
 
 // ------------------------------------------------------------

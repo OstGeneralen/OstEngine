@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME} STATIC
     Source/Components/DirectionalLightComponent.cpp
     Source/Configuration/RuntimeConfig.cpp
     Source/Platform/Win32Window.cpp
+    Source/Asset/DefaultAssets.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
