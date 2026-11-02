@@ -99,50 +99,6 @@ void OstEngine::Tick()
     _input.EndFrame();
 }
 
-void OstEngine::RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetRenderer)
-{
-    auto& sceneGraph = _sceneManager.GetActiveSceneGraph();
-
-    for (const auto& meshProxy : sceneGraph.GetStaticMeshProxies())
-    {
-        // Only push if the model handle is valid
-        if (meshProxy.hModel)
-        {
-            toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.materialHandles, meshProxy.transform));
-        }
-    }
-
-    for (const auto& lightProxy : sceneGraph.GetLightProxies())
-    {
-        LightCommand cmd;
-        cmd.cmdData = lightProxy.proxyData;
-        toQueue.Push(std::move(cmd));
-    }
-
-    const ViewRenderProxy& viewProxy = sceneGraph.GetViewProxy();
-
-    Matrix4x4 projection;
-    switch (viewProxy.projectionType)
-    {
-    case ViewRenderProxy::EProjectionType::Perspective: {
-        projection = Matrix4x4::CreatePerspectiveProjection(viewProxy.lValue, targetRenderer.GetAspectRatio(), 0.1f, 30.0f);
-        break;
-    }
-    case ViewRenderProxy::EProjectionType::Orthographic: {
-        projection = Matrix4x4::CreateOrthographicsProjection(viewProxy.lValue * targetRenderer.GetDimensions().X, viewProxy.rValue * targetRenderer.GetDimensions().Y,
-                                                              0.1f, 30.0f);
-        break;
-    case ViewRenderProxy::EProjectionType::Unset: {
-        projection = Matrix4x4(); // Simple identity
-        break;
-    }
-    }
-    }
-    const Matrix4x4 toView = viewProxy.transform.GetInverse();
-    const Matrix4x4 proj = projection;
-    toQueue.SetView(toView * proj, viewProxy.transform);
-}
-
 InputReader& OstEngine::GetInputReader()
 {
     return _input;

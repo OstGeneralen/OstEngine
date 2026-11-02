@@ -3,6 +3,9 @@
 
 #include "Engine/World/Component.h"
 
+#include <GraphicsEngine/Rendering/IRenderQueue.h>
+#include <GraphicsEngine/Rendering/IRenderer.h>
+
 // ------------------------------------------------------------
 
 using namespace ost;
@@ -55,16 +58,6 @@ const ViewRenderProxy& SceneGraph::GetViewProxy() const
     return _viewProxy;
 }
 
-const List<StaticMeshRenderProxy>& SceneGraph::GetStaticMeshProxies() const
-{
-    return _meshProxies.GetDenseList();
-}
-
-const List<LightRenderProxy>& SceneGraph::GetLightProxies() const
-{
-    return _lightProxies.GetDenseList();
-}
-
 // ------------------------------------------------------------
 
 void SceneGraph::MarkTransformDirty(RenderComponent& renderComponent)
@@ -80,6 +73,48 @@ void SceneGraph::ReconcileTransforms()
     }
 
     _pendingTransformReevaluations.Clear();
+}
+
+// ------------------------------------------------------------
+
+void ost::SceneGraph::PopulateRenderQueue(IRenderQueue& toQueue, const IRenderer& targetRenderer) const
+{
+    for (const auto& meshProxy : _meshProxies)
+    {
+        if (meshProxy.hModel)
+        {
+            toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.materialHandles, meshProxy.transform));
+        }
+    }
+
+    for (const auto& lightProxy : _lightProxies)
+    {
+        LightCommand cmd;
+        cmd.cmdData = lightProxy.proxyData;
+        toQueue.Push(std::move(cmd));
+    }
+
+    Matrix4x4 projection;
+    switch (_viewProxy.projectionType)
+    {
+    case ViewRenderProxy::EProjectionType::Perspective: {
+        projection = Matrix4x4::CreatePerspectiveProjection(_viewProxy.lValue, targetRenderer.GetAspectRatio(), 0.1f, 30.0f);
+        break;
+    }
+    case ViewRenderProxy::EProjectionType::Orthographic: {
+        projection = Matrix4x4::CreateOrthographicsProjection(_viewProxy.lValue * targetRenderer.GetDimensions().X, _viewProxy.rValue * targetRenderer.GetDimensions().Y,
+                                                              0.1f, 30.0f);
+        break;
+    }
+    case ViewRenderProxy::EProjectionType::Unset: {
+        projection = Matrix4x4(); // Simple identity
+        break;
+    }
+    }
+
+    const Matrix4x4 toView = _viewProxy.transform.GetInverse();
+    const Matrix4x4 proj = projection;
+    toQueue.SetView(toView * proj, _viewProxy.transform);
 }
 
 // ------------------------------------------------------------

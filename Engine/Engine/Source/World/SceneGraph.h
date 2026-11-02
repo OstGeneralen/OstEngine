@@ -13,6 +13,8 @@
 namespace ost
 {
     class RenderComponent;
+    class IRenderQueue;
+    class IRenderer;
 
     class SceneGraph
     {
@@ -28,11 +30,11 @@ namespace ost
         ViewRenderProxy& GetViewProxy();
 
         const ViewRenderProxy& GetViewProxy() const;
-        const List<StaticMeshRenderProxy>& GetStaticMeshProxies() const;
-        const List<LightRenderProxy>& GetLightProxies() const;
 
         void MarkTransformDirty(RenderComponent& renderComponent);
         void ReconcileTransforms();
+
+        void PopulateRenderQueue( IRenderQueue& toQueue, const IRenderer& targetRenderer ) const;
 
     private:
         ViewRenderProxy _viewProxy;

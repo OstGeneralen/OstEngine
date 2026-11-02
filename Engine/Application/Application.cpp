@@ -7,6 +7,8 @@
 
 #include <Engine/Configuration/RuntimeConfig.h>
 #include <Engine/Game/GameBase.h>
+#include <Engine/World/IScene.h>
+#include <Engine/World/ISceneManager.h>
 #include <Utility/Timer.h>
 
 using namespace ost;
@@ -29,7 +31,6 @@ void Application::Startup()
     _gameInstance = CreateGameInstance();
 
     _coreEngine->SetGameInstance(_gameInstance.Get());
-
 }
 
 void ost::Application::Shutdown()
@@ -63,11 +64,15 @@ void ost::Application::ProcessKeyEvent(EKeyboard key, bool state)
 
 void ost::Application::Run()
 {
+    ISceneManager& sceneManager = _serviceLocator.GetRequired<ISceneManager>();
+
     while (!_hasExitRequest)
     {
+        const IScene* activeScene = sceneManager.GetActiveScene();
+
         _window.Update();
         _coreEngine->Tick();
-        _coreEngine->RenderSceneGraph(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
+        activeScene->RenderSceneToQueue(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
         _graphicsEngine->ExecuteAndClearCommandQueue();
         _graphicsEngine->ClearAndSetBackbuffer();
         _graphicsEngine->DrawRendererOutput();

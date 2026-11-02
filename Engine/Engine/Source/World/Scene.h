@@ -35,6 +35,8 @@ namespace ost
 
         List<UniquePtr<Actor>>& GetActors() override;
         const List<UniquePtr<Actor>>& GetActors() const override;
+
+        void RenderSceneToQueue(IRenderQueue& toQueue, const IRenderer& targetRenderer) const override;
         // END IScene
 
         void Tick(ServiceLocator& serviceLocator);

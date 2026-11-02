@@ -103,5 +103,12 @@ const List<UniquePtr<Actor>>& ost::Scene::GetActors() const
 }
 
 // ------------------------------------------------------------
+
+void ost::Scene::RenderSceneToQueue(IRenderQueue& toQueue, const IRenderer& targetRenderer) const
+{
+    _sceneGraph.PopulateRenderQueue(toQueue, targetRenderer);
+}
+
+// ------------------------------------------------------------
 // ------------------------------------------------------------
 // ------------------------------------------------------------

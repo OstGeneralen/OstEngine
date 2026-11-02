@@ -37,7 +37,6 @@ namespace ost
         virtual void SetGameInstance(GameBase* pGameInstance) = 0;
 
         virtual void Tick() = 0;
-        virtual void RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetRenderer) = 0;
 
         virtual InputReader& GetInputReader() = 0;
     };

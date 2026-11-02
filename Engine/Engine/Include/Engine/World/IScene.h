@@ -8,17 +8,21 @@
 namespace ost
 {
     class Actor;
+    class IRenderQueue;
+    class IRenderer;
 
     class IScene
     {
     public:
         virtual Actor* CreateActor() = 0;
-        virtual void DestroyActor( Actor* pActor ) = 0;
+        virtual void DestroyActor(Actor* pActor) = 0;
 
         virtual List<UniquePtr<Actor>>& GetActors() = 0;
         virtual const List<UniquePtr<Actor>>& GetActors() const = 0;
+
+        virtual void RenderSceneToQueue(IRenderQueue& toQueue, const IRenderer& targetRenderer) const = 0;
     };
-}
+} // namespace ost
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

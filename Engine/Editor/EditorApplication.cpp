@@ -17,6 +17,7 @@
 // Services
 #include "GUI/Controls/PropertyEditorDrawer.h"
 
+#include <Engine/World/IScene.h>
 #include <Engine/World/ISceneManager.h>
 
 using namespace ost;
@@ -53,7 +54,7 @@ void ost::EditorApplication::Start()
     RuntimeConfig config;
     config.LoadFromFile("EditorConfiguration.json");
 
-    _window.Create(*this, "Ost Engine Editor", {0,0}, false);
+    _window.Create(*this, "Ost Engine Editor", {0, 0}, false);
     _graphicsEngine = IGraphicsEngine::Create(_serviceLocator, _window.GetNativeWindowHandle(), _window.GetClientSize());
     _coreEngine = IOstEngine::Create(_serviceLocator);
 
@@ -97,13 +98,17 @@ void ost::EditorApplication::Start()
 
 void ost::EditorApplication::Run()
 {
+    ISceneManager& sceneManager = _serviceLocator.GetRequired<ISceneManager>();
+
+    // Init the game + register editor services
     _coreEngine->SetGameInstance(&_editorGameInstance);
     _serviceLocator.RegisterUnmanaged<SceneViewCamera>(&_sceneViewCamera);
 
     _editorGui.Initialize();
 
+    // Set up the context
     EditorContext context(_serviceLocator, _commandQueue, _editorGui, *_graphicsEngine);
-    context.sceneContext.SetActiveScene(_serviceLocator.GetRequired<ISceneManager>().GetActiveScene());
+    context.sceneContext.SetActiveScene(sceneManager.GetActiveScene());
 
     // Pre-warm the gui to calculate sizes from normalized to actual
     ImGui_ImplDX11_NewFrame();
@@ -126,7 +131,7 @@ void ost::EditorApplication::Run()
 
         auto& renderQueue = _graphicsEngine->GetRenderQueue();
         auto& renderer = _graphicsEngine->GetRenderer();
-        _coreEngine->RenderSceneGraph(renderQueue, renderer);
+        sceneManager.GetActiveScene()->RenderSceneToQueue(renderQueue, renderer);
         _sceneViewCamera.InjectToRenderQueue(renderQueue, renderer);
 
         // Execute the command queue onto the output surface of the active renderer

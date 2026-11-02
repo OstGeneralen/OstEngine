@@ -38,7 +38,6 @@ namespace ost
         void SetGameInstance(GameBase* pGameInstance) override;
 
         void Tick() override;
-        void RenderSceneGraph(IRenderQueue& toQueue, const IRenderer& targetRenderer) override;
 
         virtual ServiceLocator& GetServiceLocator() override;
         InputReader& GetInputReader() override;
