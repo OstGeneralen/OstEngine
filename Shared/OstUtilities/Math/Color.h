@@ -110,8 +110,8 @@ namespace ost
 
         constexpr inline operator RGBAColor32() const
         {
-            return RGBAColor32{static_cast<Uint8>(math::Clamp<Float32>(R / 255.0f, 0, 255.0f)), static_cast<Uint8>(math::Clamp<Float32>(G / 255.0f, 0, 255.0f)),
-                               static_cast<Uint8>(math::Clamp<Float32>(B / 255.0f, 0, 255.0f)), static_cast<Uint8>(math::Clamp<Float32>(A / 255.0f, 0, 255.0f))};
+            return RGBAColor32{static_cast<Uint8>(math::Clamp<Float32>(R * 255.0f, 0, 255.0f)), static_cast<Uint8>(math::Clamp<Float32>(G * 255.0f, 0, 255.0f)),
+                               static_cast<Uint8>(math::Clamp<Float32>(B * 255.0f, 0, 255.0f)), static_cast<Uint8>(math::Clamp<Float32>(A * 255.0f, 0, 255.0f))};
         }
     };
 
