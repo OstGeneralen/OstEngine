@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/GraphicsTypes.h"
+#include "GraphicsEngine/Rendering/Vertex.h"
 
 // ------------------------------------------------------------
 

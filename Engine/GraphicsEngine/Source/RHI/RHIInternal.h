@@ -1,6 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/Resources/TextureCPUData.h"
+#include "GraphicsEngine/GraphicsTypes.h"
 #include "RHI/RHIMinimal.h"
 
 // DXGI + Dx11

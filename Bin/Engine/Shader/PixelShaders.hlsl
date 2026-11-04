@@ -2,28 +2,24 @@
 #include "ShaderCommon.hlsli"
 #include "PBLShader.hlsli"
 #include "Material/MaterialCore.hlsli"
-#include "MaterialInclude"
 
 // ------------------------------------------------------------
 
-float3 CalculateLights(PBRData surface)
-{
+float3 CalculateLights(PBRData surface) {
     float3 totalLight = float3(0,0,0);
 
-    for(uint i = 0; i < LightBuffer_numLights; i++)
-    {
+    for(uint i = 0; i < LightBuffer_numLights; i++) {
         float3 thisLight = float3(0,0,0);
-        switch(LightBuffer_lights[i].type)
-        {
+        switch(LightBuffer_lights[i].type) {
             case 0:
-                thisLight = CalculatePBLDirectionalLight(LightBuffer_lights[i].direction, LightBuffer_lights[i].color.rgb, surface);
-                break;
+            thisLight = CalculatePBLDirectionalLight(LightBuffer_lights[i].direction, LightBuffer_lights[i].color.rgb, surface);
+            break;
             case 1:
-                thisLight = CalculatePBLSpotLight(LightBuffer_lights[i].color.rgb, LightBuffer_lights[i].position, LightBuffer_lights[i].direction, LightBuffer_lights[i].outerRadius, LightBuffer_lights[i].radius, LightBuffer_lights[i].range, surface);
-                break;
+            thisLight = CalculatePBLSpotLight(LightBuffer_lights[i].color.rgb, LightBuffer_lights[i].position, LightBuffer_lights[i].direction, LightBuffer_lights[i].outerRadius, LightBuffer_lights[i].radius, LightBuffer_lights[i].range, surface);
+            break;
             case 2:
-                thisLight = CalculatePBLPointLight( LightBuffer_lights[i].color.rgb, LightBuffer_lights[i].position, LightBuffer_lights[i].radius, surface );
-                break;
+            thisLight = CalculatePBLPointLight(LightBuffer_lights[i].color.rgb, LightBuffer_lights[i].position, LightBuffer_lights[i].radius, surface);
+            break;
         }
         totalLight = totalLight + thisLight;
     }
@@ -38,7 +34,6 @@ float4 PSMain_Fullscreen(FullscreenPixel frag) : SV_Target {
     materialInput.uv = frag.UV;
 
     MaterialSurfaceData surfaceData;
-    MaterialSurface(materialInput, surfaceData);
 
     return float4(surfaceData.albedo.rgb, 1);
 }
@@ -54,7 +49,6 @@ float4 PSMain_LitSurface_Forward(SurfacePixel frag) : SV_Target {
     materialInput.vertexColor = frag.BaseColor;
 
     MaterialSurfaceData surfaceData;
-    MaterialSurface(materialInput, surfaceData);
 
     PBRData pblData;
     pblData.albedo = surfaceData.albedo;
@@ -72,21 +66,21 @@ float4 PSMain_LitSurface_Forward(SurfacePixel frag) : SV_Target {
 
 // ------------------------------------------------------------
 
-GBuffer PSMain_Surface_Geometry(SurfacePixel frag) {
-    MaterialPixelInput materialInput;
-    materialInput.normal = frag.Normal;
-    materialInput.tangent = frag.Tangent;
-    materialInput.bitangent = frag.Bitangent;
-    materialInput.uv = frag.UV;
-    materialInput.vertexColor = frag.BaseColor;
+Texture2D Texture_Albedo : register(t0);
+Texture2D Texture_Normal : register(t1);
+Texture2D Texture_ORM : register(t2);
 
-    MaterialSurfaceData surfaceData;
-    MaterialSurface(materialInput, surfaceData);
+GBuffer PSMain_Surface_Geometry(SurfacePixel frag) {
+    float3 albedo = Texture_Albedo.Sample(TrilinearWrap, frag.UV).rgb;
+    float2 normal = Texture_Normal.Sample(TrilinearWrap, frag.UV).rg;
+    float3 orm = Texture_ORM.Sample(TrilinearWrap, frag.UV).rgb;
+
+    float3 pixelNormal = CalculatePixelNormal(normal, frag.Normal, frag.Tangent, frag.Bitangent);
 
     GBuffer gbuf;
-    gbuf.Albedo = float4(surfaceData.albedo, 1);
-    gbuf.Normal = float4(PackNormal(surfaceData.normal), 1);
-    gbuf.ORM = float4(float3(surfaceData.ao, surfaceData.roughness, surfaceData.metallicness), 1);
+    gbuf.Albedo = float4(albedo, 1);
+    gbuf.Normal = float4(PackNormal(pixelNormal), 1);
+    gbuf.ORM = float4(orm, 1);
     return gbuf;
 }
 
@@ -94,9 +88,8 @@ GBuffer PSMain_Surface_Geometry(SurfacePixel frag) {
 
 Texture2D Blit_Colour : register(t0);
 
-float4 PSMain_Blit( FullscreenPixel frag ) : SV_Target
-{
-    float4 color = Blit_Colour.Sample( PointWrap, frag.UV );
+float4 PSMain_Blit(FullscreenPixel frag) : SV_Target {
+    float4 color = Blit_Colour.Sample(PointWrap, frag.UV);
     color.a = 1;
     return color;
 }
@@ -123,7 +116,7 @@ float4 PSMain_Surface_Lit(FullscreenPixel frag)  : SV_Target {
     pblData.roughness = max(ORM.g, 0.0001f);
     pblData.metallic = max(ORM.b, 0.0001f);
     pblData.position = worldPos;
-    
+
     float3 litColor = CalculateLights(pblData);
 
     return float4(GammaCorrectOutput(litColor.rgb, 1.9f), 1);

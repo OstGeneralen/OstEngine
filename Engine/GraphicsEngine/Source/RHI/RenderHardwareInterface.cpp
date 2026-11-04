@@ -147,7 +147,7 @@ void RenderHardwareInterface::ResizeBackbuffer(const Vector2u& newSize, Texture&
 
 // ------------------------------------------------------------
 
-bool RenderHardwareInterface::CreateTexture(const TextureCPUData& desc, Texture& outTexture) const
+bool RenderHardwareInterface::CreateTexture(const TextureDesc& desc, Texture& outTexture) const
 {
     D3D11_TEXTURE2D_DESC textureDesc = {};
     textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
@@ -384,25 +384,29 @@ bool RenderHardwareInterface::CreatePSO(const PipelineStateDesc& desc, PipelineS
     HLSLCompiler compiler;
 
     // Vertex Shader
-    if (desc.vsData.format == EShaderCodeFormat::Source)
+    if (desc.vsDesc.precompiled == false)
     {
-        List<Uint8> vsBytecode = compiler.CompileVertexShader(desc.vsData.includeRoot, desc.vsData.code, desc.vsData.entryPoint, desc.vsData.includeRoot);
+        const ShaderDesc::CompileInfo& compileInfo = desc.vsDesc.compileInfo;
+
+        List<Uint8> vsBytecode = compiler.CompileVertexShader(compileInfo.name, desc.vsDesc.code, compileInfo.entryPoint, compileInfo.includeRoot);
         CreateShader(EPipelineStage::VS, vsBytecode, outPSO._vertexShader);
     }
-    else if (desc.vsData.format == EShaderCodeFormat::Precompiled)
+    else
     {
-        CreateShader(EPipelineStage::VS, desc.vsData.code, outPSO._vertexShader);
+        CreateShader(EPipelineStage::VS, desc.vsDesc.code, outPSO._vertexShader);
     }
 
     // Pixel Shader
-    if (desc.psData.format == EShaderCodeFormat::Source)
+    if (desc.psDesc.precompiled == false)
     {
-        List<Uint8> psBytecode = compiler.CompileVertexShader(desc.psData.includeRoot, desc.psData.code, desc.psData.entryPoint, desc.psData.includeRoot);
+        const ShaderDesc::CompileInfo& compileInfo = desc.psDesc.compileInfo;
+
+        List<Uint8> psBytecode = compiler.CompileVertexShader(compileInfo.name, desc.psDesc.code, compileInfo.entryPoint, compileInfo.includeRoot);
         CreateShader(EPipelineStage::PS, psBytecode, outPSO._pixelShader);
     }
-    else if (desc.psData.format == EShaderCodeFormat::Precompiled)
+    else
     {
-        CreateShader(EPipelineStage::VS, desc.psData.code, outPSO._pixelShader);
+        CreateShader(EPipelineStage::VS, desc.psDesc.code, outPSO._pixelShader);
     }
 
     // Input Layout

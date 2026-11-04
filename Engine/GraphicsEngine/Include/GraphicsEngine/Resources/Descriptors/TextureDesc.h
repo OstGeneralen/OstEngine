@@ -1,25 +1,28 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/GraphicsTypes.h"
-#include "GraphicsEngine/Resources/ShaderCPUData.h"
-#include "GraphicsEngine/Resources/VertexElement.h"
-
-#include <OstTypes.h>
 
 #include <Container/List.h>
+#include <Math/Vector3.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-
-    struct PipelineStateDesc
+    struct TextureImageDesc
     {
-        List<VertexElement> vertexLayout;
-        ShaderCPUData vsData;
-        ShaderCPUData psData;
-        EBlendState blendState = EBlendState::Opaque;
-        EPrimitiveTopology topology = EPrimitiveTopology::TriangleList;
+        SizeType rowPitch;
+        SizeType slicePitch;
+        List<Uint8> data;
+    };
+
+    struct TextureDesc
+    {
+        Uint32 mipCount = 1;
+        ETextureFormat format = ETextureFormat::Unknown;
+        Uint32 dimensionCount = 2;
+        Vector3u dimensions;
+        List<TextureImageDesc> images;
     };
 } // namespace ost
 

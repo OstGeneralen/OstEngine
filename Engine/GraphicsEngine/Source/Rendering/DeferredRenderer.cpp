@@ -3,7 +3,6 @@
 
 #include "Buffers.h"
 #include "GraphicsEngine/Rendering/Vertex.h"
-#include "Materials/MaterialCompiler.h"
 #include "Objects/RenderDefaultsLibrary.h"
 #include "RHI/RHIInternal.h"
 #include "RHI/RenderHardwareInterface.h"
@@ -12,6 +11,8 @@
 #include "RendererContext.h"
 #include "Resources/GraphicsResourceManager.h"
 #include "Resources/ShaderCompiler.h"
+
+#include <Utility/File.h>
 
 using namespace ost;
 
@@ -35,15 +36,14 @@ void DeferredRenderer::Initialize(const Vector2u& renderSize, RendererContext&& 
     // Treat initialization as a first "resize"
     Resize(renderSize, std::move(context));
 
-    // Todo: Unhackify this glorious mess of a pretend material
-    MaterialDesc desc = {};
-    desc.domain = EMaterialDomain::Fullscreen;
-    desc.materialShaderPath = "Engine/Shader/Material/MaterialShader_FullscreenBlit.hlsl";
-    desc.blending = EBlendState::Additive;
+    PipelineStateDesc lightPassPsoDesc;
+    lightPassPsoDesc.blendState = EBlendState::Additive;
+    lightPassPsoDesc.topology = EPrimitiveTopology::TriangleList;
+    lightPassPsoDesc.vertexLayout = PipelineStateDesc::DefaultVertexLayout_Blit();
+    lightPassPsoDesc.psDesc = ShaderDesc::FromSourceCodePath(EPipelineStage::PS, "Engine/Shader/PixelShaders.hlsl", "PSMain_Surface_Lit");
+    lightPassPsoDesc.vsDesc = ShaderDesc::FromSourceCodePath(EPipelineStage::VS, "Engine/Shader/VertexShaders.hlsl", "VSMain_Fullscreen");
 
-    MaterialCompiler compiler(desc);
-    compiler.Compile();
-    rhi.CreatePSO(compiler.GetCompiledPSODescForward(), _fullscreenPSO);
+    rhi.CreatePSO(lightPassPsoDesc, _lightPassPSO);
 
     // Deferred uses its own light buffer since it actually allows more lights to be drawn than the fixed count of 8
     rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
@@ -120,7 +120,7 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     rhi.UnsetRenderTargets();
     rhi.UnsetTextures();
 
-    rhi.SetPSO(_fullscreenPSO);
+    rhi.SetPSO(_lightPassPSO);
 
     rhi.ClearRenderTarget(_outputTexture);
     rhi.SetRenderTarget(_outputTexture, nullptr);
@@ -130,7 +130,7 @@ void ost::DeferredRenderer::ExecuteCommands(const IRenderQueue& queueInterface, 
     rhi.SetTexture(_gBuffer.orm, 2, ost::EPipelineStage_PS);
     rhi.SetTexture(_gBuffer.depth, 3, ost::EPipelineStage_PS);
 
-    rhi.SetBuffersForIndexed(RenderDefaultsLibrary::GetBlitMesh().vertexBuffer, sizeof(FullscreenVertex), RenderDefaultsLibrary::GetBlitMesh().indexBuffer);
+    rhi.SetBuffersForIndexed(RenderDefaultsLibrary::GetBlitMesh().vertexBuffer, sizeof(BlitMeshVertex), RenderDefaultsLibrary::GetBlitMesh().indexBuffer);
 
     // Go through the lights and keep drawing :)
     LightsBufferStructure lightData;
@@ -165,19 +165,14 @@ const ITexture* ost::DeferredRenderer::GetOutputTarget(ERenderOutputTexture targ
     {
     case ERenderOutputTexture::Output:
         return &_outputTexture;
-        break;
     case ERenderOutputTexture::Depth:
         return &_gBuffer.depth;
-        break;
     case ERenderOutputTexture::GBufferAlbedo:
         return &_gBuffer.albedo;
-        break;
     case ERenderOutputTexture::GBufferNormal:
         return &_gBuffer.normals;
-        break;
     case ERenderOutputTexture::GBufferORM:
         return &_gBuffer.orm;
-        break;
     }
 
     return nullptr;

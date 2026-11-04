@@ -2,9 +2,8 @@
 #pragma once
 #include "GraphicsEngine/Rendering/IRenderer.h"
 #include "Objects/Buffer.h"
-#include "Objects/Texture.h"
-#include "Objects/Model.h"
 #include "Objects/PipelineStateObject.h"
+#include "Objects/Texture.h"
 
 // ------------------------------------------------------------
 
@@ -49,9 +48,7 @@ namespace ost
         Texture _outputTexture;
 
         Buffer _lightBuffer;
-
-        PipelineStateObject _fullscreenPSO;
-
+        PipelineStateObject _lightPassPSO;
     };
 } // namespace ost
 

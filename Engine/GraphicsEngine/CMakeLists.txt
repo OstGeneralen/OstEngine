@@ -2,14 +2,6 @@ cmake_minimum_required(VERSION 4.2)
 project(${OST_GRAPHICS_ENGINE_NAME})
 
 add_library(${PROJECT_NAME} STATIC
-    Include/GraphicsEngine/Rendering/Vertex.h
-    Include/GraphicsEngine/Rendering/IRenderer.h
-    Include/GraphicsEngine/Resources/ObjectHandles.h
-    Include/GraphicsEngine/Resources/TextureCPUData.h
-    Include/GraphicsEngine/Resources/ModelCPUData.h
-    Include/GraphicsEngine/Resources/IGraphicsResourceManager.h
-    Include/GraphicsEngine/Rendering/IRenderQueue.h
-    Include/GraphicsEngine/IGraphicsEngine.h
     Source/RHI/RenderHardwareInterface.h
     Source/RHI/RenderHardwareInterface.cpp
     Source/RHI/RHIMinimal.h
@@ -22,7 +14,6 @@ add_library(${PROJECT_NAME} STATIC
     Source/Objects/PipelineStateObject.cpp
     Source/GraphicsEngine.cpp
     Source/GraphicsEngine.h
-    Source/Objects/Model.h
     Source/Rendering/RenderPipelineConstants.h
     Source/Rendering/RenderCommand.h
     Source/Resources/GraphicsResourceManager.h
@@ -34,14 +25,8 @@ add_library(${PROJECT_NAME} STATIC
     Source/Rendering/ForwardRenderer.cpp
     Source/Rendering/RenderQueue.h
     Source/Rendering/RenderQueue.cpp
-    Include/GraphicsEngine/Materials/IMaterial.h
-    Include/GraphicsEngine/Materials/IMaterialPropertyCollection.h
-    Include/GraphicsEngine/Materials/MaterialConstants.h
-    Include/GraphicsEngine/Materials/MaterialPropertyTypes.h
     Source/Materials/MaterialPropertyCollection.cpp
     Source/Materials/MaterialPropertyCollection.h
-    Include/GraphicsEngine/Materials/IMaterialInstance.h
-    Include/GraphicsEngine/Materials/IMaterialManager.h
     Source/Materials/Material.h
     Source/Materials/MaterialInstance.h
     Source/Materials/Material.cpp
@@ -52,28 +37,23 @@ add_library(${PROJECT_NAME} STATIC
     Source/Materials/MaterialCompilerIncludeHandler.cpp
     Source/Objects/TextureSampler.cpp
     Source/Objects/TextureSampler.h
-    Include/GraphicsEngine/Materials/MaterialTextureCollection.h
     Source/Materials/MaterialTextureCollection.cpp
     Source/Materials/MaterialUtility.h
     Source/Rendering/RenderCommandContext.h
     Source/Rendering/RenderCommand.cpp
-    Include/GraphicsEngine/IRenderHardwareInterface.h
     Source/Rendering/DeferredRenderer.h
     Source/Rendering/DeferredRenderer.cpp
     Source/Rendering/RendererContext.h
-    Include/GraphicsEngine/Rendering/RenderConstants.h
-    Include/GraphicsEngine/Rendering/Lights.h
     Source/Objects/RenderDefaultsLibrary.h
     Source/Objects/RenderDefaultsLibrary.cpp
-    Include/GraphicsEngine/Resources/ITexture.h
     Source/RHI/HLSLCompiler.cpp
     Source/Objects/Shader.h
-    Include/GraphicsEngine/Resources/IShader.h
     Source/Objects/Shader.cpp
-    Include/GraphicsEngine/Resources/ShaderCPUData.h
-    Include/GraphicsEngine/Utility/ShaderReflector.h
     Source/Utility/ShaderReflector.cpp
-    Include/GraphicsEngine/Resources/IPipelineStateObject.h
+    Source/Objects/Mesh.h
+    Source/Objects/Mesh.cpp
+    Source/Resources/Descriptors/PipelineStateDesc.cpp
+    Source/Resources/Descriptors/ShaderDesc.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

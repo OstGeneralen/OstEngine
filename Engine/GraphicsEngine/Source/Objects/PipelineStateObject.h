@@ -1,15 +1,12 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/Rendering/RenderConstants.h"
+#include "GraphicsEngine/GraphicsTypes.h"
 #include "GraphicsEngine/Resources/IPipelineStateObject.h"
-#include "GraphicsEngine/Resources/PipelineStateDesc.h"
 #include "Objects/Shader.h"
 #include "RHI/RHIMinimal.h"
 
 // Common
 #include <string>
-
-#include <Container/List.h>
 
 // ------------------------------------------------------------
 

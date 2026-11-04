@@ -5,15 +5,14 @@
 
 // Render Objects & Resources
 #include "Objects/Buffer.h"
-#include "Objects/Model.h"
 #include "Objects/PipelineStateObject.h"
 #include "Objects/Shader.h"
 #include "Objects/Texture.h"
 #include "Objects/TextureSampler.h"
 
-// Graphics Object Creation Data
-#include "GraphicsEngine/Resources/ModelCPUData.h"
-#include "GraphicsEngine/Resources/TextureCPUData.h"
+// Descriptors
+#include "GraphicsEngine/Resources/Descriptors/PipelineStateDesc.h"
+#include "GraphicsEngine/Resources/Descriptors/TextureDesc.h"
 
 // Common
 #include <Container/List.h>
@@ -35,7 +34,7 @@ namespace ost
         void ResizeBackbuffer(const Vector2u& newSize, Texture& inOutBackbuffer);
 
     public: // Resource Management
-        bool CreateTexture(const TextureCPUData& desc, Texture& outTexture) const;
+        bool CreateTexture(const TextureDesc& desc, Texture& outTexture) const;
         bool CreateRenderTargetTexture(const Vector2u& dimensions, EDataFormat format, bool allowAsResource, Texture& outTexture) const;
         bool CreateDepthStencilTexture(const Vector2u& dimensions, bool allowAsResource, Texture& outTexture) const;
 

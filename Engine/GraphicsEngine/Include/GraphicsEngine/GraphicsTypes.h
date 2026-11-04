@@ -92,6 +92,17 @@ namespace ost
 
     // ------------------------------------------------------------
 
+    enum class ETextureFormat
+    {
+        Unknown,
+        RGBAUnorm,    // 4x 8-bit components (R8G8B8A8 unorm)
+        NormalMap,    // 2x 16-bit components (R16G16 unorm)
+        DDS_BC7,      // BC7 compressed dds
+        DDS_BC7_SRGB, // BC7 compressed dds in SRGB
+    };
+
+    // ------------------------------------------------------------
+
     enum class EPrimitiveTopology
     {
         None = 0,

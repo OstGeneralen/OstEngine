@@ -7,9 +7,6 @@
 
 #include <d3d11_1.h>
 
-// Materials
-#include "Materials/MaterialCompiler.h"
-
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -21,90 +18,78 @@ void GraphicsResourceManager::Initialize(const RenderHardwareInterface& rhi)
 
 // ------------------------------------------------------------
 
-HTexture GraphicsResourceManager::Create(const TextureCPUData& data)
+HTexture GraphicsResourceManager::Create(const TextureDesc& data)
 {
     Texture created;
     _pRHI->CreateTexture(data, created);
     return HTexture{_textures.Add(std::move(created))};
 }
 
-HModel GraphicsResourceManager::Create(const ModelCPUData& data)
+HMesh GraphicsResourceManager::Create(const RawVertexData& vertexData, const List<Uint32>& indices)
 {
-    Model created;
-    created.numVertices = data.vertexList.GetSize();
+    MeshDesc desc;
+    desc.indexCount = indices.GetSize();
+    desc.vertexCount = vertexData.GetVertexCount();
+    desc.materialIndex = 0;
 
-    if (data.vertexLayoutMask & EModelVertexData_StaticMesh)
-    {
-        List<SurfaceVertex> vertices{data.vertexList.GetSize()};
-        for (SizeType i = 0; i < vertices.GetSize(); ++i)
-        {
-            vertices[i].position = data.vertexList[i].position;
-            vertices[i].normal = data.vertexList[i].normal;
-            vertices[i].tangent = data.vertexList[i].tangent;
-            vertices[i].uv = data.vertexList[i].uv;
-            vertices[i].color = data.vertexList[i].color;
-        }
+    const auto meshHandleList = Create(vertexData, indices, List<MeshDesc>{desc});
+    return meshHandleList[0];
+}
 
-        _pRHI->CreateVertexBuffer(sizeof(SurfaceVertex), vertices.GetSize(), vertices.GetData(), created.vertexBuffer);
-    }
-    else
-    {
-        OST_ASSERT(false, "UNSUPPORTED VERTEX TYPE!");
-    }
+List<HMesh> GraphicsResourceManager::Create(const RawVertexData& vertexData, const List<Uint32>& indices, const List<MeshDesc>& meshDescs)
+{
+    Buffer vertexBuffer;
+    Buffer indexBuffer;
 
-    _pRHI->CreateIndexBuffer(data.indexList.GetSize(), data.indexList.GetData(), created.indexBuffer);
+    _pRHI->CreateVertexBuffer(vertexData.GetVertexByteSize(), vertexData.GetVertexCount(), vertexData.GetVertexData(), vertexBuffer);
+    _pRHI->CreateIndexBuffer(indices.GetSize(), indices.GetData(), indexBuffer);
 
     SizeType maxMaterialIndex = 0;
 
-    for (const auto& submesh : data.submeshes)
+    List<HMesh> meshHandles;
+
+    for (const auto& submesh : meshDescs)
     {
         Mesh createdMesh;
-        createdMesh.indexBuffer = created.indexBuffer;
-        createdMesh.vertexBuffer = created.vertexBuffer;
+        createdMesh.indexBuffer = indexBuffer;
+        createdMesh.vertexBuffer = vertexBuffer;
 
-        createdMesh.vertexCount = submesh.vertices.count;
-        createdMesh.vertexOffset = submesh.vertices.offset;
-
-        createdMesh.indexCount = submesh.indices.count;
-        createdMesh.indexOffset = submesh.indices.offset;
+        createdMesh.vertexOffset = submesh.vertexOffset;
+        createdMesh.numIndices = submesh.indexCount;
+        createdMesh.indexOffset = submesh.indexOffset;
 
         createdMesh.materialIndex = submesh.materialIndex;
 
-        if (createdMesh.materialIndex > maxMaterialIndex)
-        {
-            maxMaterialIndex = createdMesh.materialIndex;
-        }
-
-        created.meshHandles.Add(_meshes.Add(createdMesh));
+        meshHandles.Add(HMesh{_meshes.Add(createdMesh)});
     }
 
-    created.numMaterials = data.numMaterials;
-
-    return HModel{_models.Add(created)};
+    return meshHandles;
 }
 
-HShader GraphicsResourceManager::Create(const ShaderCPUData& data)
+HShader GraphicsResourceManager::Create(const ShaderDesc& desc)
 {
     List<Uint8> bytecode;
-    if (data.format == EShaderCodeFormat::Source)
+    if (desc.precompiled)
     {
-        HLSLCompiler compiler;
-        bytecode = std::move(compiler.Compile(data.includeRoot, data.pipelineStage, data.code, data.entryPoint, data.includeRoot));
+        bytecode = desc.code;
     }
     else
     {
-        bytecode = data.code;
+        const auto& compileInfo = desc.compileInfo;
+
+        HLSLCompiler compiler;
+        bytecode = std::move(compiler.Compile(compileInfo.name, desc.pipelineStage, desc.code, compileInfo.entryPoint, compileInfo.includeRoot));
     }
 
     Shader created;
-    _pRHI->CreateShader(data.pipelineStage, bytecode, created);
+    _pRHI->CreateShader(desc.pipelineStage, bytecode, created);
 
     return HShader{_shaders.Add(created)};
 }
 
 // ------------------------------------------------------------
 
-const ITexture& ost::GraphicsResourceManager::GetTexture(HTexture h) const
+const ITexture& GraphicsResourceManager::GetTexture(HTexture h) const
 {
     return _textures[static_cast<Uint64>(h)];
 }
@@ -121,11 +106,6 @@ void GraphicsResourceManager::Release(HTexture handle)
     _textures.Remove(static_cast<Uint64>(handle));
 }
 
-void GraphicsResourceManager::Release(HModel handle)
-{
-    _models.Remove(static_cast<Uint64>(handle));
-}
-
 void GraphicsResourceManager::Release(HShader handle)
 {
     _shaders.Remove(static_cast<Uint64>(handle));
@@ -138,100 +118,14 @@ const Texture& GraphicsResourceManager::Get(HTexture hnd) const
     return _textures[static_cast<Uint64>(hnd)];
 }
 
-const Model& GraphicsResourceManager::Get(HModel hnd) const
-{
-    return _models[static_cast<Uint64>(hnd)];
-}
-
 const Mesh& GraphicsResourceManager::Get(HMesh hnd) const
 {
     return _meshes[static_cast<Uint64>(hnd)];
 }
 
-const Material& GraphicsResourceManager::Get(HMaterial hnd) const
-{
-    return _materials[static_cast<Uint64>(hnd)];
-}
-
-const MaterialInstance& ost::GraphicsResourceManager::Get(HMaterialInstance hnd) const
-{
-    return _materialInstances[static_cast<Uint64>(hnd)];
-}
-
 const Shader& GraphicsResourceManager::Get(HShader hnd) const
 {
     return _shaders[static_cast<Uint64>(hnd)];
-}
-
-// ------------------------------------------------------------
-// Material Manager
-// ------------------------------------------------------------
-
-HMaterial GraphicsResourceManager::CreateMaterial(const MaterialDesc& desc)
-{
-    MaterialCompiler compiler(desc);
-    if (compiler.Compile() == false)
-    {
-        // Error
-        return {};
-    }
-
-    Material created;
-
-    BackendMaterialDesc compiledMaterialDesc;
-    compiledMaterialDesc.properties = compiler.GetCompiledPropertySet();
-    compiledMaterialDesc.textureDescs = compiler.GetCompiledTextureDescs();
-    _pRHI->CreatePSO(compiler.GetCompiledPSODescForward(), compiledMaterialDesc.psoFwd);
-    _pRHI->CreatePSO(compiler.GetCompiledPSODescDeferred(), compiledMaterialDesc.psoDef);
-
-    created.Create(compiledMaterialDesc);
-
-    return HMaterial{_materials.Add(std::move(created))};
-}
-
-HMaterialInstance GraphicsResourceManager::CreateInstance(HMaterial fromMaterialHandle)
-{
-    MaterialInstance matInstance;
-
-    const Material& rootMaterial = Get(fromMaterialHandle);
-
-    MaterialInstanceDesc desc = {};
-    desc.baseMaterialHandle = fromMaterialHandle;
-
-    SizeType bufferSize = rootMaterial.GetPropertiesBufferSize();
-    if (bufferSize == 0)
-    {
-        bufferSize = 16;
-    }
-    _pRHI->CreateBuffer(bufferSize, desc.propertyBuffer);
-    desc.propertyBuffer.SetDebugName("MaterialProperties");
-
-    matInstance.Create(desc);
-    rootMaterial.PopulateInstanceProperties(matInstance);
-
-    return HMaterialInstance{_materialInstances.Add(std::move(matInstance))};
-}
-
-// ------------------------------------------------------------
-
-IMaterial& GraphicsResourceManager::GetMaterial(HMaterial handle)
-{
-    return _materials[static_cast<Uint64>(handle)];
-}
-
-const IMaterial& GraphicsResourceManager::GetMaterial(HMaterial handle) const
-{
-    return _materials[static_cast<Uint64>(handle)];
-}
-
-IMaterialInstance& GraphicsResourceManager::GetMaterialInstance(HMaterialInstance handle)
-{
-    return _materialInstances[static_cast<Uint64>(handle)];
-}
-
-const IMaterialInstance& GraphicsResourceManager::GetMaterialInstance(HMaterialInstance handle) const
-{
-    return _materialInstances[static_cast<Uint64>(handle)];
 }
 
 // ------------------------------------------------------------
