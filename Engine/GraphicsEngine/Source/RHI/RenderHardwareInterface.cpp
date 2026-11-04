@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "RenderHardwareInterface.h"
 
+#include "HLSLCompiler.h"
 #include "RHI/RHIInternal.h"
 
 #include <OstLog.h>
@@ -357,40 +358,78 @@ bool RenderHardwareInterface::UpdateBuffer(const Buffer& targetBuffer, const voi
     return true;
 }
 
-bool RenderHardwareInterface::CreatePSO(const PipelineStateObjectDesc& desc, PipelineStateObject& outPSO) const
+bool RenderHardwareInterface::CreateShader(EPipelineStage stage, const List<Uint8>& bytecode, Shader& outShader) const
 {
-    outPSO._primitiveTopology = desc.primitiveTopology;
+    HRESULT result = S_OK;
 
-    if (FAILED(_device->CreateVertexShader(desc.vertexShader.pBytecode, desc.vertexShader.bytecodeSize, NULL, &outPSO._vertexShader)))
+    switch (stage)
     {
-        return false;
-    }
-    if (FAILED(_device->CreatePixelShader(desc.pixelShader.pBytecode, desc.pixelShader.bytecodeSize, NULL, &outPSO._pixelShader)))
-    {
-        return false;
+    case EPipelineStage::VS:
+        result = _device->CreateVertexShader(bytecode.GetData(), bytecode.GetSize(), NULL, &outShader._vs);
+        break;
+
+    case EPipelineStage::PS:
+        result = _device->CreatePixelShader(bytecode.GetData(), bytecode.GetSize(), NULL, &outShader._ps);
+        break;
     }
 
+    outShader._stage = stage;
+    outShader._bytecode = bytecode;
+
+    return SUCCEEDED(result);
+}
+
+bool RenderHardwareInterface::CreatePSO(const PipelineStateDesc& desc, PipelineStateObject& outPSO) const
+{
+    HLSLCompiler compiler;
+
+    // Vertex Shader
+    if (desc.vsData.format == EShaderCodeFormat::Source)
+    {
+        List<Uint8> vsBytecode = compiler.CompileVertexShader(desc.vsData.includeRoot, desc.vsData.code, desc.vsData.entryPoint, desc.vsData.includeRoot);
+        CreateShader(EPipelineStage::VS, vsBytecode, outPSO._vertexShader);
+    }
+    else if (desc.vsData.format == EShaderCodeFormat::Precompiled)
+    {
+        CreateShader(EPipelineStage::VS, desc.vsData.code, outPSO._vertexShader);
+    }
+
+    // Pixel Shader
+    if (desc.psData.format == EShaderCodeFormat::Source)
+    {
+        List<Uint8> psBytecode = compiler.CompileVertexShader(desc.psData.includeRoot, desc.psData.code, desc.psData.entryPoint, desc.psData.includeRoot);
+        CreateShader(EPipelineStage::PS, psBytecode, outPSO._pixelShader);
+    }
+    else if (desc.psData.format == EShaderCodeFormat::Precompiled)
+    {
+        CreateShader(EPipelineStage::VS, desc.psData.code, outPSO._pixelShader);
+    }
+
+    // Input Layout
     List<D3D11_INPUT_ELEMENT_DESC> inputElements{desc.vertexLayout.GetSize()};
     for (SizeType i = 0; i < inputElements.GetSize(); ++i)
     {
         D3D11_INPUT_ELEMENT_DESC& inputElem = inputElements[i];
 
         inputElem.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-        inputElem.Format = translate::DataSize(desc.vertexLayout[i].dataSize);
+        inputElem.Format = translate::DataSize(desc.vertexLayout[i].format);
         inputElem.InputSlot = 0;
         inputElem.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
         inputElem.InstanceDataStepRate = 0;
         inputElem.SemanticIndex = 0;
-        inputElem.SemanticName = desc.vertexLayout[i].semanticName.c_str();
+        inputElem.SemanticName = desc.vertexLayout[i].semantic.c_str();
     }
 
-    if (FAILED(_device->CreateInputLayout(inputElements.GetData(), static_cast<UINT>(inputElements.GetSize()), desc.vertexShader.pBytecode,
-                                          desc.vertexShader.bytecodeSize, &outPSO._vertexLayout)))
+    const auto& vsBytecode = outPSO._vertexShader._bytecode;
+    const UINT numElements = static_cast<UINT>(inputElements.GetSize());
+
+    if (FAILED(_device->CreateInputLayout(inputElements.GetData(), numElements, vsBytecode.GetData(), vsBytecode.GetSize(), &outPSO._vertexLayout)))
     {
         return false;
     }
 
     outPSO._blendState = CreateBlendState(desc.blendState);
+    outPSO._primitiveTopology = desc.topology;
 
     return true;
 }
@@ -452,7 +491,7 @@ void RenderHardwareInterface::SetTexture(const Texture& texture, Uint32 slot, EP
     }
 }
 
-void ost::RenderHardwareInterface::UnsetTextures() const
+void RenderHardwareInterface::UnsetTextures() const
 {
     ID3D11ShaderResourceView* nullSrvs[8] = {nullptr};
     _immediateContext->VSSetShaderResources(0, 8, nullSrvs);
@@ -474,8 +513,8 @@ void RenderHardwareInterface::SetBuffer(const Buffer& buffer, Uint32 slot, EPipe
 void RenderHardwareInterface::SetPSO(const PipelineStateObject& pso) const
 {
     _immediateContext->OMSetBlendState(pso._blendState.Get(), nullptr, 0xFFFFFFFF);
-    _immediateContext->VSSetShader(pso._vertexShader.Get(), NULL, 0);
-    _immediateContext->PSSetShader(pso._pixelShader.Get(), NULL, 0);
+    _immediateContext->VSSetShader(pso._vertexShader._vs.Get(), NULL, 0);
+    _immediateContext->PSSetShader(pso._pixelShader._ps.Get(), NULL, 0);
     _immediateContext->IASetInputLayout(pso._vertexLayout.Get());
     _immediateContext->IASetPrimitiveTopology(translate::PrimitiveTopology(pso._primitiveTopology));
 }
@@ -502,13 +541,13 @@ void RenderHardwareInterface::SetRenderTargets(const Texture* pRenderTargets, Si
     _immediateContext->OMSetRenderTargets(static_cast<UINT>(numTargets), rtvs, (pDepthTarget ? pDepthTarget->_dsv.Get() : nullptr));
 }
 
-void ost::RenderHardwareInterface::UnsetRenderTargets() const
+void RenderHardwareInterface::UnsetRenderTargets() const
 {
     ID3D11RenderTargetView* nullRtvs[8] = {nullptr};
     _immediateContext->OMSetRenderTargets(8, nullRtvs, nullptr);
 }
 
-void ost::RenderHardwareInterface::SetViewport(const Vector2f& pos, const Vector2f& size) const
+void RenderHardwareInterface::SetViewport(const Vector2f& pos, const Vector2f& size) const
 {
     D3D11_VIEWPORT vp = {};
     vp.Height = size.Y;
@@ -520,7 +559,7 @@ void ost::RenderHardwareInterface::SetViewport(const Vector2f& pos, const Vector
     _immediateContext->RSSetViewports(1, &vp);
 }
 
-void ost::RenderHardwareInterface::SetBuffersForIndexed(const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer) const
+void RenderHardwareInterface::SetBuffersForIndexed(const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer) const
 {
     UINT strides[] = {static_cast<UINT>(vertexSize)};
     UINT offsets[] = {0};
@@ -558,7 +597,7 @@ void* RenderHardwareInterface::GetNativeContext() const
 
 // ------------------------------------------------------------
 
-ComPtr<RHIBlendState> ost::RenderHardwareInterface::CreateBlendState(EBlendState blendState) const
+ComPtr<RHIBlendState> RenderHardwareInterface::CreateBlendState(EBlendState blendState) const
 {
     D3D11_BLEND_DESC desc = {};
 

@@ -1,5 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GraphicsEngine/GraphicsTypes.h"
+
 #include <OstTypes.h>
 #include <wrl.h>
 
@@ -48,61 +50,6 @@ namespace ost
 
     // ------------------------------------------------------------
 
-    enum class EDataFormat
-    {
-        RGBA_Float32,
-        RGBA_Uint8,
-        RGBA_Unorm8,
-
-        RGB_Float32,
-
-        RG_Float32,
-        RG_Uint8,
-        RG_Unorm8,
-        RG_Unorm16,
-
-        R_Float32,
-        R_Uint8,
-        R_Unorm8,
-
-        DDS_BC7,
-        DDS_BC7_SRGB,
-
-        DepthStencil,
-    };
-
-    // ------------------------------------------------------------
-
-    enum class EDataSize
-    {
-        Float4,
-        Float3,
-        Float2,
-        Float,
-
-        Uint4,
-        Uint3,
-        Uint2,
-        Uint,
-
-        Byte4,
-        Byte2,
-        Byte,
-
-        Unorm4,
-        Unorm2,
-        Unorm,
-    };
-
-    // ------------------------------------------------------------
-
-    enum class EPrimitiveTopology
-    {
-        None = 0,
-        PointList,
-        LineList,
-        TriangleList,
-    };
 } // namespace ost
 
 // ------------------------------------------------------------

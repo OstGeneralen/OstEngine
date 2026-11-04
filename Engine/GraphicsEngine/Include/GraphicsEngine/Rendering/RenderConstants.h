@@ -1,16 +1,12 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GraphicsEngine/GraphicsTypes.h" // TODO: Remove this!
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    enum class EBlendState
-    {
-        Opaque,
-        AlphaBlend,
-        Additive,
-    };
+
 }
 
 // ------------------------------------------------------------

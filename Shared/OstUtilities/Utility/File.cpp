@@ -59,6 +59,22 @@ std::string ost::FileUtility::ReadFileToString(const std::string& path)
     return str;
 }
 
+List<Uint8> ost::FileUtility::ReadFileToByteList(const std::string& path)
+{
+    std::ifstream readStream{path, std::ios::ate | std::ios::binary};
+    if (!readStream)
+    {
+        return {};
+    }
+
+    List<Uint8> list(readStream.tellg());
+    readStream.seekg(0);
+    readStream.read(reinterpret_cast<char*>(list.GetData()), list.GetSize());
+    readStream.close();
+
+    return list;
+}
+
 // ------------------------------------------------------------
 // ------------------------------------------------------------
 // ------------------------------------------------------------

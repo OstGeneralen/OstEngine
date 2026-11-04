@@ -12,6 +12,7 @@
 #include "Objects/Buffer.h"
 #include "Objects/Model.h"
 #include "Objects/PipelineStateObject.h"
+#include "Objects/Shader.h"
 #include "Objects/Texture.h"
 
 #include <Container/SlotMap.h>
@@ -28,10 +29,10 @@ namespace ost
         void Initialize(const RenderHardwareInterface& rhi);
 
         const Texture& Get(HTexture hnd) const;
-        const Model& Get(HModel hnd) const;
         const Mesh& Get(HMesh hnd) const;
-        const Material& Get( HMaterial hnd ) const;        
-        const MaterialInstance& Get( HMaterialInstance hnd ) const;        
+        const Material& Get(HMaterial hnd) const;
+        const MaterialInstance& Get(HMaterialInstance hnd) const;
+        const Shader& Get(HShader hnd) const;
 
         const HBuffer CreateBuffer(SizeType numBytes);
 
@@ -39,12 +40,15 @@ namespace ost
 
         // BEGIN IGraphicsResourceManager
         HTexture Create(const TextureCPUData& data) override;
-        HModel Create(const ModelCPUData& data) override;
+        List<HMesh> Create(const List<ModelVertex>& verts, const List<Uint32>& indices, const List<MeshCPUData>& meshes) override;
+        HShader Create(const ShaderCPUData& data) override;
 
-        const ITexture& GetTexture( HTexture h ) const override;
+        const ITexture& GetTexture(HTexture h) const override;
+        const IShader& GetShader(HShader h) const override;
 
         virtual void Release(HTexture handle) override;
-        virtual void Release(HModel handle) override;
+        virtual void Release(HMesh handle) override;
+        void Release(HShader handle) override;
         // END IGraphicsResourceManager
 
         // TODO: Maybe reconsider if this is where this interface should be implemented
@@ -65,6 +69,7 @@ namespace ost
         SlotMap<Model> _models;
         SlotMap<Mesh> _meshes;
         SlotMap<Buffer> _buffers;
+        SlotMap<Shader> _shaders;
 
         SlotMap<Material> _materials;
         SlotMap<MaterialInstance> _materialInstances;

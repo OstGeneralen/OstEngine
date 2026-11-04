@@ -2,6 +2,7 @@
 #include "GraphicsResourceManager.h"
 
 #include "GraphicsEngine/Rendering/Vertex.h"
+#include "RHI/HLSLCompiler.h"
 #include "RHI/RenderHardwareInterface.h"
 
 #include <d3d11_1.h>
@@ -82,11 +83,35 @@ HModel GraphicsResourceManager::Create(const ModelCPUData& data)
     return HModel{_models.Add(created)};
 }
 
+HShader GraphicsResourceManager::Create(const ShaderCPUData& data)
+{
+    List<Uint8> bytecode;
+    if (data.format == EShaderCodeFormat::Source)
+    {
+        HLSLCompiler compiler;
+        bytecode = std::move(compiler.Compile(data.includeRoot, data.pipelineStage, data.code, data.entryPoint, data.includeRoot));
+    }
+    else
+    {
+        bytecode = data.code;
+    }
+
+    Shader created;
+    _pRHI->CreateShader(data.pipelineStage, bytecode, created);
+
+    return HShader{_shaders.Add(created)};
+}
+
 // ------------------------------------------------------------
 
 const ITexture& ost::GraphicsResourceManager::GetTexture(HTexture h) const
 {
     return _textures[static_cast<Uint64>(h)];
+}
+
+const IShader& GraphicsResourceManager::GetShader(HShader h) const
+{
+    return _shaders[static_cast<Uint64>(h)];
 }
 
 // ------------------------------------------------------------
@@ -99,6 +124,11 @@ void GraphicsResourceManager::Release(HTexture handle)
 void GraphicsResourceManager::Release(HModel handle)
 {
     _models.Remove(static_cast<Uint64>(handle));
+}
+
+void GraphicsResourceManager::Release(HShader handle)
+{
+    _shaders.Remove(static_cast<Uint64>(handle));
 }
 
 // ------------------------------------------------------------
@@ -126,6 +156,11 @@ const Material& GraphicsResourceManager::Get(HMaterial hnd) const
 const MaterialInstance& ost::GraphicsResourceManager::Get(HMaterialInstance hnd) const
 {
     return _materialInstances[static_cast<Uint64>(hnd)];
+}
+
+const Shader& GraphicsResourceManager::Get(HShader hnd) const
+{
+    return _shaders[static_cast<Uint64>(hnd)];
 }
 
 // ------------------------------------------------------------

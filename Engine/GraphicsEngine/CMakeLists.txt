@@ -66,6 +66,14 @@ add_library(${PROJECT_NAME} STATIC
     Source/Objects/RenderDefaultsLibrary.h
     Source/Objects/RenderDefaultsLibrary.cpp
     Include/GraphicsEngine/Resources/ITexture.h
+    Source/RHI/HLSLCompiler.cpp
+    Source/Objects/Shader.h
+    Include/GraphicsEngine/Resources/IShader.h
+    Source/Objects/Shader.cpp
+    Include/GraphicsEngine/Resources/ShaderCPUData.h
+    Include/GraphicsEngine/Utility/ShaderReflector.h
+    Source/Utility/ShaderReflector.cpp
+    Include/GraphicsEngine/Resources/IPipelineStateObject.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

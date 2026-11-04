@@ -37,21 +37,21 @@ namespace ost
         Vector4f boneWeights; // ONLY IF EModelVertexData_BoneData
     };
 
-    struct ModelCPUData
+    struct MeshCPUData
     {
-        struct Mesh
+        struct BufferValue
         {
-            struct BufferValue
-            {
-                SizeType count;
-                SizeType offset;
-            };
-
-            BufferValue vertices;
-            BufferValue indices;
-            SizeType materialIndex;
+            SizeType count;
+            SizeType offset;
         };
 
+        BufferValue vertices;
+        BufferValue indices;
+        SizeType materialIndex;
+    };
+
+    struct ModelCPUData
+    {
         SizeType numMaterials;
 
         EModelVertexData vertexLayoutMask;

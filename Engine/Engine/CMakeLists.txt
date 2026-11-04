@@ -27,6 +27,7 @@ add_library(${PROJECT_NAME} STATIC
     Source/Configuration/RuntimeConfig.cpp
     Source/Platform/Win32Window.cpp
     Source/Asset/DefaultAssets.cpp
+    Include/Engine/Graphics/Material/Material.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

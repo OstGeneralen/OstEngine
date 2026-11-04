@@ -1,13 +1,13 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "RHI/RHIMinimal.h"
-
 #include "GraphicsEngine/IRenderHardwareInterface.h"
+#include "RHI/RHIMinimal.h"
 
 // Render Objects & Resources
 #include "Objects/Buffer.h"
 #include "Objects/Model.h"
 #include "Objects/PipelineStateObject.h"
+#include "Objects/Shader.h"
 #include "Objects/Texture.h"
 #include "Objects/TextureSampler.h"
 
@@ -47,14 +47,15 @@ namespace ost
         bool CreateBuffer(SizeType numBytes, Buffer& outBuffer, const void* pInitialData = nullptr) const;
         bool UpdateBuffer(const Buffer& targetBuffer, const void* pData, SizeType dataSize) const;
 
-        bool CreatePSO(const PipelineStateObjectDesc& desc, PipelineStateObject& outPSO) const;
+        bool CreateShader(EPipelineStage stage, const List<Uint8>& bytecode, Shader& outShader) const;
+        bool CreatePSO(const PipelineStateDesc& desc, PipelineStateObject& outPSO) const;
 
         bool CreateSampler(ESamplerAddressMode addressMode, ESamplerType type, TextureSampler& outSampler) const;
 
     public: // Pipeline State Management
         void SetTexture(const Texture& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
         void UnsetTextures() const;
-        
+
         void SetBuffer(const Buffer& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
 
         void SetPSO(const PipelineStateObject& pso) const;
@@ -65,17 +66,17 @@ namespace ost
         void SetRenderTargets(const Texture* pRenderTargets, SizeType numTargets, const Texture* pDepthTarget = nullptr) const;
         void UnsetRenderTargets() const;
 
-        void SetViewport( const Vector2f& pos, const Vector2f& size ) const;
+        void SetViewport(const Vector2f& pos, const Vector2f& size) const;
 
-        void SetBuffersForIndexed( const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer ) const;
-        void Draw( SizeType indexCount, SizeType indexOffset, SizeType vertexOffset ) const;
+        void SetBuffersForIndexed(const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer) const;
+        void Draw(SizeType indexCount, SizeType indexOffset, SizeType vertexOffset) const;
 
         void Present() const;
 
     public:
         // BEGIN IRenderHardwareInterface
         ERHIPlatform GetBackendPlatform() const override;
-        
+
         void* GetNativeDevice() const override;
         void* GetNativeContext() const override;
         // END IRenderHardwareInterface
