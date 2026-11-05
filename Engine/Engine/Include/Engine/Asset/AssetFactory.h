@@ -1,18 +1,24 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include <OstTypes.h>
+#include <filesystem>
+
+#include <Utility/TypeID.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct MeshDesc
+    class Asset;
+
+    class AssetFactoryBase
     {
-        SizeType vertexCount;
-        SizeType vertexOffset = 0;
-        SizeType indexCount;
-        SizeType indexOffset = 0;
-        SizeType materialIndex;
+    public:
+        virtual ~AssetFactoryBase() = default;
+        virtual TypeID AssetTypeID() const = 0;
+
+        virtual Asset* ConstructDefault() const = 0;
+        virtual void Load(const std::filesystem::path& path, Asset* pInto) const = 0;
     };
 } // namespace ost
 

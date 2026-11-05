@@ -1,14 +1,12 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "Engine/Asset/AssetType.h"
-#include "Engine/Asset/DefaultAssets.h"
+#include "Engine/Asset/Asset.h"
+#include "Engine/Asset/AssetFactory.h"
+#include "Engine/Asset/AssetRef.h"
 
 #include <filesystem>
 
-#include <GraphicsEngine/Materials/IMaterial.h>
-#include <GraphicsEngine/Materials/IMaterialInstance.h>
-#include <GraphicsEngine/Resources/ObjectHandles.h>
-#include <Utility/TypeID.h>
+#include <Memory/UniquePtr.h>
 
 // ------------------------------------------------------------
 
@@ -16,54 +14,23 @@ namespace ost
 {
     class IAssetManager
     {
-    public:
+    public: // Template Helpers
         template <typename TAsset>
-        AssetTraits<TAsset>::HandleType GetHandle(const std::string& name)
+        AssetRef<TAsset> GetOrLoad(const std::filesystem::path& path)
         {
-            return AssetTraits<TAsset>::HandleType(GetHandleRaw(TypeID::Get<TAsset>(), name));
+            return AssetRef<TAsset>(static_cast<TAsset*>(GetOrLoad(TypeID::Get<TAsset>(), path)));
         }
 
-        template <typename TAsset>
-        TAsset& GetAsset(AssetTraits<TAsset>::HandleType handle)
+        template <typename TFactory>
+        TFactory* GetAssetFactory()
         {
-            void* ptr = nullptr;
-            GetAssetByRawHandle(TypeID::Get<TAsset>(), static_cast<SizeType>(handle), &ptr);
-            return *static_cast<TAsset*>(ptr);
-        }
-
-        template <typename TAsset>
-        TAsset& GetAsset(const std::string& assetName)
-        {
-            return GetAsset<TAsset>(GetHandle<TAsset>(assetName));
-        }
-
-        template <typename TAsset>
-        const TAsset& GetAsset(AssetTraits<TAsset>::HandleType handle) const
-        {
-            const void* ptr = nullptr;
-            GetConstAssetByRawHandle(TypeID::Get<TAsset>(), static_cast<SizeType>(handle), &ptr);
-            return *static_cast<const TAsset*>(ptr);
-        }
-
-        template <typename TAsset>
-        TAsset& Create(const std::string& name, const AssetTraits<TAsset>::DescType& desc)
-        {
-            const SizeType rawHandle = CreateAsset(TypeID::Get<TAsset>(), name, &desc);
-            return GetAsset<TAsset>(AssetTraits<TAsset>::HandleType(rawHandle));
-        }
-
-        template <typename TAsset>
-        AssetTraits<TAsset>::HandleType Load(const std::string& path)
-        {
-            return AssetTraits<TAsset>::HandleType(LoadFromFile(TypeID::Get<TAsset>(), path));
+            return static_cast<TFactory*>(GetAssetFactory(TypeID::Get<TFactory>()));
         }
 
     protected:
-        virtual void GetAssetByRawHandle(TypeID assetType, SizeType rawHnd, void** ppOut) = 0;
-        virtual const void GetAssetByRawHandle(TypeID assetType, SizeType rawHnd, const void** ppOut) const = 0;
-        virtual SizeType CreateAsset(TypeID assetType, const std::string& name, const void* descData) = 0;
-        virtual SizeType LoadFromFile(TypeID assetType, const std::string& name) = 0;
-        virtual SizeType GetHandleRaw(TypeID typeID, const std::string& name) const = 0;
+        virtual void RegisterAssetFactory(UniquePtr<AssetFactoryBase>&& pFactory) = 0;
+        virtual AssetFactoryBase* GetAssetFactory(TypeID type) = 0;
+        virtual Asset* GetOrLoad(TypeID type, const std::filesystem::path& path) = 0;
     };
 } // namespace ost
 

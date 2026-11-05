@@ -52,6 +52,11 @@ namespace ost
             return _value;
         }
 
+        constexpr inline TInteger AsInteger() const
+        {
+            return _value;
+        }
+
     private:
         TInteger _value = InvalidValue;
     };

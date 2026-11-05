@@ -4,7 +4,7 @@
 #include "GraphicsEngine/Resources/ObjectHandles.h"
 
 // Graphics Data Objects
-#include "GraphicsEngine/Resources/Descriptors/MeshDesc.h"
+#include "GraphicsEngine/Resources/Descriptors/BufferDesc.h"
 #include "GraphicsEngine/Resources/Descriptors/ShaderDesc.h"
 #include "GraphicsEngine/Resources/Descriptors/TextureDesc.h"
 
@@ -22,17 +22,20 @@ namespace ost
     public:
         virtual ~IGraphicsResourceManager() = default;
 
-        virtual HTexture Create(const TextureDesc& desc) = 0;
-        virtual HMesh Create(const RawVertexData& vertexData, const List<Uint32>& indices) = 0;
-        virtual List<HMesh> Create(const RawVertexData& vertexData, const List<Uint32>& indices, const List<MeshDesc>& meshDescs) = 0;
-        virtual HShader Create(const ShaderDesc& desc) = 0;
+        virtual HTexture CreateTexture(const TextureDesc& desc) = 0;
+        virtual HIndexBuffer CreateIndexBuffer(const IndexBufferDesc& desc) = 0;
+        virtual HVertexBuffer CreateVertexBuffer(const VertexBufferDesc& desc) = 0;
+        virtual HUniformBuffer CreateUniformBuffer(const UniformBufferDesc& desc) = 0;
+        virtual HShader CreateShader(const ShaderDesc& desc) = 0;
 
         virtual const ITexture& GetTexture(HTexture h) const = 0;
         virtual const IShader& GetShader(HShader h) const = 0;
 
         virtual void Release(HTexture handle) = 0;
-        virtual void Release(HMesh handle) = 0;
         virtual void Release(HShader handle) = 0;
+        virtual void Release(HVertexBuffer handle) = 0;
+        virtual void Release(HIndexBuffer handle) = 0;
+        virtual void Release(HUniformBuffer handle) = 0;
     };
 } // namespace ost
 

@@ -25,20 +25,8 @@ add_library(${PROJECT_NAME} STATIC
     Source/Rendering/ForwardRenderer.cpp
     Source/Rendering/RenderQueue.h
     Source/Rendering/RenderQueue.cpp
-    Source/Materials/MaterialPropertyCollection.cpp
-    Source/Materials/MaterialPropertyCollection.h
-    Source/Materials/Material.h
-    Source/Materials/MaterialInstance.h
-    Source/Materials/Material.cpp
-    Source/Materials/MaterialInstance.cpp
-    Source/Materials/MaterialCompiler.h
-    Source/Materials/MaterialCompiler.cpp
-    Source/Materials/MaterialCompilerIncludeHandler.h
-    Source/Materials/MaterialCompilerIncludeHandler.cpp
     Source/Objects/TextureSampler.cpp
     Source/Objects/TextureSampler.h
-    Source/Materials/MaterialTextureCollection.cpp
-    Source/Materials/MaterialUtility.h
     Source/Rendering/RenderCommandContext.h
     Source/Rendering/RenderCommand.cpp
     Source/Rendering/DeferredRenderer.h
@@ -50,10 +38,9 @@ add_library(${PROJECT_NAME} STATIC
     Source/Objects/Shader.h
     Source/Objects/Shader.cpp
     Source/Utility/ShaderReflector.cpp
-    Source/Objects/Mesh.h
-    Source/Objects/Mesh.cpp
     Source/Resources/Descriptors/PipelineStateDesc.cpp
     Source/Resources/Descriptors/ShaderDesc.cpp
+    Include/GraphicsEngine/Resources/Descriptors/BufferDesc.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

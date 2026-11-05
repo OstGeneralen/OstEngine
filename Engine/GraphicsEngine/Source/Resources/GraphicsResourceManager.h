@@ -5,7 +5,6 @@
 
 // Actual Resource Includes
 #include "Objects/Buffer.h"
-#include "Objects/Mesh.h"
 #include "Objects/PipelineStateObject.h"
 #include "Objects/Shader.h"
 #include "Objects/Texture.h"
@@ -24,30 +23,30 @@ namespace ost
         void Initialize(const RenderHardwareInterface& rhi);
 
         const Texture& Get(HTexture hnd) const;
-        const Mesh& Get(HMesh hnd) const;
         const Shader& Get(HShader hnd) const;
-
-        const HBuffer CreateBuffer(SizeType numBytes);
-
-        const RenderHardwareInterface& GetRHI() const;
+        const Buffer& Get(HUniformBuffer hnd) const;
+        const Buffer& Get(HVertexBuffer hnd) const;
+        const Buffer& Get(HIndexBuffer hnd) const;
 
         // BEGIN IGraphicsResourceManager
-        HTexture Create(const TextureDesc& desc) override;
-        HMesh Create(const RawVertexData& vertexData, const List<Uint32>& indices) override;
-        List<HMesh> Create(const RawVertexData& vertexData, const List<Uint32>& indices, const List<MeshDesc>& meshDescs) override;
-        HShader Create(const ShaderDesc& desc) override;
+        HTexture CreateTexture(const TextureDesc& desc) override;
+        HIndexBuffer CreateIndexBuffer(const IndexBufferDesc& desc) override;
+        HVertexBuffer CreateVertexBuffer(const VertexBufferDesc& desc) override;
+        HUniformBuffer CreateUniformBuffer(const UniformBufferDesc& desc) override;
+        HShader CreateShader(const ShaderDesc& desc) override;
 
         const ITexture& GetTexture(HTexture h) const override;
         const IShader& GetShader(HShader h) const override;
 
-        virtual void Release(HTexture handle) override;
-        virtual void Release(HMesh handle) override;
+        void Release(HTexture handle) override;
         void Release(HShader handle) override;
+        void Release(HVertexBuffer handle) override;
+        void Release(HIndexBuffer handle) override;
+        void Release(HUniformBuffer handle) override;
         // END IGraphicsResourceManager
 
     private:
         SlotMap<Texture> _textures;
-        SlotMap<Mesh> _meshes;
         SlotMap<Buffer> _buffers;
         SlotMap<Shader> _shaders;
 

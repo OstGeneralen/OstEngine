@@ -18,55 +18,14 @@ void GraphicsResourceManager::Initialize(const RenderHardwareInterface& rhi)
 
 // ------------------------------------------------------------
 
-HTexture GraphicsResourceManager::Create(const TextureDesc& data)
+HTexture GraphicsResourceManager::CreateTexture(const TextureDesc& data)
 {
     Texture created;
     _pRHI->CreateTexture(data, created);
     return HTexture{_textures.Add(std::move(created))};
 }
 
-HMesh GraphicsResourceManager::Create(const RawVertexData& vertexData, const List<Uint32>& indices)
-{
-    MeshDesc desc;
-    desc.indexCount = indices.GetSize();
-    desc.vertexCount = vertexData.GetVertexCount();
-    desc.materialIndex = 0;
-
-    const auto meshHandleList = Create(vertexData, indices, List<MeshDesc>{desc});
-    return meshHandleList[0];
-}
-
-List<HMesh> GraphicsResourceManager::Create(const RawVertexData& vertexData, const List<Uint32>& indices, const List<MeshDesc>& meshDescs)
-{
-    Buffer vertexBuffer;
-    Buffer indexBuffer;
-
-    _pRHI->CreateVertexBuffer(vertexData.GetVertexByteSize(), vertexData.GetVertexCount(), vertexData.GetVertexData(), vertexBuffer);
-    _pRHI->CreateIndexBuffer(indices.GetSize(), indices.GetData(), indexBuffer);
-
-    SizeType maxMaterialIndex = 0;
-
-    List<HMesh> meshHandles;
-
-    for (const auto& submesh : meshDescs)
-    {
-        Mesh createdMesh;
-        createdMesh.indexBuffer = indexBuffer;
-        createdMesh.vertexBuffer = vertexBuffer;
-
-        createdMesh.vertexOffset = submesh.vertexOffset;
-        createdMesh.numIndices = submesh.indexCount;
-        createdMesh.indexOffset = submesh.indexOffset;
-
-        createdMesh.materialIndex = submesh.materialIndex;
-
-        meshHandles.Add(HMesh{_meshes.Add(createdMesh)});
-    }
-
-    return meshHandles;
-}
-
-HShader GraphicsResourceManager::Create(const ShaderDesc& desc)
+HShader GraphicsResourceManager::CreateShader(const ShaderDesc& desc)
 {
     List<Uint8> bytecode;
     if (desc.precompiled)
@@ -85,6 +44,42 @@ HShader GraphicsResourceManager::Create(const ShaderDesc& desc)
     _pRHI->CreateShader(desc.pipelineStage, bytecode, created);
 
     return HShader{_shaders.Add(created)};
+}
+
+HIndexBuffer ost::GraphicsResourceManager::CreateIndexBuffer(const IndexBufferDesc& desc)
+{
+    Buffer buffer;
+    _pRHI->CreateIndexBuffer(desc.numIndices, desc.pIndexData, buffer);
+    return HIndexBuffer{_buffers.Add(buffer)};
+}
+
+HVertexBuffer GraphicsResourceManager::CreateVertexBuffer(const VertexBufferDesc& desc)
+{
+    Buffer buffer;
+    SizeType vertexSize = 0;
+    switch (desc.vertexType)
+    {
+    case EVertexType::Position:
+        vertexSize = sizeof(PositionVertex);
+        break;
+    case EVertexType::Static:
+        vertexSize = sizeof(StaticVertex);
+        break;
+    case EVertexType::Blit:
+        vertexSize = sizeof(BlitVertex);
+        break;
+    }
+
+    _pRHI->CreateVertexBuffer(vertexSize, desc.numVertices, desc.pVertexData, buffer);
+
+    return HVertexBuffer{_buffers.Add(buffer)};
+}
+
+HUniformBuffer ost::GraphicsResourceManager::CreateUniformBuffer(const UniformBufferDesc& desc)
+{
+    Buffer buffer;
+    _pRHI->CreateBuffer(desc.numBytes, buffer, desc.pData);
+    return HUniformBuffer{_buffers.Add(buffer)};
 }
 
 // ------------------------------------------------------------
@@ -111,16 +106,26 @@ void GraphicsResourceManager::Release(HShader handle)
     _shaders.Remove(static_cast<Uint64>(handle));
 }
 
+void GraphicsResourceManager::Release(HVertexBuffer handle)
+{
+    _buffers.Remove(handle.AsInteger());
+}
+
+void GraphicsResourceManager::Release(HIndexBuffer handle)
+{
+    _buffers.Remove(handle.AsInteger());
+}
+
+void GraphicsResourceManager::Release(HUniformBuffer handle)
+{
+    _buffers.Remove(handle.AsInteger());
+}
+
 // ------------------------------------------------------------
 
 const Texture& GraphicsResourceManager::Get(HTexture hnd) const
 {
     return _textures[static_cast<Uint64>(hnd)];
-}
-
-const Mesh& GraphicsResourceManager::Get(HMesh hnd) const
-{
-    return _meshes[static_cast<Uint64>(hnd)];
 }
 
 const Shader& GraphicsResourceManager::Get(HShader hnd) const
