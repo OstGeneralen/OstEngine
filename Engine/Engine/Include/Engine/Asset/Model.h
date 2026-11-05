@@ -32,14 +32,11 @@ namespace ost
         {
         }
         Model(const Model&) = delete;
-        Model(Model&& asset) noexcept
-            : Asset{std::move(asset)}
-            , _vertexBufferHandle{std::move(asset._vertexBufferHandle)}
-            , _indexBufferHandle{std::move(asset._indexBufferHandle)}
-            , _submeshes{std::move(asset._submeshes)}
-        {
-        }
+        Model(Model&& asset) noexcept = default;
         ~Model();
+
+        Model& operator=(const Model&) = delete;
+        Model& operator=(Model&&) noexcept = default;
 
         HVertexBuffer GetVertexBuffer() const
         {

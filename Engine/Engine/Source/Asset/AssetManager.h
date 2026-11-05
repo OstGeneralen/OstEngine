@@ -14,9 +14,12 @@ namespace ost
     public:
         AssetManager();
 
-    protected:
         // BEGIN IAssetManager
         void RegisterAssetFactory(UniquePtr<AssetFactoryBase>&& pFactory) override;
+        // END IAssetManager
+
+    protected:
+        // BEGIN IAssetManager
         AssetFactoryBase* GetAssetFactory(TypeID type) override;
         Asset* GetOrLoad(TypeID type, const std::filesystem::path& path) override;
         // END IAssetManager

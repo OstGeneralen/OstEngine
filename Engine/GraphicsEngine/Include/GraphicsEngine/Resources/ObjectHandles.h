@@ -10,7 +10,6 @@ namespace ost
 {
     using HTexture = TypedIntegerHandle<struct HNDType_Texture>;
     using HPipelineState = TypedIntegerHandle<struct HNDType_PSO>;
-    using HMesh = TypedIntegerHandle<struct HNDType_Mesh>;
     using HShader = TypedIntegerHandle<struct HNDType_Shader>;
     using HUniformBuffer = TypedIntegerHandle<struct HNDType_UniformBuffer>;
     using HVertexBuffer = TypedIntegerHandle<struct HNDType_VertexBuffer>;

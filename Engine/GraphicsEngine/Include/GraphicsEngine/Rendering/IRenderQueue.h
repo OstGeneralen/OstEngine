@@ -1,6 +1,5 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/Materials/IMaterialInstance.h"
 #include "GraphicsEngine/Rendering/Lights.h"
 #include "GraphicsEngine/Resources/ObjectHandles.h"
 

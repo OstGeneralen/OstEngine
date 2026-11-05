@@ -3,10 +3,6 @@ project(${OST_ENGINE_NAME})
 
 add_library(${PROJECT_NAME} STATIC
     Source/OstEngine.cpp
-    Source/Asset/Loaders/ImageLoader.cpp
-    Source/Asset/Loaders/ModelLoader.cpp
-    Source/Asset/Loaders/ModelLoader.h
-    Source/Asset/Loaders/MaterialLoader.cpp
     Source/Asset/AssetManager.cpp
     Source/Components/CameraComponent.cpp
     Source/Components/StaticMeshComponent.cpp
@@ -28,11 +24,11 @@ add_library(${PROJECT_NAME} STATIC
     Source/Platform/Win32Window.cpp
     Source/Asset/DefaultAssets.cpp
     Include/Engine/Graphics/Material/Material.h
-    Include/Engine/Graphics/Model.h
     Source/Asset/Asset.cpp
     Source/Asset/AssetRef.cpp
     Include/Engine/Asset/AssetFactory.h
     Source/Asset/Loaders/TextureFactory.cpp
+    Source/Asset/Loaders/ModelFactory.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

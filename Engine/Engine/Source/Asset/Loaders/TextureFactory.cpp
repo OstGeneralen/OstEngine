@@ -48,12 +48,15 @@ void ost::TextureFactory::Load(const std::filesystem::path& path, Asset* pInto) 
     {
     case DirectX::TEX_DIMENSION_TEXTURE1D:
         desc.dimensionCount = 1;
+        desc.dimensions = Vector3u(metadata.width, 0, 0);
         break;
     case DirectX::TEX_DIMENSION_TEXTURE2D:
         desc.dimensionCount = 2;
+        desc.dimensions = Vector3u(metadata.width, metadata.height, 0);
         break;
     case DirectX::TEX_DIMENSION_TEXTURE3D:
         desc.dimensionCount = 3;
+        desc.dimensions = Vector3u(metadata.width, metadata.height, metadata.depth);
         break;
     }
 
@@ -63,39 +66,39 @@ void ost::TextureFactory::Load(const std::filesystem::path& path, Asset* pInto) 
         metadata.format = DXGI_FORMAT_BC7_UNORM;
     }
 
-    // TODO: Carry on from here!!!
     switch (metadata.format)
     {
     case DXGI_FORMAT_BC7_UNORM:
-        into.format = ETextureFormat::DDS_BC7;
+        desc.format = ETextureFormat::DDS_BC7;
         break;
     case DXGI_FORMAT_BC7_UNORM_SRGB:
-        into.format = ETextureFormat::DDS_BC7_SRGB;
+        desc.format = ETextureFormat::DDS_BC7_SRGB;
         break;
     case DXGI_FORMAT_R16G16_UNORM:
-        into.format = ETextureFormat::NormalMap;
+        desc.format = ETextureFormat::NormalMap;
         break;
     default:
         OST_ASSERT(false, "Must be BC7 rgba or srgb");
     }
 
-    into.mipCount = metadata.mipLevels;
-    into.dimensions = Vector2u{static_cast<Uint32>(metadata.width), static_cast<Uint32>(metadata.height)};
+    desc.mipCount = metadata.mipLevels;
+    desc.images = List<TextureImageDesc>(scratchImg.GetImageCount());
 
     // Now we copy across the various image pixel data into the assigned buffers
-    into.images = List<TextureCPUData::ImageData>{scratchImg.GetImageCount()};
-
-    for (SizeType imageIndex = 0; imageIndex < into.images.GetSize(); ++imageIndex)
+    for (SizeType imageIndex = 0; imageIndex < desc.images.GetSize(); ++imageIndex)
     {
         auto& dxImage = scratchImg.GetImages()[imageIndex];
-        auto& cpuDataImage = into.images[imageIndex];
+        auto& descImage = desc.images[imageIndex];
 
-        cpuDataImage.data = List<Uint8>(static_cast<SizeType>(dxImage.slicePitch));
-        MemCopy(cpuDataImage.data.GetData(), dxImage.pixels, cpuDataImage.data.GetSize());
+        descImage.data = List<Uint8>(static_cast<SizeType>(dxImage.slicePitch));
+        MemCopy(descImage.data.GetData(), dxImage.pixels, descImage.data.GetSize());
 
-        cpuDataImage.rowPitch = dxImage.rowPitch;
-        cpuDataImage.slicePitch = dxImage.slicePitch;
+        descImage.rowPitch = dxImage.rowPitch;
+        descImage.slicePitch = dxImage.slicePitch;
     }
+
+    // Finally, build the actual gfx resource
+    static_cast<Texture&>(*pInto) = std::move(Texture(_gfxResourceManager.CreateTexture(desc)));
 }
 
 // ------------------------------------------------------------

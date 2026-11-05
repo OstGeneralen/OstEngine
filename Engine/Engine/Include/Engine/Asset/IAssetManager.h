@@ -27,8 +27,8 @@ namespace ost
             return static_cast<TFactory*>(GetAssetFactory(TypeID::Get<TFactory>()));
         }
 
-    protected:
         virtual void RegisterAssetFactory(UniquePtr<AssetFactoryBase>&& pFactory) = 0;
+    protected:
         virtual AssetFactoryBase* GetAssetFactory(TypeID type) = 0;
         virtual Asset* GetOrLoad(TypeID type, const std::filesystem::path& path) = 0;
     };

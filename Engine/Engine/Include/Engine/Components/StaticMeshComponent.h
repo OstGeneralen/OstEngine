@@ -1,9 +1,10 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "Engine/Asset/AssetRef.h"
+#include "Engine/Asset/Model.h"
 #include "Engine/World/Component.h"
 
-#include <GraphicsEngine/Materials/IMaterialInstance.h>
-#include <GraphicsEngine/Resources/ObjectHandles.h>
+#include <Container/List.h>
 
 // ------------------------------------------------------------
 
@@ -15,13 +16,7 @@ namespace ost
     class StaticMeshComponent : public RenderComponent
     {
     public:
-        void SetModel(HModel model);
-
-        void SetMaterial(HMaterialInstance material, Uint32 index = 0);
-
-        HMaterialInstance GetMaterialHandle(Uint32 index = 0);
-
-        List<ComponentProperty> GeneratePropertySet() override;
+        void SetModel(const AssetRef<Model>& model);
 
     public: // Render Component
         void InitializeRenderState(SceneGraph& SceneGraph) override;
@@ -31,9 +26,9 @@ namespace ost
         void OnTransformMarkedDirty();
 
     private:
+        AssetRef<Model> _model;
+        List<ProxyHandle> _meshProxyHandles;
         SceneGraph* _pSceneGraph;
-        IAssetManager* _pAssetManager;
-        ProxyHandle _proxyMeshHandle;
         SizeType dummyHandle = 0;
     };
 } // namespace ost

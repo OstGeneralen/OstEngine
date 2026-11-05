@@ -6,7 +6,12 @@
 #include <GraphicsEngine/IGraphicsEngine.h>
 #include <GraphicsEngine/Rendering/IRenderQueue.h>
 #include <GraphicsEngine/Rendering/IRenderer.h>
+#include <GraphicsEngine/Resources/IGraphicsResourceManager.h>
 #include <Utility/Assert.h>
+
+// Asset Factories
+#include "Asset/Loaders/ModelFactory.h"
+#include "Asset/Loaders/TextureFactory.h"
 
 // Components
 #include "Engine/Components/CameraComponent.h"
@@ -34,10 +39,14 @@ OstEngine::OstEngine(ServiceLocator& appServiceLocator)
     : _appServiceLocator{appServiceLocator}
     , _input{}
     , _time{}
-    , _assetManager{appServiceLocator}
+    , _assetManager{}
     , _pGameInstance{nullptr}
 {
     pEngine = this;
+
+    // Register default asset factories
+    _assetManager.RegisterAssetFactory(Ptr::NewUnique<ModelFactory>(_appServiceLocator.GetRequired<IGraphicsResourceManager>()));
+    _assetManager.RegisterAssetFactory(Ptr::NewUnique<TextureFactory>(_appServiceLocator.GetRequired<IGraphicsResourceManager>()));
 
     // Register Engine Provided Component Types
     _componentFactory.RegisterComponentType("Camera", ComponentTypeRegistration::MakeForT<CameraComponent>());

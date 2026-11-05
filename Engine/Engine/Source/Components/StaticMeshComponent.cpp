@@ -1,7 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "Engine/Components/StaticMeshComponent.h"
 
-#include "Engine/Asset/DefaultAssets.h"
 #include "Engine/Asset/IAssetManager.h"
 #include "Engine/World/Actor.h"
 #include "World/SceneGraph.h"
@@ -12,59 +11,36 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void StaticMeshComponent::SetModel(HModel hnd)
+void ost::StaticMeshComponent::SetModel(const AssetRef<Model>& model)
 {
-    if (_pSceneGraph)
+    for (auto proxyHandle : _meshProxyHandles)
     {
-        _pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).hModel = hnd;
+        _pSceneGraph->RemoveStaticMeshProxy(proxyHandle);
     }
-}
+    _meshProxyHandles.Clear();
 
-void StaticMeshComponent::SetMaterial(HMaterialInstance hnd, Uint32 index)
-{
-    if (_pSceneGraph)
+    _model = model;
+
+    if (_model)
     {
-        _pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).materialHandles[index] = hnd;
+        for (auto submesh : _model->GetSubmeshes())
+        {
+            StaticMeshRenderProxy proxy;
+            proxy.indexBuffer = _model->GetIndexBuffer();
+            proxy.vertexBuffer = _model->GetVertexBuffer();
+            proxy.transform = GetOwner().transform.GetWorldTransform();
+            proxy.indexCount = submesh.indexCount;
+            proxy.indexOffset = submesh.indexOffset;
+            proxy.vertexCount = submesh.vertexCount;
+            _meshProxyHandles.Add(_pSceneGraph->AddStaticMeshProxy(proxy));
+        }
     }
-}
-
-HMaterialInstance ost::StaticMeshComponent::GetMaterialHandle(Uint32 index)
-{
-    if (_pSceneGraph)
-    {
-        return _pSceneGraph->GetStaticMeshProxy(_proxyMeshHandle).materialHandles[index];
-    }
-    return {};
-}
-
-// ------------------------------------------------------------
-
-List<ComponentProperty> ost::StaticMeshComponent::GeneratePropertySet()
-{
-    List<ComponentProperty> props;
-    props.Add(ComponentProperty("ModelHandle", TypeID::Get<HModel>(), &dummyHandle));
-    return props;
 }
 
 // ------------------------------------------------------------
 
 void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)
 {
-    StaticMeshRenderProxy renderProxy;
-    renderProxy.transform = GetOwner().transform.GetWorldTransform();
-    
-    // TODO: This is a bit ugly perhaps?
-    renderProxy.materialHandles[0] = DefaultAssetHandle_LitMaterial;
-    renderProxy.materialHandles[1] = DefaultAssetHandle_LitMaterial;
-    renderProxy.materialHandles[2] = DefaultAssetHandle_LitMaterial;
-    renderProxy.materialHandles[3] = DefaultAssetHandle_LitMaterial;
-    renderProxy.materialHandles[4] = DefaultAssetHandle_LitMaterial;
-    renderProxy.materialHandles[5] = DefaultAssetHandle_LitMaterial;
-    renderProxy.materialHandles[6] = DefaultAssetHandle_LitMaterial;
-    renderProxy.materialHandles[7] = DefaultAssetHandle_LitMaterial;
-
-    _proxyMeshHandle = SceneGraph.AddStaticMeshProxy(renderProxy);
-
     _pSceneGraph = &SceneGraph;
 
     GetOwner().transform.OnMarkedDirty.Bind<StaticMeshComponent, &StaticMeshComponent::OnTransformMarkedDirty>(this);
@@ -73,9 +49,7 @@ void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)
 void ost::StaticMeshComponent::DestroyRenderState(SceneGraph& SceneGraph)
 {
     GetOwner().transform.OnMarkedDirty.Unbind<StaticMeshComponent, &StaticMeshComponent::OnTransformMarkedDirty>(this);
-
-    SceneGraph.RemoveStaticMeshProxy(_proxyMeshHandle);
-    _proxyMeshHandle = 0;
+    SetModel(AssetRef<Model>()); // Set to a null model ref to release all proxies
     _pSceneGraph = nullptr;
 }
 
@@ -87,7 +61,11 @@ void ost::StaticMeshComponent::OnTransformMarkedDirty()
 void ost::StaticMeshComponent::UpdateDirtyTransform(SceneGraph& SceneGraph)
 {
     // Update this now
-    SceneGraph.GetStaticMeshProxy(_proxyMeshHandle).transform = GetOwner().transform.GetWorldTransform();
+    const Matrix4x4 transform = GetOwner().transform.GetWorldTransform();
+    for (auto proxyHandle : _meshProxyHandles)
+    {
+        _pSceneGraph->GetStaticMeshProxy(proxyHandle).transform = transform;
+    }
 }
 
 // ------------------------------------------------------------
