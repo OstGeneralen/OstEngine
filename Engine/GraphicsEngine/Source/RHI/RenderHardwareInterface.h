@@ -11,13 +11,14 @@
 #include "Objects/TextureSampler.h"
 
 // Descriptors
-#include "GraphicsEngine/Resources/Descriptors/PipelineStateDesc.h"
+#include "GraphicsEngine/Resources/Descriptors/GraphicsState.h"
 #include "GraphicsEngine/Resources/Descriptors/TextureDesc.h"
 
 // Common
 #include <Container/List.h>
 #include <Math/Color.h>
 #include <Math/Vector2.h>
+#include <Memory/BufferView.h>
 
 // ------------------------------------------------------------
 
@@ -46,8 +47,9 @@ namespace ost
         bool CreateBuffer(SizeType numBytes, Buffer& outBuffer, const void* pInitialData = nullptr) const;
         bool UpdateBuffer(const Buffer& targetBuffer, const void* pData, SizeType dataSize) const;
 
-        bool CreateShader(EPipelineStage stage, const List<Uint8>& bytecode, Shader& outShader) const;
-        bool CreatePSO(const PipelineStateDesc& desc, PipelineStateObject& outPSO) const;
+        bool CreateShader(EPipelineStage stage, BufferView bytecode, Shader& outShader) const;
+        ComPtr<RHIBlendState> CreateBlendState(EBlendState stateEnum) const;
+        ComPtr<RHIVertexLayout> CreateVertexLayout(const List<Uint8>& vsBytecode, const List<VertexElement>& vertexElement) const;
 
         bool CreateSampler(ESamplerAddressMode addressMode, ESamplerType type, TextureSampler& outSampler) const;
 
@@ -81,8 +83,6 @@ namespace ost
         // END IRenderHardwareInterface
 
     private:
-        ComPtr<RHIBlendState> CreateBlendState(EBlendState blendState) const;
-
         ComPtr<RHIDevice> _device;
         ComPtr<RHIDeviceContext> _immediateContext;
         ComPtr<RHISwapChain> _swapChain;

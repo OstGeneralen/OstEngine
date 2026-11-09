@@ -19,8 +19,6 @@ add_library(${PROJECT_NAME} STATIC
     Source/Resources/GraphicsResourceManager.h
     Source/Resources/GraphicsResourceManager.cpp
     Source/Rendering/Buffers.h
-    Source/Resources/ShaderCompiler.h
-    Source/Resources/ShaderCompiler.cpp
     Source/Rendering/ForwardRenderer.h
     Source/Rendering/ForwardRenderer.cpp
     Source/Rendering/RenderQueue.h
@@ -41,6 +39,8 @@ add_library(${PROJECT_NAME} STATIC
     Source/Resources/Descriptors/PipelineStateDesc.cpp
     Source/Resources/Descriptors/ShaderDesc.cpp
     Include/GraphicsEngine/Resources/Descriptors/BufferDesc.h
+    Source/Resources/PSOCache.cpp
+    Source/Resources/ShaderCompiler.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

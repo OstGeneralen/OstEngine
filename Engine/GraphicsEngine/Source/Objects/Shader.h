@@ -22,7 +22,7 @@ namespace ost
         void SetDebugName(const std::string& name) const;
 
         // BEGIN IShader
-        const List<Uint8>& GetBytecode() const override;
+        const BufferView& GetBytecode() const override;
         EPipelineStage GetPipelineStage() const override;
         // END IShader
 
@@ -30,7 +30,7 @@ namespace ost
         EPipelineStage _stage; // VS or PS
         ComPtr<RHIPixelShader> _ps;
         ComPtr<RHIVertexShader> _vs;
-        List<Uint8> _bytecode;
+        BufferView _bytecode;
     };
 } // namespace ost
 

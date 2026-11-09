@@ -1,6 +1,10 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "Engine/Asset/AssetFactory.h"
+#include "Engine/Graphics/Assets/TextureAsset.h"
+
+#include <Math/Color.h>
+#include <Math/Vector2.h>
 
 // ------------------------------------------------------------
 
@@ -12,6 +16,8 @@ namespace ost
     {
     public:
         TextureFactory(IGraphicsResourceManager& gfxResourceManager);
+
+        void CreateSingleColorTexture(const Vector2u& dimensions, const Color& color, TextureAsset& into);
 
         // BEGIN AssetFactoryBase
         virtual TypeID AssetTypeID() const override;

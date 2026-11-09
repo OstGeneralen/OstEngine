@@ -35,10 +35,27 @@ AssetFactoryBase* ost::AssetManager::GetAssetFactory(TypeID type)
 
 // ------------------------------------------------------------
 
+Asset* ost::AssetManager::CreateDefault(TypeID type, std::string name)
+{
+    if (UniquePtr<AssetFactoryBase>* ppFactory = _factoryRegistry.TryGetValue(type))
+    {
+        UniquePtr<Asset> pAsset(ppFactory->Get()->ConstructDefault());
+        Asset* pReturn = pAsset.Get();
+        _assetRegistry.Insert(name, std::move(pAsset));
+
+        return pReturn;
+    }
+
+    Log::Error(AssetManagerLog, "Could not create default asset '{}', no type factory registered.", name);
+    return nullptr;
+}
+
+// ------------------------------------------------------------
+
 Asset* ost::AssetManager::GetOrLoad(TypeID type, const std::filesystem::path& path)
 {
     // 1. Check the asset registry for if this path is already loaded
-    if (UniquePtr<Asset>* pAsset = _assetRegistry.TryGetValue(path))
+    if (UniquePtr<Asset>* pAsset = _assetRegistry.TryGetValue(path.string()))
     {
         if (pAsset->Get()->AssetTypeID() != type)
         {
@@ -58,7 +75,7 @@ Asset* ost::AssetManager::GetOrLoad(TypeID type, const std::filesystem::path& pa
         Log::Log(AssetManagerLog, "Loaded asset '{}'", path.string());
 
         Asset* returnPtr = pAsset.Get();
-        _assetRegistry.Insert(path, std::move(pAsset));
+        _assetRegistry.Insert(path.string(), std::move(pAsset));
         return returnPtr;
     }
 

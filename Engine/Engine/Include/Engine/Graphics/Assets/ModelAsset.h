@@ -18,25 +18,25 @@ namespace ost
         SizeType materialIndex;
     };
 
-    class Model : public Asset
+    class ModelAsset : public Asset
     {
     public:
-        Model()
+        ModelAsset()
             : Asset{}
         {
         }
-        Model(HVertexBuffer hVB, HIndexBuffer hIB, List<Submesh>&& subMsh)
+        ModelAsset(HVertexBuffer hVB, HIndexBuffer hIB, List<Submesh>&& subMsh)
             : _vertexBufferHandle{hVB}
             , _indexBufferHandle{hIB}
             , _submeshes{std::move(subMsh)}
         {
         }
-        Model(const Model&) = delete;
-        Model(Model&& asset) noexcept = default;
-        ~Model();
+        ModelAsset(const ModelAsset&) = delete;
+        ModelAsset(ModelAsset&& asset) noexcept = default;
+        ~ModelAsset();
 
-        Model& operator=(const Model&) = delete;
-        Model& operator=(Model&&) noexcept = default;
+        ModelAsset& operator=(const ModelAsset&) = delete;
+        ModelAsset& operator=(ModelAsset&&) noexcept = default;
 
         HVertexBuffer GetVertexBuffer() const
         {
@@ -53,7 +53,7 @@ namespace ost
 
         TypeID AssetTypeID() const override
         {
-            return TypeID::Get<Model>();
+            return TypeID::Get<ModelAsset>();
         }
 
     private:

@@ -22,14 +22,14 @@ ost::ModelFactory::ModelFactory(IGraphicsResourceManager& gfxResourceManager)
 
 TypeID ost::ModelFactory::AssetTypeID() const
 {
-    return TypeID::Get<Model>();
+    return TypeID::Get<ModelAsset>();
 }
 
 // ------------------------------------------------------------
 
 Asset* ost::ModelFactory::ConstructDefault() const
 {
-    return new Model();
+    return new ModelAsset();
 }
 
 // ------------------------------------------------------------
@@ -112,7 +112,7 @@ void ost::ModelFactory::Load(const std::filesystem::path& path, Asset* pInto) co
         indexBufferHandle = _gfxResourceManager.CreateIndexBuffer(indexBufferDesc);
     }
 
-    static_cast<Model&>(*pInto) = std::move(Model(vertexBufferHandle, indexBufferHandle, std::move(submeshes)));
+    static_cast<ModelAsset&>(*pInto) = std::move(ModelAsset(vertexBufferHandle, indexBufferHandle, std::move(submeshes)));
 }
 
 // ------------------------------------------------------------

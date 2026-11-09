@@ -21,6 +21,12 @@ namespace ost
             return AssetRef<TAsset>(static_cast<TAsset*>(GetOrLoad(TypeID::Get<TAsset>(), path)));
         }
 
+        template <typename TAsset>
+        AssetRef<TAsset> CreateDefault(const std::string& name)
+        {
+            return AssetRef<TAsset>(static_cast<TAsset*>(CreateDefault(TypeID::Get<TAsset>(), name)));
+        }
+
         template <typename TFactory>
         TFactory* GetAssetFactory()
         {
@@ -28,7 +34,9 @@ namespace ost
         }
 
         virtual void RegisterAssetFactory(UniquePtr<AssetFactoryBase>&& pFactory) = 0;
+
     protected:
+        virtual Asset* CreateDefault(TypeID type, std::string name) = 0;
         virtual AssetFactoryBase* GetAssetFactory(TypeID type) = 0;
         virtual Asset* GetOrLoad(TypeID type, const std::filesystem::path& path) = 0;
     };

@@ -1,7 +1,6 @@
 #include "ShaderCore.hlsli"
 #include "ShaderCommon.hlsli"
 #include "PBLShader.hlsli"
-#include "Material/MaterialCore.hlsli"
 
 // ------------------------------------------------------------
 
@@ -25,43 +24,6 @@ float3 CalculateLights(PBRData surface) {
     }
 
     return saturate(totalLight);
-}
-
-// ------------------------------------------------------------
-
-float4 PSMain_Fullscreen(FullscreenPixel frag) : SV_Target {
-    MaterialPixelInput materialInput;
-    materialInput.uv = frag.UV;
-
-    MaterialSurfaceData surfaceData;
-
-    return float4(surfaceData.albedo.rgb, 1);
-}
-
-// ------------------------------------------------------------
-
-float4 PSMain_LitSurface_Forward(SurfacePixel frag) : SV_Target {
-    MaterialPixelInput materialInput;
-    materialInput.normal = frag.Normal;
-    materialInput.tangent = frag.Tangent;
-    materialInput.bitangent = frag.Bitangent;
-    materialInput.uv = frag.UV;
-    materialInput.vertexColor = frag.BaseColor;
-
-    MaterialSurfaceData surfaceData;
-
-    PBRData pblData;
-    pblData.albedo = surfaceData.albedo;
-    pblData.normal = surfaceData.normal;
-    pblData.ao = surfaceData.ao;
-    pblData.roughness = max(surfaceData.roughness, 0.0001f);
-    pblData.metallic = max(surfaceData.metallicness, 0.0001f);
-    pblData.position = frag.WorldPosition;
-
-    float3 litColor = CalculateLights(pblData);
-
-    const float gamma = 1.9f;
-    return float4(GammaCorrectOutput(litColor.rgb, gamma), 1);
 }
 
 // ------------------------------------------------------------

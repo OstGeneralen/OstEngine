@@ -1,17 +1,19 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/GraphicsTypes.h"
-#include "GraphicsEngine/Rendering/Vertex.h"
+#include "Engine/Asset/AssetFactory.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct IShader;
-
-    struct IPipelineStateObject
+    class ShaderFactory : public AssetFactoryBase
     {
-        virtual const IShader* GetShader(EPipelineStage stage) const = 0;
+    public:
+        // BEGIN AssetFactoryBase
+        TypeID AssetTypeID() const override;
+        Asset* ConstructDefault() const override;
+        void Load(const std::filesystem::path& path, Asset* pInto) const override;
+        // END AssetFactoryBase
     };
 } // namespace ost
 

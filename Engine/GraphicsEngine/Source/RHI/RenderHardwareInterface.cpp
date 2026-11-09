@@ -358,18 +358,18 @@ bool RenderHardwareInterface::UpdateBuffer(const Buffer& targetBuffer, const voi
     return true;
 }
 
-bool RenderHardwareInterface::CreateShader(EPipelineStage stage, const List<Uint8>& bytecode, Shader& outShader) const
+bool RenderHardwareInterface::CreateShader(EPipelineStage stage, BufferView bytecode, Shader& outShader) const
 {
     HRESULT result = S_OK;
 
     switch (stage)
     {
     case EPipelineStage::VS:
-        result = _device->CreateVertexShader(bytecode.GetData(), bytecode.GetSize(), NULL, &outShader._vs);
+        result = _device->CreateVertexShader(bytecode.Data(), bytecode.Size(), NULL, &outShader._vs);
         break;
 
     case EPipelineStage::PS:
-        result = _device->CreatePixelShader(bytecode.GetData(), bytecode.GetSize(), NULL, &outShader._ps);
+        result = _device->CreatePixelShader(bytecode.Data(), bytecode.Size(), NULL, &outShader._ps);
         break;
     }
 
@@ -379,63 +379,76 @@ bool RenderHardwareInterface::CreateShader(EPipelineStage stage, const List<Uint
     return SUCCEEDED(result);
 }
 
-bool RenderHardwareInterface::CreatePSO(const PipelineStateDesc& desc, PipelineStateObject& outPSO) const
+ComPtr<RHIBlendState> ost::RenderHardwareInterface::CreateBlendState(EBlendState stateEnum) const
 {
-    HLSLCompiler compiler;
+    D3D11_BLEND_DESC desc = {};
 
-    // Vertex Shader
-    if (desc.vsDesc.precompiled == false)
+    auto& descTarget = desc.RenderTarget[0];
+    descTarget = {};
+
+    switch (stateEnum)
     {
-        const ShaderDesc::CompileInfo& compileInfo = desc.vsDesc.compileInfo;
-
-        List<Uint8> vsBytecode = compiler.CompileVertexShader(compileInfo.name, desc.vsDesc.code, compileInfo.entryPoint, compileInfo.includeRoot);
-        CreateShader(EPipelineStage::VS, vsBytecode, outPSO._vertexShader);
+    case EBlendState::Opaque: {
+        descTarget.BlendEnable = FALSE;
+        descTarget.SrcBlend = D3D11_BLEND_ZERO;
+        descTarget.DestBlend = D3D11_BLEND_ZERO;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ZERO;
+        descTarget.DestBlendAlpha = D3D11_BLEND_ZERO;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        break;
     }
-    else
-    {
-        CreateShader(EPipelineStage::VS, desc.vsDesc.code, outPSO._vertexShader);
+    case EBlendState::AlphaBlend: {
+        descTarget.BlendEnable = TRUE;
+        descTarget.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+        descTarget.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALPHA;
+        break;
+    }
+    case EBlendState::Additive: {
+        descTarget.BlendEnable = TRUE;
+        descTarget.SrcBlend = D3D11_BLEND_ONE;
+        descTarget.DestBlend = D3D11_BLEND_ONE;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.DestBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        break;
+    }
     }
 
-    // Pixel Shader
-    if (desc.psDesc.precompiled == false)
-    {
-        const ShaderDesc::CompileInfo& compileInfo = desc.psDesc.compileInfo;
+    ComPtr<RHIBlendState> blendState;
+    HRESULT result = _device->CreateBlendState(&desc, &blendState);
+    return blendState;
+}
 
-        List<Uint8> psBytecode = compiler.CompileVertexShader(compileInfo.name, desc.psDesc.code, compileInfo.entryPoint, compileInfo.includeRoot);
-        CreateShader(EPipelineStage::PS, psBytecode, outPSO._pixelShader);
-    }
-    else
-    {
-        CreateShader(EPipelineStage::VS, desc.psDesc.code, outPSO._pixelShader);
-    }
-
-    // Input Layout
-    List<D3D11_INPUT_ELEMENT_DESC> inputElements{desc.vertexLayout.GetSize()};
+ComPtr<RHIVertexLayout> ost::RenderHardwareInterface::CreateVertexLayout(const List<Uint8>& vsBytecode, const List<VertexElement>& vertexElement) const
+{
+    List<D3D11_INPUT_ELEMENT_DESC> inputElements{desc.inputLayout.GetSize()};
     for (SizeType i = 0; i < inputElements.GetSize(); ++i)
     {
         D3D11_INPUT_ELEMENT_DESC& inputElem = inputElements[i];
 
         inputElem.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-        inputElem.Format = translate::DataSize(desc.vertexLayout[i].format);
+        inputElem.Format = translate::DataSize(desc.inputLayout[i].format);
         inputElem.InputSlot = 0;
         inputElem.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
         inputElem.InstanceDataStepRate = 0;
         inputElem.SemanticIndex = 0;
-        inputElem.SemanticName = desc.vertexLayout[i].semantic.c_str();
+        inputElem.SemanticName = desc.inputLayout[i].semantic.c_str();
     }
 
-    const auto& vsBytecode = outPSO._vertexShader._bytecode;
     const UINT numElements = static_cast<UINT>(inputElements.GetSize());
 
-    if (FAILED(_device->CreateInputLayout(inputElements.GetData(), numElements, vsBytecode.GetData(), vsBytecode.GetSize(), &outPSO._vertexLayout)))
-    {
-        return false;
-    }
-
-    outPSO._blendState = CreateBlendState(desc.blendState);
-    outPSO._primitiveTopology = desc.topology;
-
-    return true;
+    ComPtr<RHIVertexLayout> inputLayout;
+    _device->CreateInputLayout(inputElements.GetData(), numElements, vsBytecode.GetData(), vsBytecode.GetSize(), &inputLayout);
+    return inputLayout;
 }
 
 bool RenderHardwareInterface::CreateSampler(ESamplerAddressMode addressMode, ESamplerType type, TextureSampler& outSampler) const
@@ -597,57 +610,6 @@ void* RenderHardwareInterface::GetNativeDevice() const
 void* RenderHardwareInterface::GetNativeContext() const
 {
     return _immediateContext.Get();
-}
-
-// ------------------------------------------------------------
-
-ComPtr<RHIBlendState> RenderHardwareInterface::CreateBlendState(EBlendState blendState) const
-{
-    D3D11_BLEND_DESC desc = {};
-
-    auto& descTarget = desc.RenderTarget[0];
-    descTarget = {};
-
-    switch (blendState)
-    {
-    case EBlendState::Opaque: {
-        descTarget.BlendEnable = FALSE;
-        descTarget.SrcBlend = D3D11_BLEND_ZERO;
-        descTarget.DestBlend = D3D11_BLEND_ZERO;
-        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
-        descTarget.SrcBlendAlpha = D3D11_BLEND_ZERO;
-        descTarget.DestBlendAlpha = D3D11_BLEND_ZERO;
-        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        break;
-    }
-    case EBlendState::AlphaBlend: {
-        descTarget.BlendEnable = TRUE;
-        descTarget.SrcBlend = D3D11_BLEND_SRC_ALPHA;
-        descTarget.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
-        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
-        descTarget.DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALPHA;
-        break;
-    }
-    case EBlendState::Additive: {
-        descTarget.BlendEnable = TRUE;
-        descTarget.SrcBlend = D3D11_BLEND_ONE;
-        descTarget.DestBlend = D3D11_BLEND_ONE;
-        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
-        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        descTarget.DestBlendAlpha = D3D11_BLEND_ONE;
-        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
-        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        break;
-    }
-    }
-
-    ComPtr<RHIBlendState> created;
-    _device->CreateBlendState(&desc, &created);
-    return created;
 }
 
 // ------------------------------------------------------------

@@ -1,7 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "Engine/Asset/AssetFactory.h"
-#include "Engine/Asset/Model.h"
+#include "Engine/Graphics/Assets/ModelAsset.h"
 
 // ------------------------------------------------------------
 

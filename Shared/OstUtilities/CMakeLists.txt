@@ -46,6 +46,8 @@ add_library(${PROJECT_NAME}
     Utility/Hash.h
     Container/Deque.h
     Math/Units.h
+    Memory/BufferView.h
+    Memory/BufferView.cpp
 )
 
 target_compile_definitions(${PROJECT_NAME}

@@ -1,8 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "TextureFactory.h"
 
-#include "Engine/Asset/Texture.h"
-
 #include <DirectXTex.h>
 
 #include <GraphicsEngine/Resources/Descriptors/TextureDesc.h>
@@ -22,14 +20,44 @@ TextureFactory::TextureFactory(IGraphicsResourceManager& gfxResourceManager)
 
 TypeID ost::TextureFactory::AssetTypeID() const
 {
-    return TypeID::Get<Texture>();
+    return TypeID::Get<TextureAsset>();
+}
+
+// ------------------------------------------------------------
+
+void ost::TextureFactory::CreateSingleColorTexture(const Vector2u& dimensions, const Color& color, TextureAsset& into)
+{
+    TextureDesc desc;
+    desc.dimensionCount = 2;
+    desc.dimensions = dimensions;
+    desc.format = ETextureFormat::RGBAUnorm;
+    desc.mipCount = 1;
+
+    const RGBAColor32 unormCol = color;
+
+    List<Uint8> pixelBytes(dimensions.X * dimensions.Y * sizeof(RGBAColor32));
+    for (SizeType pixelIndex = 0; pixelIndex < pixelBytes.GetSize(); pixelIndex += 4)
+    {
+        pixelBytes[pixelIndex + 0] = unormCol.R;
+        pixelBytes[pixelIndex + 1] = unormCol.G;
+        pixelBytes[pixelIndex + 2] = unormCol.B;
+        pixelBytes[pixelIndex + 3] = unormCol.A;
+    }
+
+    TextureImageDesc img;
+    img.data = std::move(pixelBytes);
+    img.rowPitch = sizeof(RGBAColor32) * dimensions.X * dimensions.Y;
+    img.slicePitch = 0;
+    desc.images.Add(std::move(img));
+
+    into = std::move(TextureAsset(_gfxResourceManager.CreateTexture(desc)));
 }
 
 // ------------------------------------------------------------
 
 Asset* ConstructDefault()
 {
-    return new Texture();
+    return new TextureAsset();
 }
 
 void ost::TextureFactory::Load(const std::filesystem::path& path, Asset* pInto) const
@@ -98,7 +126,7 @@ void ost::TextureFactory::Load(const std::filesystem::path& path, Asset* pInto) 
     }
 
     // Finally, build the actual gfx resource
-    static_cast<Texture&>(*pInto) = std::move(Texture(_gfxResourceManager.CreateTexture(desc)));
+    static_cast<TextureAsset&>(*pInto) = std::move(TextureAsset(_gfxResourceManager.CreateTexture(desc)));
 }
 
 // ------------------------------------------------------------

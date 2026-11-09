@@ -31,7 +31,7 @@ void ost::Shader::SetDebugName(const std::string& name) const
 
 // ------------------------------------------------------------
 
-const List<Uint8>& ost::Shader::GetBytecode() const
+const BufferView& ost::Shader::GetBytecode() const
 {
     return _bytecode;
 }

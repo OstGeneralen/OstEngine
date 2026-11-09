@@ -20,12 +20,13 @@ namespace ost
 
     protected:
         // BEGIN IAssetManager
+        Asset* CreateDefault(TypeID type, std::string name) override;
         AssetFactoryBase* GetAssetFactory(TypeID type) override;
         Asset* GetOrLoad(TypeID type, const std::filesystem::path& path) override;
         // END IAssetManager
 
     private:
-        Map<std::filesystem::path, UniquePtr<Asset>> _assetRegistry;
+        Map<std::string, UniquePtr<Asset>> _assetRegistry;
         Map<TypeID, UniquePtr<AssetFactoryBase>> _factoryRegistry;
     };
 } // namespace ost

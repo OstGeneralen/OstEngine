@@ -1,0 +1,5 @@
+{
+    "path": "Engine/Shader/PixelShaders.hlsl",
+    "entry": "PSMain_Surface_Geometry",
+    "type": "PS"
+}

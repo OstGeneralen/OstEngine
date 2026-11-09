@@ -1,0 +1,5 @@
+{
+    "path": "Engine/Shader/VertexShaders.hlsl",
+    "entry": "VSMain_Surface",
+    "type": "VS"
+}

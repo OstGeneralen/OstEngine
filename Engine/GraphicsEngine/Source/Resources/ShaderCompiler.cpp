@@ -1,49 +1,133 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
-#include "ShaderCompiler.h"
+#include "GraphicsEngine/Resources/ShaderCompiler.h"
+
+#include "RHI/RHIInternal.h"
 
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
-#include <dxgi.h>
-#include <filesystem>
-#include <Utility/StringConversion.h>
 
+#include <OstLog.h>
+
+#include <Container/Stack.h>
 #include <Memory/Memory.h>
+#include <Utility/File.h>
 
+using namespace ost;
 
-#include <iostream>
+namespace fs = std::filesystem;
 
 // ------------------------------------------------------------
 
-ost::List<Uint8> ost::CompileShaderFromFile(const std::string& filePath, EPipelineStage targetStage)
+auto ShaderCompileLog = Log::NewCategory("ShaderCompiler");
+
+// ------------------------------------------------------------
+
+namespace ost
 {
-    std::wstring pathWstr = StringUtility::Utf8ToUtf16(filePath);
+    class ShaderIncludeHandler : public ID3DInclude
+    {
+    public:
+        ShaderIncludeHandler(const fs::path& rootPath, const Map<std::string, fs::path>& remaps);
 
-    static constexpr std::string_view psMain = "PSMain";
-    static constexpr std::string_view vsMain = "VSMain";
-    static constexpr std::string_view vsModel = "vs_4_1";
-    static constexpr std::string_view psModel = "ps_4_1";
+        HRESULT Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) override;
+        HRESULT Close(LPCVOID pData) override;
 
-    std::string_view model = targetStage == EPipelineStage_VS ? vsModel.data() : psModel.data();
-    std::string_view entry = targetStage == EPipelineStage_VS ? vsMain.data() : psMain.data();
+    private:
+        Stack<fs::path> _includeStack;
+        Map<std::string, fs::path> _includeRemaps;
+    };
+} // namespace ost
 
-    std::filesystem::path actualPath = filePath;
-    actualPath = std::filesystem::absolute( actualPath );
+// ------------------------------------------------------------
+
+List<Uint8> ost::ShaderCompiler::Compile(const ShaderSource& shaderSource)
+{
+    std::string shaderModel = "";
+    switch (shaderSource.pipelineStage)
+    {
+    case EPipelineStage::VS:
+        shaderModel = "vs_4_1";
+        break;
+    case EPipelineStage::PS:
+        shaderModel = "ps_4_1";
+        break;
+    }
 
     ComPtr<ID3DBlob> shaderBlob;
     ComPtr<ID3DBlob> errorBlob;
-    HRESULT result = D3DCompileFromFile(actualPath.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry.data(), model.data(), D3DCOMPILE_DEBUG, 0, &shaderBlob, &errorBlob);
 
-    if(FAILED(result))
+    ShaderIncludeHandler includeHandler(shaderSource.includeRoot, shaderSource.includeRemapping);
+
+    const HRESULT result = D3DCompile(shaderSource.sourceCode.GetData(),     // Code Data
+                                      shaderSource.sourceCode.GetSize(),     // Code Size
+                                      NULL,                                  // Source Name
+                                      NULL,                                  // Defines
+                                      &includeHandler,                       // Include manager
+                                      shaderSource.shaderEntryPoint.c_str(), // Entry
+                                      shaderModel.c_str(),                   // Shader Target
+                                      D3DCOMPILE_DEBUG,                      // Flags 1
+                                      0,                                     // Flags 2
+                                      &shaderBlob,                           // Bytecode blob
+                                      &errorBlob);
+
+    if (FAILED(result))
     {
-        std::cerr << static_cast<const char*>( errorBlob->GetBufferPointer()) << std::endl;
+        const std::string errorMsg(static_cast<const char*>(errorBlob->GetBufferPointer()));
+        Log::Error(ShaderCompileLog, "Failed to compile shader '{}': {}", shaderSource.shaderName, errorMsg);
+        return {};
     }
 
-    List<Uint8> bytecode;
-    bytecode.Resize(shaderBlob->GetBufferSize());
+    Log::Log(ShaderCompileLog, "Compiled shader '{}'", shaderSource.shaderName);
 
+    List<Uint8> bytecode(shaderBlob->GetBufferSize());
     MemCopy(bytecode.GetData(), shaderBlob->GetBufferPointer(), bytecode.GetSize());
-
     return bytecode;
+}
+
+// ------------------------------------------------------------
+
+ShaderIncludeHandler::ShaderIncludeHandler(const fs::path& rootPath, const Map<std::string, fs::path>& remaps)
+    : _includeStack{}
+    , _includeRemaps{remaps}
+{
+    fs::path includeRoot = fs::weakly_canonical(rootPath);
+    if (fs::is_directory(includeRoot) == false)
+    {
+        includeRoot = includeRoot.parent_path();
+    }
+    _includeStack.Push(includeRoot);
+}
+
+HRESULT ShaderIncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
+{
+    // Work out the include file path
+    std::string includeName = pFileName;
+    fs::path includePath = _includeStack.Top() / includeName;
+
+    if (const fs::path* remapPath = _includeRemaps.TryGetValue(includeName))
+    {
+        includePath = *remapPath;
+    }
+    if (!fs::exists(includePath))
+    {
+        return S_FALSE;
+    }
+
+    _includeStack.Push(includePath.parent_path());
+
+    // Now read the include file content
+    SizeType fileSize = 0;
+    (*ppData) = FileUtility::ReadFileToCharArray(includePath.string(), fileSize);
+    (*pBytes) = static_cast<UINT>(fileSize);
+
+    return S_OK;
+}
+
+HRESULT ost::ShaderIncludeHandler::Close(LPCVOID pData)
+{
+    delete[] pData;
+    _includeStack.Pop();
+    return S_OK;
 }
 
 // ------------------------------------------------------------

@@ -10,19 +10,19 @@
 
 namespace ost
 {
-    class Texture : public Asset
+    class TextureAsset : public Asset
     {
     public:
-        Texture() = default;
-        Texture(HTexture texHnd)
+        TextureAsset() = default;
+        TextureAsset(HTexture texHnd)
             : _textureHandle{texHnd}
         {
         }
-        Texture(const Texture&) = delete;
-        Texture(Texture&& tex) noexcept = default;
+        TextureAsset(const TextureAsset&) = delete;
+        TextureAsset(TextureAsset&& tex) noexcept = default;
 
-        Texture& operator=(const Texture&) = delete;
-        Texture& operator=(Texture&&) noexcept = default;
+        TextureAsset& operator=(const TextureAsset&) = delete;
+        TextureAsset& operator=(TextureAsset&&) noexcept = default;
 
         HTexture GetTextureHandle() const
         {
@@ -31,7 +31,7 @@ namespace ost
 
         TypeID AssetTypeID() const override
         {
-            return TypeID::Get<Texture>();
+            return TypeID::Get<TextureAsset>();
         }
 
     private:

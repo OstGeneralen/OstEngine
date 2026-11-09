@@ -4,7 +4,7 @@
 
 #include <OstTypes.h>
 
-#include <Container/List.h>
+#include <Memory/BufferView.h>
 
 // ------------------------------------------------------------
 
@@ -12,7 +12,7 @@ namespace ost
 {
     struct IShader
     {
-        virtual const List<Uint8>& GetBytecode() const = 0;
+        virtual const BufferView& GetBytecode() const = 0;
         virtual EPipelineStage GetPipelineStage() const = 0;
     };
 } // namespace ost
