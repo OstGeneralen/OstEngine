@@ -50,7 +50,7 @@ PipelineStateObject& PSOCache::GetPSO(const GraphicsState& gfxState)
         psoDesc.topology = gfxState.primitiveTopology;
         psoDesc.inputLayout = _vertexLayouts[gfxState.vertexType];
 
-        List<Uint8> vsBytecode(gfxState.vsBytecodeSize);
+        List<Uint8> vsBytecode(gfxState );
         MemCopy(vsBytecode.GetData(), gfxState.pVSBytecode, gfxState.vsBytecodeSize);
         _rhi.CreateShader(EPipelineStage::VS, vsBytecode, psoDesc.vertexShader);
 

@@ -27,22 +27,8 @@ HTexture GraphicsResourceManager::CreateTexture(const TextureDesc& data)
 
 HShader GraphicsResourceManager::CreateShader(const ShaderDesc& desc)
 {
-    List<Uint8> bytecode;
-    if (desc.precompiled)
-    {
-        bytecode = desc.code;
-    }
-    else
-    {
-        const auto& compileInfo = desc.compileInfo;
-
-        HLSLCompiler compiler;
-        bytecode = std::move(compiler.Compile(compileInfo.name, desc.pipelineStage, desc.code, compileInfo.entryPoint, compileInfo.includeRoot));
-    }
-
     Shader created;
-    _pRHI->CreateShader(desc.pipelineStage, bytecode, created);
-
+    _pRHI->CreateShader(desc.pipelineStage, desc.bytecodeView, created);
     return HShader{_shaders.Add(created)};
 }
 
