@@ -51,10 +51,12 @@ namespace ost
             return _submeshes;
         }
 
+        // BEGIN Asset
         TypeID AssetTypeID() const override
         {
             return TypeID::Get<ModelAsset>();
         }
+        // END Asset
 
     private:
         HVertexBuffer _vertexBufferHandle;

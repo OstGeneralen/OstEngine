@@ -29,6 +29,11 @@ add_library(${PROJECT_NAME} STATIC
     Source/Asset/Loaders/TextureFactory.cpp
     Source/Asset/Loaders/ModelFactory.cpp
     Source/Asset/Loaders/ShaderFactory.cpp
+    Source/Graphics/Material/MaterialClass.cpp
+    Source/Graphics/Material/MaterialInstance.cpp
+    Source/Graphics/Material/MaterialPropertySet.cpp
+    Source/Graphics/Material/MaterialProperty.cpp
+    Source/Graphics/Material/MaterialManager.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

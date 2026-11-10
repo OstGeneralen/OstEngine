@@ -21,6 +21,7 @@ namespace ost
         std::string shaderEntryPoint;
         std::filesystem::path includeRoot = std::filesystem::current_path();
         Map<std::string, std::filesystem::path> includeRemapping;
+        List<std::string> definitions;
     };
 
     class ShaderCompiler

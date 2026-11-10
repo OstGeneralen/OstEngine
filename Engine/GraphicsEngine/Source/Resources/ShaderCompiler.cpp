@@ -56,12 +56,21 @@ List<Uint8> ost::ShaderCompiler::Compile(const ShaderSource& shaderSource)
     ComPtr<ID3DBlob> shaderBlob;
     ComPtr<ID3DBlob> errorBlob;
 
+    List<D3D_SHADER_MACRO> defines;
+    for (auto& def : shaderSource.definitions)
+    {
+        auto& v = defines.Emplace();
+        v.Name = def.c_str();
+        v.Definition = "1";
+    }
+    defines.Add({NULL, NULL}); // Required, acts as terminator
+
     ShaderIncludeHandler includeHandler(shaderSource.includeRoot, shaderSource.includeRemapping);
 
     const HRESULT result = D3DCompile(shaderSource.sourceCode.GetData(),     // Code Data
                                       shaderSource.sourceCode.GetSize(),     // Code Size
                                       NULL,                                  // Source Name
-                                      NULL,                                  // Defines
+                                      defines.GetData(),                     // Defines
                                       &includeHandler,                       // Include manager
                                       shaderSource.shaderEntryPoint.c_str(), // Entry
                                       shaderModel.c_str(),                   // Shader Target

@@ -3,6 +3,7 @@
 #include "GraphicsEngine/GraphicsTypes.h"
 #include "GraphicsEngine/Rendering/Vertex.h"
 #include "GraphicsEngine/Resources/Descriptors/ShaderDesc.h"
+#include "GraphicsEngine/Resources/ObjectHandles.h"
 #include "GraphicsEngine/Resources/VertexElement.h"
 #include "Objects/Shader.h"
 
@@ -19,19 +20,18 @@ namespace ost
         inline Uint64 CalculateHash() const
         {
             Uint64 ivals[5];
-            ivals[0] = (intptr_t)vsBytecodeView.Data();
-            ivals[1] = (intptr_t)psBytecodeView.Data();
-            ivals[2] = (SizeType)blendState;
+            ivals[0] = (Uint64)blendState;
+            ivals[1] = (Uint64)vsHandle;
+            ivals[2] = (Uint64)psHandle;
             ivals[3] = (SizeType)vertexType;
             ivals[4] = (SizeType)primitiveTopology;
             return hash::fnv1a<5>(ivals);
         }
 
-        ERenderPath renderPath; // Deferred? Forward? etc.
-        EVertexType vertexType; // Static, Blit, e
+        EVertexType vertexType;
 
-        BufferView vsBytecodeView;
-        BufferView psBytecodeView;
+        HShader vsHandle;
+        HShader psHandle;
 
         EBlendState blendState;
         EPrimitiveTopology primitiveTopology;
