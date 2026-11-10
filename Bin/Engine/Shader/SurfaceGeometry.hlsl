@@ -1,0 +1,5 @@
+#include "Shared/LayoutsMaster.hlsli"
+#include "Shared/MaterialImpl.hlsli"
+#include "Shared/Material.hlsli"
+#include "Shared/ShaderCommon.hlsli"
+#include "Shared/Resources.hlsli"

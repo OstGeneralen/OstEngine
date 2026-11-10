@@ -34,6 +34,7 @@ add_library(${PROJECT_NAME} STATIC
     Source/Graphics/Material/MaterialPropertySet.cpp
     Source/Graphics/Material/MaterialProperty.cpp
     Source/Graphics/Material/MaterialManager.cpp
+    Source/Graphics/Material/MaterialCompiler.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

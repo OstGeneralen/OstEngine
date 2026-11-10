@@ -1,18 +1,18 @@
 #ifndef SHADER_COMMON_HLSLI
 #define SHADER_COMMON_HLSLI
 
-struct VSTangentSpace {
-    float3 tangent;
-    float3 normal;
-    float3 bitangent;
-};
-
 float3 ReconstructWorldPosition(float2 uv, float depth, float4x4 inverseViewProj) {
     float2 ndcUV = uv * float2(2.0f, -2.0f) + float2(-1.0f, 1.0f);
     float4 ndcPos = float4(ndcUV, depth, 1.0f);
     float4 worldPos = mul(ndcPos, inverseViewProj);
     return float3(worldPos.xyz) / worldPos.w;
 }
+
+struct VSTangentSpace {
+    float3 tangent;
+    float3 normal;
+    float3 bitangent;
+};
 
 VSTangentSpace VSCalculateTangentSpace(float4x4 transform, float3 normal, float3 tangent) {
     row_major float3x3 toWorld = (float3x3)transform;

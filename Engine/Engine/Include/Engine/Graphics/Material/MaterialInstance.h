@@ -20,8 +20,7 @@ namespace ost
         MaterialInstance& operator=(MaterialInstance&&) noexcept;
 
         const MaterialClass& GetClass() const;
-
-        void UpdateClass(MaterialClass* newPtr);
+        void SetClass(MaterialClass* newPtr);
 
     private:
         MaterialClass* _pClass;
