@@ -1,14 +1,10 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "GraphicsEngine.h"
 
-#include "Objects/RenderDefaultsLibrary.h"
 #include "RHI/RenderHardwareInterface.h"
 #include "Rendering/Buffers.h"
-#include "Rendering/DeferredRenderer.h"
-#include "Rendering/ForwardRenderer.h"
 #include "Rendering/RenderPipelineConstants.h"
 #include "Resources/GraphicsResourceManager.h"
-#include "Resources/ShaderCompiler.h"
 
 #include <d3d11_1.h>
 #include <dxgi.h>
@@ -46,34 +42,29 @@ UniquePtr<IGraphicsEngine> IGraphicsEngine::Create(ServiceLocator& services, voi
 
 GraphicsEngine::GraphicsEngine(ServiceLocator& serviceLocator, void* windowHandle, const Vector2u& outputSize)
     : _serviceLocator{serviceLocator}
-    , _activeRenderer{}
     , _rhi{}
     , _resourceManager{}
-    , _renderQueue{_resourceManager}
+    , _globalResourceLibrary{}
+    , _renderScene{}
+    , _sceneRenderer{}
 {
     // Create the RHI from the provided window information (force fullscreen false for now)
     _rhi.Initialize(outputSize, windowHandle, false);
     _resourceManager.Initialize(_rhi);
 
-    RenderDefaultsLibrary::Initialize(_rhi);
+    _globalResourceLibrary.InitializeResources(_rhi);
+    _sceneRenderer.InitializeResources(_rhi, outputSize);
 
-    _activeRenderer = Ptr::NewUnique<DeferredRenderer>();
-    _activeRenderer->Initialize(outputSize, BuildRendererContext());
-
-    InitializeGlobalResources();
     _outputSize = outputSize.VectorCast<Float32>();
 
     // Register Globally Accessible Services
     _serviceLocator.RegisterUnmanaged<IGraphicsResourceManager>(&_resourceManager);
-    _serviceLocator.RegisterUnmanaged<IMaterialManager>(&_resourceManager);
     _serviceLocator.RegisterUnmanaged<IRenderHardwareInterface>(&_rhi);
-
 }
 
 GraphicsEngine::~GraphicsEngine()
 {
     _serviceLocator.Unregister<IGraphicsResourceManager>();
-    _serviceLocator.Unregister<IMaterialManager>();
     _serviceLocator.Unregister<IRenderHardwareInterface>();
 }
 
@@ -81,7 +72,7 @@ GraphicsEngine::~GraphicsEngine()
 
 bool GraphicsEngine::IsInitialized() const
 {
-    return _activeRenderer.IsValid();
+    return true;
 }
 
 void GraphicsEngine::Shutdown()
@@ -182,12 +173,6 @@ void ost::GraphicsEngine::InitializeGlobalResources()
     _frameBuffer.SetDebugName("Buffer_Frame");
 }
 
-// ------------------------------------------------------------
-
-RendererContext ost::GraphicsEngine::BuildRendererContext()
-{
-    return RendererContext(_rhi, _resourceManager, _frameBuffer, _objectBuffer);
-}
 // ------------------------------------------------------------
 
 void ost::GraphicsEngine::UpdateFrameBuffer()

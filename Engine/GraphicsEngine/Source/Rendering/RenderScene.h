@@ -21,7 +21,7 @@ namespace ost
         void AddLight(const RenderSceneLight& light) override;
         // END IRenderScene
 
-        void PrepareData( const GraphicsResourceManager& resources );
+        void PrepareData(const GraphicsResourceManager& resources, const Vector2f& outputDimensions);
 
         const FrameBufferStructure& GetFrameBufferData() const;
         const List<LightsBufferStructure>& GetLightBuffersData() const;

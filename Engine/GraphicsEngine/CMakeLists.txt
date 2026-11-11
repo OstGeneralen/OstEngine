@@ -19,18 +19,10 @@ add_library(${PROJECT_NAME} STATIC
     Source/Resources/GraphicsResourceManager.h
     Source/Resources/GraphicsResourceManager.cpp
     Source/Rendering/Buffers.h
-    Source/Rendering/ForwardRenderer.h
-    Source/Rendering/ForwardRenderer.cpp
-    Source/Rendering/RenderQueue.h
-    Source/Rendering/RenderQueue.cpp
     Source/Objects/TextureSampler.cpp
     Source/Objects/TextureSampler.h
     Source/Rendering/RenderCommand.cpp
-    Source/Rendering/DeferredRenderer.h
-    Source/Rendering/DeferredRenderer.cpp
     Source/Rendering/RendererContext.h
-    Source/Objects/RenderDefaultsLibrary.h
-    Source/Objects/RenderDefaultsLibrary.cpp
     Source/Objects/Shader.h
     Source/Objects/Shader.cpp
     Source/Utility/ShaderReflector.cpp
@@ -42,6 +34,10 @@ add_library(${PROJECT_NAME} STATIC
     Include/GraphicsEngine/Rendering/IRenderScene.h
     Source/Rendering/RenderScene.h
     Source/Rendering/RenderScene.cpp
+    Source/Rendering/SceneRenderer.h
+    Source/Rendering/SceneRenderer.cpp
+    Source/Rendering/RenderResourceLibrary.h
+    Source/Rendering/RenderResourceLibrary.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

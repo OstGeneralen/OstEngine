@@ -1,8 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "Engine/Asset/AssetRef.h"
-#include "Engine/Graphics/Assets/Model.h"
 #include "Engine/World/Component.h"
+#include "Engine/Graphics/Assets/ModelAsset.h"
 
 #include <Container/List.h>
 
@@ -16,7 +16,7 @@ namespace ost
     class StaticMeshComponent : public RenderComponent
     {
     public:
-        void SetModel(const AssetRef<Model>& model);
+        void SetModel(const AssetRef<ModelAsset>& model);
 
     public: // Render Component
         void InitializeRenderState(SceneGraph& SceneGraph) override;
@@ -26,7 +26,7 @@ namespace ost
         void OnTransformMarkedDirty();
 
     private:
-        AssetRef<Model> _model;
+        AssetRef<ModelAsset> _model;
         List<ProxyHandle> _meshProxyHandles;
         SceneGraph* _pSceneGraph;
         SizeType dummyHandle = 0;

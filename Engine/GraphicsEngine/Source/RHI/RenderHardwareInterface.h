@@ -58,9 +58,12 @@ namespace ost
 
         void SetBuffer(const Buffer& texture, Uint32 slot, EPipelineStage stageFlag) const;
 
+        void SetBlendState( const ComPtr<RHIBlendState>& blendState ) const;
+
         void SetPSO(const PipelineStateObject& pso) const;
 
         void SetSampler(const TextureSampler& sampler, Uint32 slot) const;
+        void SetShader( const Shader& shader, EPipelineStage stage ) const;
 
         void SetRenderTarget(const Texture& renderTarget, const Texture* pDepthTarget = nullptr) const;
         void SetRenderTargets(const Texture* pRenderTargets, SizeType numTargets, const Texture* pDepthTarget = nullptr) const;

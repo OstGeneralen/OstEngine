@@ -15,12 +15,10 @@ namespace ost
 
     enum class ERenderOutputTexture
     {
-        Output, // Primary output target
-        Depth,  // Depth target
+        Output,
+        Albedo,
+        Normal,
 
-        GBufferAlbedo, // Albedo (Deferred only)
-        GBufferNormal, // Normals (Deferred only)
-        GBufferORM,    // ORM (Deferred only)
     };
 
     class IRenderer
@@ -30,10 +28,8 @@ namespace ost
 
         virtual void Initialize(const Vector2u& size, RendererContext&& ctx) = 0;
 
-        virtual void Resize(const Vector2u& newSize, RendererContext&& ctx) = 0;
 
-        virtual Float32 GetAspectRatio() const = 0;
-        virtual const Vector2f& GetDimensions() const = 0;
+
 
         virtual void ExecuteCommands(const IRenderQueue& renderQueue, RendererContext&& ctx) = 0;
         virtual const ITexture* GetOutputTarget(ERenderOutputTexture target = ERenderOutputTexture::Output) const = 0;

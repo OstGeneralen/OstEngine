@@ -21,6 +21,10 @@ namespace ost
         const Shader* pVertexShader;
         const Shader* pPixelShader;
 
+        SizeType indexCount;
+        SizeType indexOffset;
+        SizeType vertexOffset;
+
         Matrix4x4 transform;
     };
 } // namespace ost

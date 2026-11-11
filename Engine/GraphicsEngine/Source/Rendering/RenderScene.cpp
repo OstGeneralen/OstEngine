@@ -55,7 +55,7 @@ void ost::RenderScene::AddLight(const RenderSceneLight& light)
 
 // ------------------------------------------------------------
 
-void ost::RenderScene::PrepareData(const GraphicsResourceManager& resources)
+void ost::RenderScene::PrepareData(const GraphicsResourceManager& resources, const Vector2f& outputDimensions)
 {
 
     // Sort objects by shader + buffer
@@ -67,10 +67,30 @@ void ost::RenderScene::PrepareData(const GraphicsResourceManager& resources)
     // Build the buffers
     // 1. Frame Buffer
     _frameBufferData = {};
-    _frameBufferData.inverseView = _pendingCamera.viewInverse;
-    _frameBufferData.viewProjection = _pendingCamera.viewProjection;
-    _frameBufferData.inverseViewProjection = _pendingCamera.viewProjection.GetInverse();
-    _frameBufferData.viewLocation = _pendingCamera.viewInverse.ExtractTranslation();
+    Matrix4x4 projection;
+
+    const Float32 np = _pendingCamera.nearDistance;
+    const Float32 fp = _pendingCamera.farDistance;
+    const Float32 sx = _pendingCamera.sizeFactors.X * outputDimensions.X;
+    const Float32 sy = _pendingCamera.sizeFactors.Y * outputDimensions.Y;
+
+    switch (_pendingCamera.projectionType)
+    {
+    case ERenderSceneCameraProjection::Ortho: {
+        projection = Matrix4x4::CreateOrthographicsProjection(sx, sy, np, fp);
+        break;
+    }
+    case ERenderSceneCameraProjection::Persp: {
+        projection = Matrix4x4::CreatePerspectiveProjection(_pendingCamera.yFoV, sx / sy, np, fp);
+        break;
+    }
+    }
+
+    const Matrix4x4 view = _pendingCamera.transform.GetInverse();
+    _frameBufferData.inverseView = _pendingCamera.transform;
+    _frameBufferData.viewProjection = view * projection;
+    _frameBufferData.inverseViewProjection = _frameBufferData.viewProjection.GetInverse();
+    _frameBufferData.viewLocation = _pendingCamera.transform.ExtractTranslation();
 
     // 2. Light Buffers
     _lightBuffersData.Clear();

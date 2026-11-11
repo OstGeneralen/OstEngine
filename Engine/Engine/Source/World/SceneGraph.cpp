@@ -3,7 +3,7 @@
 
 #include "Engine/World/Component.h"
 
-#include <GraphicsEngine/Rendering/IRenderQueue.h>
+#include <GraphicsEngine/Rendering/IRenderScene.h>
 #include <GraphicsEngine/Rendering/IRenderer.h>
 
 // ------------------------------------------------------------
@@ -77,44 +77,46 @@ void SceneGraph::ReconcileTransforms()
 
 // ------------------------------------------------------------
 
-void ost::SceneGraph::PopulateRenderQueue(IRenderQueue& toQueue, const IRenderer& targetRenderer) const
+void ost::SceneGraph::PopulateRenderScene(IRenderScene& renderScene) const
 {
     for (const auto& meshProxy : _meshProxies)
     {
-        if (meshProxy.hModel)
-        {
-            toQueue.Push(ModelCommand(meshProxy.hModel, meshProxy.materialHandles, meshProxy.transform));
-        }
+        RenderSceneObject rso;
+        rso.indexBuffer = meshProxy.indexBuffer;
+        rso.vertexBuffer = meshProxy.vertexBuffer;
+        rso.vertexShader = meshProxy.vertexShader;
+        rso.pixelShader = meshProxy.pixelShader;
+        rso.indexCount = meshProxy.indexCount;
+        rso.indexOffset = meshProxy.indexOffset;
+        rso.vertexCount = meshProxy.vertexCount;
+        rso.transform = meshProxy.transform;
+        renderScene.AddObject(rso);
     }
 
     for (const auto& lightProxy : _lightProxies)
     {
-        LightCommand cmd;
-        cmd.cmdData = lightProxy.proxyData;
-        toQueue.Push(std::move(cmd));
+        RenderSceneLight rsl;
+        rsl.data = lightProxy.proxyData;
+        renderScene.AddLight(rsl);
     }
 
-    Matrix4x4 projection;
+    RenderSceneCamera rsc;
+    rsc.transform = _viewProxy.transform;
     switch (_viewProxy.projectionType)
     {
     case ViewRenderProxy::EProjectionType::Perspective: {
-        projection = Matrix4x4::CreatePerspectiveProjection(_viewProxy.lValue, targetRenderer.GetAspectRatio(), 0.1f, 30.0f);
+        rsc.projectionType = ERenderSceneCameraProjection::Persp;
+        rsc.yFoV = _viewProxy.lValue;
         break;
     }
     case ViewRenderProxy::EProjectionType::Orthographic: {
-        projection = Matrix4x4::CreateOrthographicsProjection(_viewProxy.lValue * targetRenderer.GetDimensions().X, _viewProxy.rValue * targetRenderer.GetDimensions().Y,
-                                                              0.1f, 30.0f);
-        break;
-    }
-    case ViewRenderProxy::EProjectionType::Unset: {
-        projection = Matrix4x4(); // Simple identity
+        rsc.projectionType = ERenderSceneCameraProjection::Ortho;
+        rsc.sizeFactors = {_viewProxy.lValue, _viewProxy.rValue};
         break;
     }
     }
 
-    const Matrix4x4 toView = _viewProxy.transform.GetInverse();
-    const Matrix4x4 proj = projection;
-    toQueue.SetView(toView * proj, _viewProxy.transform);
+    renderScene.SetCamera(rsc);
 }
 
 // ------------------------------------------------------------

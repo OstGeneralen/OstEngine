@@ -4,15 +4,26 @@
 #include "GraphicsEngine/Resources/ObjectHandles.h"
 
 #include <Math/Matrix4x4.h>
+#include <Math/Vector2.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
+    enum class ERenderSceneCameraProjection
+    {
+        Ortho,
+        Persp,
+    };
+
     struct RenderSceneCamera
     {
-        Matrix4x4 viewProjection;
-        Matrix4x4 viewInverse;
+        ERenderSceneCameraProjection projectionType;
+        Vector2f sizeFactors;
+        Float32 yFoV;
+        Float32 nearDistance = 0.001f;
+        Float32 farDistance = 1000.0f;
+        Matrix4x4 transform;
     };
 
     struct RenderSceneObject
@@ -22,6 +33,10 @@ namespace ost
 
         HShader vertexShader;
         HShader pixelShader;
+
+        Uint64 indexOffset;
+        Uint64 indexCount;
+        Uint64 vertexOffset;
 
         Matrix4x4 transform;
     };

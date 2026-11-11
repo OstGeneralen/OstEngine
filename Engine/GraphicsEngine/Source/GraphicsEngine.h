@@ -12,8 +12,9 @@
 #include "Objects/TextureSampler.h"
 #include "RHI/RenderHardwareInterface.h"
 #include "Rendering/RenderPipelineConstants.h"
-#include "Rendering/RenderQueue.h"
-#include "Rendering/RendererContext.h"
+#include "Rendering/RenderResourceLibrary.h"
+#include "Rendering/RenderScene.h"
+#include "Rendering/SceneRenderer.h"
 
 // Shared/Common
 #include <Container/Map.h>
@@ -51,27 +52,21 @@ namespace ost
         // END IGraphicsEngine
 
     private:
-        void InitializeGlobalResources();
-
-        RendererContext BuildRendererContext();
-
-        void UpdateFrameBuffer();
-
         ServiceLocator& _serviceLocator;
+        
         Vector2f _outputSize;
-
+        
         Texture _backbuffer;
-        Buffer _frameBuffer;
-        Buffer _objectBuffer;
-        Mesh _blitMesh;
-
-        UniquePtr<IRenderer> _activeRenderer;
 
         Map<ESamplerSlot, TextureSampler> _samplers;
 
         RenderHardwareInterface _rhi;
         GraphicsResourceManager _resourceManager;
-        RenderQueue _renderQueue;
+
+        RenderResourceLibrary _globalResourceLibrary;
+
+        RenderScene _renderScene;
+        SceneRenderer _sceneRenderer;
     };
 } // namespace ost
 

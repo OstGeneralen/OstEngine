@@ -16,6 +16,8 @@ namespace ost
         SizeType vertexCount;
         SizeType indexCount;
         SizeType indexOffset;
+        HShader vertexShader;
+        HShader pixelShader;
     };
 
     struct LightRenderProxy

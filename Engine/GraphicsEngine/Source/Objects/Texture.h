@@ -25,7 +25,11 @@ namespace ost
 
         const void* GetNativeResource() const override;
 
+        const Vector2u& GetSize() const;
+
     private:
+        Vector2u _size;
+
         ComPtr<RHIRenderTarget> _rtv;
         ComPtr<RHIShaderResource> _srv;
         ComPtr<RHIDepthStencil> _dsv;

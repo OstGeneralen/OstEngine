@@ -11,7 +11,7 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void ost::StaticMeshComponent::SetModel(const AssetRef<Model>& model)
+void ost::StaticMeshComponent::SetModel(const AssetRef<ModelAsset>& model)
 {
     for (auto proxyHandle : _meshProxyHandles)
     {
@@ -49,7 +49,7 @@ void StaticMeshComponent::InitializeRenderState(SceneGraph& SceneGraph)
 void ost::StaticMeshComponent::DestroyRenderState(SceneGraph& SceneGraph)
 {
     GetOwner().transform.OnMarkedDirty.Unbind<StaticMeshComponent, &StaticMeshComponent::OnTransformMarkedDirty>(this);
-    SetModel(AssetRef<Model>()); // Set to a null model ref to release all proxies
+    SetModel(AssetRef<ModelAsset>()); // Set to a null model ref to release all proxies
     _pSceneGraph = nullptr;
 }
 

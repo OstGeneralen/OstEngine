@@ -116,6 +116,10 @@ bool RenderHardwareInterface::CreateBackbuffer(Texture& outBackbuffer)
         return false;
     }
 
+    D3D11_TEXTURE2D_DESC desc;
+    backbufferTexture->GetDesc(&desc);
+    outBackbuffer._size = Vector2u(desc.Width, desc.Height);
+
     return false;
 }
 
@@ -142,6 +146,8 @@ void RenderHardwareInterface::ResizeBackbuffer(const Vector2u& newSize, Texture&
     _immediateContext->RSSetViewports(1, &viewport);
 
     Log::Log(RHILog, "Render output resized. {}x{}", newSize.X, newSize.Y);
+
+    inOutBackbuffer._size = newSize;
 }
 
 // ------------------------------------------------------------
@@ -182,6 +188,8 @@ bool RenderHardwareInterface::CreateTexture(const TextureDesc& desc, Texture& ou
     {
         return false;
     }
+
+    outTexture._size = desc.dimensions;
 
     return true;
 }
@@ -225,6 +233,8 @@ bool RenderHardwareInterface::CreateRenderTargetTexture(const Vector2u& dimensio
         return false;
     }
 
+    outTexture._size = dimensions;
+
     return true;
 }
 
@@ -266,6 +276,8 @@ bool RenderHardwareInterface::CreateDepthStencilTexture(const Vector2u& dimensio
     {
         return false;
     }
+
+    outTexture._size = dimensions;
 
     return true;
 }
@@ -526,6 +538,11 @@ void RenderHardwareInterface::SetBuffer(const Buffer& buffer, Uint32 slot, EPipe
     }
 }
 
+void ost::RenderHardwareInterface::SetBlendState(const ComPtr<RHIBlendState>& blendState) const
+{
+    _immediateContext->OMSetBlendState(blendState.Get(), nullptr, 0xFFFFFFFF);
+}
+
 void RenderHardwareInterface::SetPSO(const PipelineStateObject& pso) const
 {
     _immediateContext->OMSetBlendState(pso._blendState.Get(), nullptr, 0xFFFFFFFF);
@@ -538,6 +555,19 @@ void RenderHardwareInterface::SetPSO(const PipelineStateObject& pso) const
 void RenderHardwareInterface::SetSampler(const TextureSampler& sampler, Uint32 slot) const
 {
     _immediateContext->PSSetSamplers(slot, 1, sampler._samplerState.GetAddressOf());
+}
+
+void ost::RenderHardwareInterface::SetShader(const Shader& shader, EPipelineStage stage) const
+{
+    switch (stage)
+    {
+    case EPipelineStage::VS:
+        _immediateContext->VSSetShader(shader._vs.Get(), NULL, 0);
+        break;
+    case EPipelineStage::PS:
+        _immediateContext->PSSetShader(shader._ps.Get(), NULL, 0);
+        break;
+    }
 }
 
 void RenderHardwareInterface::SetRenderTarget(const Texture& renderTarget, const Texture* pDepthTarget) const

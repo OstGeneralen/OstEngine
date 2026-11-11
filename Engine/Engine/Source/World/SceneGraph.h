@@ -34,7 +34,7 @@ namespace ost
         void MarkTransformDirty(RenderComponent& renderComponent);
         void ReconcileTransforms();
 
-        void PopulateRenderQueue( IRenderQueue& toQueue, const IRenderer& targetRenderer ) const;
+        void PopulateRenderScene(IRenderScene& renderScene) const;
 
     private:
         ViewRenderProxy _viewProxy;
