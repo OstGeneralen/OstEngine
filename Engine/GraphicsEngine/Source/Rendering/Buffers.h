@@ -22,7 +22,7 @@ namespace ost
         void WriteAndSetBuffer(const Buffer& target, const RenderHardwareInterface& rhi)
         {
             rhi.UpdateBuffer(target, this, sizeof(FrameBufferStructure));
-            rhi.SetBuffer(target, PipelineConstant::Get(EBufferSlot::FrameBuffer), EPipelineStage_VS | EPipelineStage_PS);
+            rhi.SetBuffer(target, PipelineConstant::Get(EBufferSlot::FrameBuffer), EPipelineStage::VS | EPipelineStage::PS);
         }
     };
 
@@ -33,7 +33,7 @@ namespace ost
         void WriteAndSetBuffer(const Buffer& target, const RenderHardwareInterface& rhi)
         {
             rhi.UpdateBuffer(target, this, sizeof(ObjectBufferStructure));
-            rhi.SetBuffer(target, PipelineConstant::Get(EBufferSlot::ObjectBuffer), EPipelineStage_VS | EPipelineStage_PS);
+            rhi.SetBuffer(target, PipelineConstant::Get(EBufferSlot::ObjectBuffer), EPipelineStage::VS | EPipelineStage::PS);
         }
     };
 
@@ -79,7 +79,7 @@ namespace ost
         void WriteAndSetBuffer(const Buffer& target, const RenderHardwareInterface& rhi)
         {
             rhi.UpdateBuffer(target, this, sizeof(LightsBufferStructure));
-            rhi.SetBuffer(target, PipelineConstant::Get(EBufferSlot::LightBuffer), EPipelineStage_VS | EPipelineStage_PS);
+            rhi.SetBuffer(target, PipelineConstant::Get(EBufferSlot::LightBuffer), EPipelineStage::VS | EPipelineStage::PS);
         }
     };
 } // namespace ost

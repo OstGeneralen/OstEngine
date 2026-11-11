@@ -19,6 +19,7 @@ typedef struct ID3D11DepthStencilView   RHIDepthStencil;
 
 typedef struct ID3D11SamplerState       RHISampler;
 typedef struct ID3D11BlendState         RHIBlendState;
+typedef struct ID3D11DepthStencilState  RHIDepthStencilState;
 
 typedef struct ID3D11VertexShader       RHIVertexShader;
 typedef struct ID3D11PixelShader        RHIPixelShader;
@@ -36,17 +37,6 @@ namespace ost
 
     template <typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
-
-    // ------------------------------------------------------------
-
-    using EPipelineStage_ = Uint32;
-
-    enum EPipelineStage : Uint32
-    {
-        None = 0,
-        EPipelineStage_VS = 1 << 0,
-        EPipelineStage_PS = 1 << 1,
-    };
 
     // ------------------------------------------------------------
 

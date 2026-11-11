@@ -25,7 +25,6 @@ add_library(${PROJECT_NAME} STATIC
     Source/Rendering/RenderQueue.cpp
     Source/Objects/TextureSampler.cpp
     Source/Objects/TextureSampler.h
-    Source/Rendering/RenderCommandContext.h
     Source/Rendering/RenderCommand.cpp
     Source/Rendering/DeferredRenderer.h
     Source/Rendering/DeferredRenderer.cpp
@@ -41,6 +40,9 @@ add_library(${PROJECT_NAME} STATIC
     Include/GraphicsEngine/Resources/Descriptors/BufferDesc.h
     Source/Resources/PSOCache.cpp
     Source/Resources/ShaderCompiler.cpp
+    Include/GraphicsEngine/Rendering/IRenderScene.h
+    Source/Rendering/RenderScene.h
+    Source/Rendering/RenderScene.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

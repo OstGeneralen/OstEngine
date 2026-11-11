@@ -1,6 +1,8 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #include "BufferView.h"
 
+#include "Memory/Memory.h"
+
 using namespace ost;
 
 // ------------------------------------------------------------
@@ -42,6 +44,15 @@ const void* ost::BufferView::Data() const
 SizeType ost::BufferView::Size() const
 {
     return _size;
+}
+
+// ------------------------------------------------------------
+
+List<Uint8> ost::BufferView::HardCopy() const
+{
+    List<Uint8> cpy(_size);
+    MemCopy(cpy.GetData(), _pBuffer, _size);
+    return cpy;
 }
 
 // ------------------------------------------------------------

@@ -12,7 +12,7 @@ namespace ost
 {
     struct IShader
     {
-        virtual const BufferView& GetBytecode() const = 0;
+        virtual BufferView GetBytecode() const = 0;
         virtual EPipelineStage GetPipelineStage() const = 0;
     };
 } // namespace ost

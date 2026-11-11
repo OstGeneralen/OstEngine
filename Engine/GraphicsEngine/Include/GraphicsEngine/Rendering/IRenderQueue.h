@@ -7,30 +7,33 @@
 #include <Math/Matrix4x4.h>
 #include <Math/Vector3.h>
 #include <Memory/Memory.h>
+#include <Utility/Hash.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct ModelCommand
-    {
-        ModelCommand(HModel h, const HMaterialInstance pMatInstances[8], const Matrix4x4& t)
-            : hModel{h}
-            , hMaterialInstances{}
-            , transform{t}
-        {
-            MemCopy(hMaterialInstances, pMatInstances, sizeof(HMaterialInstance) * 8);
-        }
-
-        HModel hModel;
-        HMaterialInstance hMaterialInstances[8];
-        Matrix4x4 transform;
-    };
-
     struct RenderView
     {
         Matrix4x4 viewProjection;
         Matrix4x4 viewInverse;
+    };
+
+    struct DrawCommand
+    {
+        Uint64 ShaderHash() const
+        {
+            Uint64 arr[2] = { vertexShader.AsInteger(), pixelShader.AsInteger() };
+            return hash::fnv1a<2>(arr);
+        }
+
+        HShader vertexShader;
+        HShader pixelShader;
+        
+        HVertexBuffer vertexBuffer;
+        HIndexBuffer indexBuffer;
+
+        Matrix4x4 transform;
     };
 
     class IRenderQueue
@@ -39,8 +42,10 @@ namespace ost
         virtual ~IRenderQueue() = default;
 
         virtual void SetView(const Matrix4x4& viewProjection, const Matrix4x4& viewInverse) = 0;
-        virtual void Push(ModelCommand&& cmd) = 0;
-        virtual void Push(LightCommand&& cmd) = 0;
+        virtual void AddLight(const LightData& lightData) = 0;
+        virtual void Push( const DrawCommand& cmd ) = 0;
+        virtual void Finalise() = 0;
+
         virtual void Clear() = 0;
     };
 } // namespace ost

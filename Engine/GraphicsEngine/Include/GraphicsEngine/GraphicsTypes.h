@@ -147,9 +147,9 @@ static inline ost::EPipelineStage operator|(ost::EPipelineStage a, ost::EPipelin
     return static_cast<ost::EPipelineStage>(static_cast<Uint8>(a) | static_cast<Uint8>(b));
 }
 
-static inline ost::EPipelineStage operator&(ost::EPipelineStage a, ost::EPipelineStage b)
+static inline bool operator&(ost::EPipelineStage a, ost::EPipelineStage b)
 {
-    return static_cast<ost::EPipelineStage>(static_cast<Uint8>(a) & static_cast<Uint8>(b));
+    return (static_cast<Uint8>(a) & static_cast<Uint8>(b));
 }
 
 // ------------------------------------------------------------

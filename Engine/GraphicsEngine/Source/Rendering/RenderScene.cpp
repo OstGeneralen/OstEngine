@@ -1,0 +1,132 @@
+// Kasper "OstGeneralen" Esbjornsson - 2026
+#include "RenderScene.h"
+
+#include "Resources/GraphicsResourceManager.h"
+
+#include <algorithm>
+
+#include <Utility/Hash.h>
+
+// ------------------------------------------------------------
+
+namespace sorting
+{
+    static bool RenderSceneObjectSort(const ost::RenderSceneObject& a, const ost::RenderSceneObject& b)
+    {
+        Uint64 aShaderArr[2] = {a.vertexShader.AsInteger(), a.pixelShader.AsInteger()};
+        Uint64 bShaderArr[2] = {b.vertexShader.AsInteger(), b.pixelShader.AsInteger()};
+        Uint64 aBufferArr[2] = {a.vertexBuffer.AsInteger(), a.indexBuffer.AsInteger()};
+        Uint64 bBufferArr[2] = {b.vertexBuffer.AsInteger(), b.indexBuffer.AsInteger()};
+
+        const Uint64 shaderMask = 0xFFFFFFFF00000000u;
+        const Uint64 bufferMask = 0x00000000FFFFFFFFu;
+
+        const Uint64 aHash = (ost::hash::fnv1a<2>(aShaderArr) & shaderMask) | (ost::hash::fnv1a<2>(aBufferArr) & bufferMask);
+        const Uint64 bHash = (ost::hash::fnv1a<2>(bShaderArr) & shaderMask) | (ost::hash::fnv1a<2>(bBufferArr) & bufferMask);
+        return aHash < bHash;
+    }
+
+    static bool RenderLightSort(const ost::LightData& a, const ost::LightData& b)
+    {
+        return a.type < b.type;
+    }
+} // namespace sorting
+
+// ------------------------------------------------------------
+
+using namespace ost;
+
+// ------------------------------------------------------------
+
+void ost::RenderScene::SetCamera(const RenderSceneCamera& camera)
+{
+    _pendingCamera = camera;
+}
+
+void ost::RenderScene::AddObject(const RenderSceneObject& object)
+{
+    _pendingObjects.Add(object);
+}
+
+void ost::RenderScene::AddLight(const RenderSceneLight& light)
+{
+    _pendingLights.Add(light.data);
+}
+
+// ------------------------------------------------------------
+
+void ost::RenderScene::PrepareData(const GraphicsResourceManager& resources)
+{
+
+    // Sort objects by shader + buffer
+    std::sort(_pendingObjects.begin(), _pendingObjects.end(), &sorting::RenderSceneObjectSort);
+
+    // Sort lights to be directional first
+    std::sort(_pendingLights.begin(), _pendingLights.end(), &sorting::RenderLightSort);
+
+    // Build the buffers
+    // 1. Frame Buffer
+    _frameBufferData = {};
+    _frameBufferData.inverseView = _pendingCamera.viewInverse;
+    _frameBufferData.viewProjection = _pendingCamera.viewProjection;
+    _frameBufferData.inverseViewProjection = _pendingCamera.viewProjection.GetInverse();
+    _frameBufferData.viewLocation = _pendingCamera.viewInverse.ExtractTranslation();
+
+    // 2. Light Buffers
+    _lightBuffersData.Clear();
+    _lightBuffersData.Reserve(_pendingLights.GetSize() / 8);
+
+    LightsBufferStructure* pCurrentLightBuffer;
+    pCurrentLightBuffer = &_lightBuffersData.Emplace();
+    pCurrentLightBuffer->numLights = 0;
+
+    for (SizeType i = 0; i < _pendingLights.GetSize(); ++i)
+    {
+        if (pCurrentLightBuffer->numLights == 8)
+        {
+            pCurrentLightBuffer = &_lightBuffersData.Emplace();
+            pCurrentLightBuffer->numLights = 0;
+        }
+
+        pCurrentLightBuffer->lights[pCurrentLightBuffer->numLights].FromLightData(_pendingLights[i]);
+        pCurrentLightBuffer->numLights++;
+    }
+
+    // 3. Render Commands
+    _commands = List<RenderCommand>(_pendingObjects.GetSize());
+
+    for (SizeType i = 0; i < _pendingObjects.GetSize(); ++i)
+    {
+        _commands[i].pIndexBuffer = &resources.Get(_pendingObjects[i].indexBuffer);
+        _commands[i].pVertexBuffer = &resources.Get(_pendingObjects[i].vertexBuffer);
+        _commands[i].pVertexShader = &resources.Get(_pendingObjects[i].vertexShader);
+        _commands[i].pPixelShader = &resources.Get(_pendingObjects[i].pixelShader);
+        _commands[i].transform = _pendingObjects[i].transform;
+    }
+
+    // Now clear the pending lists!
+    _pendingLights.Clear();
+    _pendingObjects.Clear();
+    _pendingCamera = {};
+}
+
+// ------------------------------------------------------------
+
+const FrameBufferStructure& ost::RenderScene::GetFrameBufferData() const
+{
+    return _frameBufferData;
+}
+
+const List<LightsBufferStructure>& ost::RenderScene::GetLightBuffersData() const
+{
+    return _lightBuffersData;
+}
+
+const List<RenderCommand>& ost::RenderScene::GetRenderCommands() const
+{
+    return _commands;
+}
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------

@@ -11,7 +11,6 @@
 #include "Objects/TextureSampler.h"
 
 // Descriptors
-#include "GraphicsEngine/Resources/Descriptors/GraphicsState.h"
 #include "GraphicsEngine/Resources/Descriptors/TextureDesc.h"
 
 // Common
@@ -54,10 +53,10 @@ namespace ost
         bool CreateSampler(ESamplerAddressMode addressMode, ESamplerType type, TextureSampler& outSampler) const;
 
     public: // Pipeline State Management
-        void SetTexture(const Texture& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
+        void SetTexture(const Texture& texture, Uint32 slot, EPipelineStage stageFlag) const;
         void UnsetTextures() const;
 
-        void SetBuffer(const Buffer& texture, Uint32 slot, EPipelineStage_ stageFlag) const;
+        void SetBuffer(const Buffer& texture, Uint32 slot, EPipelineStage stageFlag) const;
 
         void SetPSO(const PipelineStateObject& pso) const;
 

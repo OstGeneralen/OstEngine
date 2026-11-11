@@ -4,6 +4,7 @@
 #include "Rendering/RenderCommand.h"
 #include "Resources/GraphicsResourceManager.h"
 
+#include <Container/Map.h>
 #include <Container/List.h>
 
 // ------------------------------------------------------------
@@ -17,20 +18,24 @@ namespace ost
 
     public: // IRenderQueue
         void SetView(const Matrix4x4& viewProjection, const Matrix4x4& viewInverse) override;
-        void Push(ModelCommand&& cmd) override;
-        void Push(LightCommand&& cmd) override;
+        void AddLight(const LightData& light) override;
+        void Push(const DrawCommand& cmd) override;
+        void Finalise() override;
+
         void Clear() override;
 
         const RenderView& GetView() const;
-        const List<RenderCommand>& GetDrawCommands() const;
-        const List<LightCommand>& GetLightCommands() const;
+        const List<LightData>& GetLights() const;
+        const List<RenderCommand>& GetRenderCommands() const;
 
     private:
         const GraphicsResourceManager& _resourceManager;
 
         RenderView _view;
-        List<RenderCommand> _drawCommands;
-        List<LightCommand> _lights;
+        List<RenderCommand> _commands;
+        List<DrawCommand> _pendingCommands;
+
+        List<LightData> _lights;
     };
 } // namespace ost
 

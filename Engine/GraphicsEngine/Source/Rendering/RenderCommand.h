@@ -10,24 +10,18 @@
 
 namespace ost
 {
-    struct Mesh;
-    class Material;
-    class MaterialInstance;
-    struct Texture;
-    struct Model;
-    class RenderCommandContext;
     struct Buffer;
+    struct Shader;
 
     struct RenderCommand
     {
-        const Mesh* pMesh;
-        const Model* pModel;
-        const Material* pMaterial;
-        const MaterialInstance* pMaterialInstance;
-        Matrix4x4 transform;
+        const Buffer* pVertexBuffer;
+        const Buffer* pIndexBuffer;
 
-        void Execute(RenderCommandContext& ctx, const Buffer& objectBuffer) const;
-        void ExecuteDeferred(RenderCommandContext& ctx, const Buffer& objectBuffer) const;
+        const Shader* pVertexShader;
+        const Shader* pPixelShader;
+
+        Matrix4x4 transform;
     };
 } // namespace ost
 

@@ -21,6 +21,8 @@ namespace ost
         const void* Data() const;
         SizeType Size() const;
 
+        List<Uint8> HardCopy() const;
+
     private:
         const void* _pBuffer = nullptr;
         SizeType _size = 0;

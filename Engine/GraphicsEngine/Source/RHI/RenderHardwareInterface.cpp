@@ -374,7 +374,7 @@ bool RenderHardwareInterface::CreateShader(EPipelineStage stage, BufferView byte
     }
 
     outShader._stage = stage;
-    outShader._bytecode = bytecode;
+    outShader._bytecode = bytecode.HardCopy();
 
     return SUCCEEDED(result);
 }
@@ -428,20 +428,20 @@ ComPtr<RHIBlendState> ost::RenderHardwareInterface::CreateBlendState(EBlendState
     return blendState;
 }
 
-ComPtr<RHIVertexLayout> ost::RenderHardwareInterface::CreateVertexLayout(const List<Uint8>& vsBytecode, const List<VertexElement>& vertexElement) const
+ComPtr<RHIVertexLayout> ost::RenderHardwareInterface::CreateVertexLayout(const List<Uint8>& vsBytecode, const List<VertexElement>& vertexElements) const
 {
-    List<D3D11_INPUT_ELEMENT_DESC> inputElements{desc.inputLayout.GetSize()};
+    List<D3D11_INPUT_ELEMENT_DESC> inputElements{vertexElements.GetSize()};
     for (SizeType i = 0; i < inputElements.GetSize(); ++i)
     {
         D3D11_INPUT_ELEMENT_DESC& inputElem = inputElements[i];
 
         inputElem.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-        inputElem.Format = translate::DataSize(desc.inputLayout[i].format);
+        inputElem.Format = translate::DataSize(vertexElements[i].format);
         inputElem.InputSlot = 0;
         inputElem.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
         inputElem.InstanceDataStepRate = 0;
         inputElem.SemanticIndex = 0;
-        inputElem.SemanticName = desc.inputLayout[i].semantic.c_str();
+        inputElem.SemanticName = vertexElements[i].semantic.c_str();
     }
 
     const UINT numElements = static_cast<UINT>(inputElements.GetSize());
@@ -496,13 +496,13 @@ bool RenderHardwareInterface::CreateSampler(ESamplerAddressMode addressMode, ESa
 
 // ------------------------------------------------------------
 
-void RenderHardwareInterface::SetTexture(const Texture& texture, Uint32 slot, EPipelineStage_ stageFlag) const
+void RenderHardwareInterface::SetTexture(const Texture& texture, Uint32 slot, EPipelineStage stageFlag) const
 {
-    if (stageFlag & EPipelineStage_VS)
+    if (stageFlag & EPipelineStage::VS)
     {
         _immediateContext->VSSetShaderResources(slot, 1, texture._srv.GetAddressOf());
     }
-    if (stageFlag & EPipelineStage_PS)
+    if (stageFlag & EPipelineStage::PS)
     {
         _immediateContext->PSSetShaderResources(slot, 1, texture._srv.GetAddressOf());
     }
@@ -515,13 +515,13 @@ void RenderHardwareInterface::UnsetTextures() const
     _immediateContext->PSSetShaderResources(0, 8, nullSrvs);
 }
 
-void RenderHardwareInterface::SetBuffer(const Buffer& buffer, Uint32 slot, EPipelineStage_ stageFlag) const
+void RenderHardwareInterface::SetBuffer(const Buffer& buffer, Uint32 slot, EPipelineStage stageFlag) const
 {
-    if (stageFlag & EPipelineStage_VS)
+    if (stageFlag & EPipelineStage::VS)
     {
         _immediateContext->VSSetConstantBuffers(slot, 1, buffer._buffer.GetAddressOf());
     }
-    if (stageFlag & EPipelineStage_PS)
+    if (stageFlag & EPipelineStage::PS)
     {
         _immediateContext->PSSetConstantBuffers(slot, 1, buffer._buffer.GetAddressOf());
     }
