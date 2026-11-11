@@ -83,6 +83,7 @@ void GraphicsEngine::Shutdown()
 
 void ost::GraphicsEngine::SetRenderSize(const Vector2u& size)
 {
+    
     _activeRenderer->Resize(size, BuildRendererContext());
 }
 
