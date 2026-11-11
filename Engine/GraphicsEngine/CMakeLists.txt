@@ -31,7 +31,6 @@ add_library(${PROJECT_NAME} STATIC
     Source/Rendering/RendererContext.h
     Source/Objects/RenderDefaultsLibrary.h
     Source/Objects/RenderDefaultsLibrary.cpp
-    Source/RHI/HLSLCompiler.cpp
     Source/Objects/Shader.h
     Source/Objects/Shader.cpp
     Source/Utility/ShaderReflector.cpp
