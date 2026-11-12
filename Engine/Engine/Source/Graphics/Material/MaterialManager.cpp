@@ -29,7 +29,7 @@ HMaterialClass ost::MaterialManager::CreateClass(const MaterialDesc& desc)
 
     // Build the actual material class
     MaterialClass materialClass;
-    materialClass._blendMode = EBlendState::Opaque;
+    materialClass._blendMode = EBlendMode::Opaque;
     materialClass._domain = desc.domain;
     materialClass._litMode = desc.litMode;
     materialClass._renderTopology = EPrimitiveTopology::TriangleList;

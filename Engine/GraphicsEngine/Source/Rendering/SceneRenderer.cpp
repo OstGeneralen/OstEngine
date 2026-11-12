@@ -25,36 +25,42 @@ void ost::SceneRenderer::InitializeResources(const RenderHardwareInterface& rhi,
     rhi.CreateBuffer(sizeof(LightsBufferStructure), _lightBuffer);
     rhi.CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
 
+    _geometryPassPipelineState.topology = EPrimitiveTopology::TriangleList;
+    _geometryPassPipelineState.blendMode = EBlendMode::Opaque;
+    _geometryPassPipelineState.depthMode = EDepthMode::Less;
+    _geometryPassPipelineState.numTargets = 3;
+
+    _lightPassPipelineState.topology = EPrimitiveTopology::TriangleList;
+    _lightPassPipelineState.blendMode = EBlendMode::Additive;
+    _lightPassPipelineState.depthMode = EDepthMode::Disabled;
+    _lightPassPipelineState.targets[0] = _outputTexture;
+
     InitializeTextures(rhi, renderDimensions);
 }
 
 void ost::SceneRenderer::Resize(const RenderHardwareInterface& rhi, const Vector2u& renderDimensions)
 {
-    if (renderDimensions != _renderSize)
-    {
-        InitializeTextures(rhi, renderDimensions);
-        _renderSize = renderDimensions;
-    }
+    InitializeTextures(rhi, renderDimensions);
 }
 
 // ------------------------------------------------------------
 
-void ost::SceneRenderer::ExecuteRenderScene(const RenderScene& scene, const RenderHardwareInterface& rhi)
+void ost::SceneRenderer::ExecuteRenderScene(const RenderHardwareInterface& rhi)
 {
-    rhi.SetViewport({0, 0}, _renderSize.VectorCast<Float32>());
+    rhi.SetViewport({0, 0}, _outputTexture.GetSize().VectorCast<Float32>());
 
-    rhi.UpdateBuffer(_frameBuffer, &scene.GetFrameBufferData(), sizeof(FrameBufferStructure));
+    rhi.UpdateBuffer(_frameBuffer, &_renderScene.GetFrameBufferData(), sizeof(FrameBufferStructure));
     rhi.SetBuffer(_frameBuffer, 10, EPipelineStage::All);
 
     // 1. Geometry Pass
-    ExecuteGeometryPass(scene, rhi);
+    ExecuteGeometryPass(_renderScene, rhi);
 
     // 2. Intermediate Cleanup
     rhi.UnsetRenderTargets();
     rhi.UnsetTextures();
 
     // 3. Lighting Pass
-    ExecuteLightPass(scene, rhi);
+    ExecuteLightPass(_renderScene, rhi);
 
     // 4. Post execution cleanup
     rhi.UnsetRenderTargets();
@@ -67,7 +73,8 @@ void ost::SceneRenderer::BlitOutputToTarget(const Texture& target, const RenderH
 
     const auto& blitMesh = RenderResourceLibrary::Get().GetBlitMesh();
 
-    rhi.SetBuffersForIndexed(blitMesh.vertexBuffer, sizeof(BlitVertex), blitMesh.indexBuffer);
+    rhi.SetVertexBuffer(blitMesh.vertexBuffer, sizeof(BlitVertex));
+    rhi.SetIndexBuffer(blitMesh.indexBuffer);
     rhi.SetShader(RenderResourceLibrary::Get().GetBlitVertexShader(), EPipelineStage::VS);
     rhi.SetShader(RenderResourceLibrary::Get().GetBlitPixelShader(), EPipelineStage::PS);
     rhi.SetRenderTarget(target, nullptr);
@@ -77,18 +84,39 @@ void ost::SceneRenderer::BlitOutputToTarget(const Texture& target, const RenderH
 
 // ------------------------------------------------------------
 
+IRenderScene& ost::SceneRenderer::GetRenderScene()
+{
+    return _renderScene;
+}
+
+const ITexture* ost::SceneRenderer::GetTargetTexture(ESceneRendererTargetTexture t) const
+{
+    switch (t)
+    {
+    case ESceneRendererTargetTexture::Albedo:
+        return &_gbufferAlbedo;
+    case ESceneRendererTargetTexture::Normal:
+        return &_gbufferNormal;
+    case ESceneRendererTargetTexture::ORM:
+        return &_gbufferORM;
+    case ESceneRendererTargetTexture::Depth:
+        return &_gbufferDepth;
+    case ESceneRendererTargetTexture::Output:
+        return &_outputTexture;
+    }
+    return nullptr;
+}
+
+// ------------------------------------------------------------
+
 void ost::SceneRenderer::ExecuteGeometryPass(const RenderScene& scene, const RenderHardwareInterface& rhi)
 {
-
     rhi.ClearRenderTarget(_gbufferAlbedo);
     rhi.ClearRenderTarget(_gbufferNormal, {0.5f, 0.5f, 1.0f, 1.0f});
     rhi.ClearRenderTarget(_gbufferORM, {0.0f, 1.0f, 0.0f, 1.0f});
     rhi.ClearDepthStencil(_gbufferDepth, 1, 0);
 
-    Texture gbufferTargets[3] = {_gbufferAlbedo, _gbufferNormal, _gbufferORM};
-    rhi.SetRenderTargets(gbufferTargets, 3, &_gbufferDepth);
-
-    rhi.SetBlendState(RenderResourceLibrary::Get().GetBlendState(EBlendState::Opaque));
+    _geometryPassPipelineState.Apply(rhi);
 
     const Buffer* pCurrentIndexBuffer = nullptr;
     const Buffer* pCurrentVertexBuffer = nullptr;
@@ -108,7 +136,8 @@ void ost::SceneRenderer::ExecuteGeometryPass(const RenderScene& scene, const Ren
 
         if (pCurrentIndexBuffer != cmd.pIndexBuffer || pCurrentVertexBuffer != cmd.pVertexBuffer)
         {
-            rhi.SetBuffersForIndexed(*cmd.pVertexBuffer, sizeof(StaticVertex), *cmd.pIndexBuffer);
+            rhi.SetVertexBuffer(*cmd.pVertexBuffer, sizeof(StaticVertex));
+            rhi.SetIndexBuffer(*cmd.pIndexBuffer);
             pCurrentIndexBuffer = cmd.pIndexBuffer;
             pCurrentVertexBuffer = cmd.pVertexBuffer;
         }
@@ -124,19 +153,18 @@ void ost::SceneRenderer::ExecuteGeometryPass(const RenderScene& scene, const Ren
 
 void ost::SceneRenderer::ExecuteLightPass(const RenderScene& scene, const RenderHardwareInterface& rhi)
 {
-
     rhi.ClearRenderTarget(_outputTexture);
-    rhi.SetRenderTarget(_outputTexture, nullptr);
+
+    _lightPassPipelineState.Apply(rhi);
 
     rhi.SetTexture(_gbufferAlbedo, 0, EPipelineStage::PS);
     rhi.SetTexture(_gbufferNormal, 1, EPipelineStage::PS);
     rhi.SetTexture(_gbufferORM, 2, EPipelineStage::PS);
     rhi.SetTexture(_gbufferDepth, 3, EPipelineStage::PS);
 
-    rhi.SetBlendState(RenderResourceLibrary::Get().GetBlendState(EBlendState::Additive));
-
     const auto& blitMesh = RenderResourceLibrary::Get().GetBlitMesh();
-    rhi.SetBuffersForIndexed(blitMesh.vertexBuffer, sizeof(BlitVertex), blitMesh.indexBuffer);
+    rhi.SetVertexBuffer(blitMesh.vertexBuffer, sizeof(BlitVertex));
+    rhi.SetIndexBuffer(blitMesh.indexBuffer);
 
     for (const auto& lightBufferData : scene.GetLightBuffersData())
     {
@@ -155,6 +183,13 @@ void ost::SceneRenderer::InitializeTextures(const RenderHardwareInterface& rhi, 
     rhi.CreateRenderTargetTexture(renderDimensions, EDataFormat::RGBA_Uint8, true, _gbufferORM);
     rhi.CreateDepthStencilTexture(renderDimensions, true, _gbufferDepth);
     rhi.CreateRenderTargetTexture(renderDimensions, EDataFormat::RGBA_Uint8, true, _outputTexture);
+
+    _geometryPassPipelineState.targets[0] = _gbufferAlbedo;
+    _geometryPassPipelineState.targets[1] = _gbufferNormal;
+    _geometryPassPipelineState.targets[2] = _gbufferORM;
+    _geometryPassPipelineState.depthTarget = _gbufferDepth;
+
+    _lightPassPipelineState.targets[0] = _outputTexture;
 }
 
 // ------------------------------------------------------------

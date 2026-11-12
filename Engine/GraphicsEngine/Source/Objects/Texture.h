@@ -27,6 +27,8 @@ namespace ost
 
         const Vector2u& GetSize() const;
 
+        operator bool() const;
+
     private:
         Vector2u _size;
 

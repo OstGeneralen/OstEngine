@@ -369,6 +369,100 @@ bool RenderHardwareInterface::UpdateBuffer(const Buffer& targetBuffer, const voi
     return true;
 }
 
+// ------------------------------------------------------------
+
+bool ost::RenderHardwareInterface::CreateBlendState(EBlendMode stateEnum, BlendState& outBlendState) const
+{
+    D3D11_BLEND_DESC desc = {};
+
+    auto& descTarget = desc.RenderTarget[0];
+    descTarget = {};
+
+    switch (stateEnum)
+    {
+    case EBlendMode::Opaque: {
+        descTarget.BlendEnable = FALSE;
+        descTarget.SrcBlend = D3D11_BLEND_ZERO;
+        descTarget.DestBlend = D3D11_BLEND_ZERO;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ZERO;
+        descTarget.DestBlendAlpha = D3D11_BLEND_ZERO;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        break;
+    }
+    case EBlendMode::AlphaBlend: {
+        descTarget.BlendEnable = TRUE;
+        descTarget.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+        descTarget.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALPHA;
+        break;
+    }
+    case EBlendMode::Additive: {
+        descTarget.BlendEnable = TRUE;
+        descTarget.SrcBlend = D3D11_BLEND_ONE;
+        descTarget.DestBlend = D3D11_BLEND_ONE;
+        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
+        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        descTarget.DestBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
+        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        break;
+    }
+    }
+
+    HRESULT result = _device->CreateBlendState(&desc, &outBlendState._resource);
+    return SUCCEEDED(result);
+}
+
+bool ost::RenderHardwareInterface::CreateDepthStencilState(EDepthMode depthMode, DepthStencilState& outState) const
+{
+    D3D11_DEPTH_STENCIL_DESC desc = {};
+    desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+    desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    desc.FrontFace = desc.BackFace;
+    desc.DepthEnable = TRUE;
+    desc.DepthFunc = D3D11_COMPARISON_LESS;
+    desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+    desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+    desc.StencilEnable = FALSE;
+
+    switch (depthMode)
+    {
+    case EDepthMode::Disabled: {
+        desc.DepthEnable = FALSE;
+        break;
+    }
+    case EDepthMode::Less: {
+        desc.DepthEnable = TRUE;
+        desc.DepthFunc = D3D11_COMPARISON_LESS;
+        break;
+    }
+    case EDepthMode::LessEqual: {
+        desc.DepthEnable = TRUE;
+        desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+        break;
+    }
+    case EDepthMode::Equal: {
+        desc.DepthEnable = TRUE;
+        desc.DepthFunc = D3D11_COMPARISON_EQUAL;
+        break;
+    }
+    }
+
+    const HRESULT result = _device->CreateDepthStencilState(&desc, &outState._resource);
+    return SUCCEEDED(result);
+}
+
+// ------------------------------------------------------------
+
 bool RenderHardwareInterface::CreateShader(EPipelineStage stage, BufferView bytecode, Shader& outShader) const
 {
     HRESULT result = S_OK;
@@ -388,55 +482,6 @@ bool RenderHardwareInterface::CreateShader(EPipelineStage stage, BufferView byte
     outShader._bytecode = bytecode.HardCopy();
 
     return SUCCEEDED(result);
-}
-
-ComPtr<RHIBlendState> ost::RenderHardwareInterface::CreateBlendState(EBlendState stateEnum) const
-{
-    D3D11_BLEND_DESC desc = {};
-
-    auto& descTarget = desc.RenderTarget[0];
-    descTarget = {};
-
-    switch (stateEnum)
-    {
-    case EBlendState::Opaque: {
-        descTarget.BlendEnable = FALSE;
-        descTarget.SrcBlend = D3D11_BLEND_ZERO;
-        descTarget.DestBlend = D3D11_BLEND_ZERO;
-        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
-        descTarget.SrcBlendAlpha = D3D11_BLEND_ZERO;
-        descTarget.DestBlendAlpha = D3D11_BLEND_ZERO;
-        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        break;
-    }
-    case EBlendState::AlphaBlend: {
-        descTarget.BlendEnable = TRUE;
-        descTarget.SrcBlend = D3D11_BLEND_SRC_ALPHA;
-        descTarget.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
-        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
-        descTarget.DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALPHA;
-        break;
-    }
-    case EBlendState::Additive: {
-        descTarget.BlendEnable = TRUE;
-        descTarget.SrcBlend = D3D11_BLEND_ONE;
-        descTarget.DestBlend = D3D11_BLEND_ONE;
-        descTarget.BlendOp = D3D11_BLEND_OP_ADD;
-        descTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        descTarget.DestBlendAlpha = D3D11_BLEND_ONE;
-        descTarget.SrcBlendAlpha = D3D11_BLEND_ONE;
-        descTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        break;
-    }
-    }
-
-    ComPtr<RHIBlendState> blendState;
-    HRESULT result = _device->CreateBlendState(&desc, &blendState);
-    return blendState;
 }
 
 ComPtr<RHIVertexLayout> ost::RenderHardwareInterface::CreateVertexLayout(const List<Uint8>& vsBytecode, const List<VertexElement>& vertexElements) const
@@ -538,19 +583,35 @@ void RenderHardwareInterface::SetBuffer(const Buffer& buffer, Uint32 slot, EPipe
     }
 }
 
-void ost::RenderHardwareInterface::SetBlendState(const ComPtr<RHIBlendState>& blendState) const
+// ------------------------------------------------------------
+
+void ost::RenderHardwareInterface::SetPrimitiveTopology(EPrimitiveTopology topology) const
 {
-    _immediateContext->OMSetBlendState(blendState.Get(), nullptr, 0xFFFFFFFF);
+    switch (topology)
+    {
+    case EPrimitiveTopology::PointList:
+        _immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+        break;
+    case EPrimitiveTopology::LineList:
+        _immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+        break;
+    case EPrimitiveTopology::TriangleList:
+        _immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        break;
+    }
 }
 
-void RenderHardwareInterface::SetPSO(const PipelineStateObject& pso) const
+void ost::RenderHardwareInterface::SetBlendState(const BlendState& blendState) const
 {
-    _immediateContext->OMSetBlendState(pso._blendState.Get(), nullptr, 0xFFFFFFFF);
-    _immediateContext->VSSetShader(pso._vertexShader._vs.Get(), NULL, 0);
-    _immediateContext->PSSetShader(pso._pixelShader._ps.Get(), NULL, 0);
-    _immediateContext->IASetInputLayout(pso._vertexLayout.Get());
-    _immediateContext->IASetPrimitiveTopology(translate::PrimitiveTopology(pso._primitiveTopology));
+    _immediateContext->OMSetBlendState(blendState._resource.Get(), nullptr, 0xFFFFFFFF);
 }
+
+void ost::RenderHardwareInterface::SetDepthStencilState(const DepthStencilState& state) const
+{
+    _immediateContext->OMSetDepthStencilState(state._resource.Get(), 0);
+}
+
+// ------------------------------------------------------------
 
 void RenderHardwareInterface::SetSampler(const TextureSampler& sampler, Uint32 slot) const
 {
@@ -605,13 +666,17 @@ void RenderHardwareInterface::SetViewport(const Vector2f& pos, const Vector2f& s
     _immediateContext->RSSetViewports(1, &vp);
 }
 
-void RenderHardwareInterface::SetBuffersForIndexed(const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer) const
+void ost::RenderHardwareInterface::SetVertexBuffer(const Buffer& buffer, SizeType vertexSize) const
 {
     UINT strides[] = {static_cast<UINT>(vertexSize)};
     UINT offsets[] = {0};
 
-    _immediateContext->IASetVertexBuffers(0, 1, vertexBuffer._buffer.GetAddressOf(), strides, offsets);
-    _immediateContext->IASetIndexBuffer(indexBuffer._buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+    _immediateContext->IASetVertexBuffers(0, 1, buffer._buffer.GetAddressOf(), strides, offsets);
+}
+
+void ost::RenderHardwareInterface::SetIndexBuffer(const Buffer& buffer) const
+{
+    _immediateContext->IASetIndexBuffer(buffer._buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 }
 
 void RenderHardwareInterface::Draw(SizeType indexCount, SizeType indexOffset, SizeType vertexOffset) const

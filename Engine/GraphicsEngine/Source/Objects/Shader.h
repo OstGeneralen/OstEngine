@@ -21,6 +21,8 @@ namespace ost
 
         void SetDebugName(const std::string& name) const;
 
+        operator bool() const;
+
         // BEGIN IShader
         BufferView GetBytecode() const override;
         EPipelineStage GetPipelineStage() const override;

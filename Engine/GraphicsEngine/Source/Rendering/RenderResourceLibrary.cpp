@@ -38,7 +38,7 @@ ost::RenderResourceLibrary::~RenderResourceLibrary()
 void ost::RenderResourceLibrary::InitializeResources(const RenderHardwareInterface& rhi)
 {
     InitializeBlitResources(rhi);
-    InitializeBlendStates(rhi);
+    InitializeStateObjects(rhi);
 }
 
 // ------------------------------------------------------------
@@ -60,18 +60,28 @@ const Shader& ost::RenderResourceLibrary::GetBlitPixelShader() const
 
 // ------------------------------------------------------------
 
-const ComPtr<RHIBlendState>& ost::RenderResourceLibrary::GetBlendState(EBlendState blendMode) const
+const BlendState& ost::RenderResourceLibrary::GetBlendState(EBlendMode blendMode) const
 {
     return _blendStates[static_cast<Uint32>(blendMode)];
 }
 
+const DepthStencilState& ost::RenderResourceLibrary::GetDepthStencilState(EDepthMode depthMode) const
+{
+    return _dsStates[static_cast<Uint32>(depthMode)];
+}
+
 // ------------------------------------------------------------
 
-void ost::RenderResourceLibrary::InitializeBlendStates(const RenderHardwareInterface& rhi)
+void ost::RenderResourceLibrary::InitializeStateObjects(const RenderHardwareInterface& rhi)
 {
-    _blendStates[static_cast<Uint32>(EBlendState::Opaque)] = rhi.CreateBlendState(EBlendState::Opaque);
-    _blendStates[static_cast<Uint32>(EBlendState::AlphaBlend)] = rhi.CreateBlendState(EBlendState::AlphaBlend);
-    _blendStates[static_cast<Uint32>(EBlendState::Additive)] = rhi.CreateBlendState(EBlendState::Additive);
+    rhi.CreateBlendState(EBlendMode::Opaque, _blendStates[static_cast<Uint32>(EBlendMode::Opaque)]);
+    rhi.CreateBlendState(EBlendMode::AlphaBlend, _blendStates[static_cast<Uint32>(EBlendMode::AlphaBlend)]);
+    rhi.CreateBlendState(EBlendMode::Additive, _blendStates[static_cast<Uint32>(EBlendMode::Additive)]);
+
+    rhi.CreateDepthStencilState(EDepthMode::Disabled, _dsStates[static_cast<Uint32>(EDepthMode::Disabled)]);
+    rhi.CreateDepthStencilState(EDepthMode::Less, _dsStates[static_cast<Uint32>(EDepthMode::Less)]);
+    rhi.CreateDepthStencilState(EDepthMode::LessEqual, _dsStates[static_cast<Uint32>(EDepthMode::LessEqual)]);
+    rhi.CreateDepthStencilState(EDepthMode::Equal, _dsStates[static_cast<Uint32>(EDepthMode::Equal)]);
 }
 
 void ost::RenderResourceLibrary::InitializeBlitResources(const RenderHardwareInterface& rhi)

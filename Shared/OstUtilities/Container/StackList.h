@@ -68,6 +68,23 @@ namespace ost
 
             o.Clear();
         }
+
+        constexpr StackList(std::initializer_list<T> initList)
+            : _storage{}
+            , _size{initList.size()}
+        {
+            if constexpr (std::is_trivially_copyable_v<T>)
+            {
+                MemCopy(_storage, initList.begin(), sizeof(T) * _size);
+            }
+            else
+            {
+                for (auto elemPtr : initList)
+                {
+                    Emplace(std::move(*elemPtr));
+                }
+            }
+        }
         ~StackList()
         {
             Clear();

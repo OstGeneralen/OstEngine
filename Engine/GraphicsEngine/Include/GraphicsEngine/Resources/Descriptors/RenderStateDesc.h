@@ -15,7 +15,7 @@ namespace ost
         HShader vertexShader;
         HShader pixelShader;
 
-        EBlendState blendMode;
+        EBlendMode blendMode;
         EPrimitiveTopology topology;
     };
 } // namespace ost

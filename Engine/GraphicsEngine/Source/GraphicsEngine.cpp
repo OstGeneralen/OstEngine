@@ -83,14 +83,20 @@ void GraphicsEngine::Shutdown()
 
 void ost::GraphicsEngine::SetRenderSize(const Vector2u& size)
 {
-    
-    _activeRenderer->Resize(size, BuildRendererContext());
+    if (size != _renderSize)
+    {
+        _activeRenderer->Resize(size, BuildRendererContext());
+        _renderSize = size;
+    }
 }
 
 void ost::GraphicsEngine::SetOutputSize(const Vector2u& size)
 {
-    _rhi.ResizeBackbuffer(size, _backbuffer);
-    _outputSize = size.VectorCast<Float32>();
+    if (size != _outputSize)
+    {
+        _rhi.ResizeBackbuffer(size, _backbuffer);
+        _outputSize = size;
+    }
 }
 
 // ------------------------------------------------------------

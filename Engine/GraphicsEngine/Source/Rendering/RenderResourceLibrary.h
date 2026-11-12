@@ -3,6 +3,7 @@
 #include "GraphicsEngine/Rendering/Vertex.h"
 #include "Objects/Buffer.h"
 #include "Objects/Shader.h"
+#include "Objects/StateObjects.h"
 
 // ------------------------------------------------------------
 
@@ -26,21 +27,23 @@ namespace ost
         RenderResourceLibrary();
         ~RenderResourceLibrary();
 
-        void InitializeResources( const RenderHardwareInterface& rhi );
+        void InitializeResources(const RenderHardwareInterface& rhi);
 
         const RenderResourceMesh& GetBlitMesh() const;
         const Shader& GetBlitVertexShader() const;
         const Shader& GetBlitPixelShader() const;
 
-        const ComPtr<RHIBlendState>& GetBlendState(EBlendState blendMode) const;
+        const BlendState& GetBlendState(EBlendMode blendMode) const;
+        const DepthStencilState& GetDepthStencilState(EDepthMode depthMode) const;
 
     private:
-        void InitializeBlendStates(const RenderHardwareInterface& rhi);
+        void InitializeStateObjects(const RenderHardwareInterface& rhi);
         void InitializeBlitResources(const RenderHardwareInterface& rhi);
 
         static RenderResourceLibrary* pInstance;
 
-        ComPtr<RHIBlendState> _blendStates[static_cast<Uint32>(EBlendState::COUNT)];
+        BlendState _blendStates[static_cast<Uint32>(EBlendMode::COUNT)];
+        DepthStencilState _dsStates[static_cast<Uint32>(EDepthMode::COUNT)];
 
         RenderResourceMesh _blitMesh;
         Shader _blitVertexShader;

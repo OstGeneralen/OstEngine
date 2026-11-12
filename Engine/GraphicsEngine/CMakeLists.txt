@@ -10,8 +10,6 @@ add_library(${PROJECT_NAME} STATIC
     Source/RHI/RHIInternal.h
     Source/Objects/Buffer.h
     Source/Objects/Buffer.cpp
-    Source/Objects/PipelineStateObject.h
-    Source/Objects/PipelineStateObject.cpp
     Source/GraphicsEngine.cpp
     Source/GraphicsEngine.h
     Source/Rendering/RenderPipelineConstants.h
@@ -29,7 +27,6 @@ add_library(${PROJECT_NAME} STATIC
     Source/Resources/Descriptors/PipelineStateDesc.cpp
     Source/Resources/Descriptors/ShaderDesc.cpp
     Include/GraphicsEngine/Resources/Descriptors/BufferDesc.h
-    Source/Resources/PSOCache.cpp
     Source/Resources/ShaderCompiler.cpp
     Include/GraphicsEngine/Rendering/IRenderScene.h
     Source/Rendering/RenderScene.h
@@ -38,6 +35,11 @@ add_library(${PROJECT_NAME} STATIC
     Source/Rendering/SceneRenderer.cpp
     Source/Rendering/RenderResourceLibrary.h
     Source/Rendering/RenderResourceLibrary.cpp
+    Source/Rendering/PipelineState.h
+    Source/Rendering/PipelineState.cpp
+    Source/Objects/StateObjects.h
+    Source/Objects/StateObjects.cpp
+    Include/GraphicsEngine/Rendering/ISceneRenderer.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

@@ -28,9 +28,6 @@ namespace ost
 
         virtual void Initialize(const Vector2u& size, RendererContext&& ctx) = 0;
 
-
-
-
         virtual void ExecuteCommands(const IRenderQueue& renderQueue, RendererContext&& ctx) = 0;
         virtual const ITexture* GetOutputTarget(ERenderOutputTexture target = ERenderOutputTexture::Output) const = 0;
     };

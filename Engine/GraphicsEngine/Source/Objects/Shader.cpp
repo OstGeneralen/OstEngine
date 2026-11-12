@@ -31,6 +31,20 @@ void ost::Shader::SetDebugName(const std::string& name) const
 
 // ------------------------------------------------------------
 
+ost::Shader::operator bool() const
+{
+    switch (_stage)
+    {
+    case EPipelineStage::VS:
+        return _vs;
+    case EPipelineStage::PS:
+        return _ps;
+    }
+    return false;
+}
+
+// ------------------------------------------------------------
+
 const BufferView& ost::Shader::GetBytecode() const
 {
     return _bytecode;

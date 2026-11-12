@@ -113,12 +113,25 @@ namespace ost
 
     // ------------------------------------------------------------
 
-    enum class EBlendState : Uint32
+    enum class EBlendMode : Uint32
     {
-        Opaque = 0, 
+        Opaque = 0,
         AlphaBlend,
         Additive,
         COUNT,
+        Unknown,
+    };
+
+    // ------------------------------------------------------------
+
+    enum class EDepthMode : Uint32
+    {
+        Disabled,
+        Less,
+        LessEqual,
+        Equal,
+        COUNT,
+        Unknown,
     };
 
     // ------------------------------------------------------------

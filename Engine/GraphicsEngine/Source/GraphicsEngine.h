@@ -54,8 +54,9 @@ namespace ost
     private:
         ServiceLocator& _serviceLocator;
         
-        Vector2f _outputSize;
-        
+        Vector2u _outputSize;
+        Vector2u _renderSize;
+
         Texture _backbuffer;
 
         Map<ESamplerSlot, TextureSampler> _samplers;

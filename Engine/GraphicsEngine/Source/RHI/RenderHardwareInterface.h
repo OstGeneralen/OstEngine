@@ -5,13 +5,14 @@
 
 // Render Objects & Resources
 #include "Objects/Buffer.h"
-#include "Objects/PipelineStateObject.h"
 #include "Objects/Shader.h"
+#include "Objects/StateObjects.h"
 #include "Objects/Texture.h"
 #include "Objects/TextureSampler.h"
 
 // Descriptors
 #include "GraphicsEngine/Resources/Descriptors/TextureDesc.h"
+#include "GraphicsEngine/Resources/VertexElement.h"
 
 // Common
 #include <Container/List.h>
@@ -46,8 +47,10 @@ namespace ost
         bool CreateBuffer(SizeType numBytes, Buffer& outBuffer, const void* pInitialData = nullptr) const;
         bool UpdateBuffer(const Buffer& targetBuffer, const void* pData, SizeType dataSize) const;
 
+        bool CreateBlendState(EBlendMode stateEnum, BlendState& outState) const;
+        bool CreateDepthStencilState(EDepthMode depthMode, DepthStencilState& outState) const;
+
         bool CreateShader(EPipelineStage stage, BufferView bytecode, Shader& outShader) const;
-        ComPtr<RHIBlendState> CreateBlendState(EBlendState stateEnum) const;
         ComPtr<RHIVertexLayout> CreateVertexLayout(const List<Uint8>& vsBytecode, const List<VertexElement>& vertexElement) const;
 
         bool CreateSampler(ESamplerAddressMode addressMode, ESamplerType type, TextureSampler& outSampler) const;
@@ -58,12 +61,12 @@ namespace ost
 
         void SetBuffer(const Buffer& texture, Uint32 slot, EPipelineStage stageFlag) const;
 
-        void SetBlendState( const ComPtr<RHIBlendState>& blendState ) const;
-
-        void SetPSO(const PipelineStateObject& pso) const;
+        void SetPrimitiveTopology(EPrimitiveTopology topology) const;
+        void SetBlendState(const BlendState& blendState) const;
+        void SetDepthStencilState(const DepthStencilState& state) const;
 
         void SetSampler(const TextureSampler& sampler, Uint32 slot) const;
-        void SetShader( const Shader& shader, EPipelineStage stage ) const;
+        void SetShader(const Shader& shader, EPipelineStage stage) const;
 
         void SetRenderTarget(const Texture& renderTarget, const Texture* pDepthTarget = nullptr) const;
         void SetRenderTargets(const Texture* pRenderTargets, SizeType numTargets, const Texture* pDepthTarget = nullptr) const;
@@ -71,7 +74,8 @@ namespace ost
 
         void SetViewport(const Vector2f& pos, const Vector2f& size) const;
 
-        void SetBuffersForIndexed(const Buffer& vertexBuffer, SizeType vertexSize, const Buffer& indexBuffer) const;
+        void SetVertexBuffer(const Buffer& buffer, SizeType vertexSize) const;
+        void SetIndexBuffer(const Buffer& buffer) const;
         void Draw(SizeType indexCount, SizeType indexOffset, SizeType vertexOffset) const;
 
         void Present() const;

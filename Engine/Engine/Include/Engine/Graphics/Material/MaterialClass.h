@@ -73,7 +73,7 @@ namespace ost
 
         HShader _vertexShaderHandle;
         HShader _pixelShaderHandle;
-        EBlendState _blendMode;
+        EBlendMode _blendMode;
         EPrimitiveTopology _renderTopology;
     };
 
