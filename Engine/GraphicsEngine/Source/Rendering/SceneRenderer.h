@@ -4,13 +4,13 @@
 #include "Objects/Buffer.h"
 #include "Objects/Texture.h"
 #include "Rendering/PipelineState.h"
-#include "Rendering/RenderScene.h"
+#include "Rendering/GraphicsScene.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    class RenderScene;
+    class GraphicsScene;
     class GraphicsResourceManager;
     class RenderHardwareInterface;
 
@@ -22,12 +22,11 @@ namespace ost
         void InitializeResources(const RenderHardwareInterface& rhi, const Vector2u& renderDimensions);
         void Resize(const RenderHardwareInterface& rhi, const Vector2u& renderDimensions);
 
-        void ClearRenderScene();
-        void ExecuteRenderScene(const RenderHardwareInterface& rhi);
+        void ClearGraphicsScene();
+        void ExecuteGraphicsScene(const GraphicsScene& scene, const RenderHardwareInterface& rhi);
         void BlitOutputToTarget(const Texture& target, const RenderHardwareInterface& rhi);
 
         // BEGIN ISceneRenderer
-        IRenderScene& GetRenderScene() override;
         const ITexture* GetTargetTexture(ESceneRendererTargetTexture t) const override;
         // END ISceneRenderer
 
@@ -35,10 +34,8 @@ namespace ost
         void InitializeBuffers(const RenderHardwareInterface& rhi);
         void InitializeTextures(const RenderHardwareInterface& rhi, const Vector2u& renderDimensions);
 
-        void ExecuteGeometryPass(const RenderScene& scene, const RenderHardwareInterface& rhi);
-        void ExecuteLightPass(const RenderScene& scene, const RenderHardwareInterface& rhi);
-
-        RenderScene _renderScene;
+        void ExecuteGeometryPass(const GraphicsScene& scene, const RenderHardwareInterface& rhi);
+        void ExecuteLightPass(const GraphicsScene& scene, const RenderHardwareInterface& rhi);
 
         Buffer _frameBuffer;
         Buffer _lightBuffer;

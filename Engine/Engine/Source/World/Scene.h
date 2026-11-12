@@ -36,7 +36,7 @@ namespace ost
         List<UniquePtr<Actor>>& GetActors() override;
         const List<UniquePtr<Actor>>& GetActors() const override;
 
-        void OutputToRenderScene(IRenderScene& renderScene) const override;
+        void OutputToGraphicsScene(IGraphicsScene& GraphicsScene) const override;
         // END IScene
 
         void Tick(ServiceLocator& serviceLocator);

@@ -28,9 +28,9 @@ add_library(${PROJECT_NAME} STATIC
     Source/Resources/Descriptors/ShaderDesc.cpp
     Include/GraphicsEngine/Resources/Descriptors/BufferDesc.h
     Source/Resources/ShaderCompiler.cpp
-    Include/GraphicsEngine/Rendering/IRenderScene.h
-    Source/Rendering/RenderScene.h
-    Source/Rendering/RenderScene.cpp
+    Include/GraphicsEngine/Rendering/IGraphicsScene.h
+    Source/Rendering/GraphicsScene.h
+    Source/Rendering/GraphicsScene.cpp
     Source/Rendering/SceneRenderer.h
     Source/Rendering/SceneRenderer.cpp
     Source/Rendering/RenderResourceLibrary.h

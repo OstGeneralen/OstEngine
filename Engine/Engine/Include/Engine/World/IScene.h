@@ -8,7 +8,7 @@
 namespace ost
 {
     class Actor;
-    class IRenderScene;
+    class IGraphicsScene;
 
     class IScene
     {
@@ -19,7 +19,7 @@ namespace ost
         virtual List<UniquePtr<Actor>>& GetActors() = 0;
         virtual const List<UniquePtr<Actor>>& GetActors() const = 0;
 
-        virtual void OutputToRenderScene(IRenderScene& scene) const = 0;
+        virtual void OutputToGraphicsScene(IGraphicsScene& scene) const = 0;
     };
 } // namespace ost
 

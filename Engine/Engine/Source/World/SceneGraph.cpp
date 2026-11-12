@@ -3,7 +3,7 @@
 
 #include "Engine/World/Component.h"
 
-#include <GraphicsEngine/Rendering/IRenderScene.h>
+#include <GraphicsEngine/Rendering/IGraphicsScene.h>
 #include <GraphicsEngine/Rendering/IRenderer.h>
 
 // ------------------------------------------------------------
@@ -77,11 +77,11 @@ void SceneGraph::ReconcileTransforms()
 
 // ------------------------------------------------------------
 
-void ost::SceneGraph::PopulateRenderScene(IRenderScene& renderScene) const
+void ost::SceneGraph::PopulateGraphicsScene(IGraphicsScene& GraphicsScene) const
 {
     for (const auto& meshProxy : _meshProxies)
     {
-        RenderSceneObject rso;
+        GraphicsSceneObject rso;
         rso.indexBuffer = meshProxy.indexBuffer;
         rso.vertexBuffer = meshProxy.vertexBuffer;
         rso.vertexShader = meshProxy.vertexShader;
@@ -90,33 +90,33 @@ void ost::SceneGraph::PopulateRenderScene(IRenderScene& renderScene) const
         rso.indexOffset = meshProxy.indexOffset;
         rso.vertexCount = meshProxy.vertexCount;
         rso.transform = meshProxy.transform;
-        renderScene.AddObject(rso);
+        GraphicsScene.AddObject(rso);
     }
 
     for (const auto& lightProxy : _lightProxies)
     {
-        RenderSceneLight rsl;
+        GraphicsSceneLight rsl;
         rsl.data = lightProxy.proxyData;
-        renderScene.AddLight(rsl);
+        GraphicsScene.AddLight(rsl);
     }
 
-    RenderSceneCamera rsc;
+    GraphicsSceneCamera rsc;
     rsc.transform = _viewProxy.transform;
     switch (_viewProxy.projectionType)
     {
     case ViewRenderProxy::EProjectionType::Perspective: {
-        rsc.projectionType = ERenderSceneCameraProjection::Persp;
+        rsc.projectionType = EGraphicsSceneCameraProjection::Persp;
         rsc.yFoV = _viewProxy.lValue;
         break;
     }
     case ViewRenderProxy::EProjectionType::Orthographic: {
-        rsc.projectionType = ERenderSceneCameraProjection::Ortho;
+        rsc.projectionType = EGraphicsSceneCameraProjection::Ortho;
         rsc.sizeFactors = {_viewProxy.lValue, _viewProxy.rValue};
         break;
     }
     }
 
-    renderScene.SetCamera(rsc);
+    GraphicsScene.SetCamera(rsc);
 }
 
 // ------------------------------------------------------------

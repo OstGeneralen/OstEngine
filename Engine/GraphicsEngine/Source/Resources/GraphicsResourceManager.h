@@ -5,7 +5,6 @@
 
 // Actual Resource Includes
 #include "Objects/Buffer.h"
-#include "Objects/PipelineStateObject.h"
 #include "Objects/Shader.h"
 #include "Objects/Texture.h"
 

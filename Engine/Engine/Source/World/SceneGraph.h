@@ -34,7 +34,7 @@ namespace ost
         void MarkTransformDirty(RenderComponent& renderComponent);
         void ReconcileTransforms();
 
-        void PopulateRenderScene(IRenderScene& renderScene) const;
+        void PopulateGraphicsScene(IGraphicsScene& GraphicsScene) const;
 
     private:
         ViewRenderProxy _viewProxy;

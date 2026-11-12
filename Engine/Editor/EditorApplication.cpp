@@ -131,7 +131,7 @@ void ost::EditorApplication::Run()
 
         auto& renderQueue = _graphicsEngine->GetRenderQueue();
         auto& renderer = _graphicsEngine->GetRenderer();
-        sceneManager.GetActiveScene()->RenderSceneToQueue(renderQueue, renderer);
+        sceneManager.GetActiveScene()->GraphicsSceneToQueue(renderQueue, renderer);
         _sceneViewCamera.InjectToRenderQueue(renderQueue, renderer);
 
         // Execute the command queue onto the output surface of the active renderer

@@ -10,15 +10,15 @@
 
 namespace ost
 {
-    enum class ERenderSceneCameraProjection
+    enum class EGraphicsSceneCameraProjection
     {
         Ortho,
         Persp,
     };
 
-    struct RenderSceneCamera
+    struct GraphicsSceneCamera
     {
-        ERenderSceneCameraProjection projectionType;
+        EGraphicsSceneCameraProjection projectionType;
         Vector2f sizeFactors;
         Float32 yFoV;
         Float32 nearDistance = 0.001f;
@@ -26,7 +26,7 @@ namespace ost
         Matrix4x4 transform;
     };
 
-    struct RenderSceneObject
+    struct GraphicsSceneObject
     {
         HVertexBuffer vertexBuffer;
         HIndexBuffer indexBuffer;
@@ -41,17 +41,17 @@ namespace ost
         Matrix4x4 transform;
     };
 
-    struct RenderSceneLight
+    struct GraphicsSceneLight
     {
         LightData data;
     };
 
-    class IRenderScene
+    class IGraphicsScene
     {
     public:
-        virtual void SetCamera(const RenderSceneCamera& camera) = 0;
-        virtual void AddObject(const RenderSceneObject& object) = 0;
-        virtual void AddLight(const RenderSceneLight& light) = 0;
+        virtual void SetCamera(const GraphicsSceneCamera& camera) = 0;
+        virtual void AddObject(const GraphicsSceneObject& object) = 0;
+        virtual void AddLight(const GraphicsSceneLight& light) = 0;
     };
 } // namespace ost
 

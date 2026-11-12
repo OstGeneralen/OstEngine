@@ -72,7 +72,7 @@ void ost::Application::Run()
 
         _window.Update();
         _coreEngine->Tick();
-        activeScene->RenderSceneToQueue(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
+        activeScene->GraphicsSceneToQueue(_graphicsEngine->GetRenderQueue(), _graphicsEngine->GetRenderer());
         _graphicsEngine->ExecuteAndClearCommandQueue();
         _graphicsEngine->ClearAndSetBackbuffer();
         _graphicsEngine->DrawRendererOutput();

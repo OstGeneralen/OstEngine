@@ -45,7 +45,7 @@ GraphicsEngine::GraphicsEngine(ServiceLocator& serviceLocator, void* windowHandl
     , _rhi{}
     , _resourceManager{}
     , _globalResourceLibrary{}
-    , _renderScene{}
+    , _GraphicsScene{}
     , _sceneRenderer{}
 {
     // Create the RHI from the provided window information (force fullscreen false for now)
@@ -85,7 +85,7 @@ void ost::GraphicsEngine::SetRenderSize(const Vector2u& size)
 {
     if (size != _renderSize)
     {
-        _activeRenderer->Resize(size, BuildRendererContext());
+        _sceneRenderer.Resize(_rhi, size);
         _renderSize = size;
     }
 }
@@ -101,15 +101,17 @@ void ost::GraphicsEngine::SetOutputSize(const Vector2u& size)
 
 // ------------------------------------------------------------
 
-IRenderer& GraphicsEngine::GetRenderer()
+IGraphicsScene& ost::GraphicsEngine::BeginGraphicsScene()
 {
-    return *_activeRenderer;
+    _graphicsScene.Clear();
+    return _graphicsScene;
 }
 
-IRenderQueue& GraphicsEngine::GetRenderQueue()
+void ost::GraphicsEngine::LockGraphicsScene()
 {
-    return _renderQueue;
+    _graphicsScene.PrepareData(_resourceManager, _renderSize.VectorCast<Float32>());
 }
+
 
 void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
 {
@@ -152,47 +154,6 @@ void ost::GraphicsEngine::Present()
 {
     _rhi.Present();
 }
-
-// ------------------------------------------------------------
-
-void ost::GraphicsEngine::InitializeGlobalResources()
-{
-    TextureSampler buildSampler;
-
-    _rhi.CreateSampler(ESamplerAddressMode::Wrap, ESamplerType::Trilinear, buildSampler);
-    _samplers.Insert(ESamplerSlot::TrilinearWrap, buildSampler);
-
-    _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Trilinear, buildSampler);
-    _samplers.Insert(ESamplerSlot::TrilinearClamp, buildSampler);
-
-    _rhi.CreateSampler(ESamplerAddressMode::Wrap, ESamplerType::Point, buildSampler);
-    _samplers.Insert(ESamplerSlot::PointWrap, buildSampler);
-
-    _rhi.CreateSampler(ESamplerAddressMode::Clamp, ESamplerType::Point, buildSampler);
-    _samplers.Insert(ESamplerSlot::PointClamp, buildSampler);
-
-    _rhi.CreateBackbuffer(_backbuffer);
-
-    _rhi.CreateBuffer(sizeof(ObjectBufferStructure), _objectBuffer);
-    _objectBuffer.SetDebugName("Buffer_Object");
-
-    _rhi.CreateBuffer(sizeof(FrameBufferStructure), _frameBuffer);
-    _frameBuffer.SetDebugName("Buffer_Frame");
-}
-
-// ------------------------------------------------------------
-
-void ost::GraphicsEngine::UpdateFrameBuffer()
-{
-    FrameBufferStructure frameBufferData;
-    frameBufferData.viewProjection = _renderQueue.GetView().viewProjection;
-    frameBufferData.inverseViewProjection = _renderQueue.GetView().viewProjection.GetInverse();
-    frameBufferData.inverseView = _renderQueue.GetView().viewInverse;
-    frameBufferData.viewLocation = _renderQueue.GetView().viewInverse.ExtractTranslation();
-    _rhi.UpdateBuffer(_frameBuffer, &frameBufferData, sizeof(FrameBufferStructure));
-}
-
-// ------------------------------------------------------------
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

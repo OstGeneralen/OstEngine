@@ -104,9 +104,9 @@ const List<UniquePtr<Actor>>& ost::Scene::GetActors() const
 
 // ------------------------------------------------------------
 
-void ost::Scene::OutputToRenderScene(IRenderScene& renderScene) const
+void ost::Scene::OutputToGraphicsScene(IGraphicsScene& GraphicsScene) const
 {
-    _sceneGraph.PopulateRenderScene(renderScene);
+    _sceneGraph.PopulateGraphicsScene(GraphicsScene);
 }
 
 // ------------------------------------------------------------

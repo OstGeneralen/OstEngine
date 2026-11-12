@@ -5,7 +5,7 @@
 #include "GraphicsEngine/Resources/ShaderCompiler.h"
 #include "Rendering/Buffers.h"
 #include "Rendering/RenderResourceLibrary.h"
-#include "Rendering/RenderScene.h"
+#include "Rendering/GraphicsScene.h"
 
 // RHI
 #include "RHI/RenderHardwareInterface.h"
@@ -45,22 +45,22 @@ void ost::SceneRenderer::Resize(const RenderHardwareInterface& rhi, const Vector
 
 // ------------------------------------------------------------
 
-void ost::SceneRenderer::ExecuteRenderScene(const RenderHardwareInterface& rhi)
+void ost::SceneRenderer::ExecuteGraphicsScene(const GraphicsScene& scene, const RenderHardwareInterface& rhi)
 {
     rhi.SetViewport({0, 0}, _outputTexture.GetSize().VectorCast<Float32>());
 
-    rhi.UpdateBuffer(_frameBuffer, &_renderScene.GetFrameBufferData(), sizeof(FrameBufferStructure));
+    rhi.UpdateBuffer(_frameBuffer, &scene.GetFrameBufferData(), sizeof(FrameBufferStructure));
     rhi.SetBuffer(_frameBuffer, 10, EPipelineStage::All);
 
     // 1. Geometry Pass
-    ExecuteGeometryPass(_renderScene, rhi);
+    ExecuteGeometryPass(scene, rhi);
 
     // 2. Intermediate Cleanup
     rhi.UnsetRenderTargets();
     rhi.UnsetTextures();
 
     // 3. Lighting Pass
-    ExecuteLightPass(_renderScene, rhi);
+    ExecuteLightPass(scene, rhi);
 
     // 4. Post execution cleanup
     rhi.UnsetRenderTargets();
@@ -84,11 +84,6 @@ void ost::SceneRenderer::BlitOutputToTarget(const Texture& target, const RenderH
 
 // ------------------------------------------------------------
 
-IRenderScene& ost::SceneRenderer::GetRenderScene()
-{
-    return _renderScene;
-}
-
 const ITexture* ost::SceneRenderer::GetTargetTexture(ESceneRendererTargetTexture t) const
 {
     switch (t)
@@ -109,7 +104,7 @@ const ITexture* ost::SceneRenderer::GetTargetTexture(ESceneRendererTargetTexture
 
 // ------------------------------------------------------------
 
-void ost::SceneRenderer::ExecuteGeometryPass(const RenderScene& scene, const RenderHardwareInterface& rhi)
+void ost::SceneRenderer::ExecuteGeometryPass(const GraphicsScene& scene, const RenderHardwareInterface& rhi)
 {
     rhi.ClearRenderTarget(_gbufferAlbedo);
     rhi.ClearRenderTarget(_gbufferNormal, {0.5f, 0.5f, 1.0f, 1.0f});
@@ -151,7 +146,7 @@ void ost::SceneRenderer::ExecuteGeometryPass(const RenderScene& scene, const Ren
     }
 }
 
-void ost::SceneRenderer::ExecuteLightPass(const RenderScene& scene, const RenderHardwareInterface& rhi)
+void ost::SceneRenderer::ExecuteLightPass(const GraphicsScene& scene, const RenderHardwareInterface& rhi)
 {
     rhi.ClearRenderTarget(_outputTexture);
 

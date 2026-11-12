@@ -1,5 +1,5 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
-#include "RenderScene.h"
+#include "GraphicsScene.h"
 
 #include "Resources/GraphicsResourceManager.h"
 
@@ -11,7 +11,7 @@
 
 namespace sorting
 {
-    static bool RenderSceneObjectSort(const ost::RenderSceneObject& a, const ost::RenderSceneObject& b)
+    static bool GraphicsSceneObjectSort(const ost::GraphicsSceneObject& a, const ost::GraphicsSceneObject& b)
     {
         Uint64 aShaderArr[2] = {a.vertexShader.AsInteger(), a.pixelShader.AsInteger()};
         Uint64 bShaderArr[2] = {b.vertexShader.AsInteger(), b.pixelShader.AsInteger()};
@@ -38,28 +38,34 @@ using namespace ost;
 
 // ------------------------------------------------------------
 
-void ost::RenderScene::SetCamera(const RenderSceneCamera& camera)
+void ost::GraphicsScene::SetCamera(const GraphicsSceneCamera& camera)
 {
     _pendingCamera = camera;
 }
 
-void ost::RenderScene::AddObject(const RenderSceneObject& object)
+void ost::GraphicsScene::AddObject(const GraphicsSceneObject& object)
 {
     _pendingObjects.Add(object);
 }
 
-void ost::RenderScene::AddLight(const RenderSceneLight& light)
+void ost::GraphicsScene::AddLight(const GraphicsSceneLight& light)
 {
     _pendingLights.Add(light.data);
 }
 
 // ------------------------------------------------------------
 
-void ost::RenderScene::PrepareData(const GraphicsResourceManager& resources, const Vector2f& outputDimensions)
+void ost::GraphicsScene::Clear()
 {
+    _pendingCamera = {};
+    _pendingLights.Clear();
+    _pendingObjects.Clear();
+}
 
+void ost::GraphicsScene::PrepareData(const GraphicsResourceManager& resources, const Vector2f& outputDimensions)
+{
     // Sort objects by shader + buffer
-    std::sort(_pendingObjects.begin(), _pendingObjects.end(), &sorting::RenderSceneObjectSort);
+    std::sort(_pendingObjects.begin(), _pendingObjects.end(), &sorting::GraphicsSceneObjectSort);
 
     // Sort lights to be directional first
     std::sort(_pendingLights.begin(), _pendingLights.end(), &sorting::RenderLightSort);
@@ -76,11 +82,11 @@ void ost::RenderScene::PrepareData(const GraphicsResourceManager& resources, con
 
     switch (_pendingCamera.projectionType)
     {
-    case ERenderSceneCameraProjection::Ortho: {
+    case EGraphicsSceneCameraProjection::Ortho: {
         projection = Matrix4x4::CreateOrthographicsProjection(sx, sy, np, fp);
         break;
     }
-    case ERenderSceneCameraProjection::Persp: {
+    case EGraphicsSceneCameraProjection::Persp: {
         projection = Matrix4x4::CreatePerspectiveProjection(_pendingCamera.yFoV, sx / sy, np, fp);
         break;
     }
@@ -132,17 +138,17 @@ void ost::RenderScene::PrepareData(const GraphicsResourceManager& resources, con
 
 // ------------------------------------------------------------
 
-const FrameBufferStructure& ost::RenderScene::GetFrameBufferData() const
+const FrameBufferStructure& ost::GraphicsScene::GetFrameBufferData() const
 {
     return _frameBufferData;
 }
 
-const List<LightsBufferStructure>& ost::RenderScene::GetLightBuffersData() const
+const List<LightsBufferStructure>& ost::GraphicsScene::GetLightBuffersData() const
 {
     return _lightBuffersData;
 }
 
-const List<RenderCommand>& ost::RenderScene::GetRenderCommands() const
+const List<RenderCommand>& ost::GraphicsScene::GetRenderCommands() const
 {
     return _commands;
 }

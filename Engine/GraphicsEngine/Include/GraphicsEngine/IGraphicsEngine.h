@@ -2,6 +2,8 @@
 #pragma once
 #include <Memory/UniquePtr.h>
 #include <Services/ServiceLocator.h>
+#include "GraphicsEngine/Rendering/ISceneRenderer.h"
+#include "GraphicsEngine/Rendering/IGraphicsScene.h"
 
 // ------------------------------------------------------------
 
@@ -30,12 +32,13 @@ namespace ost
         virtual void SetRenderSize(const Vector2u& renderSize) = 0;
         virtual void SetOutputSize(const Vector2u& outputSize) = 0;
 
-        virtual IRenderer& GetRenderer() = 0;
-        virtual IRenderQueue& GetRenderQueue() = 0;
+        virtual IGraphicsScene& BeginGraphicsScene() = 0;
+        virtual void LockGraphicsScene() = 0;
 
+        
         virtual void ExecuteAndClearCommandQueue() = 0;
         virtual void ClearAndSetBackbuffer() = 0;
-        virtual void DrawRendererOutput(ERenderOutputTexture presentOutputTexture = ERenderOutputTexture::Output) = 0;
+        
         virtual void Present() = 0;
     };
 
