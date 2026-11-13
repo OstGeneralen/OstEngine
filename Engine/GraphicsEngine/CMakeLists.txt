@@ -40,6 +40,18 @@ add_library(${PROJECT_NAME} STATIC
     Source/Objects/StateObjects.h
     Source/Objects/StateObjects.cpp
     Include/GraphicsEngine/Rendering/ISceneRenderer.h
+    Include/GraphicsEngine/Resources/ShaderVariant.h
+    Source/Resources/PipelineStateCache.h
+    Source/Objects/TextureBundle.h
+    Source/Objects/TextureBundle.cpp
+    Include/GraphicsEngine/Resources/Interfaces/IVertexShader.h
+    Include/GraphicsEngine/Resources/Interfaces/IPixelShader.h
+    Source/Objects/VertexShader.h
+    Source/Objects/PixelShader.h
+    Include/GraphicsEngine/Resources/Interfaces/IGraphicsResource.h
+    Include/GraphicsEngine/Resources/Interfaces/IUniformBuffer.h
+    Include/GraphicsEngine/Resources/Interfaces/IVertexBuffer.h
+    Include/GraphicsEngine/Resources/Interfaces/IIndexBuffer.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

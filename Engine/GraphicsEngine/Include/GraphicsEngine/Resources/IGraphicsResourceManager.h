@@ -7,6 +7,7 @@
 #include "GraphicsEngine/Resources/Descriptors/BufferDesc.h"
 #include "GraphicsEngine/Resources/Descriptors/ShaderDesc.h"
 #include "GraphicsEngine/Resources/Descriptors/TextureDesc.h"
+#include "GraphicsEngine/Resources/ShaderVariant.h"
 
 #include <Container/List.h>
 
@@ -23,19 +24,26 @@ namespace ost
         virtual ~IGraphicsResourceManager() = default;
 
         virtual HTexture CreateTexture(const TextureDesc& desc) = 0;
+        virtual HTextureBundle CreateTextureTable(const TextureBundleDesc& desc) = 0;
+
         virtual HIndexBuffer CreateIndexBuffer(const IndexBufferDesc& desc) = 0;
         virtual HVertexBuffer CreateVertexBuffer(const VertexBufferDesc& desc) = 0;
         virtual HUniformBuffer CreateUniformBuffer(const UniformBufferDesc& desc) = 0;
+
         virtual HShader CreateShader(const ShaderDesc& desc) = 0;
+        virtual HShaderVariant CreateShaderVariant(const ShaderVariant& variant) = 0;
 
         virtual const ITexture& GetTexture(HTexture h) const = 0;
         virtual const IShader& GetShader(HShader h) const = 0;
+        
 
         virtual void Release(HTexture handle) = 0;
+        virtual void Release(HTextureBundle handle) = 0;
         virtual void Release(HShader handle) = 0;
         virtual void Release(HVertexBuffer handle) = 0;
         virtual void Release(HIndexBuffer handle) = 0;
         virtual void Release(HUniformBuffer handle) = 0;
+        virtual void Release(HShaderVariant handle) = 0;
     };
 } // namespace ost
 

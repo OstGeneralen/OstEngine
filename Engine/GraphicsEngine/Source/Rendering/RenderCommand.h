@@ -1,6 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/Resources/ObjectHandles.h"
+#include "GraphicsEngine/GraphicsTypes.h"
 
 #include <OstTypes.h>
 
@@ -12,14 +12,14 @@ namespace ost
 {
     struct Buffer;
     struct Shader;
+    struct Texture;
 
     struct RenderCommand
     {
+        Uint64 materialIndex;
+
         const Buffer* pVertexBuffer;
         const Buffer* pIndexBuffer;
-
-        const Shader* pVertexShader;
-        const Shader* pPixelShader;
 
         SizeType indexCount;
         SizeType indexOffset;

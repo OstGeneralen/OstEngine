@@ -12,7 +12,7 @@
 
 // Descriptors
 #include "GraphicsEngine/Resources/Descriptors/TextureDesc.h"
-#include "GraphicsEngine/Resources/VertexElement.h"
+#include "GraphicsEngine/Resources/Descriptors/VertexElement.h"
 
 // Common
 #include <Container/List.h>

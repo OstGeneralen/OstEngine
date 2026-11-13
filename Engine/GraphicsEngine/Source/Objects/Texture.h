@@ -1,6 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/Resources/ITexture.h"
+#include "GraphicsEngine/Resources/Interfaces/ITexture.h"
 #include "RHI/RHIMinimal.h"
 
 #include <OstTypes.h>
@@ -16,6 +16,7 @@ namespace ost
     struct Texture : public ITexture
     {
         friend class RenderHardwareInterface;
+        friend class TextureBundle;
 
         Texture();
         Texture(const Texture&);

@@ -1,7 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/Rendering/IGraphicsScene.h"
-#include "GraphicsEngine/Resources/ITexture.h"
+#include "GraphicsEngine/Resources/Interfaces/IShader.h"
 
 // ------------------------------------------------------------
 

@@ -26,13 +26,27 @@ namespace ost
         Matrix4x4 transform;
     };
 
-    struct GraphicsSceneObject
+    struct GraphicsSceneMaterial
     {
-        HVertexBuffer vertexBuffer;
-        HIndexBuffer indexBuffer;
+        Uint64 uid;
+
+        EBlendMode blendMode;
 
         HShader vertexShader;
         HShader pixelShader;
+
+        HUniformBuffer uniformBuffer;
+
+        HTexture textures[8];
+        SizeType numTextures;
+    };
+
+    struct GraphicsSceneObject
+    {
+        Uint64 materialID;
+
+        HVertexBuffer vertexBuffer;
+        HIndexBuffer indexBuffer;
 
         Uint64 indexOffset;
         Uint64 indexCount;
@@ -50,6 +64,7 @@ namespace ost
     {
     public:
         virtual void SetCamera(const GraphicsSceneCamera& camera) = 0;
+        virtual void AddMaterial(const GraphicsSceneMaterial& material) = 0;
         virtual void AddObject(const GraphicsSceneObject& object) = 0;
         virtual void AddLight(const GraphicsSceneLight& light) = 0;
     };

@@ -5,7 +5,7 @@
 #ifdef SHADER_VARIANT_MATERIAL
 #include "MATERIAL" // This will be swapped for the actual material shader file :)
 #else
-void MaterialMain(inout Material material) {
+void MaterialMain(inout SurfaceProperties properties, inout SurfaceMaterial material) {
     // No-op (not a material shader)
 }
 #endif // SHADER_VARIANT_MATERIAL

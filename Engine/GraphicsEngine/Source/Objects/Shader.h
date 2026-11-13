@@ -1,6 +1,6 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/Resources/IShader.h"
+#include "GraphicsEngine/Resources/Interfaces/IShader.h"
 #include "RHI/RHIMinimal.h"
 
 // ------------------------------------------------------------

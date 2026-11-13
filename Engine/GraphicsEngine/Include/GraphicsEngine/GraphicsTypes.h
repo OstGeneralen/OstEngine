@@ -152,19 +152,32 @@ namespace ost
         Deferred,
     };
 
+    // ------------------------------------------------------------
+
+    enum ETextureType : Uint8
+    {
+        None = 0,
+        Resource = 1 << 0,
+        RenderTarget = 1 << 1,
+        DepthStencilTarget = 1 << 2,
+    };
+
 } // namespace ost
 
 // ------------------------------------------------------------
 
-static inline ost::EPipelineStage operator|(ost::EPipelineStage a, ost::EPipelineStage b)
-{
-    return static_cast<ost::EPipelineStage>(static_cast<Uint8>(a) | static_cast<Uint8>(b));
-}
+#define GFX_TYPE_FLAG_ENUM(EnumType, IntType)                                                                                                                            \
+    static inline EnumType operator|(EnumType a, EnumType b)                                                                                                             \
+    {                                                                                                                                                                    \
+        return static_cast<EnumType>(static_cast<IntType>(a) | static_cast<IntType>(b));                                                                                 \
+    }                                                                                                                                                                    \
+    static inline bool operator&(EnumType a, EnumType b)                                                                                                                 \
+    {                                                                                                                                                                    \
+        return (static_cast<IntType>(a) & static_cast<IntType>(b));                                                                                                      \
+    }
 
-static inline bool operator&(ost::EPipelineStage a, ost::EPipelineStage b)
-{
-    return (static_cast<Uint8>(a) & static_cast<Uint8>(b));
-}
+GFX_TYPE_FLAG_ENUM(EPipelineStage, Uint8);
+GFX_TYPE_FLAG_ENUM(ETextureType, Uint8);
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------

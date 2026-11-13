@@ -42,15 +42,6 @@ float3 ExtractAndUnpackNormal(float2 sampledNormal) {
     return unpacked;
 }
 
-float3 CalculatePixelNormal(float2 sampledNormal, float3 surfaceNormal, float3 surfaceTangent, float3 surfaceBitangent) {
-    float3 T = normalize(surfaceTangent);
-    float3 B = normalize(surfaceBitangent);
-    float3 N = normalize(surfaceNormal);
-    float3x3 TBN = float3x3(T,B,N);
-
-    return mul(ExtractAndUnpackNormal(sampledNormal), TBN);
-}
-
 float3 GammaCorrectOutput(float3 rgb, float gamma) {
     const float f = 1.0f / gamma;
     return float3(pow(rgb.r, f), pow(rgb.g, f), pow(rgb.b, f));

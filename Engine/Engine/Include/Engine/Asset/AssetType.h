@@ -2,8 +2,8 @@
 #pragma once
 #include "GraphicsEngine/Materials/IMaterial.h"
 #include "GraphicsEngine/Materials/IMaterialInstance.h"
-#include "GraphicsEngine/Resources/IShader.h"
-#include "GraphicsEngine/Resources/ITexture.h"
+#include "GraphicsEngine/Resources/Interfaces/IShader.h"
+#include "GraphicsEngine/Resources/Interfaces/IShader.h"
 #include "GraphicsEngine/Resources/ObjectHandles.h"
 
 // ------------------------------------------------------------

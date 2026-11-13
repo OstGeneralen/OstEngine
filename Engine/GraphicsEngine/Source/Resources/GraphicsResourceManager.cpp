@@ -2,7 +2,6 @@
 #include "GraphicsResourceManager.h"
 
 #include "GraphicsEngine/Rendering/Vertex.h"
-#include "RHI/HLSLCompiler.h"
 #include "RHI/RenderHardwareInterface.h"
 
 #include <d3d11_1.h>
@@ -32,7 +31,12 @@ HShader GraphicsResourceManager::CreateShader(const ShaderDesc& desc)
     return HShader{_shaders.Add(created)};
 }
 
-HIndexBuffer ost::GraphicsResourceManager::CreateIndexBuffer(const IndexBufferDesc& desc)
+HShaderVariant GraphicsResourceManager::CreateShaderVariant(const ShaderVariant& variant)
+{
+    return HShaderVariant{_shaderVariants.Add(variant)};
+}
+
+HIndexBuffer GraphicsResourceManager::CreateIndexBuffer(const IndexBufferDesc& desc)
 {
     Buffer buffer;
     _pRHI->CreateIndexBuffer(desc.numIndices, desc.pIndexData, buffer);
@@ -61,7 +65,7 @@ HVertexBuffer GraphicsResourceManager::CreateVertexBuffer(const VertexBufferDesc
     return HVertexBuffer{_buffers.Add(buffer)};
 }
 
-HUniformBuffer ost::GraphicsResourceManager::CreateUniformBuffer(const UniformBufferDesc& desc)
+HUniformBuffer GraphicsResourceManager::CreateUniformBuffer(const UniformBufferDesc& desc)
 {
     Buffer buffer;
     _pRHI->CreateBuffer(desc.numBytes, buffer, desc.pData);
@@ -107,6 +111,11 @@ void GraphicsResourceManager::Release(HUniformBuffer handle)
     _buffers.Remove(handle.AsInteger());
 }
 
+void GraphicsResourceManager::Release(HShaderVariant handle)
+{
+    _shaderVariants.Remove(handle.AsInteger());
+}
+
 // ------------------------------------------------------------
 
 const Texture& GraphicsResourceManager::Get(HTexture hnd) const
@@ -117,6 +126,26 @@ const Texture& GraphicsResourceManager::Get(HTexture hnd) const
 const Shader& GraphicsResourceManager::Get(HShader hnd) const
 {
     return _shaders[static_cast<Uint64>(hnd)];
+}
+
+const Buffer& GraphicsResourceManager::Get(HUniformBuffer hnd) const
+{
+    return _buffers[hnd.AsInteger()];
+}
+
+const Buffer& GraphicsResourceManager::Get(HVertexBuffer hnd) const
+{
+    return _buffers[hnd.AsInteger()];
+}
+
+const Buffer& GraphicsResourceManager::Get(HIndexBuffer hnd) const
+{
+    return _buffers[hnd.AsInteger()];
+}
+
+const ShaderVariant& GraphicsResourceManager::Get(HSHaderVariant hnd) const
+{
+    return _shaderVariants[hnd.AsInteger()];
 }
 
 // ------------------------------------------------------------

@@ -9,24 +9,21 @@ Texture2D tex_normal : register(t1);
 Texture2D tex_orm : register(t2);
 
 GBuffer PSMain(StaticSurfaceFragment frag) {
-    MaterialData material;
-    material.normal = frag.Normal;
-    material.tangent = frag.Tangent;
-    material.bitangent = frag.Bitangent;
+    SurfaceProperties surface;
+    surface.normal = frag.Normal;
+    surface.tangent = frag.Tangent;
+    surface.bitangent = frag.Bitangent;
+    surface.uv = frag.UV;
+    surface.worldPos = frag.WorldPosition;
 
-    material.color = tex_albedo.Sample(TrilinearWrap, frag.UV).rgb;
-    material.uv = frag.UV;
-    material.worldPosition = frag.WorldPosition;
+    SurfaceMaterial material;
+    material.albedo = float3(0,0,0);
+    material.normal = float3(0.5f, 0.5f, 1);
+    material.ao = 0;
+    material.roughness = 1;
+    material.metallic = 0;
 
-    float2 normal = tex_normal.Sample(TrilinearWrap, frag.UV).rg;
-    material.normal = CalculatePixelNormal(normal, frag.Normal, frag.Tangent, frag.Bitangent);
-
-    float3 orm = tex_orm.Sample(TrilinearWrap, frag.UV).rgb;
-    material.ao = orm.r;
-    material.roughness = orm.g;
-    material.metallic = orm.b;
-
-    MaterialMain(material);
+    MaterialMain(surface, material);
 
     GBuffer gbuf;
     gbuf.albedo = float4(material.albedo, 1);

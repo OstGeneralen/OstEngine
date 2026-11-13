@@ -4,8 +4,8 @@
 // Objects and Resources
 #include "GraphicsEngine/Resources/ShaderCompiler.h"
 #include "Rendering/Buffers.h"
-#include "Rendering/RenderResourceLibrary.h"
 #include "Rendering/GraphicsScene.h"
+#include "Rendering/RenderResourceLibrary.h"
 
 // RHI
 #include "RHI/RenderHardwareInterface.h"
@@ -115,18 +115,26 @@ void ost::SceneRenderer::ExecuteGeometryPass(const GraphicsScene& scene, const R
 
     const Buffer* pCurrentIndexBuffer = nullptr;
     const Buffer* pCurrentVertexBuffer = nullptr;
-    const Shader* pCurrentVertexShader = nullptr;
-    const Shader* pCurrentPixelShader = nullptr;
+    Uint64 currentMaterialIndex = SizeTypeNpos;
 
     for (const RenderCommand& cmd : scene.GetRenderCommands())
     {
-        if (pCurrentVertexShader != cmd.pVertexShader || pCurrentPixelShader != cmd.pPixelShader)
+        if (cmd.materialIndex != currentMaterialIndex)
         {
-            rhi.SetShader(*cmd.pVertexShader, EPipelineStage::VS);
-            rhi.SetShader(*cmd.pPixelShader, EPipelineStage::PS);
+            const RenderMaterial& renderMat = scene.GetRenderMaterial(cmd.materialIndex);
+            currentMaterialIndex = cmd.materialIndex;
 
-            pCurrentVertexShader = cmd.pVertexShader;
-            pCurrentPixelShader = cmd.pPixelShader;
+            rhi.SetShader(*renderMat.pVertexShader, EPipelineStage::VS);
+            rhi.SetShader(*renderMat.pPixelShader, EPipelineStage::PS);
+
+            for (SizeType textureIndex = 0; textureIndex < renderMat.numTextures; ++textureIndex)
+            {
+                rhi.SetTexture(*renderMat.pTextures[textureIndex], textureIndex, EPipelineStage::PS);
+            }
+            if (renderMat.pUniformBuffer)
+            {
+                rhi.SetBuffer(*renderMat.pUniformBuffer, 0, EPipelineStage::PS);
+            }
         }
 
         if (pCurrentIndexBuffer != cmd.pIndexBuffer || pCurrentVertexBuffer != cmd.pVertexBuffer)

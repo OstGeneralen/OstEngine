@@ -8,9 +8,9 @@
 
 // Rendering
 #include "Objects/TextureSampler.h"
+#include "Rendering/GraphicsScene.h"
 #include "Rendering/RenderPipelineConstants.h"
 #include "Rendering/RenderResourceLibrary.h"
-#include "Rendering/GraphicsScene.h"
 #include "Rendering/SceneRenderer.h"
 
 // Shared/Common
@@ -37,17 +37,14 @@ namespace ost
         void SetRenderSize(const Vector2u& renderSize) override;
         void SetOutputSize(const Vector2u& outputSize) override;
 
-        IGraphicsScene& BeginGraphicsScene() override;
-        void LockGraphicsScene() override;
-
-        void ExecuteAndClearCommandQueue() override;
-        void ClearAndSetBackbuffer() override;
-        void Present() override;
+        IGraphicsScene& BeginRenderFrame() override;
+        void EndRenderFrame() override;
+        void PresentFrame() override;
         // END IGraphicsEngine
 
     private:
         ServiceLocator& _serviceLocator;
-        
+
         Vector2u _outputSize;
         Vector2u _renderSize;
 

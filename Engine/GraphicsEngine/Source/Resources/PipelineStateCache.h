@@ -1,20 +1,17 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/GraphicsTypes.h"
-
-#include <OstTypes.h>
-
-#include <Memory/BufferView.h>
+#include "GraphicsEngine/Resources/ObjectHandles.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct IShader
+    struct PSOKey
     {
-        virtual BufferView GetBytecode() const = 0;
-        virtual EPipelineStage GetPipelineStage() const = 0;
+        HShaderVariant shaderVariant;
+        
     };
+
 } // namespace ost
 
 // ------------------------------------------------------------

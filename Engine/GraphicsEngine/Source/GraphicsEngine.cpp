@@ -45,7 +45,7 @@ GraphicsEngine::GraphicsEngine(ServiceLocator& serviceLocator, void* windowHandl
     , _rhi{}
     , _resourceManager{}
     , _globalResourceLibrary{}
-    , _GraphicsScene{}
+    , _graphicsScene{}
     , _sceneRenderer{}
 {
     // Create the RHI from the provided window information (force fullscreen false for now)
@@ -54,8 +54,6 @@ GraphicsEngine::GraphicsEngine(ServiceLocator& serviceLocator, void* windowHandl
 
     _globalResourceLibrary.InitializeResources(_rhi);
     _sceneRenderer.InitializeResources(_rhi, outputSize);
-
-    _outputSize = outputSize.VectorCast<Float32>();
 
     // Register Globally Accessible Services
     _serviceLocator.RegisterUnmanaged<IGraphicsResourceManager>(&_resourceManager);
@@ -81,6 +79,8 @@ void GraphicsEngine::Shutdown()
     _rhi = RenderHardwareInterface{};
 }
 
+// ------------------------------------------------------------
+
 void ost::GraphicsEngine::SetRenderSize(const Vector2u& size)
 {
     if (size != _renderSize)
@@ -101,23 +101,15 @@ void ost::GraphicsEngine::SetOutputSize(const Vector2u& size)
 
 // ------------------------------------------------------------
 
-IGraphicsScene& ost::GraphicsEngine::BeginGraphicsScene()
+IGraphicsScene& ost::GraphicsEngine::BeginRenderFrame()
 {
     _graphicsScene.Clear();
     return _graphicsScene;
 }
 
-void ost::GraphicsEngine::LockGraphicsScene()
+void ost::GraphicsEngine::EndRenderFrame()
 {
     _graphicsScene.PrepareData(_resourceManager, _renderSize.VectorCast<Float32>());
-}
-
-
-void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
-{
-    // Start by resetting bindings
-    _rhi.UnsetRenderTargets();
-    _rhi.UnsetTextures();
 
     // Always bind the samplers since these are globals
     _rhi.SetSampler(_samplers[ESamplerSlot::TrilinearWrap], PipelineConstant::Get(ESamplerSlot::TrilinearWrap));
@@ -125,33 +117,13 @@ void ost::GraphicsEngine::ExecuteAndClearCommandQueue()
     _rhi.SetSampler(_samplers[ESamplerSlot::PointWrap], PipelineConstant::Get(ESamplerSlot::PointWrap));
     _rhi.SetSampler(_samplers[ESamplerSlot::PointClamp], PipelineConstant::Get(ESamplerSlot::PointClamp));
 
-    // Update the buffers based on the command queue
-    UpdateFrameBuffer();
-
-    // Execute commands under current renderer
-    _activeRenderer->ExecuteCommands(_renderQueue, BuildRendererContext());
-    _renderQueue.Clear();
+    _sceneRenderer.ExecuteGraphicsScene(_graphicsScene, _rhi);
 }
 
-void ost::GraphicsEngine::ClearAndSetBackbuffer()
+void ost::GraphicsEngine::PresentFrame()
 {
-    _rhi.ClearRenderTarget(_backbuffer);
-    _rhi.SetRenderTarget(_backbuffer);
-}
-
-void ost::GraphicsEngine::DrawRendererOutput(ERenderOutputTexture presentOutputTexture)
-{
-    _rhi.SetViewport({0, 0}, _outputSize);
-
-    _rhi.SetTexture(*static_cast<const Texture*>(_activeRenderer->GetOutputTarget(presentOutputTexture)), 0, EPipelineStage_PS);
-
-    _rhi.SetPSO(RenderDefaultsLibrary::GetBlitPSO());
-    _rhi.SetBuffersForIndexed(RenderDefaultsLibrary::GetBlitMesh().vertexBuffer, sizeof(FullscreenVertex), RenderDefaultsLibrary::GetBlitMesh().indexBuffer);
-    _rhi.Draw(RenderDefaultsLibrary::GetBlitMesh().indexCount, RenderDefaultsLibrary::GetBlitMesh().indexOffset, RenderDefaultsLibrary::GetBlitMesh().vertexOffset);
-}
-
-void ost::GraphicsEngine::Present()
-{
+    _rhi.ClearRenderTarget(_backbuffer, Colors::Black);
+    _sceneRenderer.BlitOutputToTarget(_backbuffer, _rhi);
     _rhi.Present();
 }
 

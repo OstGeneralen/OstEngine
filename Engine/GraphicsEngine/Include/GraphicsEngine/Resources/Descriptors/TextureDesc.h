@@ -1,6 +1,7 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "GraphicsEngine/GraphicsTypes.h"
+#include "GraphicsEngine/Resources/ObjectHandles.h"
 
 #include <Container/List.h>
 #include <Math/Vector3.h>
@@ -23,6 +24,11 @@ namespace ost
         Uint32 dimensionCount = 2;
         Vector3u dimensions;
         List<TextureImageDesc> images;
+    };
+
+    struct TextureBundleDesc
+    {
+        List<HTexture> textures;
     };
 } // namespace ost
 

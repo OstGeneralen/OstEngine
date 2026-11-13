@@ -7,6 +7,7 @@
 #include "Objects/Buffer.h"
 #include "Objects/Shader.h"
 #include "Objects/Texture.h"
+#include "Rendering/PipelineState.h"
 
 #include <Container/SlotMap.h>
 
@@ -29,10 +30,14 @@ namespace ost
 
         // BEGIN IGraphicsResourceManager
         HTexture CreateTexture(const TextureDesc& desc) override;
+        HTextureTable CreateTextureTable(  ) override;
+        
         HIndexBuffer CreateIndexBuffer(const IndexBufferDesc& desc) override;
         HVertexBuffer CreateVertexBuffer(const VertexBufferDesc& desc) override;
         HUniformBuffer CreateUniformBuffer(const UniformBufferDesc& desc) override;
         HShader CreateShader(const ShaderDesc& desc) override;
+        HShaderVariant CreateShaderVariant(const ShaderVariant& variant) override;
+
 
         const ITexture& GetTexture(HTexture h) const override;
         const IShader& GetShader(HShader h) const override;
@@ -42,12 +47,14 @@ namespace ost
         void Release(HVertexBuffer handle) override;
         void Release(HIndexBuffer handle) override;
         void Release(HUniformBuffer handle) override;
+        void Release(HShaderVariant handle) override;
         // END IGraphicsResourceManager
 
     private:
         SlotMap<Texture> _textures;
         SlotMap<Buffer> _buffers;
         SlotMap<Shader> _shaders;
+        SlotMap<ShaderVariant> _shaderVariants;
 
         const RenderHardwareInterface* _pRHI;
     };

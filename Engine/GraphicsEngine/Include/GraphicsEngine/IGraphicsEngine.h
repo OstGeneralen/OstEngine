@@ -1,9 +1,10 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
+#include "GraphicsEngine/Rendering/IGraphicsScene.h"
+#include "GraphicsEngine/Rendering/ISceneRenderer.h"
+
 #include <Memory/UniquePtr.h>
 #include <Services/ServiceLocator.h>
-#include "GraphicsEngine/Rendering/ISceneRenderer.h"
-#include "GraphicsEngine/Rendering/IGraphicsScene.h"
 
 // ------------------------------------------------------------
 
@@ -32,14 +33,10 @@ namespace ost
         virtual void SetRenderSize(const Vector2u& renderSize) = 0;
         virtual void SetOutputSize(const Vector2u& outputSize) = 0;
 
-        virtual IGraphicsScene& BeginGraphicsScene() = 0;
-        virtual void LockGraphicsScene() = 0;
+        virtual IGraphicsScene& BeginRenderFrame() = 0;
+        virtual void EndRenderFrame() = 0;
 
-        
-        virtual void ExecuteAndClearCommandQueue() = 0;
-        virtual void ClearAndSetBackbuffer() = 0;
-        
-        virtual void Present() = 0;
+        virtual void PresentFrame() = 0;
     };
 
 } // namespace ost
