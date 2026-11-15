@@ -4,10 +4,6 @@
 #include "Shared/ShaderCommon.hlsli"
 #include "Shared/Resources.hlsli"
 
-Texture2D tex_albedo : register(t0);
-Texture2D tex_normal : register(t1);
-Texture2D tex_orm : register(t2);
-
 GBuffer PSMain(StaticSurfaceFragment frag) {
     SurfaceProperties surface;
     surface.normal = frag.Normal;

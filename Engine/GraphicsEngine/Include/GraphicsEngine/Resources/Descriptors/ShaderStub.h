@@ -1,17 +1,22 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
-#include "GraphicsEngine/Resources/Interfaces/IGraphicsResource.h"
+#include "GraphicsEngine/Resources/IGraphicsResource.h"
+
+#include <string>
+
+#include <Container/List.h>
+#include <Container/Map.h>
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    DECLARE_GFX_RESOURCE_HANDLE(HUniformBuffer);
+    DECLARE_GFX_RESOURCE_HANDLE(HShaderStub);
 
-    struct IUniformBuffer : public IGraphicsResource
+    struct ShaderStub
     {
-        virtual void WriteData(const void* pData, SizeType size) = 0;
-        virtual SizeType GetDataSize() const = 0;
+        List<std::string> defines;
+        Map<std::string, std::string> includeRemaps;
     };
 } // namespace ost
 

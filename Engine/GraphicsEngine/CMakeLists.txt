@@ -5,24 +5,16 @@ add_library(${PROJECT_NAME} STATIC
     Source/RHI/RenderHardwareInterface.h
     Source/RHI/RenderHardwareInterface.cpp
     Source/RHI/RHIMinimal.h
-    Source/Objects/Texture.h
-    Source/Objects/Texture.cpp
     Source/RHI/RHIInternal.h
-    Source/Objects/Buffer.h
-    Source/Objects/Buffer.cpp
     Source/GraphicsEngine.cpp
     Source/GraphicsEngine.h
     Source/Rendering/RenderPipelineConstants.h
     Source/Rendering/RenderCommand.h
-    Source/Resources/GraphicsResourceManager.h
-    Source/Resources/GraphicsResourceManager.cpp
     Source/Rendering/Buffers.h
     Source/Objects/TextureSampler.cpp
     Source/Objects/TextureSampler.h
     Source/Rendering/RenderCommand.cpp
     Source/Rendering/RendererContext.h
-    Source/Objects/Shader.h
-    Source/Objects/Shader.cpp
     Source/Utility/ShaderReflector.cpp
     Source/Resources/Descriptors/PipelineStateDesc.cpp
     Source/Resources/Descriptors/ShaderDesc.cpp
@@ -40,18 +32,28 @@ add_library(${PROJECT_NAME} STATIC
     Source/Objects/StateObjects.h
     Source/Objects/StateObjects.cpp
     Include/GraphicsEngine/Rendering/ISceneRenderer.h
-    Include/GraphicsEngine/Resources/ShaderVariant.h
     Source/Resources/PipelineStateCache.h
-    Source/Objects/TextureBundle.h
-    Source/Objects/TextureBundle.cpp
-    Include/GraphicsEngine/Resources/Interfaces/IVertexShader.h
-    Include/GraphicsEngine/Resources/Interfaces/IPixelShader.h
-    Source/Objects/VertexShader.h
-    Source/Objects/PixelShader.h
-    Include/GraphicsEngine/Resources/Interfaces/IGraphicsResource.h
-    Include/GraphicsEngine/Resources/Interfaces/IUniformBuffer.h
-    Include/GraphicsEngine/Resources/Interfaces/IVertexBuffer.h
-    Include/GraphicsEngine/Resources/Interfaces/IIndexBuffer.h
+    Include/GraphicsEngine/Resources/IGraphicsResource.h
+    Include/GraphicsEngine/Resources/Shaders.h
+    Include/GraphicsEngine/Resources/Buffers.h
+    Include/GraphicsEngine/Resources/Textures.h
+    Source/Resources/GfxBuffers.h
+    Source/Resources/GfxShaders.h
+    Source/Resources/GfxTextures.h
+    Source/Resources/GfxResourceHelper.h
+    Source/RHI/RHIResourceFactory.h
+    Source/Resources/GfxTextures.cpp
+    Source/Resources/GfxShaders.cpp
+    Source/Resources/GfxBuffers.cpp
+    Include/GraphicsEngine/Resources/Managers/IGfxTextureManager.h
+    Include/GraphicsEngine/Resources/Managers/IGfxBufferManager.h
+    Include/GraphicsEngine/Resources/Managers/IGfxResourceManager.h
+    Include/GraphicsEngine/Resources/Managers/IGfxShaderManager.h
+    Include/GraphicsEngine/Resources/Descriptors/ShaderStub.h
+    Source/Resources/Managers/GfxBufferManager.h
+    Source/Resources/Managers/GfxShaderManager.h
+    Source/Resources/Managers/GfxTextureManager.h
+    Source/Resources/Managers/GfxResourceManager.h
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

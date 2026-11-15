@@ -1,4 +1,29 @@
 {
-    "domain": "surfaceLit",
-    "shader": "Engine/Shader/Material/MaterialShader_LitSurfaceDefault.hlsl"
+    "stub": "Engine/Shader/Material/DefaultSurfaceOpaque.hlsl",
+    "inputs": {
+        "textures": [
+            {
+                "name": "albedo",
+                "slot": 0
+            },
+            {
+                "name": "normal",
+                "slot": 1
+            },
+            {
+                "name": "orm",
+                "slot": 2
+            }
+        ],
+        "properties": [
+            {
+                "name": "testVector",
+                "type": "float4"
+            },
+            {
+                "name": "testFloat",
+                "type": "float"
+            }
+        ]
+    }
 }

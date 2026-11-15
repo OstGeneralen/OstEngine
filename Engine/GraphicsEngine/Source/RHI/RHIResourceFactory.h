@@ -1,25 +1,28 @@
 // Kasper "OstGeneralen" Esbjornsson - 2026
 #pragma once
 #include "RHI/RHIMinimal.h"
-#include <string>
+
+// Descriptors
+#include "GraphicsEngine/Resources/Descriptors/BufferDesc.h"
+#include "GraphicsEngine/Resources/Descriptors/TextureDesc.h"
+
+// Resources
+#include "Resources/GfxBuffers.h"
+#include "Resources/GfxShaders.h"
+#include "Resources/GfxTextures.h"
 
 // ------------------------------------------------------------
 
 namespace ost
 {
-    struct Buffer
+    class RHIFactory
     {
-        friend class RenderHardwareInterface;
+    public:
+        void Initialize(ComPtr<RHIDevice> device);
 
-        Buffer();
-        Buffer(const Buffer&);
-        ~Buffer();
-
-        void SetDebugName(const std::string& n) const;
-
+        
     private:
-        SizeType _allocSize;
-        ComPtr<RHIBuffer> _buffer;
+        ComPtr<RHIDevice> _device;
     };
 } // namespace ost
 
